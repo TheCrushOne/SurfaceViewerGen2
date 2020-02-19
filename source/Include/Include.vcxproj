@@ -61,8 +61,6 @@
     <ClInclude Include="source\common\surface_base_types.h" />
     <ClInclude Include="source\common\utils.h" />
     <ClInclude Include="source\crossdllinterface\SettingsSerializerInterface.h" />
-    <ClInclude Include="source\crossdllinterface\SimulatorInterface.h" />
-    <ClInclude Include="source\crossdllinterface\SimulatorManagerInterface.h" />
     <ClInclude Include="source\crossdllinterface\SurfaceInterfaces.h" />
     <ClInclude Include="source\crossdllinterface\TransceiverInterface.h" />
     <ClInclude Include="source\crossdllinterface\UnitDataSerializerInterface.h" />

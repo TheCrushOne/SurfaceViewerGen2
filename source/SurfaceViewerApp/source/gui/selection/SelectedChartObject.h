@@ -23,7 +23,7 @@ private:
    colreg::OBJECT_TYPE _chart_object_type;
    std::string _strType;
    std::string  _propValue;
-   colreg::geo_points _points;
+   math::geo_points _points;
    colreg::geo_points_ref _points_ref;
    colreg::object_props_ref _props_ref;
 

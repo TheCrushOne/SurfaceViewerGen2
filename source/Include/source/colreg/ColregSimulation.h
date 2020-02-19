@@ -3,6 +3,7 @@
 #include "ColregInterfaces.h"
 #include "WeatherInterface.h"
 #include "StateFullColregInterface.h"
+#include "common/settings.h"
 
 struct iPropertyInterface;
 
@@ -233,30 +234,11 @@ namespace ColregSimulation
    //! Интерфейс симулятора колрега
    struct iSimulator : colreg::iReleasable
    {
-      //! Получить корневой элемент, который будет заполняться дебажной информацией
-      virtual dbg::iDebugInfo* GetDebugInfo() = 0;
-      /*!
-      Запуск симулятора
-      */
+      //! Запуск симулятора
       virtual void Start() = 0;
 
       //! Остановка симуляции, сброс данных о кораблях в исходное положение
       virtual void Stop() = 0;
-
-      //! Запуск записи сценария для юнит-теста
-      virtual void StartRecording() = 0;
-
-      //! Остановка записи сценария для юнит-теста
-      virtual void StopRecording() = 0;
-
-      //! Является ли сценарий скриптовым
-      virtual bool IsScripted() const = 0;
-
-      //! Получить маневр по времени для скриптового сценария
-      virtual ActionData ManeuverMetaByTime(double time) = 0;
-
-      //! Отменить последний принятый маневр
-      virtual void CancelManeuver(colreg::id_type id) = 0;
 
       //! Остановка симуляции, сброс всех данных без выгрузки dll
       virtual void Reset() = 0;
@@ -280,7 +262,7 @@ namespace ColregSimulation
       virtual size_t GetCurrentControlPointIdx() const = 0;
 
       //! Получить доступ к текущему срезу состояния симулятора
-      virtual const iSimulationState& GetState() const = 0;
+      //virtual const iSimulationState& GetState() const = 0;
 
       //! Сохранение комбинации лога и карты
       virtual bool SaveLogPair(const char* filename) const = 0;
@@ -288,106 +270,43 @@ namespace ColregSimulation
       //! Получить тип симуляции
       virtual const ColregSimulation::SIMULATION_PLAYER_TYPE GetSimulationType() = 0;
 
-      /*!
-      Настроить окружающую среду
-      \param[in] points Район для настроек (points == nulptr - общие настройки)
-      */
-      virtual void SetEnvironment(const colreg::environment& e, const colreg::geo_point* points = nullptr, size_t size = 0) = 0;
-
-      /*!
-      Установить настройки colreg
-      \param[in] points Район для настроек (points == nulptr - общие настройки)
-      */
-      virtual void SetSettings(const colreg::settings& s, const colreg::geo_point* points = nullptr, size_t size = 0) = 0;
-
-      virtual void SetSimulationSettings( const simulation_settings&) = 0;
-
-      virtual void SetWeatherSettings(const colreg::weather_influence_info&) = 0;
-
-      virtual void SetWeatherInfluenceInterface(const colreg::iWeatherInfluence*) = 0;
-
+      //! Установить настройки
+      virtual void SetSettings(const settings::application_settings& s) = 0;
+      
       //! Перезагрузить настройки с xml
       virtual void ReloadSettings() = 0;
 
-      //! Добавить корабль в симуляцию, назначить ему начальный маршрут и предсказанную траекторию
-      virtual colreg::id_type AddShip(const colreg::ship_info& info, const colreg::track_point_info& pos,
-                                      const colreg::route_point* pRoute, size_t szRoute,
-                                      const colreg::track_point_info* pPrediction, size_t szPrediction) = 0;
-
-      //! Убрать корабль из симуляции
-      virtual bool RemoveShip(colreg::id_type shipId) = 0;
-
-      //! Задать настройки корабля 
-      virtual bool SetShipInfo(colreg::id_type shipId, const colreg::ship_info& shipInfo) = 0;
-
-      //! Задать позицию корабля 
-      virtual bool SetShipPos(colreg::id_type shipId, const colreg::track_point_info& pos) = 0;
+      //! Взять настройки
+      virtual const settings::application_settings& GetSettings() const = 0;
       
-      //! brief Задать маршрут корабля
-      virtual bool SetShipRoute(ROUTE_TYPE type, colreg::id_type shipId, const colreg::route_point* pRoute, size_t szRoute) = 0;
-
-      //! brief Задать Prediction корабля
-      virtual bool SetShipPrediction( colreg::id_type shipId, const colreg::track_point_info* pPrediction, size_t szRoute) = 0;
-
-      //! Задать настройки симуляции корабля
-      virtual bool SetShipSimulationSettings(colreg::id_type shipId, const simulation_ship_settings& settings) = 0;
-
-      //! Задать параметры домена безопасности корабля
-      virtual bool SetShipDomainScales(colreg::id_type shipId, const colreg::domain_scales& scales) = 0;
-
       /*!
       \brief Добавить динамические объекты карты в симуляцию
       ID назначаются при запросе из GetState (id в objects игнорятся)
       */
-      virtual colreg::chart_object_id AddDynamicChartObjects(const colreg::chart_object* objects, size_t size) = 0;
+      //virtual colreg::chart_object_id AddDynamicChartObjects(const colreg::chart_object* objects, size_t size) = 0;
 
       /*!
       \brief Добавить статические объекты карты в симуляцию
       После добавления запускается сборка данных карты.
       ID назначаются при запросе из GetState (id в objects игнорятся)
       */
-      virtual colreg::chart_object_id AddStaticChartObjects(const colreg::chart_object* objects, size_t size) = 0;
+      //virtual colreg::chart_object_id AddStaticChartObjects(const colreg::chart_object* objects, size_t size) = 0;
 
       //! Убрать объекты карты из симуляции
-      virtual bool RemoveChartObjects(const colreg::chart_object_id* ids, size_t size) = 0;
+      //virtual bool RemoveChartObjects(const colreg::chart_object_id* ids, size_t size) = 0;
 
       /*!
       \brief Задать новую геометрию и свойства объектам карты
       После добавления запускается сборка данных карты.
       ID назначаются при запросе из GetState (id в data игнорятся)
       */
-      virtual bool SetChartObjectsData(const colreg::chart_object_id* ids, const colreg::chart_object* data, size_t size) = 0;
+      //virtual bool SetChartObjectsData(const colreg::chart_object_id* ids, const colreg::chart_object* data, size_t size) = 0;
 
-      virtual const simulation_settings& GetSimulationSettings() = 0;
+      ///////////////////////////statefull//////////////////////////////////////////////////
 
-      virtual const colreg::weather_influence_info& GetWeatherSettings() const = 0;
+      //virtual void ReEstimate() = 0;
 
-      virtual const char* GetDescription() const{ return ""; }
-      virtual void SetDescription(const char* desc) {  }
-      virtual const char* GetAisLogFilePath() const { return ""; }
-      virtual bool SetAisLogFilePath(const char* aisLogFilePath) { return false;  } //returns true if successfull
-      virtual const char* GetMapFolderPath() const { return ""; }
-      virtual bool SetMapFolderPath(const char* mapFolderPath) { return false;  }//returns true if successfull
-
-      virtual const char* GetVesselMathModelName(colreg::id_type) const = 0;
-      virtual void SetVesselMathModelName(const char*, colreg::id_type) = 0;
-
-      virtual colreg::model_name_ref GetVesselModelNameList() const = 0;
-
-   ///////////////////////////statefull//////////////////////////////////////////////////
-      virtual colreg::statefull::iStateFullExtention* GetStateFullExtention() = 0;
-      virtual bool ApplyManeuver(const colreg::solution_description& descr, const colreg::iSolutionManeuver* accepted_maneuver) = 0;
-      virtual void ReEstimate() = 0;
-
-      virtual size_t AddStatisticsAreaObjects(const colreg::chart_object* objects, size_t size) = 0;
-      virtual size_t GetStatisticsAreaObjectsCount() const = 0;
-      virtual colreg::chart_object GetStatisticsAreaObjects(size_t index ) const = 0;
-      virtual colreg::chart_object GetStatisticsAreaObjects(const colreg::chart_object_id& chartObjId) const = 0;
-      
-      virtual bool RemoveStatisticsAreaObjects(const colreg::chart_object_id* ids, size_t size) = 0;
-      virtual bool EnableStatisticProcessing(bool enable) = 0;
-
-      virtual const char* GetSimulationTimeStr() const = 0;
+      //virtual const char* GetSimulationTimeStr() const = 0;
    };
 
    struct simulation_paths : colreg::colreg_paths

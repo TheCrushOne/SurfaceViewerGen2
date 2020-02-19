@@ -88,7 +88,7 @@ namespace render
 
    struct object
    {
-      SVCG::geo_points points;
+      math::geo_points points;
       object_info info;
       find_info find;
       float min_scale_2_draw = 0.0;
@@ -102,21 +102,21 @@ namespace render
       virtual void Init(void* hWnd) = 0;
       virtual void SetSize(size_t w, size_t h) = 0;
       virtual SIZE GetSize() const = 0;
-      virtual void SetCenter(const SVCG::geo_point& center) = 0;
-      virtual SVCG::geo_point GetCenter() const = 0;
+      virtual void SetCenter(const math::geo_point& center) = 0;
+      virtual math::geo_point GetCenter() const = 0;
       virtual void SetScale(double scale) = 0;
       virtual double GetScale()const = 0;
       virtual void AddObject(object&& obj, bool dynamic = true) = 0;
-      virtual void AddArc(const SVCG::geo_point& center, double radius, double beg, double end, double step, unsigned long clr, LINE_STYLE conture, unsigned int width = 2, bool dynamic = true) = 0;
-      virtual math::point GeoToPixel(const SVCG::geo_point& pos) const = 0;
-      virtual SVCG::geo_point PixelToGeo(const math::point& pos) const = 0;
-      virtual bool IsNeedRender(const SVCG::geo_points& points) const = 0;
+      virtual void AddArc(const math::geo_point& center, double radius, double beg, double end, double step, unsigned long clr, LINE_STYLE conture, unsigned int width = 2, bool dynamic = true) = 0;
+      virtual math::point GeoToPixel(const math::geo_point& pos) const = 0;
+      virtual math::geo_point PixelToGeo(const math::point& pos) const = 0;
+      virtual bool IsNeedRender(const math::geo_points& points) const = 0;
       virtual void Render(size_t user_data) = 0;
       virtual void Clear() = 0;
-      virtual std::vector<std::vector<SVCG::geo_point>> GetObjectsInsideScreenPts() = 0;
+      virtual std::vector<std::vector<math::geo_point>> GetObjectsInsideScreenPts() = 0;
 
       virtual find_info FindObject(const math::point& pos, FIND_TYPE type) const = 0;
       virtual std::vector<colreg::id_type> GetStaticIds() const = 0;
-      virtual const SVCG::geo_point* GetStaticCenterId(colreg::id_type id) const = 0;
+      virtual const math::geo_point* GetStaticCenterId(colreg::id_type id) const = 0;
    };
 }

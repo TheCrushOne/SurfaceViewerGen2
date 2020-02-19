@@ -2,7 +2,7 @@
 #include "SelectedChartObject.h"
 #include "simulator\simulator.h"
 #include "gui/layers/renderhelper.h"
-
+#include "gui/user_interface.h"
 
 SelectedChartObject::SelectedChartObject(colreg::id_type id, colreg::OBJECT_TYPE chart_object_type)
    : _id{ id }
@@ -245,13 +245,13 @@ void SelectedChartObject::EndEdit()
 
    Delete();
 
-   ScenarioManager::GetInstance().AddObject(object);
+   //ScenarioManager::GetInstance().AddObject(object);
 }
 
 void SelectedChartObject::Delete()
 {
    colreg::chart_object_id cid;
    colreg::check_chart_obj_type(colreg::OT_DYNAMIC_AREAS | colreg::OT_STATISTIC_AREA, _chart_object_type) ? cid.dynamic_id = _id : cid.static_id = _id;
-   ScenarioManager::GetInstance().RemoveObject(cid, _chart_object_type);
+   //ScenarioManager::GetInstance().RemoveObject(cid, _chart_object_type);
 }
 

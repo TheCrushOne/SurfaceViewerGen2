@@ -89,13 +89,13 @@ public:
    void Init(void* hWnd) override;
    void SetSize(size_t w, size_t h) override;
    SIZE GetSize()const override { return SIZE{ (LONG)_width, (LONG)_height }; }
-   void SetCenter(const SVCG::geo_point& center) override;
-   SVCG::geo_point GetCenter()const override { return _center; }
+   void SetCenter(const math::geo_point& center) override;
+   math::geo_point GetCenter()const override { return _center; }
    void SetScale(double scale) override;
    double GetScale()const override { return _scale; }
    void AddObject(render::object&& obj, bool dynamic)override;
-   void AddArc(const SVCG::geo_point& center, double radius, double beg, double end, double step, unsigned long clr, render::LINE_STYLE conture, unsigned int width, bool dynamic) override;
-   bool IsNeedRender(const SVCG::geo_points& points)const override;
+   void AddArc(const math::geo_point& center, double radius, double beg, double end, double step, unsigned long clr, render::LINE_STYLE conture, unsigned int width, bool dynamic) override;
+   bool IsNeedRender(const math::geo_points& points)const override;
    void Render(size_t user_data) override;
    void Clear()override
    {
@@ -104,8 +104,8 @@ public:
 
    render::find_info FindObject(const math::point& pos, render::FIND_TYPE type)const override;
 
-   math::point GeoToPixel(const colreg::geo_point& pos)const  override;
-   colreg::geo_point PixelToGeo(const math::point& pos)const override;
+   math::point GeoToPixel(const math::geo_point& pos)const  override;
+   math::geo_point PixelToGeo(const math::point& pos)const override;
 
    std::vector<colreg::id_type> GetStaticIds()const override
    {
@@ -119,7 +119,7 @@ public:
       return res;
    }
 
-   const SVCG::geo_point* GetStaticCenterId(colreg::id_type id)const override
+   const math::geo_point* GetStaticCenterId(colreg::id_type id)const override
    {
       const auto itf = std::find_if(_staticRenderObjects.begin(), _staticRenderObjects.end(), [id](const auto& obj)
          {
@@ -131,7 +131,7 @@ public:
 
       return nullptr;
    }
-   std::vector<std::vector<SVCG::geo_point>> GetObjectsInsideScreenPts() override;
+   std::vector<std::vector<math::geo_point>> GetObjectsInsideScreenPts() override;
 
 private:
 
@@ -184,7 +184,7 @@ private:
 
    HWND _hwnd;
    double _scale;		         //< לאסרעאב pixel/mile
-   SVCG::geo_point _center;
+   math::geo_point _center;
    size_t _width;
    size_t _height;
 

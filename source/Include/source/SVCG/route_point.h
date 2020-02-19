@@ -9,25 +9,25 @@
 
 namespace SVCG
 {
-   struct route_point : public geo_point
+   struct route_point : public position_point
    {
       surface_viewer::FlyZoneAffilation fly;
       surface_viewer::GoZoneAffilation go;
       bool is_control;
       route_point(double lat, double lon, double alt, surface_viewer::FlyZoneAffilation fly, surface_viewer::GoZoneAffilation go, bool isControl = false)
-         : SVCG::geo_point{ lat, lon, alt }
+         : position_point{ lat, lon, alt }
          , fly(fly)
          , go(go)
          , is_control(isControl)
       {}
       route_point(double lat, double lon, double alt, bool isControl = false)
-         : SVCG::geo_point{ lat, lon, alt }
+         : position_point{ lat, lon, alt }
          , fly(surface_viewer::FlyZoneAffilation::FZA_NORMAL)
          , go(surface_viewer::GoZoneAffilation::GZA_NORMAL)
          , is_control(isControl)
       {}
       route_point(bool isControl = false)
-         : SVCG::geo_point{ 0., 0., 0. }
+         : position_point{ 0., 0., 0. }
          , fly(surface_viewer::FlyZoneAffilation::FZA_NORMAL)
          , go(surface_viewer::GoZoneAffilation::GZA_NORMAL)
          , is_control(isControl)

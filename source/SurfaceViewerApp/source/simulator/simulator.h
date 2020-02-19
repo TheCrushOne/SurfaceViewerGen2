@@ -1,11 +1,10 @@
 #pragma once
-#include "common/module_guard.h"
-#include "crossdllinterface/SimulatorInterface.h"
-//#include "ChartSafetyInterface.h"
+#include "colreg/ModuleGuard.h"
+#include "colreg/ColregSimulation.h"
 
 namespace simulator
 {
-   surface_simulation::iSimulator* getSimulator();
+   ColregSimulation::iSimulator* getSimulator();
 
    bool simulatorStep();
    bool simulatorStart(const char* scenarioPath);

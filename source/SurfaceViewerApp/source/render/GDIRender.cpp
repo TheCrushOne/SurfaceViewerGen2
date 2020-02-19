@@ -19,7 +19,7 @@ namespace
    }
 }
 
-bool GDIRender::IsNeedRender(const SVCG::geo_points& points)const
+bool GDIRender::IsNeedRender(const math::geo_points& points)const
 {
    for (const auto& p : points)
    {
@@ -62,7 +62,7 @@ void GDIRender::SetSize(size_t w, size_t h)
    calcRenderGeoRect();
 }
 
-void GDIRender::SetCenter(const colreg::geo_point& center)
+void GDIRender::SetCenter(const math::geo_point& center)
 {
    _center = center;
 
@@ -85,7 +85,7 @@ void GDIRender::AddObject(object&& obj, bool dynamic)
    getContainer(dynamic).emplace_back(std::move(obj));
 }
 
-void GDIRender::AddArc(const SVCG::geo_point& center, double radius, double beg, double end, double step, unsigned long clr, LINE_STYLE conture, unsigned int width, bool dynamic)
+void GDIRender::AddArc(const math::geo_point& center, double radius, double beg, double end, double step, unsigned long clr, LINE_STYLE conture, unsigned int width, bool dynamic)
 {
    object obj;
    obj.info.style = conture;
@@ -93,32 +93,32 @@ void GDIRender::AddArc(const SVCG::geo_point& center, double radius, double beg,
    obj.info.width = width;
    obj.points.reserve(static_cast<size_t>((end - beg) / step));
    for (double deg = beg; deg <= end; deg += step)
-      obj.points.emplace_back(SVCG::calc_point(center, radius, deg));
-   obj.points.emplace_back(SVCG::calc_point(center, radius, end));
+      obj.points.emplace_back(math::calc_point(center, radius, deg));
+   obj.points.emplace_back(math::calc_point(center, radius, end));
 
    AddObject(std::move(obj), dynamic);
 }
 
-SVCG::math_point GDIRender::GeoToPixel(const SVCG::geo_point& pos)const
+math::point GDIRender::GeoToPixel(const math::geo_point& pos)const
 {
    auto dlon = pos.lon - _center.lon;
    auto dlat = pos.lat - _center.lat;
-   auto dir = SVCG::normal_K360(SVCG::rad_to_grad(atan2(dlon, dlat)));
-   auto dist = sqrt(SVCG::sqr(dlat) + SVCG::sqr(dlon)) * 60;
-   SVCG::math_point point{ _height * .5 - SVCG::cos_grad(dir) * dist * _scale, _width * .5 + SVCG::sin_grad(dir) * dist * SVCG::cos_grad(_center.lat) * _scale };
+   auto dir = math::normal_K360(math::rad_to_grad(atan2(dlon, dlat)));
+   auto dist = sqrt(math::sqr(dlat) + math::sqr(dlon)) * 60;
+   math::point point{ _height * .5 - math::cos_grad(dir) * dist * _scale, _width * .5 + math::sin_grad(dir) * dist * math::cos_grad(_center.lat) * _scale };
    return point;
 }
 
-SVCG::geo_point GDIRender::PixelToGeo(const SVCG::math_point& pos)const
+math::geo_point GDIRender::PixelToGeo(const math::point& pos)const
 {
-   SVCG::math_point center{ _height * .5, _width * .5 };
-   const auto course = -SVCG::direction(pos, center);
-   const auto dist = SVCG::distance(center, pos) / _scale * MIN_TO_RAD;
+   math::point center{ _height * .5, _width * .5 };
+   const auto course = -math::direction(pos, center);
+   const auto dist = math::distance(center, pos) / _scale * MIN_TO_RAD;
 
-   const auto courseRad = SVCG::grad_to_rad(course);
+   const auto courseRad = math::grad_to_rad(course);
    double dLat = dist * cos(courseRad);
    double dLon = dist * sin(courseRad);
-   return SVCG::geo_point(_center.lat + dLat, _center.lon + dLon / SVCG::cos_grad(_center.lat));
+   return math::geo_point(_center.lat + dLat, _center.lon + dLon / math::cos_grad(_center.lat));
 }
 
 void GDIRender::selectPen(CDC* dc, const render::object_info& info)
@@ -259,8 +259,8 @@ void GDIRender::renderObjects(CDC* dc, pixelObjects& objects)
       {
          if (obj.points.size() == 2 && obj.info.fill != FILL_TYPE::FT_NONE) //circle
          {
-            auto delta = (int)SVCG::distance(SVCG::math_point{ (double)obj.pixels[0].y, (double)obj.pixels[0].x }
-            , SVCG::math_point{ (double)obj.pixels[1].y, (double)obj.pixels[1].x });
+            auto delta = (int)math::distance(math::point{ (double)obj.pixels[0].y, (double)obj.pixels[0].x }
+            , math::point{ (double)obj.pixels[1].y, (double)obj.pixels[1].x });
             dc->Ellipse(obj.pixels[0].x - delta, obj.pixels[0].y - delta, obj.pixels[0].x + delta, obj.pixels[0].y + delta);
          }
          else
@@ -334,8 +334,8 @@ void GDIRender::renderAlphaObjects(CDC* dc, pixelObjects& objects)
       }
       else if (pts.size() == 2 && obj.info.fill != FILL_TYPE::FT_NONE)
       {
-         int R = (int)SVCG::distance(SVCG::math_point{ (double)obj.pixels[0].y, (double)obj.pixels[0].x }
-         , SVCG::math_point{ (double)obj.pixels[1].y, (double)obj.pixels[1].x });
+         int R = (int)math::distance(math::point{ (double)obj.pixels[0].y, (double)obj.pixels[0].x }
+         , math::point{ (double)obj.pixels[1].y, (double)obj.pixels[1].x });
          graphics.FillEllipse(getAlphaBrush(obj.info), obj.pixels[0].x - R, obj.pixels[0].y - R, 2 * R, 2 * R);
       }
       else if (obj.info.fill != FILL_TYPE::FT_NONE)
@@ -349,7 +349,7 @@ void GDIRender::renderAlphaObjects(CDC* dc, pixelObjects& objects)
 find_info GDIRender::FindObject(const math::point& pos, FIND_TYPE type)const
 {
    constexpr auto size = 8;
-   SVCG::geo_rect geoFind;
+   math::geo_rect geoFind;
    geoFind.leftTop = PixelToGeo({ pos.y - size, pos.x - size });
    geoFind.rightBottom = PixelToGeo({ pos.y + size, pos.x + size });
    CRect pixFind{ (int)pos.x - size, (int)pos.y - size, (int)pos.x + size, (int)pos.y + size };
@@ -438,9 +438,9 @@ void GDIRender::getObjectInsideScreen()
    }
 }
 
-std::vector<std::vector<SVCG::geo_point>> GDIRender::GetObjectsInsideScreenPts()
+std::vector<std::vector<math::geo_point>> GDIRender::GetObjectsInsideScreenPts()
 {
-   std::vector<std::vector<SVCG::geo_point>> pts;
+   std::vector<std::vector<math::geo_point>> pts;
    getObjectInsideScreen();
    for (auto& obj : _objectsWithinScreen)
    {

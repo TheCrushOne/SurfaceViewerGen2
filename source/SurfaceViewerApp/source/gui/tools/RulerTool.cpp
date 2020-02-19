@@ -68,12 +68,12 @@ std::string RulerTool::getDistText(double dist)const
 
 void RulerTool::renderRuler(CPoint from, CPoint to)const
 {
-   const auto geoFrom = _renderer->PixelToGeo(SVCG::math_point{ (double)from.y, (double)from.x });
-   const auto geoTo = _renderer->PixelToGeo(SVCG::math_point{ (double)to.y, (double)to.x });
+   const auto geoFrom = _renderer->PixelToGeo(math::point{ (double)from.y, (double)from.x });
+   const auto geoTo = _renderer->PixelToGeo(math::point{ (double)to.y, (double)to.x });
 
    double dist;
    double dir;
-   SVCG::distance_direction(geoFrom, geoTo, dist, dir);
+   math::distance_direction(geoFrom, geoTo, dist, dir);
    if (dist < METERS_TO_MILE)
       return;
 
@@ -81,13 +81,13 @@ void RulerTool::renderRuler(CPoint from, CPoint to)const
    _renderer->AddObject({ {geoFrom, geoTo}, {1, render::LINE_STYLE::LL_SOLID, render::FILL_TYPE::FT_NULL, RGB(255, 255, 0), "", 0, 0, 25} });
 
 
-   const auto distSection = SVCG::distance(geoFrom, _renderer->PixelToGeo(SVCG::math_point{ (double)from.y + 3, (double)from.x }));
+   const auto distSection = math::distance(geoFrom, _renderer->PixelToGeo(math::point{ (double)from.y + 3, (double)from.x }));
 
    for (auto step = 0.; step <= dist; step += dist * 0.1)
    {
-      const auto p = SVCG::calc_point(geoFrom, step, dir);
-      const auto p1 = SVCG::calc_point(p, distSection, dir + 90);
-      const auto p2 = SVCG::calc_point(p, distSection, dir - 90);
+      const auto p = math::calc_point(geoFrom, step, dir);
+      const auto p1 = math::calc_point(p, distSection, dir + 90);
+      const auto p2 = math::calc_point(p, distSection, dir - 90);
 
       _renderer->AddObject({ {p1, p2}, {1, render::LINE_STYLE::LL_SOLID, render::FILL_TYPE::FT_NONE, RGB(0, 0, 200), ""} });
    }

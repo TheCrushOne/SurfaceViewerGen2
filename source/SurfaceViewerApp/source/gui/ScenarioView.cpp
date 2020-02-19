@@ -24,7 +24,7 @@ void user_interface::InvalidateView()
 
 void user_interface::SetCenter(double lt, double ln)
 {
-   pView->GetRenderer()->SetCenter(SVCG::geo_point{ lt, ln, 0.f });
+   pView->GetRenderer()->SetCenter(math::geo_point{ lt, ln });
 }
 
 void user_interface::ShowToolTip(const wchar_t* title, const wchar_t* description)
@@ -156,7 +156,7 @@ int ScenarioView::OnCreate(LPCREATESTRUCT lpCreateStruct)
    GetClientRect(rect);
 
    _renderer->SetScale(30);
-   _renderer->SetCenter(SVCG::geo_point{ 0, 0, 0.f });
+   _renderer->SetCenter(math::geo_point{ 0, 0 });
 
    _layers = std::make_unique<LayersContainer>();
 
@@ -262,7 +262,7 @@ void ScenarioView::OnRButtonUp(UINT /* nFlags */, CPoint point)
 bool ScenarioView::OnScenarioLoad(const wchar_t* name)
 {
    _renderer->Clear();
-   SVCG::geo_point center{0., 0., 0.};// = simulator::getCenter();
+   math::geo_point center = simulator::getCenter();
    if (!center.lat && !center.lon)
    {
       _needResetCenter = true;
@@ -315,7 +315,7 @@ void ScenarioView::OnTimer(UINT_PTR nIDEvent)
 
       if (_needResetCenter)
       {
-         SVCG::geo_point center = { 0., 0., 0. };//simulator::getCenter();
+         math::geo_point center = simulator::getCenter();
          if (center.lat || center.lon)
          {
             _needResetCenter = false;

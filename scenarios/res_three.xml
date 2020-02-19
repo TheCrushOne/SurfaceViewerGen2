@@ -1,0 +1,29 @@
+<config>
+	<research>
+		<type>2</type>
+		<common>
+			<itercount>1</itercount>
+			<map_size>500</map_size>
+			<superexperiment>1</superexperiment>
+		</common>
+		<range>
+			<packet_range>
+				<min>1</min>
+				<max>10</max>
+				<step>1</step>
+			</packet_range>
+			<pathshard_range>
+				<min>1</min>
+				<max>20</max>
+				<step>1</step>
+			</pathshard_range>
+		</range>
+		<debug>
+			<output>
+				<time>
+					<count_time>3</count_time>
+				</time>
+			</output>
+		</debug>
+	</research>
+</config>

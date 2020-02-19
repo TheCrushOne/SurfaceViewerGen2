@@ -1,0 +1,335 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>16.0</VCProjectVersion>
+    <ProjectGuid>{70150A96-15F3-49F2-98E2-B7C50043F215}</ProjectGuid>
+    <Keyword>MFCProj</Keyword>
+    <RootNamespace>SurfaceViewerGen2</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>SurfaceViewerApp</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+    <UseOfMfc>Static</UseOfMfc>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+    <UseOfMfc>Dynamic</UseOfMfc>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+    <UseOfMfc>Dynamic</UseOfMfc>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+    <UseOfMfc>Dynamic</UseOfMfc>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>$(SolutionDir)..\Bin\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)..\Bin\$(Platform)\Intermediate\$(ProjectName)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(SolutionDir)..\Bin\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)..\Bin\$(Platform)\Intermediate\$(ProjectName)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>source;$(SolutionDir)Include\source\;$(IncludePath)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalUsingDirectories>
+      </AdditionalUsingDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <AdditionalLibraryDirectories>$(LibraryPath)</AdditionalLibraryDirectories>
+    </Link>
+    <Midl>
+      <MkTypLibCompatible>false</MkTypLibCompatible>
+      <ValidateAllParameters>true</ValidateAllParameters>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </Midl>
+    <ResourceCompile>
+      <Culture>0x0419</Culture>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_WINDOWS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+    </Link>
+    <Midl>
+      <MkTypLibCompatible>false</MkTypLibCompatible>
+      <ValidateAllParameters>true</ValidateAllParameters>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </Midl>
+    <ResourceCompile>
+      <Culture>0x0419</Culture>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>source;$(IncludePath)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalLibraryDirectories>$(LibraryPath)</AdditionalLibraryDirectories>
+    </Link>
+    <Midl>
+      <MkTypLibCompatible>false</MkTypLibCompatible>
+      <ValidateAllParameters>true</ValidateAllParameters>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </Midl>
+    <ResourceCompile>
+      <Culture>0x0419</Culture>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_WINDOWS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+    <Midl>
+      <MkTypLibCompatible>false</MkTypLibCompatible>
+      <ValidateAllParameters>true</ValidateAllParameters>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </Midl>
+    <ResourceCompile>
+      <Culture>0x0419</Culture>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ResourceCompile Include="SurfaceViewerGen2.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\classview.bmp" />
+    <Image Include="res\classview_hc.bmp" />
+    <Image Include="res\class_view.ico" />
+    <Image Include="res\class_view_hc.ico" />
+    <Image Include="res\explorer.bmp" />
+    <Image Include="res\explorer_hc.bmp" />
+    <Image Include="res\fileview.bmp" />
+    <Image Include="res\fileview_hc.bmp" />
+    <Image Include="res\file_view.ico" />
+    <Image Include="res\file_view_hc.ico" />
+    <Image Include="res\menuimages.bmp" />
+    <Image Include="res\menuimages_hc.bmp" />
+    <Image Include="res\output_wnd.ico" />
+    <Image Include="res\output_wnd_hc.ico" />
+    <Image Include="res\properties.bmp" />
+    <Image Include="res\properties_hc.bmp" />
+    <Image Include="res\properties_wnd.ico" />
+    <Image Include="res\properties_wnd_hc.ico" />
+    <Image Include="res\sort.bmp" />
+    <Image Include="res\sort_hc.bmp" />
+    <Image Include="res\SurfaceViewerGen2.ico" />
+    <Image Include="res\SurfaceViewerGen2Doc.ico" />
+    <Image Include="res\Toolbar.bmp" />
+    <Image Include="res\Toolbar256.bmp" />
+    <Image Include="res\userimages.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\SurfaceViewerGen2.rc2" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="source\framework.h" />
+    <ClInclude Include="source\gui\ClassView.h" />
+    <ClInclude Include="source\gui\CModalDirectX.h" />
+    <ClInclude Include="source\gui\FileView.h" />
+    <ClInclude Include="source\gui\graph2d\coords.h" />
+    <ClInclude Include="source\gui\graph2d\f2doff.h" />
+    <ClInclude Include="source\gui\graph2d\gen_prop_dlgs.h" />
+    <ClInclude Include="source\gui\graph2d\graphcombobox.h" />
+    <ClInclude Include="source\gui\graph2d\GraphContainer.h" />
+    <ClInclude Include="source\gui\graph2d\GraphFrame.h" />
+    <ClInclude Include="source\gui\graph2d\graphpanel.h" />
+    <ClInclude Include="source\gui\graph2d\GraphWnd.h" />
+    <ClInclude Include="source\gui\graph2d\graph_general.h" />
+    <ClInclude Include="source\gui\graph2d\graph_props.h" />
+    <ClInclude Include="source\gui\graph2d\gruler.h" />
+    <ClInclude Include="source\gui\graph2d\points.h" />
+    <ClInclude Include="source\gui\graph2d\pviewbar.h" />
+    <ClInclude Include="source\gui\graph2d\sizecbar.h" />
+    <ClInclude Include="source\gui\layers\RenderHelper.h" />
+    <ClInclude Include="source\gui\layers\RenderLayers.h" />
+    <ClInclude Include="source\gui\layers\UnitLayer.h" />
+    <ClInclude Include="source\gui\MainFrm.h" />
+    <ClInclude Include="source\gui\modal\modalframe.h" />
+    <ClInclude Include="source\gui\modal\TestFrame.h" />
+    <ClInclude Include="source\gui\modal\TestView.h" />
+    <ClInclude Include="source\gui\OutputWnd.h" />
+    <ClInclude Include="source\gui\properties\PropComboBox.h" />
+    <ClInclude Include="source\gui\properties\PropertiesCtrl.h" />
+    <ClInclude Include="source\gui\properties\PropertiesWnd.h" />
+    <ClInclude Include="source\gui\properties\PropertiesWndBase.h" />
+    <ClInclude Include="source\gui\ScenarioView.h" />
+    <ClInclude Include="source\gui\selection\property.h" />
+    <ClInclude Include="source\gui\selection\PropertyInterface.h" />
+    <ClInclude Include="source\gui\selection\property_helper.h" />
+    <ClInclude Include="source\gui\selection\ScenarioProperties.h" />
+    <ClInclude Include="source\gui\selection\SelectedChartObject.h" />
+    <ClInclude Include="source\gui\selection\SelectedObjectManager.h" />
+    <ClInclude Include="source\gui\selection\SelectedRoute.h" />
+    <ClInclude Include="source\gui\tools\CreateObjectTool.h" />
+    <ClInclude Include="source\gui\tools\DragTool.h" />
+    <ClInclude Include="source\gui\tools\MouseTool.h" />
+    <ClInclude Include="source\gui\tools\RulerTool.h" />
+    <ClInclude Include="source\gui\user_interface.h" />
+    <ClInclude Include="source\gui\ViewTree.h" />
+    <ClInclude Include="source\render\GDIRender.h" />
+    <ClInclude Include="source\render\Render.h" />
+    <ClInclude Include="source\Resource.h" />
+    <ClInclude Include="source\scenario\ScenarioManager.h" />
+    <ClInclude Include="source\simulator\simulator.h" />
+    <ClInclude Include="source\stdafx.h" />
+    <ClInclude Include="source\SurfaceViewerGen2.h" />
+    <ClInclude Include="source\SurfaceViewerGen2Doc.h" />
+    <ClInclude Include="source\SurfaceViewerGen2View.h" />
+    <ClInclude Include="source\targetver.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="source\gui\ClassView.cpp" />
+    <ClCompile Include="source\gui\CModalDirectX.cpp" />
+    <ClCompile Include="source\gui\FileView.cpp" />
+    <ClCompile Include="source\gui\graph2d\coords.cpp" />
+    <ClCompile Include="source\gui\graph2d\f2doff.cpp" />
+    <ClCompile Include="source\gui\graph2d\gen_prop_dlgs.cpp" />
+    <ClCompile Include="source\gui\graph2d\graphcombobox.cpp" />
+    <ClCompile Include="source\gui\graph2d\GraphContainer.cpp" />
+    <ClCompile Include="source\gui\graph2d\GraphFrame.cpp" />
+    <ClCompile Include="source\gui\graph2d\graphpanel.cpp" />
+    <ClCompile Include="source\gui\graph2d\GraphWnd.cpp" />
+    <ClCompile Include="source\gui\graph2d\graph_general.cpp" />
+    <ClCompile Include="source\gui\graph2d\graph_props.cpp" />
+    <ClCompile Include="source\gui\graph2d\gruler.cpp" />
+    <ClCompile Include="source\gui\graph2d\points.cpp" />
+    <ClCompile Include="source\gui\graph2d\pviewbar.cpp" />
+    <ClCompile Include="source\gui\graph2d\sizecbar.cpp" />
+    <ClCompile Include="source\gui\layers\RenderHelper.cpp" />
+    <ClCompile Include="source\gui\layers\UnitLayer.cpp" />
+    <ClCompile Include="source\gui\MainFrm.cpp" />
+    <ClCompile Include="source\gui\modal\modalframe.cpp" />
+    <ClCompile Include="source\gui\modal\TestFrame.cpp" />
+    <ClCompile Include="source\gui\modal\TestView.cpp" />
+    <ClCompile Include="source\gui\OutputWnd.cpp" />
+    <ClCompile Include="source\gui\properties\PropComboBox.cpp" />
+    <ClCompile Include="source\gui\properties\PropertiesCtrl.cpp" />
+    <ClCompile Include="source\gui\properties\PropertiesWnd.cpp" />
+    <ClCompile Include="source\gui\properties\PropertiesWndBase.cpp" />
+    <ClCompile Include="source\gui\ScenarioView.cpp" />
+    <ClCompile Include="source\gui\selection\ScenarioProperties.cpp" />
+    <ClCompile Include="source\gui\selection\SelectedChartObject.cpp" />
+    <ClCompile Include="source\gui\selection\SelectedObjectManager.cpp" />
+    <ClCompile Include="source\gui\selection\SelectedRoute.cpp" />
+    <ClCompile Include="source\gui\tools\CreateObjectTool.cpp" />
+    <ClCompile Include="source\gui\tools\DragTool.cpp" />
+    <ClCompile Include="source\gui\tools\MouseTool.cpp" />
+    <ClCompile Include="source\gui\tools\RulerTool.cpp" />
+    <ClCompile Include="source\gui\ViewTree.cpp" />
+    <ClCompile Include="source\render\GDIRender.cpp" />
+    <ClCompile Include="source\scenario\ScenarioManager.cpp" />
+    <ClCompile Include="source\simulator\simulator.cpp" />
+    <ClCompile Include="source\stdafx.cpp" />
+    <ClCompile Include="source\SurfaceViewerGen2.cpp" />
+    <ClCompile Include="source\SurfaceViewerGen2Doc.cpp" />
+    <ClCompile Include="source\SurfaceViewerGen2View.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+</Project>

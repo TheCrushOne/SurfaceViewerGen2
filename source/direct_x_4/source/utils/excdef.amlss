@@ -1,0 +1,5 @@
+{"'.x mesh load failure'"},
+{"'empty texture creation failure'"},
+{"'sub texture load failure'"},
+{"'font creation failure'"},
+{"'shader data load failure'"}

@@ -1,0 +1,48 @@
+{
+    "land_units" : [
+        {
+            "name" : "range rover",
+            "start" : {
+                "x" : 8,
+                "y" : 8
+            },
+            "finish" : {
+                "x" : 250,
+                "y" : 250
+            },
+            "control_points" : [
+                {
+                    "x" : 100,
+                    "y" : 100
+                },
+                {
+                    "x" : 200,
+                    "y" : 200
+                }
+            ]
+        }
+    ],
+    "air_units" : [
+        {
+            "name" : "helidrone",
+            "start" : {
+                "x" : 1,
+                "y" : 1
+            },
+            "finish" : {
+                "x" : 255,
+                "y" : 255
+            },
+            "control_points" : [
+                {
+                    "x" : 50,
+                    "y" : 150
+                },
+                {
+                    "x" : 150,
+                    "y" : 50
+                }
+            ]
+        }
+    ]
+}

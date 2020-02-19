@@ -1,0 +1,288 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="source\car_model\carlight.cpp" />
+    <ClCompile Include="source\car_model\carmove.cpp" />
+    <ClCompile Include="source\car_model\carsystem.cpp" />
+    <ClCompile Include="source\datatransfer\socket\ConnectionManager.cpp" />
+    <ClCompile Include="source\engine\engine.cpp" />
+    <ClCompile Include="source\engine\shader_processing\shaderunit.cpp" />
+    <ClCompile Include="source\engine\subsystems\ordermanager.cpp" />
+    <ClCompile Include="source\environment\environment.cpp" />
+    <ClCompile Include="source\environment\envlights.cpp" />
+    <ClCompile Include="source\library\cglApp.cpp" />
+    <ClCompile Include="source\library\cglD3D.cpp" />
+    <ClCompile Include="source\library\cglTimer.cpp" />
+    <ClCompile Include="source\main\main.cpp" />
+    <ClCompile Include="source\directxapp.cpp" />
+    <ClCompile Include="source\stdafx.cpp" />
+    <ClCompile Include="source\utils\camera.cpp" />
+    <ClCompile Include="source\utils\gmtr.cpp" />
+    <ClCompile Include="source\utils\infoboard.cpp" />
+    <ClCompile Include="source\utils\light.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="source\car_model\carlight.h" />
+    <ClInclude Include="source\car_model\carmove.h" />
+    <ClInclude Include="source\car_model\carsystem.h" />
+    <ClInclude Include="source\datatransfer\socket\ConnectionManager.h" />
+    <ClInclude Include="source\engine\engine.h" />
+    <ClInclude Include="source\engine\shader_processing\shaderunit.h" />
+    <ClInclude Include="source\engine\subsystems\ordermanager.h" />
+    <ClInclude Include="source\environment\environment.h" />
+    <ClInclude Include="source\environment\envlights.h" />
+    <ClInclude Include="source\library\cglApp.h" />
+    <ClInclude Include="source\library\cglD3D.h" />
+    <ClInclude Include="source\library\cglTimer.h" />
+    <ClInclude Include="source\directxapp.h" />
+    <ClInclude Include="source\stdafx.h" />
+    <ClInclude Include="source\typecluster.h" />
+    <ClInclude Include="source\utils\camera.h" />
+    <ClInclude Include="source\utils\gmtr.h" />
+    <ClInclude Include="source\utils\infoboard.h" />
+    <ClInclude Include="source\utils\light.h" />
+    <ClInclude Include="source\utils\utils.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <CopyFileToFolders Include="res\custom\Eightway.wpd">
+      <FileType>Document</FileType>
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)res\custom</DestinationFolders>
+    </CopyFileToFolders>
+    <None Include="res\custom\Testway (2).wpd">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </None>
+    <None Include="res\custom\Testway.wpd">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </None>
+    <None Include="res\models\17755_Audi_R8_ASCII.x">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </None>
+    <CopyFileToFolders Include="res\models\column.x">
+      <FileType>Document</FileType>
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)res\models</DestinationFolders>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="res\models\fw43_lowpoly_n1.x">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <FileType>Document</FileType>
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)res/models</DestinationFolders>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="res\models\Lamborghini.x">
+      <FileType>Document</FileType>
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)res\models</DestinationFolders>
+    </CopyFileToFolders>
+    <None Include="res\models\tera.x">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </None>
+    <CopyFileToFolders Include="res\models\tera_2.x">
+      <FileType>Document</FileType>
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)res\models</DestinationFolders>
+    </CopyFileToFolders>
+    <None Include="source\shader\Includes.inc" />
+    <None Include="source\utils\excdef.amlss" />
+    <None Include="source\utils\linetitle.hdrs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="source\environment\column_coordinates.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <CopyFileToFolders Include="source\shader\fx\ambient.fx">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <FileType>Document</FileType>
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)shader\fx</DestinationFolders>
+    </CopyFileToFolders>
+    <FxCompile Include="source\shader\fx\blinn_phong_sm20.fx">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="source\shader\fx\blinn_phong_sm30.fx">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="source\shader\fx\Empty.fx">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="source\shader\fx\MaterialShader20.fx">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="source\shader\fx\MaterialShader30.fx">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="source\shader\fx\PointLightMesh.fx">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="source\shader\fx\shader (2).fx">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="source\shader\fx\shader.fx">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </FxCompile>
+    <CopyFileToFolders Include="source\shader\fx\stn.fx">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <FileType>Document</FileType>
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)shader\fx</DestinationFolders>
+    </CopyFileToFolders>
+  </ItemGroup>
+  <ItemGroup>
+    <CopyFileToFolders Include="res\pct\texture_data\ground\ground_1226.jpg">
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)res/pct/texture_data/ground</DestinationFolders>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="res\pct\texture_data\ground\ground_1226_g.jpg">
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)res/pct/texture_data/ground</DestinationFolders>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="res\pct\texture_data\ground\ground_1226_j.jpg">
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)res/pct/texture_data/ground</DestinationFolders>
+    </CopyFileToFolders>
+  </ItemGroup>
+  <ItemGroup>
+    <CopyFileToFolders Include="res\pct\texture_data\house\door35.jpg">
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)res/pct/texture_data/house</DestinationFolders>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="res\pct\texture_data\house\fw42b.jpg">
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)res/pct/texture_data/house</DestinationFolders>
+    </CopyFileToFolders>
+  </ItemGroup>
+  <ItemGroup>
+    <CopyFileToFolders Include="res\pct\texture_data\house\leafs.jpg">
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)res/pct/texture_data/house</DestinationFolders>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="res\pct\texture_data\house\stoned.jpg">
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)res/pct/texture_data/house</DestinationFolders>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="res\pct\texture_data\house\Wall02.jpg">
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)res/pct/texture_data/house</DestinationFolders>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="res\pct\texture_data\house\wall1.jpg">
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)res/pct/texture_data/house</DestinationFolders>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="res\pct\texture_data\house\wall7.jpg">
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)res/pct/texture_data/house</DestinationFolders>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="res\pct\texture_data\house\window22.jpg">
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)res/pct/texture_data/house</DestinationFolders>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="res\pct\texture_data\house\wood_1B.jpg">
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)res/pct/texture_data/house</DestinationFolders>
+    </CopyFileToFolders>
+  </ItemGroup>
+  <ItemGroup>
+    <CopyFileToFolders Include="res\pct\texture_data\column\grass_3t.tga">
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)res/pct/texture_data/column</DestinationFolders>
+    </CopyFileToFolders>
+  </ItemGroup>
+  <ItemGroup>
+    <CopyFileToFolders Include="res\pct\texture_data\lamborghini\Lamborghini.tga">
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)res/pct/texture_data/lamborghini</DestinationFolders>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="res\pct\texture_data\lamborghini\Lamborghini_b.tga">
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)res/pct/texture_data/lamborghini</DestinationFolders>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="res\pct\texture_data\lamborghini\Lamborghini_r.tga">
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)res/pct/texture_data/lamborghini</DestinationFolders>
+    </CopyFileToFolders>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{699E6C93-0A29-4E41-AD9B-E1C9380AB73A}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>lab</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <IncludePath>%DXSDK_DIR%Include;$(IncludePath)</IncludePath>
+    <LibraryPath>%DXSDK_DIR%Lib\x86;$(LibraryPath)</LibraryPath>
+    <OutDir>$(SolutionDir)..\Bin\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)..\Bin\$(Platform)\Intermediate\$(ProjectName)\$(Configuration)\</IntDir>
+    <TargetName>$(ProjectName)</TargetName>
+    <CustomBuildAfterTargets />
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(SolutionDir)..\Bin\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)..\Bin\$(Platform)\Intermediate\$(ProjectName)\$(Configuration)\</IntDir>
+    <TargetName>$(ProjectName)</TargetName>
+    <LibraryPath>%DXSDK_DIR%Lib\x86;$(LibraryPath)</LibraryPath>
+    <IncludePath>%DXSDK_DIR%Include;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>source;$(SolutionDir)Include\source\;%(AdditionalIncludeDirectories);$(DXSDK_DIR)Include</AdditionalIncludeDirectories>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <MultiProcessorCompilation>false</MultiProcessorCompilation>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>d3dx9d.lib;d3d9.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(LibraryPath);$(DXSDK_DIR)Lib\x86</AdditionalLibraryDirectories>
+    </Link>
+    <FxCompile>
+      <EntryPointName>main</EntryPointName>
+      <ShaderModel>5.0</ShaderModel>
+    </FxCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>source;$(SolutionDir)Include\source\;%(AdditionalIncludeDirectories);$(DXSDK_DIR)Include</AdditionalIncludeDirectories>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>d3dx9.lib;d3d9.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(LibraryPath);$(DXSDK_DIR)Lib\x86</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

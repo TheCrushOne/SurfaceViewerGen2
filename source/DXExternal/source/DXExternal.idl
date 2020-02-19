@@ -1,0 +1,29 @@
+﻿// DXExternal.idl: источник библиотеки типов для DXExternal.exe
+
+// Этот файл будет обработан компилятором MIDL для создания
+// библиотека типов (DXExternal.tlb).
+
+[ uuid(8f4dcec7-0670-4a11-8b95-a145c46fcb75), version(1.0) ]
+library DXExternal
+{
+	importlib("stdole32.tlb");
+	importlib("stdole2.tlb");
+
+	//  Первичный интерфейс диспетчеризации для CDXExternalDoc
+
+	[ uuid(8735de3b-4678-4a53-a888-0532bc1ce282) ]
+	dispinterface IDXExternal
+	{
+		properties:
+
+		methods:
+	};
+
+	//  Сведения о классе CDXExternalDoc
+
+	[ uuid(2f181556-31b1-48ee-b102-36edde0eb55d) ]
+	coclass DXExternal
+	{
+		[default] dispinterface IDXExternal;
+	};
+};

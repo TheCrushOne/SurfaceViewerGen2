@@ -1,0 +1,17 @@
+﻿REGEDIT
+; Возможно, этот файл .REG используется программой установки.
+;   Если программа SETUP недоступна, записи, расположенные ниже, будут зарегистрированы
+;   в InitInstance автоматически с вызовом в
+;   CWinApp::RegisterShellFileTypes и COleObjectFactory::UpdateRegistryAll.
+
+
+HKEY_CLASSES_ROOT\DXExternal.Application = DXExternal Application
+
+
+HKEY_CLASSES_ROOT\DXExternal.Application\CLSID = {2f181556-31b1-48ee-b102-36edde0eb55d}
+
+HKEY_CLASSES_ROOT\CLSID\{2f181556-31b1-48ee-b102-36edde0eb55d} = DXExternal Application
+HKEY_CLASSES_ROOT\CLSID\{2f181556-31b1-48ee-b102-36edde0eb55d}\ProgId = DXExternal.Application
+
+
+HKEY_CLASSES_ROOT\CLSID\{2f181556-31b1-48ee-b102-36edde0eb55d}\LocalServer32 = DXExternal.EXE

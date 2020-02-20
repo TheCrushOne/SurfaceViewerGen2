@@ -1,0 +1,204 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="crossdllinterface">
+      <UniqueIdentifier>{87339221-2359-4b57-a715-8ef6f1f787cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="colreg">
+      <UniqueIdentifier>{48ed09eb-1f5a-45bf-a6d4-8d03915926e3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="colreg\ThirdParty">
+      <UniqueIdentifier>{c42bad8e-f2fb-4117-ab2a-ec0d38123955}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="colreg\ThirdParty\tinyxml2">
+      <UniqueIdentifier>{111ad133-35df-42c4-931e-f0f14db83a1d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="colreg\XmlProperties">
+      <UniqueIdentifier>{49bf598c-dd43-4bc8-8f0b-ec96d720380e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="common">
+      <UniqueIdentifier>{70df28d9-a660-40c3-898e-f6779c364a6d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SVCG">
+      <UniqueIdentifier>{4f1034f0-5d17-4ed0-ba9d-642337789804}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="math">
+      <UniqueIdentifier>{5f05ea15-9774-4a0f-a6ad-038771042131}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="source\crossdllinterface\SettingsSerializerInterface.h">
+      <Filter>crossdllinterface</Filter>
+    </ClInclude>
+    <ClInclude Include="source\crossdllinterface\UnitDataSerializerInterface.h">
+      <Filter>crossdllinterface</Filter>
+    </ClInclude>
+    <ClInclude Include="source\crossdllinterface\SurfaceInterfaces.h">
+      <Filter>crossdllinterface</Filter>
+    </ClInclude>
+    <ClInclude Include="source\crossdllinterface\TransceiverInterface.h">
+      <Filter>crossdllinterface</Filter>
+    </ClInclude>
+    <ClInclude Include="source\colreg\ThirdParty\dirent.h">
+      <Filter>colreg\ThirdParty</Filter>
+    </ClInclude>
+    <ClInclude Include="source\colreg\ThirdParty\tinyxml2\tinyxml2.h">
+      <Filter>colreg\ThirdParty\tinyxml2</Filter>
+    </ClInclude>
+    <ClInclude Include="source\colreg\XmlProperties\xml_property.h">
+      <Filter>colreg\XmlProperties</Filter>
+    </ClInclude>
+    <ClInclude Include="source\colreg\XmlProperties\xml_property_container.h">
+      <Filter>colreg\XmlProperties</Filter>
+    </ClInclude>
+    <ClInclude Include="source\colreg\BaseRef.h">
+      <Filter>colreg</Filter>
+    </ClInclude>
+    <ClInclude Include="source\colreg\BaseRefHolder.h">
+      <Filter>colreg</Filter>
+    </ClInclude>
+    <ClInclude Include="source\colreg\ChartSafetyInterface.h">
+      <Filter>colreg</Filter>
+    </ClInclude>
+    <ClInclude Include="source\colreg\ChartSafetyStructs.h">
+      <Filter>colreg</Filter>
+    </ClInclude>
+    <ClInclude Include="source\colreg\ColregHelper.h">
+      <Filter>colreg</Filter>
+    </ClInclude>
+    <ClInclude Include="source\colreg\ColregInterfaces.h">
+      <Filter>colreg</Filter>
+    </ClInclude>
+    <ClInclude Include="source\colreg\ColregSettings.h">
+      <Filter>colreg</Filter>
+    </ClInclude>
+    <ClInclude Include="source\colreg\ColregSimulation.h">
+      <Filter>colreg</Filter>
+    </ClInclude>
+    <ClInclude Include="source\colreg\CommonRefs.h">
+      <Filter>colreg</Filter>
+    </ClInclude>
+    <ClInclude Include="source\colreg\CommonStructs.h">
+      <Filter>colreg</Filter>
+    </ClInclude>
+    <ClInclude Include="source\colreg\DebugStructs.h">
+      <Filter>colreg</Filter>
+    </ClInclude>
+    <ClInclude Include="source\colreg\domain_utils.h">
+      <Filter>colreg</Filter>
+    </ClInclude>
+    <ClInclude Include="source\colreg\DomainInterface.h">
+      <Filter>colreg</Filter>
+    </ClInclude>
+    <ClInclude Include="source\colreg\DomainStructs.h">
+      <Filter>colreg</Filter>
+    </ClInclude>
+    <ClInclude Include="source\colreg\FileSystemHelper.h">
+      <Filter>colreg</Filter>
+    </ClInclude>
+    <ClInclude Include="source\colreg\GoodMarinePracticeSettings.h">
+      <Filter>colreg</Filter>
+    </ClInclude>
+    <ClInclude Include="source\colreg\MathModelInterface.h">
+      <Filter>colreg</Filter>
+    </ClInclude>
+    <ClInclude Include="source\colreg\MemoryBlock.h">
+      <Filter>colreg</Filter>
+    </ClInclude>
+    <ClInclude Include="source\colreg\MemoryOverload.h">
+      <Filter>colreg</Filter>
+    </ClInclude>
+    <ClInclude Include="source\colreg\ModelInterface.h">
+      <Filter>colreg</Filter>
+    </ClInclude>
+    <ClInclude Include="source\colreg\ModelStructs.h">
+      <Filter>colreg</Filter>
+    </ClInclude>
+    <ClInclude Include="source\colreg\ModuleGuard.h">
+      <Filter>colreg</Filter>
+    </ClInclude>
+    <ClInclude Include="source\colreg\PropertyInterface.h">
+      <Filter>colreg</Filter>
+    </ClInclude>
+    <ClInclude Include="source\colreg\ReleaseGuard.h">
+      <Filter>colreg</Filter>
+    </ClInclude>
+    <ClInclude Include="source\colreg\RouteModelSettings.h">
+      <Filter>colreg</Filter>
+    </ClInclude>
+    <ClInclude Include="source\colreg\SettingsSerializer.h">
+      <Filter>colreg</Filter>
+    </ClInclude>
+    <ClInclude Include="source\colreg\StateFullColregInterface.h">
+      <Filter>colreg</Filter>
+    </ClInclude>
+    <ClInclude Include="source\colreg\TinyFixedStack.h">
+      <Filter>colreg</Filter>
+    </ClInclude>
+    <ClInclude Include="source\colreg\WeatherInterface.h">
+      <Filter>colreg</Filter>
+    </ClInclude>
+    <ClInclude Include="source\colreg\XMLSettingsSerializer.h">
+      <Filter>colreg</Filter>
+    </ClInclude>
+    <ClInclude Include="source\common\settings.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="source\SVCG\route_point.h">
+      <Filter>SVCG</Filter>
+    </ClInclude>
+    <ClInclude Include="source\SVCG\geo_point.h">
+      <Filter>SVCG</Filter>
+    </ClInclude>
+    <ClInclude Include="source\common\base_class.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="source\common\utils.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="source\common\observer.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="source\common\coordinates.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="source\common\surface_base_types.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="source\common\file_storage.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="source\math\ellipse.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="source\math\intersect.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="source\math\math_utils.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="source\math\point.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="source\math\transform.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="source\SVCG\math_base_types.h">
+      <Filter>SVCG</Filter>
+    </ClInclude>
+    <ClInclude Include="source\colreg\Communicator.h">
+      <Filter>colreg</Filter>
+    </ClInclude>
+    <ClInclude Include="source\crossdllinterface\ConverterInterface.h">
+      <Filter>crossdllinterface</Filter>
+    </ClInclude>
+    <ClInclude Include="source\crossdllinterface\SVGMDatabaseInterface.h">
+      <Filter>crossdllinterface</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="source\colreg\ThirdParty\tinyxml2\tinyxml2.cpp">
+      <Filter>colreg\ThirdParty\tinyxml2</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

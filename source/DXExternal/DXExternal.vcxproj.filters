@@ -1,0 +1,132 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Исходные файлы">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Файлы заголовков">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Файлы ресурсов">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Исходные файлы\gui">
+      <UniqueIdentifier>{ff08dbc1-53c3-4922-b73b-21ed153bdd49}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Исходные файлы\gui\directx">
+      <UniqueIdentifier>{dde50e4b-4a67-400b-a24b-9bca540651b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Файлы заголовков\gui">
+      <UniqueIdentifier>{b9872e21-38de-4c38-968b-d7729ae711f6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Файлы заголовков\gui\directx">
+      <UniqueIdentifier>{5ff096ff-0e90-4f16-8c9b-4d86af2b7bbf}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="source\gui\directx\d3dutil.h">
+      <Filter>Файлы заголовков\gui\directx</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gui\directx\d3dwnd.h">
+      <Filter>Файлы заголовков\gui\directx</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gui\directx\dxutil.h">
+      <Filter>Файлы заголовков\gui\directx</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gui\directx\TArray.h">
+      <Filter>Файлы заголовков\gui\directx</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gui\directx\xd3d.h">
+      <Filter>Файлы заголовков\gui\directx</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gui\directx\xd3denum.h">
+      <Filter>Файлы заголовков\gui\directx</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gui\directx\xd3dsettings.h">
+      <Filter>Файлы заголовков\gui\directx</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gui\directx\xd3dutil.h">
+      <Filter>Файлы заголовков\gui\directx</Filter>
+    </ClInclude>
+    <ClInclude Include="source\framework.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Resource.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="source\stdafx.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="source\targetver.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="source\DlgProxy.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="source\DXExternal.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="source\DXExternalDlg.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="source\gui\directx\d3dutil.cpp">
+      <Filter>Исходные файлы\gui\directx</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gui\directx\d3dwnd.cpp">
+      <Filter>Исходные файлы\gui\directx</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gui\directx\dxutil.cpp">
+      <Filter>Исходные файлы\gui\directx</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gui\directx\xd3d.cpp">
+      <Filter>Исходные файлы\gui\directx</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gui\directx\xd3denum.cpp">
+      <Filter>Исходные файлы\gui\directx</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gui\directx\xd3dsettings.cpp">
+      <Filter>Исходные файлы\gui\directx</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gui\directx\xd3dutil.cpp">
+      <Filter>Исходные файлы\gui\directx</Filter>
+    </ClCompile>
+    <ClCompile Include="source\DXExternalDlg.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="source\stdafx.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="source\DlgProxy.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="source\DXExternal.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="DXExternal.reg" />
+    <None Include="res\DXExternal.rc2">
+      <Filter>Файлы ресурсов</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="DXExternal.rc">
+      <Filter>Файлы ресурсов</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\DXExternal.ico">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Midl Include="source\DXExternal.idl">
+      <Filter>Исходные файлы</Filter>
+    </Midl>
+  </ItemGroup>
+</Project>

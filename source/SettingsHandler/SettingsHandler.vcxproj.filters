@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="serializer">
+      <UniqueIdentifier>{61f6f7af-13fa-4eae-9542-ac2156fedd8a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="thirdparty">
+      <UniqueIdentifier>{fda0f46e-c707-4e51-a59a-130d6a556529}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="thirdparty\tinyxml">
+      <UniqueIdentifier>{15913a2d-0fc4-4947-8440-4dc8bb2ee05f}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="source\thirdparty\tinyxml\tinyxml2.cpp">
+      <Filter>thirdparty\tinyxml</Filter>
+    </ClCompile>
+    <ClCompile Include="source\serializer\JsonSerializer.cpp">
+      <Filter>serializer</Filter>
+    </ClCompile>
+    <ClCompile Include="source\serializer\XMLSettingsSerializer.cpp">
+      <Filter>serializer</Filter>
+    </ClCompile>
+    <ClCompile Include="source\stdafx.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="source\thirdparty\tinyxml\tinyxml2.h">
+      <Filter>thirdparty\tinyxml</Filter>
+    </ClInclude>
+    <ClInclude Include="source\serializer\JsonSerializer.h">
+      <Filter>serializer</Filter>
+    </ClInclude>
+    <ClInclude Include="source\serializer\XMLSettingsMeta.h">
+      <Filter>serializer</Filter>
+    </ClInclude>
+    <ClInclude Include="source\serializer\XMLSettingsSerializer.h">
+      <Filter>serializer</Filter>
+    </ClInclude>
+    <ClInclude Include="source\serializer\XMLSettingsStructs.h">
+      <Filter>serializer</Filter>
+    </ClInclude>
+    <ClInclude Include="source\stdafx.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+</Project>

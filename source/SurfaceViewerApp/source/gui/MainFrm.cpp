@@ -14,6 +14,10 @@
 #endif
 
 CMainFrame* pFrame;
+void user_interface::SetStatusBarText(const wchar_t* text)
+{
+   //pFrame->SetPanelText(text);
+}
 void user_interface::SetOutputText(OUTPUT_TYPE type, const char* text, COLORREF color, bool bold, bool italic)
 {
    if (strlen(text))

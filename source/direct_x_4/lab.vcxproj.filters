@@ -1,0 +1,304 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="library">
+      <UniqueIdentifier>{56e762b7-c244-4ba0-8d97-7e5d464e32c3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shader">
+      <UniqueIdentifier>{cb537ebf-e9c0-4e40-96b4-5f16d4e8b11f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="environment">
+      <UniqueIdentifier>{a4c28a98-3bbd-493e-8887-20f49403e9b3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="engine">
+      <UniqueIdentifier>{44fa9447-0f4c-42e0-8058-8220f05358ac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="engine\subsystems">
+      <UniqueIdentifier>{44662ab3-ac44-4001-9c3b-14bd8108160b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="engine\shader_processing">
+      <UniqueIdentifier>{c1687410-73f7-4e2d-aae9-5acf79affb13}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="car_model">
+      <UniqueIdentifier>{6c79aee0-de55-44d3-bc65-441aa8c21dda}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="utils">
+      <UniqueIdentifier>{e3e79de7-5b54-4d0b-ba2e-6740facf2772}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="main">
+      <UniqueIdentifier>{8343220f-d50e-4629-bd73-4716e54c9f3a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="res">
+      <UniqueIdentifier>{c3307704-242e-43e6-b9a2-1e705aa4d6f6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="res\custom">
+      <UniqueIdentifier>{9ee3089d-15cf-4056-ae98-5c12cdd7d3e3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="res\models">
+      <UniqueIdentifier>{9b7f0076-4a0b-4997-9b31-e2b187ac8fc8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="res\pct">
+      <UniqueIdentifier>{72c7e07f-34b1-4910-bb09-e4e46baf340b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shader\fx">
+      <UniqueIdentifier>{3c3203c9-29bd-4eb0-8c16-1697610a54cf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="res\pct\texture_data">
+      <UniqueIdentifier>{41a4cbf8-c0bf-4278-8a1f-98a154dd0146}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="res\pct\texture_data\ground">
+      <UniqueIdentifier>{400f7b79-9860-48f5-aba3-d4e81dfce218}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="res\pct\texture_data\house">
+      <UniqueIdentifier>{176784c0-dcf9-4578-a620-fbd4b9ddcf02}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="res\pct\texture_data\column">
+      <UniqueIdentifier>{a6c013ed-56c8-4775-be36-afea03dd9677}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="res\pct\texture_data\lamborghini">
+      <UniqueIdentifier>{c7c1e952-a86a-4f21-873b-99e4efb2dd7a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="datatransfer">
+      <UniqueIdentifier>{df160bfd-51bb-4726-a393-ef548cbdae5d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="datatransfer\socket">
+      <UniqueIdentifier>{1fcca951-6a21-486b-a71c-612a2a6f0b9e}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="source\library\cglApp.cpp">
+      <Filter>library</Filter>
+    </ClCompile>
+    <ClCompile Include="source\library\cglD3D.cpp">
+      <Filter>library</Filter>
+    </ClCompile>
+    <ClCompile Include="source\library\cglTimer.cpp">
+      <Filter>library</Filter>
+    </ClCompile>
+    <ClCompile Include="source\environment\environment.cpp">
+      <Filter>environment</Filter>
+    </ClCompile>
+    <ClCompile Include="source\environment\envlights.cpp">
+      <Filter>environment</Filter>
+    </ClCompile>
+    <ClCompile Include="source\engine\shader_processing\shaderunit.cpp">
+      <Filter>engine\shader_processing</Filter>
+    </ClCompile>
+    <ClCompile Include="source\engine\engine.cpp">
+      <Filter>engine</Filter>
+    </ClCompile>
+    <ClCompile Include="source\car_model\carlight.cpp">
+      <Filter>car_model</Filter>
+    </ClCompile>
+    <ClCompile Include="source\car_model\carmove.cpp">
+      <Filter>car_model</Filter>
+    </ClCompile>
+    <ClCompile Include="source\car_model\carsystem.cpp">
+      <Filter>car_model</Filter>
+    </ClCompile>
+    <ClCompile Include="source\utils\camera.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="source\utils\infoboard.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="source\utils\light.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="source\main\main.cpp">
+      <Filter>main</Filter>
+    </ClCompile>
+    <ClCompile Include="source\utils\gmtr.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="source\directxapp.cpp" />
+    <ClCompile Include="source\engine\subsystems\ordermanager.cpp">
+      <Filter>engine\subsystems</Filter>
+    </ClCompile>
+    <ClCompile Include="source\datatransfer\socket\ConnectionManager.cpp">
+      <Filter>datatransfer\socket</Filter>
+    </ClCompile>
+    <ClCompile Include="source\stdafx.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="source\library\cglApp.h">
+      <Filter>library</Filter>
+    </ClInclude>
+    <ClInclude Include="source\library\cglD3D.h">
+      <Filter>library</Filter>
+    </ClInclude>
+    <ClInclude Include="source\library\cglTimer.h">
+      <Filter>library</Filter>
+    </ClInclude>
+    <ClInclude Include="source\environment\environment.h">
+      <Filter>environment</Filter>
+    </ClInclude>
+    <ClInclude Include="source\environment\envlights.h">
+      <Filter>environment</Filter>
+    </ClInclude>
+    <ClInclude Include="source\engine\shader_processing\shaderunit.h">
+      <Filter>engine\shader_processing</Filter>
+    </ClInclude>
+    <ClInclude Include="source\engine\engine.h">
+      <Filter>engine</Filter>
+    </ClInclude>
+    <ClInclude Include="source\car_model\carlight.h">
+      <Filter>car_model</Filter>
+    </ClInclude>
+    <ClInclude Include="source\car_model\carmove.h">
+      <Filter>car_model</Filter>
+    </ClInclude>
+    <ClInclude Include="source\car_model\carsystem.h">
+      <Filter>car_model</Filter>
+    </ClInclude>
+    <ClInclude Include="source\utils\camera.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="source\utils\infoboard.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="source\utils\light.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="source\utils\utils.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="source\utils\gmtr.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="source\typecluster.h" />
+    <ClInclude Include="source\directxapp.h" />
+    <ClInclude Include="source\engine\subsystems\ordermanager.h">
+      <Filter>engine\subsystems</Filter>
+    </ClInclude>
+    <ClInclude Include="source\datatransfer\socket\ConnectionManager.h">
+      <Filter>datatransfer\socket</Filter>
+    </ClInclude>
+    <ClInclude Include="source\stdafx.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="source\shader\Includes.inc">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="source\utils\excdef.amlss">
+      <Filter>utils</Filter>
+    </None>
+    <None Include="source\utils\linetitle.hdrs">
+      <Filter>utils</Filter>
+    </None>
+    <None Include="res\models\17755_Audi_R8_ASCII.x">
+      <Filter>res\models</Filter>
+    </None>
+    <None Include="res\models\tera.x">
+      <Filter>res\models</Filter>
+    </None>
+    <None Include="res\custom\Testway (2).wpd">
+      <Filter>res\custom</Filter>
+    </None>
+    <None Include="res\custom\Testway.wpd">
+      <Filter>res\custom</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="source\environment\column_coordinates.txt">
+      <Filter>environment</Filter>
+    </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="source\shader\fx\blinn_phong_sm20.fx">
+      <Filter>shader\fx</Filter>
+    </FxCompile>
+    <FxCompile Include="source\shader\fx\blinn_phong_sm30.fx">
+      <Filter>shader\fx</Filter>
+    </FxCompile>
+    <FxCompile Include="source\shader\fx\Empty.fx">
+      <Filter>shader\fx</Filter>
+    </FxCompile>
+    <FxCompile Include="source\shader\fx\MaterialShader20.fx">
+      <Filter>shader\fx</Filter>
+    </FxCompile>
+    <FxCompile Include="source\shader\fx\MaterialShader30.fx">
+      <Filter>shader\fx</Filter>
+    </FxCompile>
+    <FxCompile Include="source\shader\fx\PointLightMesh.fx">
+      <Filter>shader\fx</Filter>
+    </FxCompile>
+    <FxCompile Include="source\shader\fx\shader (2).fx">
+      <Filter>shader\fx</Filter>
+    </FxCompile>
+    <FxCompile Include="source\shader\fx\shader.fx">
+      <Filter>shader\fx</Filter>
+    </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CopyFileToFolders Include="source\shader\fx\ambient.fx">
+      <Filter>shader\fx</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="source\shader\fx\stn.fx">
+      <Filter>shader\fx</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="res\models\column.x">
+      <Filter>res\models</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="res\models\Lamborghini.x">
+      <Filter>res\models</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="res\models\tera_2.x">
+      <Filter>res\models</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="res\models\fw43_lowpoly_n1.x">
+      <Filter>res\models</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="res\custom\Eightway.wpd">
+      <Filter>res\custom</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="res\pct\texture_data\ground\ground_1226.jpg">
+      <Filter>res\pct\texture_data\ground</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="res\pct\texture_data\ground\ground_1226_g.jpg">
+      <Filter>res\pct\texture_data\ground</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="res\pct\texture_data\ground\ground_1226_j.jpg">
+      <Filter>res\pct\texture_data\ground</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="res\pct\texture_data\house\door35.jpg">
+      <Filter>res\pct\texture_data\house</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="res\pct\texture_data\house\fw42b.jpg">
+      <Filter>res\pct\texture_data\house</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="res\pct\texture_data\house\leafs.jpg">
+      <Filter>res\pct\texture_data\house</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="res\pct\texture_data\house\stoned.jpg">
+      <Filter>res\pct\texture_data\house</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="res\pct\texture_data\house\wall1.jpg">
+      <Filter>res\pct\texture_data\house</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="res\pct\texture_data\house\Wall02.jpg">
+      <Filter>res\pct\texture_data\house</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="res\pct\texture_data\house\wall7.jpg">
+      <Filter>res\pct\texture_data\house</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="res\pct\texture_data\house\window22.jpg">
+      <Filter>res\pct\texture_data\house</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="res\pct\texture_data\house\wood_1B.jpg">
+      <Filter>res\pct\texture_data\house</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="res\pct\texture_data\column\grass_3t.tga">
+      <Filter>res\pct\texture_data\column</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="res\pct\texture_data\lamborghini\Lamborghini.tga">
+      <Filter>res\pct\texture_data\lamborghini</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="res\pct\texture_data\lamborghini\Lamborghini_b.tga">
+      <Filter>res\pct\texture_data\lamborghini</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="res\pct\texture_data\lamborghini\Lamborghini_r.tga">
+      <Filter>res\pct\texture_data\lamborghini</Filter>
+    </CopyFileToFolders>
+  </ItemGroup>
+</Project>

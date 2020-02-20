@@ -128,11 +128,11 @@ namespace colreg
       char         probability = 0;          ///< Вероятность наступления события-предупреждения
    };
 
-   struct colreg_paths
-   {
-      const char* data_path = nullptr;       ///< Путь к папке ColregData (если не задан, то рядом с бинарником)
-      const char* log_path = nullptr;        ///< Путь к папке логов (если не задан - то ColregData\CallLogs)
-   };
+   //struct colreg_paths
+   //{
+   //   const char* data_path = nullptr;       ///< Путь к папке ColregData (если не задан, то рядом с бинарником)
+   //   const char* log_path = nullptr;        ///< Путь к папке логов (если не задан - то ColregData\CallLogs)
+   //};
 
    using warnings_ref            = base_ref<ship_warning>;
    using ids_ref                 = base_ref<id_type>;
@@ -244,78 +244,78 @@ namespace colreg
    };
 
 
-   struct iColreg : iReleasable
-   {
-      virtual void SetCommunicator(ICommunicator* comm) = 0;
+   //struct iColreg : iReleasable
+   //{
+   //   virtual void SetCommunicator(ICommunicator* comm) = 0;
 
-      //! Установить реализацию для интерфейса iChartSafetyCheck
-      virtual void SetMapSafetyInterface(const iChartSafetyCheck* chartData) = 0;
+   //   //! Установить реализацию для интерфейса iChartSafetyCheck
+   //   virtual void SetMapSafetyInterface(const iChartSafetyCheck* chartData) = 0;
 
-      //! Установить реализацию для интерфейса iWeatherInfluence
-      virtual void SetWeatherInfluenceInterface(const iWeatherInfluence* weather) = 0;
+   //   //! Установить реализацию для интерфейса iWeatherInfluence
+   //   virtual void SetWeatherInfluenceInterface(const iWeatherInfluence* weather) = 0;
 
-      //! Получить корневой элемент, который будет заполняться дебажной информацией
-      virtual dbg::iDebugInfo* GetDebugInfo() = 0;
+   //   //! Получить корневой элемент, который будет заполняться дебажной информацией
+   //   virtual dbg::iDebugInfo* GetDebugInfo() = 0;
 
-      //! Установить путь к папке ColregData
-      virtual void SetColregDataPath(const colreg_paths& paths) = 0;
+   //   //! Установить путь к папке ColregData
+   //   virtual void SetColregDataPath(const colreg_paths& paths) = 0;
 
-      /*!
-      Настроить окружающую среду
-      \param[in] points Район для настроек (nullptr - использовать везде)
-      */
-      virtual void SetEnvironment(const environment& env, const geo_point* points, size_t size) = 0;
+   //   /*!
+   //   Настроить окружающую среду
+   //   \param[in] points Район для настроек (nullptr - использовать везде)
+   //   */
+   //   virtual void SetEnvironment(const environment& env, const geo_point* points, size_t size) = 0;
 
-      /*!
-      Установить настройки colreg
-      \param[in] points Район для настроек (nullptr - использовать везде)
-      */
-      virtual void SetSettings(const settings& s, const geo_point* points, size_t size) = 0;
+   //   /*!
+   //   Установить настройки colreg
+   //   \param[in] points Район для настроек (nullptr - использовать везде)
+   //   */
+   //   virtual void SetSettings(const settings& s, const geo_point* points, size_t size) = 0;
 
-      /*!
-      Установить данные по кораблю
-      \return Точка проекции позиции корабля на маршрут, с устаневленным временем нахождения на маршруте от его начала
-      */
-      virtual track_point_info SetShipData(const ship_info& info, const track_point_info& moveInfo) = 0;
-      
-      //! Установить ID корабля на котором работает colreg
-      virtual void SetOwnShipID(id_type ownShipId) = 0;
+   //   /*!
+   //   Установить данные по кораблю
+   //   \return Точка проекции позиции корабля на маршрут, с устаневленным временем нахождения на маршруте от его начала
+   //   */
+   //   virtual track_point_info SetShipData(const ship_info& info, const track_point_info& moveInfo) = 0;
+   //   
+   //   //! Установить ID корабля на котором работает colreg
+   //   virtual void SetOwnShipID(id_type ownShipId) = 0;
 
-      virtual void RemoveShip(id_type shipId) = 0;
+   //   virtual void RemoveShip(id_type shipId) = 0;
 
-      virtual void RemoveAllShips() = 0;
+   //   virtual void RemoveAllShips() = 0;
 
-      //! Установить траекторию для корабля с заданным ID
-      virtual bool SetPrediction(id_type shipId, const track_point_info* points, size_t size) = 0;
+   //   //! Установить траекторию для корабля с заданным ID
+   //   virtual bool SetPrediction(id_type shipId, const track_point_info* points, size_t size) = 0;
 
-      //! Установить маршрут для корабля с заданным ID
-      virtual bool SetRoute(id_type shipId, const route_point* points, size_t size, ROUTE_TYPE flag = ROUTE_TYPE::RT_MAIN ) = 0;
+   //   //! Установить маршрут для корабля с заданным ID
+   //   virtual bool SetRoute(id_type shipId, const route_point* points, size_t size, ROUTE_TYPE flag = ROUTE_TYPE::RT_MAIN ) = 0;
 
-      //! Установить модель для корабля с заданным ID
-      virtual void SetShipModelById(id_type shipId, const char* modelName) = 0;
+   //   //! Установить модель для корабля с заданным ID
+   //   virtual void SetShipModelById(id_type shipId, const char* modelName) = 0;
 
-      // ! Получить модель корабля с заданным ID
-      virtual const char* GetShipModelNameById(id_type shipId) const = 0;
+   //   // ! Получить модель корабля с заданным ID
+   //   virtual const char* GetShipModelNameById(id_type shipId) const = 0;
 
-      //! Обработать навигационную обстановку
-      virtual iNavEstimation* EstimateNavState(double time)  = 0;
+   //   //! Обработать навигационную обстановку
+   //   virtual iNavEstimation* EstimateNavState(double time)  = 0;
 
-      //! Получить модель корабля с заданным ID
-      virtual const iModel* GetModel(id_type shipId) const = 0;
+   //   //! Получить модель корабля с заданным ID
+   //   virtual const iModel* GetModel(id_type shipId) const = 0;
 
-      //! Получить домен безопасности
-      virtual iDomain* GetDomain(id_type shipId) const = 0;
+   //   //! Получить домен безопасности
+   //   virtual iDomain* GetDomain(id_type shipId) const = 0;
 
-      /*!
-      Получить топологию домена безопасности
-      \param[in] shipId Идентификатор корабля
-      \param[in] time Сдвиг в секундах от текущей позиции
-      */
-      virtual const domain_geometry_ref* GetDomainTopology(id_type shipId, double time) const = 0;
+   //   /*!
+   //   Получить топологию домена безопасности
+   //   \param[in] shipId Идентификатор корабля
+   //   \param[in] time Сдвиг в секундах от текущей позиции
+   //   */
+   //   virtual const domain_geometry_ref* GetDomainTopology(id_type shipId, double time) const = 0;
 
-      //! Получить расширенный интерфейс для взаимодействия с STATE-FULL моделью COLREG
-      virtual statefull::iStateFullExtention* GetStateFullExtension() = 0;
-   };
+   //   //! Получить расширенный интерфейс для взаимодействия с STATE-FULL моделью COLREG
+   //   virtual statefull::iStateFullExtention* GetStateFullExtension() = 0;
+   //};
 
 #pragma pack (pop)
 }
@@ -326,5 +326,5 @@ namespace colreg
 #define EXPRTIMPRT __declspec(dllimport) // import DLL information
 #endif
 
-extern "C" EXPRTIMPRT colreg::iColreg* __cdecl CreateColreg(const colreg::colreg_paths* paths, const colreg::iModelManager* modelManager, colreg::COLREG_MODE colregMode);
-extern "C" EXPRTIMPRT colreg::iColreg* __cdecl CreateRawColreg(const colreg::colreg_paths* paths, const colreg::iModelManager* modelManager, colreg::COLREG_MODE colregMode);
+//extern "C" EXPRTIMPRT colreg::iColreg* __cdecl CreateColreg(const colreg::colreg_paths* paths, const colreg::iModelManager* modelManager, colreg::COLREG_MODE colregMode);
+//extern "C" EXPRTIMPRT colreg::iColreg* __cdecl CreateRawColreg(const colreg::colreg_paths* paths, const colreg::iModelManager* modelManager, colreg::COLREG_MODE colregMode);

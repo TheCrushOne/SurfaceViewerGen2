@@ -273,6 +273,7 @@
     <ClInclude Include="source\gui\tools\RulerTool.h" />
     <ClInclude Include="source\gui\user_interface.h" />
     <ClInclude Include="source\gui\ViewTree.h" />
+    <ClInclude Include="source\gui\WndCommunicator.h" />
     <ClInclude Include="source\render\GDIRender.h" />
     <ClInclude Include="source\render\Render.h" />
     <ClInclude Include="source\Resource.h" />

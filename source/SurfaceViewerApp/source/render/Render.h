@@ -119,4 +119,4 @@ namespace render
       virtual std::vector<colreg::id_type> GetStaticIds() const = 0;
       virtual const math::geo_point* GetStaticCenterId(colreg::id_type id) const = 0;
    };
-}
+};

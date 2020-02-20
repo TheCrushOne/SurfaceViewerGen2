@@ -6,7 +6,7 @@
 #include "Layers\UnitLayer.h"
 //#include "Layers\NaveStateLayer.h"
 #include "MainFrm.h"
-//#include "Colreg\simulator.h"
+#include "simulator\simulator.h"
 //#include "Selection\SelectetObjectManager.h"
 #include "scenario\ScenarioManager.h"
 

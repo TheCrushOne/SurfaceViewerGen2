@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="RobotLogPlayer">
+      <UniqueIdentifier>{b86ed40d-239e-45f7-87fd-4ffdfb2ecae4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="RobotScenarioPlayer">
+      <UniqueIdentifier>{0632fd4c-ede2-4f00-b7cd-96277f225df0}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="source\RobotScenarioPlayer\RobotScenarioPlayer.cpp">
+      <Filter>RobotScenarioPlayer</Filter>
+    </ClCompile>
+    <ClCompile Include="source\RobotLogPlayer\RobotLogPlayer.cpp">
+      <Filter>RobotLogPlayer</Filter>
+    </ClCompile>
+    <ClCompile Include="source\SimulatorBase.cpp" />
+    <ClCompile Include="source\stdafx.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="source\RobotScenarioPlayer\RobotScenarioPlayer.h">
+      <Filter>RobotScenarioPlayer</Filter>
+    </ClInclude>
+    <ClInclude Include="source\RobotLogPlayer\RobotLogPlayer.h">
+      <Filter>RobotLogPlayer</Filter>
+    </ClInclude>
+    <ClInclude Include="source\SimulatorBase.h" />
+    <ClInclude Include="source\stdafx.h" />
+  </ItemGroup>
+</Project>

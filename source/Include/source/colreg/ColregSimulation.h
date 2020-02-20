@@ -309,10 +309,10 @@ namespace ColregSimulation
       //virtual const char* GetSimulationTimeStr() const = 0;
    };
 
-   struct simulation_paths : colreg::colreg_paths
+   struct simulation_paths
    {
-      const char* scenario_path = nullptr; ///< Путь к сценарию (txt, crg)
-      const char* scenario_data_path = nullptr; ///< Путь по которому будут складываться данные сценария
+      const char* scenario_path = nullptr; ///< Путь к сценарию (png, svgm)
+      const char* scenario_result_path = nullptr; ///< Путь по которому будут складываться данные сценария
    };
 
    struct iSimulatorManager : colreg::iReleasable

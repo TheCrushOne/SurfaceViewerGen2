@@ -13,7 +13,7 @@ iMouseToolPtr create_mouse_tool(EDIT_MODE type, render::iRender* renderer, unsig
    case EDIT_MODE::EM_EDIT:
    case EDIT_MODE::EM_DRAG:      return std::make_unique<DragTool>(renderer);
    case EDIT_MODE::EM_MEASURMENT:return std::make_unique<RulerTool>(renderer);
-   case EDIT_MODE::EM_CREATE:    return std::make_unique<CreateObjectTool>(renderer, static_cast<colreg::OBJECT_TYPE>(userData));
+   case EDIT_MODE::EM_CREATE:    return std::make_unique<CreateObjectTool>(renderer/*, static_cast<colreg::OBJECT_TYPE>(userData)*/);
    }
    ATLASSERT("NOT IMPLEMENTED!!!");
    return std::make_unique<DragTool>(renderer);

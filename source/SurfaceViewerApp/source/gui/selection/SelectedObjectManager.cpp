@@ -4,6 +4,7 @@
 #include "selectedroute.h"
 #include "SelectedChartObject.h"
 #include "ScenarioProperties.h"
+#include "gui/user_interface.h"
 
 std::vector< SelectObjectObserver* >AutoContainer< SelectObjectObserver>::_objects;
 

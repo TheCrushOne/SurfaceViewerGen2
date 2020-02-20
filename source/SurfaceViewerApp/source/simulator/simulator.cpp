@@ -1,13 +1,15 @@
 #include "stdafx.h"
 #include "Simulator.h"
-//#include "WndCommunicator.h"
+#include "gui/WndCommunicator.h"
 //#include "TTCG\Common\FileSystem\Path.h"
 #include "gui/layers/RenderLayers.h"
-#include "crossdllinterface\SimulatorManagerInterface.h"
+//#include "crossdllinterface\SimulatorManagerInterface.h"
 
 namespace
 {
-   colreg::ModuleGuard<surface_simulation::iSimulatorManager> _simMgr;
+   colreg::ModuleGuard<ColregSimulation::iSimulatorManager> _simMgr;
+   std::unique_ptr<CommunicatorWnd> comm(new CommunicatorWnd);
+   ColregSimulation::iSimulator* _simulator = nullptr;
 
    bool createSimulationManager()
    {
@@ -17,16 +19,14 @@ namespace
       }
       //const fpath simulatorPath = fpath::get_module_folder().append("ColregSimulation.dll");
       auto simmgr = _simMgr.Create(SVGUtils::CurrentDllPath("SettingsHandler").c_str(), "CreateSimulationManager");
-      _simMgr->Init(/*comm.get(), LayersContainer::GetLayerProperties()*/);
+      _simMgr->Init(comm.get(), LayersContainer::GetLayerProperties());
       return simmgr;
    }
 }
 
 namespace simulator
 {
-   surface_simulation::iSimulator* _simulator = nullptr;
-
-   surface_simulation::iSimulator* getSimulator()
+   ColregSimulation::iSimulator* getSimulator()
    {
       return _simulator;
    }
@@ -45,9 +45,12 @@ namespace simulator
 
       simulatorStop();
 
+      ColregSimulation::simulation_paths p;
+      p.scenario_path = fileName;
+
       _simulator = nullptr;
 
-      _simulator = _simMgr->Get(fileName);
+      _simulator = _simMgr->Get(p);
 
       ATLASSERT(_simulator);
 
@@ -89,5 +92,28 @@ namespace simulator
       //      return false;
       //}
       return true;
+   }
+
+   colreg::geo_point getCenter()
+   {
+      colreg::geo_point center{ 0., 0. };
+      if (!_simulator)
+         return center;
+
+      /*const auto& simulationState = _simulator->GetState();
+
+      const auto count = simulationState.GetShipCount();
+      if (count == 0)
+         return center;
+      for (size_t iShip = 0; iShip < count; ++iShip)
+      {
+         center.lat += simulationState.GetShip(iShip).GetPos().point.pos.lat;
+         center.lon += simulationState.GetShip(iShip).GetPos().point.pos.lon;
+      }
+
+      center.lat /= count;
+      center.lon /= count;*/
+
+      return center;
    }
 }

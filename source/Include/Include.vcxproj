@@ -29,6 +29,7 @@
     <ClInclude Include="source\colreg\ColregSimulation.h" />
     <ClInclude Include="source\colreg\CommonRefs.h" />
     <ClInclude Include="source\colreg\CommonStructs.h" />
+    <ClInclude Include="source\colreg\Communicator.h" />
     <ClInclude Include="source\colreg\DebugStructs.h" />
     <ClInclude Include="source\colreg\DomainInterface.h" />
     <ClInclude Include="source\colreg\DomainStructs.h" />
@@ -60,8 +61,10 @@
     <ClInclude Include="source\common\settings.h" />
     <ClInclude Include="source\common\surface_base_types.h" />
     <ClInclude Include="source\common\utils.h" />
+    <ClInclude Include="source\crossdllinterface\ConverterInterface.h" />
     <ClInclude Include="source\crossdllinterface\SettingsSerializerInterface.h" />
     <ClInclude Include="source\crossdllinterface\SurfaceInterfaces.h" />
+    <ClInclude Include="source\crossdllinterface\SVGMDatabaseInterface.h" />
     <ClInclude Include="source\crossdllinterface\TransceiverInterface.h" />
     <ClInclude Include="source\crossdllinterface\UnitDataSerializerInterface.h" />
     <ClInclude Include="source\math\ellipse.h" />

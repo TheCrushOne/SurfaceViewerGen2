@@ -1,0 +1,408 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Файлы ресурсов">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="gui">
+      <UniqueIdentifier>{d048df56-c1a8-4d3e-997a-30b0677c75ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="scenario">
+      <UniqueIdentifier>{a85937a2-0363-4ad8-82c5-901e8c40f9cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="gui\graph2d">
+      <UniqueIdentifier>{1da6090a-3f52-4b17-bb7c-8ff31995f14d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="gui\layers">
+      <UniqueIdentifier>{8f699dfa-bc31-4f52-ba10-82c1d8ec1968}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="gui\modal">
+      <UniqueIdentifier>{204c8c13-316b-4405-881d-edf49ed76036}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="gui\properties">
+      <UniqueIdentifier>{a22d4147-e474-4fbd-856e-934e25f928af}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="render">
+      <UniqueIdentifier>{77e63620-d6fd-4e7b-8266-1849cbe5e366}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="gui\tools">
+      <UniqueIdentifier>{12f49981-e5da-4faa-a8a3-10546a7e598b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="gui\selection">
+      <UniqueIdentifier>{07df6ba9-d38e-45e5-87e4-6cf73ae2ca19}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="simulator">
+      <UniqueIdentifier>{43548e99-e7f6-4bee-9ba9-48a483a2a237}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="SurfaceViewerGen2.rc">
+      <Filter>Файлы ресурсов</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\file_view.ico">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="res\file_view_hc.ico">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="res\class_view.ico">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="res\class_view_hc.ico">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="res\fileview.bmp">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="res\fileview_hc.bmp">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="res\classview.bmp">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="res\classview_hc.bmp">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="res\explorer.bmp">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="res\explorer_hc.bmp">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="res\sort.bmp">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="res\sort_hc.bmp">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="res\menuimages.bmp">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="res\menuimages_hc.bmp">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="res\output_wnd.ico">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="res\output_wnd_hc.ico">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="res\properties_wnd.ico">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="res\properties_wnd_hc.ico">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="res\properties.bmp">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="res\properties_hc.bmp">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="res\userimages.bmp">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="res\SurfaceViewerGen2Doc.ico">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="res\SurfaceViewerGen2.ico">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="res\Toolbar.bmp">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="res\Toolbar256.bmp">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\SurfaceViewerGen2.rc2">
+      <Filter>Файлы ресурсов</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="source\framework.h" />
+    <ClInclude Include="source\Resource.h" />
+    <ClInclude Include="source\stdafx.h" />
+    <ClInclude Include="source\SurfaceViewerGen2.h" />
+    <ClInclude Include="source\SurfaceViewerGen2Doc.h" />
+    <ClInclude Include="source\SurfaceViewerGen2View.h" />
+    <ClInclude Include="source\targetver.h" />
+    <ClInclude Include="source\gui\ClassView.h">
+      <Filter>gui</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gui\CModalDirectX.h">
+      <Filter>gui</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gui\FileView.h">
+      <Filter>gui</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gui\MainFrm.h">
+      <Filter>gui</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gui\OutputWnd.h">
+      <Filter>gui</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gui\ViewTree.h">
+      <Filter>gui</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gui\graph2d\coords.h">
+      <Filter>gui\graph2d</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gui\graph2d\f2doff.h">
+      <Filter>gui\graph2d</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gui\graph2d\gen_prop_dlgs.h">
+      <Filter>gui\graph2d</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gui\graph2d\graph_general.h">
+      <Filter>gui\graph2d</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gui\graph2d\graph_props.h">
+      <Filter>gui\graph2d</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gui\graph2d\graphcombobox.h">
+      <Filter>gui\graph2d</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gui\graph2d\GraphContainer.h">
+      <Filter>gui\graph2d</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gui\graph2d\GraphFrame.h">
+      <Filter>gui\graph2d</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gui\graph2d\graphpanel.h">
+      <Filter>gui\graph2d</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gui\graph2d\GraphWnd.h">
+      <Filter>gui\graph2d</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gui\graph2d\gruler.h">
+      <Filter>gui\graph2d</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gui\graph2d\points.h">
+      <Filter>gui\graph2d</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gui\graph2d\pviewbar.h">
+      <Filter>gui\graph2d</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gui\graph2d\sizecbar.h">
+      <Filter>gui\graph2d</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gui\layers\RenderLayers.h">
+      <Filter>gui\layers</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gui\layers\UnitLayer.h">
+      <Filter>gui\layers</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gui\modal\modalframe.h">
+      <Filter>gui\modal</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gui\modal\TestFrame.h">
+      <Filter>gui\modal</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gui\modal\TestView.h">
+      <Filter>gui\modal</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gui\properties\PropComboBox.h">
+      <Filter>gui\properties</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gui\properties\PropertiesCtrl.h">
+      <Filter>gui\properties</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gui\properties\PropertiesWnd.h">
+      <Filter>gui\properties</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gui\properties\PropertiesWndBase.h">
+      <Filter>gui\properties</Filter>
+    </ClInclude>
+    <ClInclude Include="source\scenario\ScenarioManager.h">
+      <Filter>scenario</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gui\user_interface.h">
+      <Filter>gui</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gui\ScenarioView.h">
+      <Filter>gui</Filter>
+    </ClInclude>
+    <ClInclude Include="source\render\GDIRender.h">
+      <Filter>render</Filter>
+    </ClInclude>
+    <ClInclude Include="source\render\Render.h">
+      <Filter>render</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gui\tools\MouseTool.h">
+      <Filter>gui\tools</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gui\tools\CreateObjectTool.h">
+      <Filter>gui\tools</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gui\tools\DragTool.h">
+      <Filter>gui\tools</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gui\tools\RulerTool.h">
+      <Filter>gui\tools</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gui\selection\property.h">
+      <Filter>gui\selection</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gui\selection\property_helper.h">
+      <Filter>gui\selection</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gui\selection\PropertyInterface.h">
+      <Filter>gui\selection</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gui\selection\SelectedRoute.h">
+      <Filter>gui\selection</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gui\selection\ScenarioProperties.h">
+      <Filter>gui\selection</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gui\selection\SelectedObjectManager.h">
+      <Filter>gui\selection</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gui\selection\SelectedChartObject.h">
+      <Filter>gui\selection</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gui\layers\RenderHelper.h">
+      <Filter>gui\layers</Filter>
+    </ClInclude>
+    <ClInclude Include="source\simulator\simulator.h">
+      <Filter>simulator</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gui\WndCommunicator.h">
+      <Filter>gui</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="source\stdafx.cpp" />
+    <ClCompile Include="source\SurfaceViewerGen2.cpp" />
+    <ClCompile Include="source\SurfaceViewerGen2Doc.cpp" />
+    <ClCompile Include="source\SurfaceViewerGen2View.cpp" />
+    <ClCompile Include="source\gui\ClassView.cpp">
+      <Filter>gui</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gui\CModalDirectX.cpp">
+      <Filter>gui</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gui\FileView.cpp">
+      <Filter>gui</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gui\MainFrm.cpp">
+      <Filter>gui</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gui\OutputWnd.cpp">
+      <Filter>gui</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gui\ViewTree.cpp">
+      <Filter>gui</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gui\graph2d\coords.cpp">
+      <Filter>gui\graph2d</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gui\graph2d\f2doff.cpp">
+      <Filter>gui\graph2d</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gui\graph2d\gen_prop_dlgs.cpp">
+      <Filter>gui\graph2d</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gui\graph2d\graph_general.cpp">
+      <Filter>gui\graph2d</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gui\graph2d\graph_props.cpp">
+      <Filter>gui\graph2d</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gui\graph2d\graphcombobox.cpp">
+      <Filter>gui\graph2d</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gui\graph2d\GraphContainer.cpp">
+      <Filter>gui\graph2d</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gui\graph2d\GraphFrame.cpp">
+      <Filter>gui\graph2d</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gui\graph2d\graphpanel.cpp">
+      <Filter>gui\graph2d</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gui\graph2d\GraphWnd.cpp">
+      <Filter>gui\graph2d</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gui\graph2d\gruler.cpp">
+      <Filter>gui\graph2d</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gui\graph2d\points.cpp">
+      <Filter>gui\graph2d</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gui\graph2d\pviewbar.cpp">
+      <Filter>gui\graph2d</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gui\graph2d\sizecbar.cpp">
+      <Filter>gui\graph2d</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gui\layers\UnitLayer.cpp">
+      <Filter>gui\layers</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gui\modal\modalframe.cpp">
+      <Filter>gui\modal</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gui\modal\TestFrame.cpp">
+      <Filter>gui\modal</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gui\modal\TestView.cpp">
+      <Filter>gui\modal</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gui\properties\PropComboBox.cpp">
+      <Filter>gui\properties</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gui\properties\PropertiesCtrl.cpp">
+      <Filter>gui\properties</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gui\properties\PropertiesWnd.cpp">
+      <Filter>gui\properties</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gui\properties\PropertiesWndBase.cpp">
+      <Filter>gui\properties</Filter>
+    </ClCompile>
+    <ClCompile Include="source\scenario\ScenarioManager.cpp">
+      <Filter>scenario</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gui\ScenarioView.cpp">
+      <Filter>gui</Filter>
+    </ClCompile>
+    <ClCompile Include="source\render\GDIRender.cpp">
+      <Filter>render</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gui\tools\MouseTool.cpp">
+      <Filter>gui\tools</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gui\tools\CreateObjectTool.cpp">
+      <Filter>gui\tools</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gui\tools\DragTool.cpp">
+      <Filter>gui\tools</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gui\tools\RulerTool.cpp">
+      <Filter>gui\tools</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gui\selection\SelectedRoute.cpp">
+      <Filter>gui\selection</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gui\selection\ScenarioProperties.cpp">
+      <Filter>gui\selection</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gui\selection\SelectedObjectManager.cpp">
+      <Filter>gui\selection</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gui\selection\SelectedChartObject.cpp">
+      <Filter>gui\selection</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gui\layers\RenderHelper.cpp">
+      <Filter>gui\layers</Filter>
+    </ClCompile>
+    <ClCompile Include="source\simulator\simulator.cpp">
+      <Filter>simulator</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

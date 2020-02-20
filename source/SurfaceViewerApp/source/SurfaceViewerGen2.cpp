@@ -15,6 +15,7 @@
 #include "afxwinappex.h"
 #include "afxdialogex.h"
 #include "SurfaceViewerGen2.h"
+#include "gui/ScenarioView.h"
 #include "gui/MainFrm.h"
 
 #include "SurfaceViewerGen2Doc.h"
@@ -125,7 +126,8 @@ BOOL CSurfaceViewerGen2App::InitInstance()
       IDR_MAINFRAME,
       RUNTIME_CLASS(CSurfaceViewerGen2Doc),
       RUNTIME_CLASS(CMainFrame),       // основное окно рамки SDI
-      RUNTIME_CLASS(CSurfaceViewerGen2View));
+      RUNTIME_CLASS(ScenarioView));
+      //RUNTIME_CLASS(CSurfaceViewerGen2View));
    if (!pDocTemplate)
       return FALSE;
    AddDocTemplate(pDocTemplate);

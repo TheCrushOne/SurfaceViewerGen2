@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="source\stdafx.cpp" />
+    <ClCompile Include="source\udp\TransceiverImpl.cpp">
+      <Filter>udp</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="source\stdafx.h" />
+    <ClInclude Include="source\udp\TransceiverImpl.h">
+      <Filter>udp</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="udp">
+      <UniqueIdentifier>{7df3fa47-859f-4321-877a-d6c8933b9516}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

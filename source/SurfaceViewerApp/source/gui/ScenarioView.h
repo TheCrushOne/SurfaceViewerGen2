@@ -81,4 +81,4 @@ private:
 
    bool  _needResetCenter = false;
    bool _needInvalidate = false;
-}
+};

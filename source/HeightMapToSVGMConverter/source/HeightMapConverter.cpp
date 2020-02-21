@@ -1,4 +1,5 @@
 #include "HeightMapConverter.h"
+#include "common/utils.h"
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -6,17 +7,50 @@
 
 using namespace converter;
 
-HeightMapConverter::HeightMapConverter(const colreg::ModuleGuard<database::iSVGMDatabaseController> db)
-   : m_databaseController(db)
-   , m_row_pointers(nullptr)
+HeightMapConverter::HeightMapConverter()
+   : m_row_pointers(nullptr)
 {
+   m_databaseController.Create(SVGUtils::CurrentDllPath("XMLDatabaseController").c_str(), "CreateDatabaseController");
+   if (!m_databaseController.IsValid())
+   {
+      m_lock = true;
+      //MessageString(ICommunicator::MS_Error, "Can't load settings serializer!");
+      return;
+   }
+   return;
 }
 
 bool HeightMapConverter::Convert(const char* srcPath, const char* dstPath)
 {
+   if (m_lock)
+      return;
    readDataFromPng(srcPath);
    convertToDatabaseFormat();
-   m_databaseController->SaveExternalData(dstPath);
+   m_databaseController->SaveExternalData(dstPath, m_rawData, m_currentMeta);
+   safeReleaseData();
+}
+
+// к-т преобразования градиента в высоту 0-256 -> height_min-height_max
+#define HEIGHT_CORRECTOR(h) 0.1*h
+
+void HeightMapConverter::convertToDatabaseFormat()
+{
+   m_rawData = (double**)malloc(sizeof(double*) * m_currentMeta.length);
+   for (int l = 0; l < m_currentMeta.length; l++)
+   {
+      m_rawData[l] = (double*)malloc(sizeof(double*) * m_currentMeta.width);
+      for (int w = 0; w < m_currentMeta.width; w++)
+         m_rawData[l][w] = HEIGHT_CORRECTOR(m_row_pointers[l][w]);
+   }
+}
+
+#undef HEIGHT_CORRECTOR
+
+void HeightMapConverter::safeReleaseData()
+{   
+   for (int l = 0; l < m_currentMeta.length; l++)   
+      free(m_rawData[l]);   
+   free(m_rawData);
 }
 
 void HeightMapConverter::readDataFromPng(const char* srcPath)
@@ -78,6 +112,10 @@ void HeightMapConverter::readDataFromPng(const char* srcPath)
    {
       m_row_pointers[y] = (png_byte*)malloc(png_get_rowbytes(png, info));
    }
+
+   // Так...вроде правильно
+   m_currentMeta.length = height;
+   m_currentMeta.width = png_get_rowbytes(png, info);
 
    png_read_image(png, m_row_pointers);
 

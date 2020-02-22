@@ -3,12 +3,12 @@
   <ItemGroup>
     <ClCompile Include="source\stdafx.cpp" />
     <ClCompile Include="source\Connector.cpp" />
+    <ClCompile Include="source\SQLiteController.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\stdafx.h" />
     <ClInclude Include="source\Connector.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
+    <ClInclude Include="source\SQLiteController.h" />
+    <ClInclude Include="source\ConnectorMeta.h" />
   </ItemGroup>
 </Project>

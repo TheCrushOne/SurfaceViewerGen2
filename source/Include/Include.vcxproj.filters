@@ -25,6 +25,9 @@
     <Filter Include="math">
       <UniqueIdentifier>{5f05ea15-9774-4a0f-a6ad-038771042131}</UniqueIdentifier>
     </Filter>
+    <Filter Include="database">
+      <UniqueIdentifier>{ee9d03f5-e8e2-4759-b9b5-30c214360126}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\crossdllinterface\SettingsSerializerInterface.h">
@@ -193,6 +196,15 @@
       <Filter>crossdllinterface</Filter>
     </ClInclude>
     <ClInclude Include="source\crossdllinterface\SVGMDatabaseInterface.h">
+      <Filter>crossdllinterface</Filter>
+    </ClInclude>
+    <ClInclude Include="source\common\database_misc.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="source\database\sqlite3.h">
+      <Filter>database</Filter>
+    </ClInclude>
+    <ClInclude Include="source\crossdllinterface\RawDataInterface.h">
       <Filter>crossdllinterface</Filter>
     </ClInclude>
   </ItemGroup>

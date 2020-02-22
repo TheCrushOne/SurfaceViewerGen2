@@ -25,6 +25,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SQLiteController", "SQLiteC
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "XMLDatabaseController", "XMLDatabaseController\XMLDatabaseController.vcxproj", "{5466CF14-6B13-4E3B-BB18-DA010A4A1C09}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SQLiteWrapper", "SQLiteWrapper\SQLiteWrapper.vcxproj", "{8D938DC3-FE8D-437F-B0FF-312E830BAF28}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RawDataController", "RawDataController\RawDataController.vcxproj", "{BE3FD7BF-C230-427B-87DB-0451E5704F19}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -119,6 +123,22 @@ Global
 		{5466CF14-6B13-4E3B-BB18-DA010A4A1C09}.Release|x64.Build.0 = Release|x64
 		{5466CF14-6B13-4E3B-BB18-DA010A4A1C09}.Release|x86.ActiveCfg = Release|Win32
 		{5466CF14-6B13-4E3B-BB18-DA010A4A1C09}.Release|x86.Build.0 = Release|Win32
+		{8D938DC3-FE8D-437F-B0FF-312E830BAF28}.Debug|x64.ActiveCfg = Debug|x64
+		{8D938DC3-FE8D-437F-B0FF-312E830BAF28}.Debug|x64.Build.0 = Debug|x64
+		{8D938DC3-FE8D-437F-B0FF-312E830BAF28}.Debug|x86.ActiveCfg = Debug|Win32
+		{8D938DC3-FE8D-437F-B0FF-312E830BAF28}.Debug|x86.Build.0 = Debug|Win32
+		{8D938DC3-FE8D-437F-B0FF-312E830BAF28}.Release|x64.ActiveCfg = Release|x64
+		{8D938DC3-FE8D-437F-B0FF-312E830BAF28}.Release|x64.Build.0 = Release|x64
+		{8D938DC3-FE8D-437F-B0FF-312E830BAF28}.Release|x86.ActiveCfg = Release|Win32
+		{8D938DC3-FE8D-437F-B0FF-312E830BAF28}.Release|x86.Build.0 = Release|Win32
+		{BE3FD7BF-C230-427B-87DB-0451E5704F19}.Debug|x64.ActiveCfg = Debug|x64
+		{BE3FD7BF-C230-427B-87DB-0451E5704F19}.Debug|x64.Build.0 = Debug|x64
+		{BE3FD7BF-C230-427B-87DB-0451E5704F19}.Debug|x86.ActiveCfg = Debug|Win32
+		{BE3FD7BF-C230-427B-87DB-0451E5704F19}.Debug|x86.Build.0 = Debug|Win32
+		{BE3FD7BF-C230-427B-87DB-0451E5704F19}.Release|x64.ActiveCfg = Release|x64
+		{BE3FD7BF-C230-427B-87DB-0451E5704F19}.Release|x64.Build.0 = Release|x64
+		{BE3FD7BF-C230-427B-87DB-0451E5704F19}.Release|x86.ActiveCfg = Release|Win32
+		{BE3FD7BF-C230-427B-87DB-0451E5704F19}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

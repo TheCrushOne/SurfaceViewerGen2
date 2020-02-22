@@ -98,11 +98,11 @@ const std::shared_ptr<settings::application_settings> Dispatcher::GetSettings()
 
 void Dispatcher::LoadScenario(const wchar_t* name)
 {
-   m_fileStorage = std::make_shared<SVGUtils::FileStorage>(name);
-   m_settingsSerializer->Deserialize(m_fileStorage->pathfinderSettingsPath.c_str(), m_appSettings->pth_stt);
-   m_settingsSerializer->Deserialize(m_fileStorage->researchSettingsPath.c_str(), m_appSettings->res_stt);
-   m_unitDataSerializer->Deserialize(m_fileStorage->unitDataPath.c_str(), m_appSettings->unit_stt);
-   loadHeightMap(m_fileStorage->mapPath.c_str());
+   m_fileStorage = std::make_shared<file_utils::heightmap_file_storage>(name);
+   m_settingsSerializer->Deserialize(SVGUtils::wstringToString(m_fileStorage->pathfinder_settings_path).c_str(), m_appSettings->pth_stt);
+   m_settingsSerializer->Deserialize(SVGUtils::wstringToString(m_fileStorage->research_settings_path).c_str(), m_appSettings->res_stt);
+   m_unitDataSerializer->Deserialize(SVGUtils::wstringToString(m_fileStorage->unit_data_path).c_str(), m_appSettings->unit_stt);
+   loadHeightMap(SVGUtils::wstringToString(m_fileStorage->map_path).c_str());
 }
 
 void Dispatcher::onScenarioLoad()

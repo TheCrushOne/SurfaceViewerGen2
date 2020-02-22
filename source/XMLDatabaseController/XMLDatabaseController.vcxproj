@@ -20,9 +20,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\stdafx.cpp" />
+    <ClCompile Include="source\XMLDatabaseController.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\stdafx.h" />
+    <ClInclude Include="source\XMLDatabaseController.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

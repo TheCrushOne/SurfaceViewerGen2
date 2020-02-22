@@ -1,16 +1,49 @@
 #include "stdafx.h"
 #include "ScenarioManager.h"
-//#include "Colreg\Simulator.h"
+#include "simulator\simulator.h"
 //#include "TTCG\Common\FileSystem\Path.h"
 #include "gui/selection/SelectedObjectManager.h"
 //#include "engine\main\dispatcher.h"
+#include "common/file_storage.h"
+#include "gui/user_interface.h"
 
+ScenarioManager::ScenarioManager()
+{
+   createTransceiver();
+}
 
 void ScenarioManager::Open(const wchar_t* fileName)
 {
    _scenarioFile = fileName;
    SelectedObjectManager::GetInstance().Unselect();
 
+   if (!m_converter.IsValid())
+   {
+      m_converter.Create(SVGUtils::CurrentDllPath("HeightMapToSVGMConverter").c_str(), "CreateConverter");
+      if (!m_converter.IsValid())
+      {
+         //MessageString(ICommunicator::MS_Error, "Can't load settings serializer!");
+         return;
+      }
+      //return;
+   }
+   if (!m_shareProvider.IsValid())
+   {
+      m_shareProvider.Create(SVGUtils::CurrentDllPath("DataShareProvider").c_str(), "CreateDataShareProvider");
+      if (!m_shareProvider.IsValid())
+      {
+         //MessageString(ICommunicator::MS_Error, "Can't load settings serializer!");
+         return;
+      }
+      //return;
+   }
+
+   m_rawdata = m_converter->Convert(file_utils::heightmap_file_storage(fileName), file_utils::sqlite_database_file_storage(fileName));
+   
+   data_share::share_meta meta{L"file.bin"};
+   m_shareProvider->Share(meta, m_rawdata);
+   m_transceiver->Send(SVGUtils::wstringToString(meta.shared_filename).c_str());
+   //simulator::simulatorStart(SVGUtils::wstringToString(_scenarioFile).c_str());
    //Dispatcher::GetInstance().LoadScenario(fileName);
 
    //if (ScenarioDispather::GetInstance().OnScenarioLoad(fileName))
@@ -87,4 +120,27 @@ void ScenarioManager::ReEstimate()
    //   pClusters->arr[i]->SetSettings(simulationState.GetSettings());
 
    //navEstimation->Solve(simulator::getSimulator()->GetState().GetSettings().cooperativeMode);
+}
+
+void ScenarioManager::createTransceiver()
+{
+   m_transceiver.Create(SVGUtils::CurrentDllPath("SocketTransceiverLine").c_str(), "CreateTransceiver");
+   if (!m_transceiver.IsValid())
+   {
+      user_interface::SetOutputText(user_interface::OT_ERROR, "Can't load Socket Transceiver Line!");
+      return;
+   }
+   std::thread thr(&ScenarioManager::initTransceiver, this);
+   thr.detach();
+   return;
+}
+
+void ScenarioManager::initTransceiver()
+{
+   m_transceiver->Init("127.0.0.1", "8080", "27015", [this](const char* txt) { this->callback(txt); }, [this](const char* txt) {});
+}
+
+void ScenarioManager::callback(const char* text)
+{
+   user_interface::SetOutputText(user_interface::OT_INFO, text);
 }

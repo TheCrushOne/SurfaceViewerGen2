@@ -152,8 +152,8 @@ BOOL CSurfaceViewerGen2App::InitInstance()
    m_pMainWnd->UpdateWindow();
 
    // Запуск всего и вся
-   createDirectXApp();
-   createTransceiver();
+   //createDirectXApp();
+   ScenarioManager::GetInstance();
 
    return TRUE;
 }
@@ -274,27 +274,4 @@ void CSurfaceViewerGen2App::createDirectXApp()
    // Close process and thread handles. 
    CloseHandle(pi.hProcess);
    CloseHandle(pi.hThread);
-}
-
-void CSurfaceViewerGen2App::createTransceiver()
-{
-   m_transceiver.Create(SVGUtils::CurrentDllPath("SocketTransceiverLine").c_str(), "CreateTransceiver");
-   if (!m_transceiver.IsValid())
-   {
-      user_interface::SetOutputText(user_interface::OT_ERROR, "Can't load Socket Transceiver Line!");
-      return;
-   }
-   std::thread thr(&CSurfaceViewerGen2App::initTransceiver, this);
-   thr.detach();
-   return;
-}
-
-void CSurfaceViewerGen2App::initTransceiver()
-{
-   m_transceiver->Init("127.0.0.1", "8080", "27015", [this](const char* txt) { this->callback(txt); });
-}
-
-void CSurfaceViewerGen2App::callback(const char* text)
-{
-   user_interface::SetOutputText(user_interface::OT_INFO, text);
 }

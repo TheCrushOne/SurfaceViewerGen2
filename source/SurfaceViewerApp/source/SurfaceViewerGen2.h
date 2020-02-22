@@ -9,7 +9,6 @@
 
 #include "resource.h"       // основные символы
 #include "colreg\ModuleGuard.h"
-#include "crossdllinterface\TransceiverInterface.h"
 
 // CSurfaceViewerGen2App:
 // Сведения о реализации этого класса: SurfaceViewerGen2.cpp
@@ -21,9 +20,6 @@ public:
    CSurfaceViewerGen2App() noexcept;
 protected:
    void createDirectXApp();
-   void createTransceiver();
-   void initTransceiver();
-   void callback(const char*);
 // Переопределение
 public:
    virtual BOOL InitInstance();
@@ -43,7 +39,6 @@ public:
    DECLARE_MESSAGE_MAP()
 
 private:
-   colreg::ModuleGuard<iTransceiver> m_transceiver;
 };
 
 extern CSurfaceViewerGen2App theApp;

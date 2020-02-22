@@ -1,20 +1,21 @@
 #pragma once
 
 #include "crossdllinterface\TransceiverInterface.h"
+#include "Client.h"
+#include "Server.h"
 
 class TransceiverImpl : public iTransceiver
 {
 public:
    TransceiverImpl();
 
-   void Init(const char* serverAddr, const char* serverPort, const char* clientPort, std::function<void(const char*)> callback);
+   void Init(const char* serverAddr, const char* serverPort, const char* clientPort, std::function<void(const char*)> traceCallback, std::function<void(const char*)> dataCallback);
+   void Send(const char* message);
    void Release() override { delete this; }
 protected:
-   void createServer();
-   void createClient();
+   void initServer();
+   void initClient();
 private:
-   std::function<void(const char*)> m_callback;
-   LPCSTR m_sAddr;
-   LPCSTR m_sPort;
-   LPCSTR m_cPort;
+   std::unique_ptr<Client> m_client;
+   std::unique_ptr<Server> m_server;
 };

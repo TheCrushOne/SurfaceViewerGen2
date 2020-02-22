@@ -11,4 +11,7 @@
     <ClInclude Include="source\SQLiteController.h" />
     <ClInclude Include="source\ConnectorMeta.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
 </Project>

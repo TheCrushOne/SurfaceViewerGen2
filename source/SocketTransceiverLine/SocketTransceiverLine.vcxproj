@@ -20,11 +20,16 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\stdafx.cpp" />
+    <ClCompile Include="source\udp\Client.cpp" />
+    <ClCompile Include="source\udp\Server.cpp" />
     <ClCompile Include="source\udp\TransceiverImpl.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\stdafx.h" />
+    <ClInclude Include="source\udp\Client.h" />
+    <ClInclude Include="source\udp\Server.h" />
     <ClInclude Include="source\udp\TransceiverImpl.h" />
+    <ClInclude Include="source\udp\udef.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

@@ -60,9 +60,11 @@
     <ClInclude Include="source\common\file_storage.h" />
     <ClInclude Include="source\common\observer.h" />
     <ClInclude Include="source\common\settings.h" />
+    <ClInclude Include="source\common\share_types.h" />
     <ClInclude Include="source\common\surface_base_types.h" />
     <ClInclude Include="source\common\utils.h" />
     <ClInclude Include="source\crossdllinterface\ConverterInterface.h" />
+    <ClInclude Include="source\crossdllinterface\DataShareInterface.h" />
     <ClInclude Include="source\crossdllinterface\RawDataInterface.h" />
     <ClInclude Include="source\crossdllinterface\SettingsSerializerInterface.h" />
     <ClInclude Include="source\crossdllinterface\SurfaceInterfaces.h" />

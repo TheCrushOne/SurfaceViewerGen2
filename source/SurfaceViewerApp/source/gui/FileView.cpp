@@ -15,7 +15,7 @@ static char THIS_FILE[]=__FILE__;
 #define new DEBUG_NEW
 #endif
 
-const wchar_t* TEST_SCENARIOS_SRC_DIR = L"\\..\\scenarios";
+const wchar_t* TEST_SCENARIOS_SRC_DIR = L"\\..\\..\\..\\scenarios";
 
 namespace
 {

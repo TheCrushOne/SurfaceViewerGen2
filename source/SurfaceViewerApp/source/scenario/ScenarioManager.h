@@ -1,5 +1,9 @@
 #pragma once
 #include "common\observer.h"
+#include "colreg/ModuleGuard.h"
+#include "crossdllinterface/ConverterInterface.h"
+#include "crossdllinterface\TransceiverInterface.h"
+#include "crossdllinterface/DataShareInterface.h"
 
 namespace ColregSimulation
 {
@@ -138,7 +142,7 @@ class ScenarioManager
    : public Singleton< ScenarioManager>
 {
 public:
-
+   ScenarioManager();
 public:
    void Open(const wchar_t* name);
 
@@ -175,7 +179,7 @@ public:
    bool IsDebugMode() const { return _debugMode; }
    void SetDebugMode(bool debug);
 private:
-   ScenarioManager() = default;
+   //ScenarioManager() = default;
    friend class Singleton< ScenarioManager>;
    friend class ScenarioDispather;
 
@@ -184,7 +188,12 @@ private:
 
    void printSolutuins();
    void printEnentsAndSuggestions();
+
+   void createTransceiver();
+   void initTransceiver();
+   void callback(const char*);
 private:
+   colreg::ModuleGuard<converter::iConverter> m_converter;
    std::unordered_map<colreg::id_type, bool> _shipVisibility = {};
    bool _autoPause = true;
    CSENARIO_STATUS _state = CSENARIO_STATUS::SS_NOT_LOADED;
@@ -194,4 +203,7 @@ private:
    int _timeScale = 10;
    bool _recording = false;
    std::wstring _scenarioFile;
+   colreg::ModuleGuard<iTransceiver> m_transceiver;
+   colreg::ModuleGuard<data_share::iDataShareProvider> m_shareProvider;
+   const double** m_rawdata;
 };

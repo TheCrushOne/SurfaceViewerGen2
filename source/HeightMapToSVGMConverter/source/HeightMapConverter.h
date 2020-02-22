@@ -12,7 +12,7 @@ namespace converter
    public:
       HeightMapConverter();
 
-      bool Convert(const file_utils::file_storage_base& src, const file_utils::file_storage_base& dst) override;
+      const double** Convert(const file_utils::file_storage_base& src, const file_utils::file_storage_base& dst) override;
       void Release() override { delete this; }
    private:
       void readDataFromPng(const char* srcPath);
@@ -20,7 +20,7 @@ namespace converter
       void safeReleaseData();
    private:
       colreg::ModuleGuard<database::iSVGMDatabaseController> m_databaseController;
-      //png_bytep* m_row_pointers;
+      png_bytep* m_row_pointers;
       bool m_lock = false;
       double** m_rawData;
       database::chart_meta m_currentMeta;

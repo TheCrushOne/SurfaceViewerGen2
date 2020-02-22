@@ -5,10 +5,25 @@
     <ClCompile Include="source\udp\TransceiverImpl.cpp">
       <Filter>udp</Filter>
     </ClCompile>
+    <ClCompile Include="source\udp\Client.cpp">
+      <Filter>udp</Filter>
+    </ClCompile>
+    <ClCompile Include="source\udp\Server.cpp">
+      <Filter>udp</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\stdafx.h" />
     <ClInclude Include="source\udp\TransceiverImpl.h">
+      <Filter>udp</Filter>
+    </ClInclude>
+    <ClInclude Include="source\udp\Client.h">
+      <Filter>udp</Filter>
+    </ClInclude>
+    <ClInclude Include="source\udp\Server.h">
+      <Filter>udp</Filter>
+    </ClInclude>
+    <ClInclude Include="source\udp\udef.h">
       <Filter>udp</Filter>
     </ClInclude>
   </ItemGroup>

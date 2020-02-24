@@ -4,13 +4,13 @@
 #include "Client.h"
 #include "Server.h"
 
-class TransceiverImpl : public iTransceiver
+class TransceiverImpl : public transceiver::iTransceiver
 {
 public:
    TransceiverImpl();
 
-   void Init(const char* serverAddr, const char* serverPort, const char* clientPort, std::function<void(const char*)> traceCallback, std::function<void(const char*)> dataCallback);
-   void Send(const char* message);
+   void Init(const transceiver::transceiver_info& info) override final;
+   void Send(transceiver::JsonCommand token, const char* jsonDee) override final;
    void Release() override { delete this; }
 protected:
    void initServer();

@@ -56,35 +56,13 @@ Dispatcher::Dispatcher(/*GlViewerDlg::ViewerCluster cluster
    m_engine = std::make_unique<Engine>(m_appSettings);
    m_pathfinder = std::make_unique<PathFinder>(/*DBG_DATA*/);
    
-   createUnitDataSerializer();
-   createSettingsSerializer();
+   //createUnitDataSerializer();
+   //createSettingsSerializer();
    //m_dom = WFM::CreateSharedObject<DomSettings>();
 }
 
 Dispatcher::~Dispatcher()
 {}
-
-void Dispatcher::createSettingsSerializer()
-{
-   m_settingsSerializer.Create(SVGUtils::CurrentDllPath("SettingsHandler").c_str(), "CreateSettingsSerializer");
-   if (!m_settingsSerializer.IsValid())
-   {
-      //MessageString(ICommunicator::MS_Error, "Can't load settings serializer!");
-      return;
-   }
-   return;
-}
-
-void Dispatcher::createUnitDataSerializer()
-{
-   m_unitDataSerializer.Create(SVGUtils::CurrentDllPath("SettingsHandler").c_str(), "CreateSettingsSerializer");
-   if (!m_unitDataSerializer.IsValid())
-   {
-      //MessageString(ICommunicator::MS_Error, "Can't load settings serializer!");
-      return;
-   }
-   return;
-}
 
 const std::shared_ptr<settings::application_settings> Dispatcher::GetSettings()
 {
@@ -99,9 +77,7 @@ const std::shared_ptr<settings::application_settings> Dispatcher::GetSettings()
 void Dispatcher::LoadScenario(const wchar_t* name)
 {
    m_fileStorage = std::make_shared<file_utils::heightmap_file_storage>(name);
-   m_settingsSerializer->Deserialize(SVGUtils::wstringToString(m_fileStorage->pathfinder_settings_path).c_str(), m_appSettings->pth_stt);
-   m_settingsSerializer->Deserialize(SVGUtils::wstringToString(m_fileStorage->research_settings_path).c_str(), m_appSettings->res_stt);
-   m_unitDataSerializer->Deserialize(SVGUtils::wstringToString(m_fileStorage->unit_data_path).c_str(), m_appSettings->unit_stt);
+   
    loadHeightMap(SVGUtils::wstringToString(m_fileStorage->map_path).c_str());
 }
 

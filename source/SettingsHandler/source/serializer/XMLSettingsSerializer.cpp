@@ -47,10 +47,7 @@ namespace colreg
       {
          size_t offset = 0;
          std::unique_ptr < TypedSettingsTree<void*, settings::pathfinding_settings> > tree(new TypedSettingsTree<void*, settings::pathfinding_settings>(PATHFINDING_SETTINGS_TAG, "", {
-              PSTCOLLECTINGELEM(_PSN(PathfindingSettingsFieldIndex::PSFI_POINT_ST)) {
-                 PSTVALELEM(std::string, _PSN(PathfindingSettingsFieldIndex::PSFI_RELPATH), point_settings.settings_rel_path)
-              }) 
-            , PSTCOLLECTINGELEM(_PSN(PathfindingSettingsFieldIndex::PSFI_LEVEL_ST)) {
+              PSTCOLLECTINGELEM(_PSN(PathfindingSettingsFieldIndex::PSFI_LEVEL_ST)) {
                    PSTVALELEM(double, _PSN(PathfindingSettingsFieldIndex::PSFI_MAXAIRHEIGHT), level_settings.max_air_height)
                  , PSTVALELEM(double, _PSN(PathfindingSettingsFieldIndex::PSFI_MAXLANDHEIGHT), level_settings.max_land_height)
                  , PSTVALELEM(double, _PSN(PathfindingSettingsFieldIndex::PSFI_MINLANDHEIGHT), level_settings.min_land_height)

@@ -213,6 +213,12 @@
     <ClInclude Include="source\common\share_types.h">
       <Filter>common</Filter>
     </ClInclude>
+    <ClInclude Include="source\common\transceiver_types.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="source\common\settings_meta.h">
+      <Filter>common</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\colreg\ThirdParty\tinyxml2\tinyxml2.cpp">

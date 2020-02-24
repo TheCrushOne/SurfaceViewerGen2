@@ -111,7 +111,7 @@ void Engine::CreateEnvlight(LPDIRECT3DDEVICE9 dev)
 // Вызов конструктора класса менеджера протокола соединения
 void Engine::CreateConnectionManager()
 {
-   m_connectionManager = std::make_shared<ConnectionManager>(m_infoboard);
+   m_connectionManager = std::make_shared<ConnectionManager>(m_this);
 }
 
 // Отрисовки отладочной сферы
@@ -141,6 +141,8 @@ void Engine::CascadeRender()
    if (!m_shaderUsage)
    {
       m_manager->Render();
+      m_carsystem->Render();
+      m_environment->Render();
       m_camera->Render();       //пустой(пока что)
       m_light->Render();
    }
@@ -148,6 +150,8 @@ void Engine::CascadeRender()
    {
       m_shaderunit->Update();
       m_manager->Render();
+      m_carsystem->Render();
+      m_environment->Render();
       m_shaderunit->Render();
    }
    m_infoboard->Render();  //а тут нету текстур, взаимодействующих со светом
@@ -203,7 +207,7 @@ bool Engine::StartWTransform()
 // Каскадный запуск повортных трансформаций мира
 void Engine::StartWRotate()
 {
-   m_environment->StartWRotate();
+   //m_environment->StartWRotate();
    m_carsystem->StartWRotate();
    m_eTransforming = true;
    m_cTransforming = true;

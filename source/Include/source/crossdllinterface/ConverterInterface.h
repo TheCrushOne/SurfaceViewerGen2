@@ -7,7 +7,7 @@ namespace converter
 {
    struct iConverter : colreg::iReleasable
    {
-      virtual const double** Convert(const file_utils::file_storage_base& src, const file_utils::file_storage_base& dst) = 0;
+      virtual bool Convert(const file_utils::file_storage_base& src, const file_utils::file_storage_base& dst) = 0;
    };
 }
 

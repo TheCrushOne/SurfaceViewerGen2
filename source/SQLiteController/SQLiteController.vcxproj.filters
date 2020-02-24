@@ -9,7 +9,7 @@
     <ClInclude Include="source\stdafx.h" />
     <ClInclude Include="source\Connector.h" />
     <ClInclude Include="source\SQLiteController.h" />
-    <ClInclude Include="source\ConnectorMeta.h" />
+    <ClInclude Include="source\SqlRequestStorage.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

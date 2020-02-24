@@ -18,19 +18,40 @@ HeightMapConverter::HeightMapConverter()
       //MessageString(ICommunicator::MS_Error, "Can't load settings serializer!");
       return;
    }
+   m_settingsSerializer.Create(SVGUtils::CurrentDllPath("SettingsHandler").c_str(), "CreateSettingsSerializer");
+   if (!m_settingsSerializer.IsValid())
+   {
+      m_lock = true;
+      //MessageString(ICommunicator::MS_Error, "Can't load settings serializer!");
+      return;
+   }
+   m_unitDataSerializer.Create(SVGUtils::CurrentDllPath("SettingsHandler").c_str(), "CreateUnitDataSerializer");
+   if (!m_unitDataSerializer.IsValid())
+   {
+      m_lock = true;
+      //MessageString(ICommunicator::MS_Error, "Can't load settings serializer!");
+      return;
+   }
    return;
 }
 
-const double** HeightMapConverter::Convert(const file_utils::file_storage_base& src, const file_utils::file_storage_base& dst)
+bool HeightMapConverter::Convert(const file_utils::file_storage_base& src, const file_utils::file_storage_base& dst)
 {
    if (m_lock)
-      return nullptr;
+      return false;
    std::string srcPngPath = SVGUtils::wstringToString((reinterpret_cast<file_utils::heightmap_file_storage&>(const_cast<file_utils::file_storage_base&>(src))).map_path);
    readDataFromPng(srcPngPath.c_str());
    convertToDatabaseFormat();
-   m_databaseController->SaveExternalData(dst, const_cast<const double**>(m_rawData), m_currentMeta);
-   //safeReleaseData();
-   return const_cast<const double**>(m_rawData);
+   // NOTE: share provider вызываетcя из базы
+   m_databaseController->SaveHeightGrid(dst, const_cast<const double**>(m_rawData), m_currentMeta);
+   safeReleaseData();
+   auto& srcFs = reinterpret_cast<const file_utils::heightmap_file_storage&>(src);
+   m_settingsSerializer->Deserialize(SVGUtils::wstringToString(srcFs.pathfinder_settings_path).c_str(), m_settings.pth_stt);
+   m_settingsSerializer->Deserialize(SVGUtils::wstringToString(srcFs.research_settings_path).c_str(), m_settings.res_stt);
+   m_unitDataSerializer->Deserialize(SVGUtils::wstringToString(srcFs.unit_data_path).c_str(), m_settings.unit_stt);
+
+   m_databaseController->SaveAppSettings(m_settings);
+   return true;
 }
 
 // к-т преобразования градиента в высоту 0-256 -> height_min-height_max
@@ -50,8 +71,8 @@ void HeightMapConverter::convertToDatabaseFormat()
 #undef HEIGHT_CORRECTOR
 
 void HeightMapConverter::safeReleaseData()
-{   
-   for (int l = 0; l < m_currentMeta.length; l++)   
+{
+   for (int l = 0; l < m_currentMeta.length; l++)
       delete m_rawData[l];
    delete m_rawData;
 }

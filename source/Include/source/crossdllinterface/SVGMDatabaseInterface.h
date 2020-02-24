@@ -8,7 +8,8 @@ namespace database
 {
    struct iSVGMDatabaseController : colreg::iReleasable
    {
-      virtual void SaveExternalData(const file_utils::file_storage_base& dst, const double** coordGrid, const chart_meta& meta) = 0;
+      virtual void SaveHeightGrid(const file_utils::file_storage_base& dst, const double** coordGrid, const chart_meta& meta) = 0;
+      virtual void SaveAppSettings(const settings::application_settings& settings) = 0;
    };
 }
 

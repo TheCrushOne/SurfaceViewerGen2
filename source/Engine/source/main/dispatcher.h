@@ -16,12 +16,6 @@ namespace settings
 //   struct iMatrix;
 //}
 
-namespace colreg
-{
-   struct iSettingsSerializer;
-   struct iUnitDataSerializer;
-}
-
 class Engine;
 class PathFinder;
 namespace file_utils
@@ -38,9 +32,6 @@ public:
             , std::shared_ptr<SystemWnd> m_systemWnd*/);
    ~Dispatcher();
 private:
-   void createSettingsSerializer();
-   void createUnitDataSerializer();
-
    void recountConfigNavigation();
    void preparePathfindingView();
    void onScenarioLoad();
@@ -99,8 +90,7 @@ private:
 
    //std::unique_ptr<RouteData> m_route;
    std::unique_ptr<PathFinder> m_pathfinder;
-   colreg::ModuleGuard<colreg::iSettingsSerializer> m_settingsSerializer;
-   colreg::ModuleGuard<colreg::iUnitDataSerializer> m_unitDataSerializer;
+   
 
    //std::map<float, QColor> m_colorPercentMap;
 };

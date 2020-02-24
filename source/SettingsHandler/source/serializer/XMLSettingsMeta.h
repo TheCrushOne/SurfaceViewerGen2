@@ -8,10 +8,7 @@ namespace colreg
 {
    enum class PathfindingSettingsFieldIndex : unsigned short
    {
-      PSFI_POINT_ST = 0,
-      PSFI_RELPATH,
-
-      PSFI_LEVEL_ST,
+      PSFI_LEVEL_ST = 0,
       PSFI_MAXAIRHEIGHT,
       PSFI_MAXLANDHEIGHT,
       PSFI_MINLANDHEIGHT,
@@ -35,9 +32,6 @@ namespace colreg
    };
 
    const static std::unordered_map<PathfindingSettingsFieldIndex, std::pair<std::string, std::string>> pathfindingMeta = {
-      { PathfindingSettingsFieldIndex::PSFI_POINT_ST, { "point_settings", "" } },
-      { PathfindingSettingsFieldIndex::PSFI_RELPATH, { "rel_path", "relative path to unit data" } },
-
       { PathfindingSettingsFieldIndex::PSFI_LEVEL_ST, { "level_settings", "" } },
       { PathfindingSettingsFieldIndex::PSFI_MAXAIRHEIGHT, { "max_air_height", "height limit(air)" } },
       { PathfindingSettingsFieldIndex::PSFI_MAXLANDHEIGHT, { "max_land_height", "height limit(land)" } },

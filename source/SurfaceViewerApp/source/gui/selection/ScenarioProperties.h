@@ -13,11 +13,8 @@ class ScenarioProperties : public iSelected
 {
    enum ScenarioPathfindingSettingsFieldIndex
    {
-      // point settings
-      SPSFI_RELPATH = 0,
-      
       // level settings
-      SPSFI_MAXAIRHEIGHT,
+      SPSFI_MAXAIRHEIGHT = 0,
       SPSFI_MAXLANDHEIGHT,
       SPSFI_MINLANDHEIGHT,
       SPSFI_MAXLANDANGLE,
@@ -48,8 +45,6 @@ class ScenarioProperties : public iSelected
    };
 
    const std::unordered_map<ScenarioPathfindingSettingsFieldIndex, FieldMeta> scenarioPathfindingSettingsMeta = {
-      { SPSFI_RELPATH, { "Relative Path", "path to point data", VALUE_FORMAT_TYPE::VFT_NONE, false } },
-      
       { SPSFI_MAXAIRHEIGHT, { "Max air height", "Maximum air height for drones", VALUE_FORMAT_TYPE::VFT_NONE, false } },
       { SPSFI_MAXLANDHEIGHT, { "Max land height", "Maximum land height for rovers", VALUE_FORMAT_TYPE::VFT_NONE, false } },
       { SPSFI_MINLANDHEIGHT, { "Min land height", "Minimum land height for rovers", VALUE_FORMAT_TYPE::VFT_NONE, false } },
@@ -91,7 +86,6 @@ private:
 private:
    std::unique_ptr<FolderProperty> m_scenario_pathfinding_settings_folder;
 
-   std::unique_ptr<FolderProperty> m_scenario_pathfinding_settings_point_folder;
    std::unique_ptr<FolderProperty> m_scenario_pathfinding_settings_level_folder;
 
    std::unique_ptr<FolderProperty> m_scenario_research_settings_folder;

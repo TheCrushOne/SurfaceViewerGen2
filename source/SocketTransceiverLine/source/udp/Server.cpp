@@ -1,12 +1,10 @@
 #include "stdafx.h"
 #include "Server.h"
 #include "udef.h"
+#include "JsonCommandSplitter.h"
 
-Server::Server(const char* serverAddr, const char* serverPort, std::function<void(const char*)> traceCallback, std::function<void(const char*)> dataCallback)
-   : m_traceCallback(traceCallback)
-   , m_dataCallback(dataCallback)
-   , m_sAddr(serverAddr)
-   , m_sPort(serverPort)
+Server::Server(const transceiver::transceiver_info& info)
+   : m_info(info)
 {}
 
 void Server::Init()
@@ -27,7 +25,7 @@ void Server::Init()
    // Initialize Winsock
    iResult = WSAStartup(MAKEWORD(2, 2), &wsaData);
    if (iResult != 0) {
-      m_traceCallback(("WSAStartup failed with error: %d\n" + std::to_string(iResult)).c_str());
+      m_info.trace_callback(("WSAStartup failed with error: %d\n" + std::to_string(iResult)).c_str());
       return;
    }
 
@@ -38,10 +36,10 @@ void Server::Init()
    hints.ai_flags = AI_PASSIVE;
 
    // Resolve the server address and port
-   iResult = getaddrinfo(NULL, m_sPort, &hints, &result);
+   iResult = getaddrinfo(NULL, m_info.server_port.c_str(), &hints, &result);
    if (iResult != 0)
    {
-      m_traceCallback(("getaddrinfo failed with error: " + std::to_string(iResult)).c_str());
+      m_info.trace_callback(("getaddrinfo failed with error: " + std::to_string(iResult)).c_str());
       WSACleanup();
       return;
    }
@@ -49,7 +47,7 @@ void Server::Init()
    // Create a SOCKET for connecting to server
    ListenSocket = socket(result->ai_family, result->ai_socktype, result->ai_protocol);
    if (ListenSocket == INVALID_SOCKET) {
-      m_traceCallback(("socket failed with error: " + std::to_string(WSAGetLastError())).c_str());
+      m_info.trace_callback(("socket failed with error: " + std::to_string(WSAGetLastError())).c_str());
       freeaddrinfo(result);
       WSACleanup();
       return;
@@ -59,7 +57,7 @@ void Server::Init()
    iResult = bind(ListenSocket, result->ai_addr, (int)result->ai_addrlen);
    if (iResult == SOCKET_ERROR)
    {
-      m_traceCallback(("bind failed with error: " + std::to_string(WSAGetLastError())).c_str());
+      m_info.trace_callback(("bind failed with error: " + std::to_string(WSAGetLastError())).c_str());
       freeaddrinfo(result);
       closesocket(ListenSocket);
       WSACleanup();
@@ -71,7 +69,7 @@ void Server::Init()
    iResult = listen(ListenSocket, SOMAXCONN);
    if (iResult == SOCKET_ERROR)
    {
-      m_traceCallback(("listen failed with error: " + std::to_string(WSAGetLastError())).c_str());
+      m_info.trace_callback(("listen failed with error: " + std::to_string(WSAGetLastError())).c_str());
       closesocket(ListenSocket);
       WSACleanup();
       return;
@@ -81,7 +79,7 @@ void Server::Init()
    ClientSocket = accept(ListenSocket, NULL, NULL);
    if (ClientSocket == INVALID_SOCKET)
    {
-      m_traceCallback(("accept failed with error: " + std::to_string(WSAGetLastError())).c_str());
+      m_info.trace_callback(("accept failed with error: " + std::to_string(WSAGetLastError())).c_str());
       closesocket(ListenSocket);
       WSACleanup();
       return;
@@ -95,8 +93,10 @@ void Server::Init()
 
       iResult = recv(ClientSocket, recvbuf, recvbuflen, 0);
       if (iResult > 0) {
-         m_traceCallback(("Bytes received: " + std::to_string(iResult)).c_str());
-         m_dataCallback(recvbuf);
+         m_info.trace_callback(("Bytes received: " + std::to_string(iResult)).c_str());
+         auto token = JsonCommandSplitter::GetCommandToken(recvbuf);
+         if (m_info.data_callback_map.find(token) != m_info.data_callback_map.end())
+            m_info.data_callback_map.at(token)(recvbuf);
          // Echo the buffer back to the sender
          //iSendResult = send(ClientSocket, recvbuf, iResult, 0);
          //if (iSendResult == SOCKET_ERROR)
@@ -109,10 +109,10 @@ void Server::Init()
          //printf("Bytes sent: %d\n", iSendResult);
       }
       else if (iResult == 0)
-         m_traceCallback("Connection 0\n");
+         m_info.trace_callback("Connection 0\n");
       else
       {
-         m_traceCallback(("recv failed with error: " + std::to_string(WSAGetLastError())).c_str());
+         m_info.trace_callback(("recv failed with error: " + std::to_string(WSAGetLastError())).c_str());
          closesocket(ClientSocket);
          WSACleanup();
          return;
@@ -124,7 +124,7 @@ void Server::Init()
    iResult = shutdown(ClientSocket, SD_SEND);
    if (iResult == SOCKET_ERROR)
    {
-      m_traceCallback(("shutdown failed with error: " + std::to_string(WSAGetLastError())).c_str());
+      m_info.trace_callback(("shutdown failed with error: " + std::to_string(WSAGetLastError())).c_str());
       closesocket(ClientSocket);
       WSACleanup();
       return;

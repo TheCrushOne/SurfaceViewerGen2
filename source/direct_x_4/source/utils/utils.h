@@ -36,10 +36,8 @@ struct coordinates
 // Данные вершины (заброшено(но не факт....))
 struct vertex
 {
-    float x, y, z;
-    //float rhw, u, v;
-    float nx, ny, nz;    
-    //DWORD color;
+    FLOAT x, y, z, rhw;
+    DWORD color;
 };
 
 namespace uts

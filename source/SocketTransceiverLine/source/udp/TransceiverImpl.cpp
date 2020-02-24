@@ -23,19 +23,19 @@
 TransceiverImpl::TransceiverImpl()
 {}
 
-void TransceiverImpl::Init(const char* serverAddr, const char* serverPort, const char* clientPort, std::function<void(const char*)> traceCallback, std::function<void(const char*)> dataCallback)
+void TransceiverImpl::Init(const transceiver::transceiver_info& info)
 {
-   m_server = std::make_unique<Server>(serverAddr, serverPort, traceCallback, dataCallback);
-   m_client = std::make_unique<Client>(serverAddr, clientPort, traceCallback);
+   m_server = std::make_unique<Server>(info);
+   m_client = std::make_unique<Client>(info);
    std::thread sThr(&TransceiverImpl::initServer, this);
    sThr.detach();
    std::thread cThr(&TransceiverImpl::initClient, this);
    cThr.detach();
 }
 
-void TransceiverImpl::Send(const char* message)
+void TransceiverImpl::Send(transceiver::JsonCommand comand, const char* jsonDee)
 {
-   m_client->Send(message);
+   m_client->Send(jsonDee);
 }
 
 void TransceiverImpl::initServer()
@@ -48,7 +48,7 @@ void TransceiverImpl::initClient()
    m_client->Init();
 }
 
-extern "C" iTransceiver* CreateTransceiver()
+extern "C" transceiver::iTransceiver* CreateTransceiver()
 {
    return new TransceiverImpl();
 }

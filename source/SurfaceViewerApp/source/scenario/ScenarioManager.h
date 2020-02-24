@@ -194,7 +194,6 @@ private:
    void callback(const char*);
 private:
    colreg::ModuleGuard<converter::iConverter> m_converter;
-   std::unordered_map<colreg::id_type, bool> _shipVisibility = {};
    bool _autoPause = true;
    CSENARIO_STATUS _state = CSENARIO_STATUS::SS_NOT_LOADED;
    bool _showRelations = false;
@@ -203,7 +202,7 @@ private:
    int _timeScale = 10;
    bool _recording = false;
    std::wstring _scenarioFile;
-   colreg::ModuleGuard<iTransceiver> m_transceiver;
+   colreg::ModuleGuard<transceiver::iTransceiver> m_transceiver;
    colreg::ModuleGuard<data_share::iDataShareProvider> m_shareProvider;
-   const double** m_rawdata;
+   transceiver::transceiver_info m_info;
 };

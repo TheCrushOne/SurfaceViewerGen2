@@ -8,7 +8,9 @@
 #include "gui/user_interface.h"
 
 ScenarioManager::ScenarioManager()
+   : m_info({ "127.0.0.1", "8080", "27015", [this](const char* txt) { this->callback(txt); }})
 {
+   m_info.data_callback_map[transceiver::JsonCommand::JC_NEWSURFACE] = [this](const char* txt) {};
    createTransceiver();
 }
 
@@ -38,11 +40,15 @@ void ScenarioManager::Open(const wchar_t* fileName)
       //return;
    }
 
-   m_rawdata = m_converter->Convert(file_utils::heightmap_file_storage(fileName), file_utils::sqlite_database_file_storage(fileName));
+   m_converter->Convert(file_utils::heightmap_file_storage(fileName), file_utils::sqlite_database_file_storage(fileName));
    
-   data_share::share_meta meta{L"file.bin"};
-   m_shareProvider->Share(meta, m_rawdata);
-   m_transceiver->Send(SVGUtils::wstringToString(meta.shared_filename).c_str());
+   //data_share::share_meta meta{L"file.bin"};
+
+   //m_shareProvider->Share(meta, m_rawdata);
+   //m_transceiver->Send(SVGUtils::wstringToString(meta.shared_filename).c_str());
+
+
+
    //simulator::simulatorStart(SVGUtils::wstringToString(_scenarioFile).c_str());
    //Dispatcher::GetInstance().LoadScenario(fileName);
 
@@ -137,7 +143,7 @@ void ScenarioManager::createTransceiver()
 
 void ScenarioManager::initTransceiver()
 {
-   m_transceiver->Init("127.0.0.1", "8080", "27015", [this](const char* txt) { this->callback(txt); }, [this](const char* txt) {});
+   m_transceiver->Init(m_info);
 }
 
 void ScenarioManager::callback(const char* text)

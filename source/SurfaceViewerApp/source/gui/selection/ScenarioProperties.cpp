@@ -24,10 +24,6 @@ void ScenarioProperties::prepareScenarioPathfindingSettingsFolder()
    m_scenario_pathfinding_settings_folder = std::make_unique<FolderProperty>("Pathfinding settings");
    m_prop_pathfinding_settings.resize(ScenarioPathfindingSettingsFieldIndex::SPSFI_END);
 
-   m_scenario_pathfinding_settings_point_folder = std::make_unique<FolderProperty>("Point settings");
-   CRSCENPATHSTT(settings::point_settings, m_settings.pth_stt.point_settings, settings_rel_path, ScenarioPathfindingSettingsFieldIndex::SPSFI_RELPATH);
-   m_scenario_pathfinding_settings_point_folder->AddChild(m_prop_pathfinding_settings[ScenarioPathfindingSettingsFieldIndex::SPSFI_RELPATH].get());
-
    m_scenario_pathfinding_settings_level_folder = std::make_unique<FolderProperty>("Level settings");
    CRSCENPATHSTT(settings::level_settings, m_settings.pth_stt.level_settings, max_air_height, ScenarioPathfindingSettingsFieldIndex::SPSFI_MAXAIRHEIGHT);
    CRSCENPATHSTT(settings::level_settings, m_settings.pth_stt.level_settings, max_land_height, ScenarioPathfindingSettingsFieldIndex::SPSFI_MAXLANDHEIGHT);
@@ -43,7 +39,6 @@ void ScenarioProperties::prepareScenarioPathfindingSettingsFolder()
          m_scenario_pathfinding_settings_level_folder->AddChild(m_prop_pathfinding_settings[idx].get());
    }
 
-   m_scenario_pathfinding_settings_folder->AddChild(m_scenario_pathfinding_settings_point_folder.get());
    m_scenario_pathfinding_settings_folder->AddChild(m_scenario_pathfinding_settings_level_folder.get());
 
    AddChild(m_scenario_pathfinding_settings_folder.get());

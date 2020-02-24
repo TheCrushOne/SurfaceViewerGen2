@@ -6,6 +6,8 @@
 #include "coordinates.h"
 #include "SVCG/route_point.h"
 
+#include "settings_meta.h"
+
 namespace settings
 {
    struct point_setting_element
@@ -21,11 +23,6 @@ namespace settings
    {
       std::vector<point_setting_element> land_units;
       std::vector<point_setting_element> air_units;
-   };
-
-   struct point_settings
-   {
-      std::string settings_rel_path;
    };
 
    struct level_settings
@@ -46,7 +43,6 @@ namespace settings
 
     struct pathfinding_settings
     {
-       point_settings point_settings;
        level_settings level_settings;
     };
 

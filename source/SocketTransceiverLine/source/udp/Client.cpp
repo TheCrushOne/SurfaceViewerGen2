@@ -3,10 +3,8 @@
 #include "udef.h"
 
 
-Client::Client(const char* serverAddr, const char* clientPort, std::function<void(const char*)> traceCallback)
-   : m_traceCallback(traceCallback)
-   , m_sAddr(serverAddr)
-   , m_cPort(clientPort)
+Client::Client(const transceiver::transceiver_info& info)
+   : m_info(info)
 {}
 
 void Client::Send(const char* data)
@@ -15,7 +13,7 @@ void Client::Send(const char* data)
    iResult = send(m_connectSocket, data, (int)strlen(data) + 1, 0);
    if (iResult == SOCKET_ERROR)
    {
-      m_traceCallback(("send failed with error: " + std::to_string(WSAGetLastError())).c_str());
+      m_info.trace_callback(("send failed with error: " + std::to_string(WSAGetLastError())).c_str());
       closesocket(m_connectSocket);
       WSACleanup();
       return;
@@ -37,7 +35,7 @@ void Client::Init()
    // Initialize Winsock
    iResult = WSAStartup(MAKEWORD(2, 2), &wsaData);
    if (iResult != 0) {
-      m_traceCallback(("WSAStartup failed with error: " + std::to_string(iResult)).c_str());
+      m_info.trace_callback(("WSAStartup failed with error: " + std::to_string(iResult)).c_str());
       return;
    }
 
@@ -47,10 +45,10 @@ void Client::Init()
    hints.ai_protocol = IPPROTO_TCP;
 
    // Resolve the server address and port
-   iResult = getaddrinfo(m_sAddr, m_cPort, &hints, &result);
+   iResult = getaddrinfo(m_info.server_addr.c_str(), m_info.client_port.c_str(), &hints, &result);
    if (iResult != 0)
    {
-      m_traceCallback(("getaddrinfo failed with error: " + std::to_string(iResult)).c_str());
+      m_info.trace_callback(("getaddrinfo failed with error: " + std::to_string(iResult)).c_str());
       WSACleanup();
       return;
    }
@@ -66,7 +64,7 @@ void Client::Init()
             ptr->ai_protocol);
          if (m_connectSocket == INVALID_SOCKET)
          {
-            m_traceCallback(("socket failed with error: " + std::to_string(WSAGetLastError())).c_str());
+            m_info.trace_callback(("socket failed with error: " + std::to_string(WSAGetLastError())).c_str());
             WSACleanup();
             return;
          }
@@ -75,7 +73,7 @@ void Client::Init()
          iResult = connect(m_connectSocket, ptr->ai_addr, (int)ptr->ai_addrlen);
          if (iResult == SOCKET_ERROR)
          {
-            m_traceCallback(("socket failed with error: " + std::to_string(WSAGetLastError())).c_str());
+            m_info.trace_callback(("socket failed with error: " + std::to_string(WSAGetLastError())).c_str());
             closesocket(m_connectSocket);
             m_connectSocket = INVALID_SOCKET;
             continue;
@@ -84,7 +82,7 @@ void Client::Init()
       }
       if (m_connectSocket == INVALID_SOCKET)
       {
-         m_traceCallback(("Unable to connect to server! try " + std::to_string(tryCount)).c_str());
+         m_info.trace_callback(("Unable to connect to server! try " + std::to_string(tryCount)).c_str());
          //WSACleanup();
       }
       tryCount++;
@@ -104,13 +102,13 @@ void Client::Init()
    iResult = send(m_connectSocket, sendbuf, (int)strlen(sendbuf), 0);
    if (iResult == SOCKET_ERROR)
    {
-      m_traceCallback(("send failed with error: " + std::to_string(WSAGetLastError())).c_str());
+      m_info.trace_callback(("send failed with error: " + std::to_string(WSAGetLastError())).c_str());
       closesocket(m_connectSocket);
       WSACleanup();
       return;
    }
 
-   m_traceCallback(("Bytes Sent:" + std::to_string(iResult)).c_str());
+   m_info.trace_callback(("Bytes Sent:" + std::to_string(iResult)).c_str());
 
    // shutdown the connection since no more data will be sent
    //iResult = shutdown(ConnectSocket, SD_SEND);

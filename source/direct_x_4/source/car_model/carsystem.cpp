@@ -26,7 +26,7 @@ CarSystem::CarSystem(std::shared_ptr<Engine>& eng, LPDIRECT3DDEVICE9 dev, LPCWST
    , m_shaderunit(eng->GetShader())
    , m_transforming(false)
 {
-   m_engine->GetOrderManager()->RegisterObject(&CarSystem::DomRender, reinterpret_cast<void*>(this), &m_pos, &m_priority);
+   //m_engine->GetOrderManager()->RegisterObject(&CarSystem::DomRender, reinterpret_cast<void*>(this), &m_pos, &m_priority);
    m_d3dd = dev;
    m_texturing = DEFAULT_TEXTURING;
    initService();      //хотя он пустой...

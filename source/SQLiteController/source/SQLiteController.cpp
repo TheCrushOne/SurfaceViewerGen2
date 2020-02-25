@@ -14,6 +14,7 @@ void SQLiteController::SaveHeightGrid(const file_utils::file_storage_base& dst, 
 {
    auto& destFs = reinterpret_cast<file_utils::sqlite_database_file_storage&>(const_cast<file_utils::file_storage_base&>(dst));
    m_connector->Connect(SVGUtils::wstringToString(destFs.database_path).c_str());
+   baseCheckCreate();
 }
 
 void SQLiteController::SaveAppSettings(const settings::application_settings& settings)

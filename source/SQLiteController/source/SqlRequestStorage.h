@@ -21,7 +21,7 @@ namespace request_storage
       { RequestToken::RT_CRPTHSTT,
          "CREATE TABLE IF NOT EXISTS pathfinding_settings("
          "setting_id INTEGER PRIMARY KEY,"
-         "setting_parameter TEXT NOT NULL,"
+         "setting_parameter TEXT NOT NULL UNIQUE,"
          "setting_value TEXT NOT NULL)" },
       { RequestToken::RT_CRRESSTT,
          "CREATE TABLE IF NOT EXISTS research_settings("
@@ -32,7 +32,7 @@ namespace request_storage
          "CREATE TABLE IF NOT EXISTS unit_list("
          "unit_id INTEGER PRIMARY KEY, "
          "unit_name TEXT NOT NULL)" },
-      { RequestToken::RT_CRUNITDATA,         
+      { RequestToken::RT_CRUNITDATA,
          "CREATE TABLE IF NOT EXISTS unit_data("
          "data_id INTEGER PRIMARY KEY, "
          "data_unitId INTEGER NOT NULL, "
@@ -54,9 +54,13 @@ namespace request_storage
    const static std::unordered_map<RequestToken, std::string> settingsReqList = {
       { RequestToken::RT_SETPTHSTT,
          "INSERT INTO pathfinding_settings(setting_parameter, setting_value) "
-         "VALUES (%s, %s)" },
+         "VALUES ('%s', '%s') "
+         "ON CONFLICT(setting_parameter) "
+         "DO UPDATE SET setting_value = excluded.setting_value" },
       { RequestToken::RT_SETPTHSTT,
          "INSERT INTO research_settings(setting_parameter, setting_value) "
-         "VALUES (%s, %s)" }
+         "VALUES ('%s', '%s')"
+         "ON CONFLICT(setting_parameter) "
+         "DO UPDATE SET setting_value = excluded.setting_value" }
    };
 }

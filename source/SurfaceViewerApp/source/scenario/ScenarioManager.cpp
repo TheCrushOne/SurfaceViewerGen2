@@ -40,7 +40,10 @@ void ScenarioManager::Open(const wchar_t* fileName)
       //return;
    }
 
-   m_converter->Convert(file_utils::heightmap_file_storage(fileName), file_utils::sqlite_database_file_storage(fileName));
+   auto hmFS = file_utils::heightmap_file_storage(fileName);
+   auto sdFS = file_utils::sqlite_database_file_storage(fileName);
+
+   m_converter->Convert(hmFS, sdFS);
    
    //data_share::share_meta meta{L"file.bin"};
 
@@ -49,7 +52,7 @@ void ScenarioManager::Open(const wchar_t* fileName)
 
 
 
-   //simulator::simulatorStart(SVGUtils::wstringToString(_scenarioFile).c_str());
+   simulator::simulatorStart(sdFS);
    //Dispatcher::GetInstance().LoadScenario(fileName);
 
    //if (ScenarioDispather::GetInstance().OnScenarioLoad(fileName))

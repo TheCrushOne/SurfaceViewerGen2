@@ -38,7 +38,7 @@ namespace simulator
       //simulatorReset ? _simulator->Reset() : _simulator->Stop();
    }
 
-   bool simulatorStart(const char* fileName)
+   bool simulatorStart(const file_utils::sqlite_database_file_storage& fs)
    {
       if (!_simulator)
          createSimulationManager();

@@ -50,8 +50,6 @@ void ScenarioManager::Open(const wchar_t* fileName)
    //m_shareProvider->Share(meta, m_rawdata);
    //m_transceiver->Send(SVGUtils::wstringToString(meta.shared_filename).c_str());
 
-
-
    simulator::simulatorStart(sdFS);
    //Dispatcher::GetInstance().LoadScenario(fileName);
 

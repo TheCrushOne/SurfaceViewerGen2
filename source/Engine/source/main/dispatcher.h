@@ -17,7 +17,11 @@ namespace settings
 //}
 
 class Engine;
-class PathFinder;
+namespace pathfinder
+{
+   class PathFinder;
+}
+
 namespace file_utils
 {
    struct heightmap_file_storage;
@@ -89,7 +93,7 @@ private:
    //std::unique_ptr<ResearchResultGen3> m_resmapGen3;
 
    //std::unique_ptr<RouteData> m_route;
-   std::unique_ptr<PathFinder> m_pathfinder;
+   std::unique_ptr<pathfinder::PathFinder> m_pathfinder;
    
 
    //std::map<float, QColor> m_colorPercentMap;

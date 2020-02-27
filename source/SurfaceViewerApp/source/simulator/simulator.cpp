@@ -46,7 +46,7 @@ namespace simulator
       simulatorStop();
 
       ColregSimulation::simulation_paths p;
-      p.scenario_path = fileName;
+      //p.scenario_path = fileName;
 
       _simulator = nullptr;
 

@@ -59,10 +59,10 @@
     <ClInclude Include="source\common\database_misc.h" />
     <ClInclude Include="source\common\file_storage.h" />
     <ClInclude Include="source\common\observer.h" />
+    <ClInclude Include="source\common\pathfinder_types.h" />
     <ClInclude Include="source\common\settings.h" />
     <ClInclude Include="source\common\settings_meta.h" />
     <ClInclude Include="source\common\share_types.h" />
-    <ClInclude Include="source\common\surface_base_types.h" />
     <ClInclude Include="source\common\transceiver_types.h" />
     <ClInclude Include="source\common\utils.h" />
     <ClInclude Include="source\crossdllinterface\ConverterInterface.h" />
@@ -79,8 +79,9 @@
     <ClInclude Include="source\math\math_utils.h" />
     <ClInclude Include="source\math\point.h" />
     <ClInclude Include="source\math\transform.h" />
-    <ClInclude Include="source\SVCG\geo_point.h" />
+    <ClInclude Include="source\SVCG\position_point.h" />
     <ClInclude Include="source\SVCG\math_base_types.h" />
+    <ClInclude Include="source\SVCG\positioning.h" />
     <ClInclude Include="source\SVCG\route_point.h" />
   </ItemGroup>
   <ItemGroup>

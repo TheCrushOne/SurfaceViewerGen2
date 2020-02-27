@@ -7,6 +7,9 @@
     <Filter Include="algorithm">
       <UniqueIdentifier>{42f03fb7-fc43-40a6-8a6f-3cd99796b7d4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="algorithm\pathfinder">
+      <UniqueIdentifier>{25cc6782-3c6a-4772-99a4-8227c99bf7c6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\main\calibrator.cpp">
@@ -18,13 +21,13 @@
     <ClCompile Include="source\main\engine.cpp">
       <Filter>main</Filter>
     </ClCompile>
-    <ClCompile Include="source\algorithm\pathfinder.cpp">
-      <Filter>algorithm</Filter>
-    </ClCompile>
     <ClCompile Include="source\algorithm\statistic.cpp">
       <Filter>algorithm</Filter>
     </ClCompile>
     <ClCompile Include="source\stdafx.cpp" />
+    <ClCompile Include="source\algorithm\pathfinder\pathfinder.cpp">
+      <Filter>algorithm\pathfinder</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\main\calibrator.h">
@@ -39,12 +42,12 @@
     <ClInclude Include="source\main\engine.h">
       <Filter>main</Filter>
     </ClInclude>
-    <ClInclude Include="source\algorithm\pathfinder.h">
-      <Filter>algorithm</Filter>
-    </ClInclude>
     <ClInclude Include="source\algorithm\statistic.h">
       <Filter>algorithm</Filter>
     </ClInclude>
     <ClInclude Include="source\stdafx.h" />
+    <ClInclude Include="source\algorithm\pathfinder\pathfinder.h">
+      <Filter>algorithm\pathfinder</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

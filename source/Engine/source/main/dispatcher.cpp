@@ -2,7 +2,7 @@
 #include "dispatcher.h"
 
 #include "engine.h"
-#include "../algorithm/pathfinder.h"
+#include "algorithm/pathfinder/pathfinder.h"
 #include "common/settings.h"
 #include "crossdllinterface\SettingsSerializerInterface.h"
 #include "crossdllinterface\UnitDataSerializerInterface.h"
@@ -54,7 +54,7 @@ Dispatcher::Dispatcher(/*GlViewerDlg::ViewerCluster cluster
    
    m_appSettings = std::make_unique<settings::application_settings>();
    m_engine = std::make_unique<Engine>(m_appSettings);
-   m_pathfinder = std::make_unique<PathFinder>(/*DBG_DATA*/);
+   m_pathfinder = std::make_unique<pathfinder::PathFinder>(/*DBG_DATA*/);
    
    //createUnitDataSerializer();
    //createSettingsSerializer();

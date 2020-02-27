@@ -65,11 +65,30 @@ namespace settings
         size_t debug_level;   // TODO: подкорректировать
     };
 
+    struct simulation_settings
+    {};
+
+    struct coordinate_system_info
+    {
+       double angle = 0.; // угол между x и ординатой этой СК
+       double scale = 1.; // относительный масштаб(т.е. 1к[scale])
+    };
+
+    struct environment_settings
+    {
+       // Настройки сделаны относительно пикселей,
+       // т.к. экран привязан именно к ним
+       coordinate_system_info gcs_info;   // geographical coordinate system
+       coordinate_system_info mtx_info;   // matrix coordinate system
+    };
+
     struct application_settings
     {
         pathfinding_settings pth_stt;
         research_settings res_stt;
         unit_settings unit_stt;
+        environment_settings env_stt;
+        simulation_settings sim_stt;
 
         application_settings() = default;
 
@@ -78,5 +97,5 @@ namespace settings
             , res_stt(resStt)
             , unit_stt(unitStt)
         {}
-    };
+    };    
 }

@@ -6,9 +6,7 @@
 using namespace database;
 
 Connector::Connector()
-{
-   
-}
+{}
 
 void Connector::Connect(const char* baseFileName)
 {

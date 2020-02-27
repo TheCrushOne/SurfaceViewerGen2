@@ -6,7 +6,7 @@
 #include <math.h>
 #include <cmath>
 //#include "settings/common/settings.h"
-#include "algorithm/pathfinder.h"
+#include "algorithm/pathfinder/pathfinder.h"
 #include <windows.h>
 #include "algorithm/statistic.h"
 

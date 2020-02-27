@@ -4,7 +4,7 @@
 #include <limits.h>
 //#include "framework/base/instance.h"
 //#include "common/matrix.h"
-#include "../main/engine.h"
+#include "main/engine.h"
 //#include "main/dispatcher.h"
 //#include "settings/common/settings.h"
 
@@ -16,6 +16,8 @@
                               qDebug() << "Corr: [ " << oldrow << ", " << oldcol << " ] -> [ " << nwp.mp.row << ", " << nwp.mp.col << " ]";
 
 #define THREADDEBUG(line) qDebug() << line << "thread:" << QThread::currentThreadId();
+
+using namespace pathfinder;
 
 PathFinder::PathFinder()
    //: m_data(LightPointData())
@@ -111,7 +113,7 @@ PathFinder::~PathFinder()
    //return coverageMatrix;
 //}
 
-bool PathFinder::landPathCoverage(StrategySettings settings, std::vector<Route>& landRoutes, std::vector<Route>& airRoutes)
+bool PathFinder::landPathCoverage(strategy_settings settings, std::vector<route>& landRoutes, std::vector<route>& airRoutes)
 {
    //auto countDist = [](int x1, int y1, int x2, int y2)->double
    //{
@@ -237,7 +239,7 @@ SVCG::route_point PathFinder::checkRetranslateFlyPointAffilation(int row, int co
    return SVCG::route_point(static_cast<size_t>(row), static_cast<size_t>(col), 0.f);
 }
 
-bool PathFinder::prepareControlPoint(StrategySettings settings, size_t iterations, std::vector<Route>& landRoutes, std::vector<Route>& airRoutes/*, const std::shared_ptr<SVM::iMatrix<SurfaceElement>>& rawdata*/)
+bool PathFinder::prepareControlPoint(strategy_settings settings, size_t iterations, std::vector<route>& landRoutes, std::vector<route>& airRoutes/*, const std::shared_ptr<SVM::iMatrix<SurfaceElement>>& rawdata*/)
 {
    //StrategyType type = settings.type;
    //auto start = landRoutes.at(0).start, finish = landRoutes.at(0).finish;
@@ -425,7 +427,7 @@ bool PathFinder::prepareControlPoint(StrategySettings settings, size_t iteration
 }
 
 // WARNING: распараллелено!!!
-void PathFinder::FindPath(StrategySettings settings, std::shared_ptr<RouteData>& routeData/*, const std::shared_ptr<SVM::iMatrix<SurfaceElement>>& rawdata*/, const PathFinderSettings pathFinderSettings, PathFinderStatistic& statistic)
+void PathFinder::FindPath(strategy_settings settings, std::shared_ptr<route_data>& routeData/*, const std::shared_ptr<SVM::iMatrix<SurfaceElement>>& rawdata*/, const path_finder_settings pathFinderSettings, path_finder_statistic& statistic)
 {
    //m_statistic = &statistic;
    //m_vmeta = ExperimentMeta{
@@ -568,7 +570,7 @@ void PathFinder::clearSupportData()
    //TP_MATRIX_CLEAR(m_data, m_rowCount);
 }
 
-Route PathFinder::findAirPath(Route& route, size_t iterations, bool multithread)
+route PathFinder::findAirPath(route& route, size_t iterations, bool multithread)
 {
    //std::vector<CombinedPoint> exp_route;
    //std::vector<CombinedPoint> waypointList;
@@ -625,64 +627,63 @@ Route PathFinder::findAirPath(Route& route, size_t iterations, bool multithread)
    return route;
 }
 
-Route PathFinder::findLandPath(Route& route/*, std::shared_ptr<SVM::iMatrix<size_t>>& coverageMatrix*/, bool multithread, bool* pathFounded)
+route PathFinder::findLandPath(route& route, std::shared_ptr<Matrix<size_t>>& coverageMatrix, bool multithread, bool* pathFounded)
 {
-   //std::vector<CombinedPoint> exp_route;
-   //std::vector<CombinedPoint> waypointList;
-   //waypointList.emplace_back(route.start);
-   //waypointList.insert(waypointList.end(), route.controlPointList.begin(), route.controlPointList.end());
-   //waypointList.emplace_back(route.finish);
-   //Q_ASSERT(waypointList.size() >= 2);
-   //aff_checker checker = [](std::shared_ptr<SVM::iMatrix<SurfaceElement>>& data, std::shared_ptr<SVM::iMatrix<size_t>>& coverageMatrix, size_t row, size_t col) -> bool
-   //{
-   //   return data->Get(row, col).go.gza == GZA_FORBIDDEN || coverageMatrix->Get(row, col) == 0;
-   //};
-   //height_corrector counter = [](float y) -> float
-   //{
-   //   // NOTE: корректировок нет
-   //   return y;
-   //};
-   //PathFinderLogic logic = { checker, counter };
-   //exp_route.emplace_back(waypointList.at(0));
-   //for (size_t idx = 0; idx < waypointList.size() - 1; idx++)
-   //{
-   //   std::vector<CombinedPoint> path = findPath(waypointList.at(idx), waypointList.at(idx + 1), logic, coverageMatrix, multithread, pathFounded);
-   //   //exp_route.clear();
-   //   //qDebug() << "wpl sz:" << idx;
-   //   std::reverse(path.begin(), path.end());
-   //   //exp_route.emplace_back(waypointList.at(idx));
-   //   if (path.size() != 0)
-   //      exp_route.insert(exp_route.end(), ++path.begin(), path.end());
-   //   //exp_route.emplace_back(waypointList.at(idx + 1));
-   //}
-   ////THREADDEBUG("exproute size land: " << exp_route.size());
-   //route.route = exp_route;
+   std::vector<SVCG::route_point> exp_route;
+   std::vector<SVCG::route_point> waypointList;
+   waypointList.emplace_back(route.start);
+   waypointList.insert(waypointList.end(), route.control_point_list.begin(), route.control_point_list.end());
+   waypointList.emplace_back(route.finish);
+   ATLASSERT(waypointList.size() >= 2);
+   aff_checker checker = [](std::shared_ptr<Matrix<SVCG::route_point>>& data, std::shared_ptr<Matrix<size_t>>& coverageMatrix, size_t row, size_t col) -> bool
+   {
+      return data->Get(row, col).go.gza == GoZoneAffilation::GZA_FORBIDDEN || coverageMatrix->Get(row, col) == 0;
+   };
+   height_corrector counter = [](float y) -> float
+   {
+      // NOTE: корректировок нет
+      return y;
+   };
+   path_finder_logic logic = { checker, counter };
+   exp_route.emplace_back(waypointList.at(0));
+   for (size_t idx = 0; idx < waypointList.size() - 1; idx++)
+   {
+      std::vector<SVCG::route_point> path = findPath(waypointList.at(idx), waypointList.at(idx + 1), logic, coverageMatrix, multithread, pathFounded);
+      //exp_route.clear();
+      //qDebug() << "wpl sz:" << idx;
+      std::reverse(path.begin(), path.end());
+      //exp_route.emplace_back(waypointList.at(idx));
+      if (path.size() != 0)
+         exp_route.insert(exp_route.end(), ++path.begin(), path.end());
+      //exp_route.emplace_back(waypointList.at(idx + 1));
+   }
+   //THREADDEBUG("exproute size land: " << exp_route.size());
+   route.route_list = exp_route;
    return route;
 }
 
-std::vector<SVCG::route_point> PathFinder::findPath(SVCG::route_point& start, SVCG::route_point& finish, PathFinderLogic& logic/*, std::shared_ptr<SVM::iMatrix<size_t>>& coverageMatrix*/, bool multithread, bool* pathFound)
+std::vector<SVCG::route_point> PathFinder::findPath(SVCG::route_point& start, SVCG::route_point& finish, path_finder_logic& logic/*, std::shared_ptr<SVM::iMatrix<size_t>>& coverageMatrix*/, bool multithread, bool* pathFound)
 {
-   //Q_UNUSED(multithread);
    std::vector<SVCG::route_point> exp_route;
-   ///*auto countDist = [](RoutePoint& p1, RoutePoint& p2)->double
-   //{
-   //    return sqrt(pow(p2.x - p1.x, 2.) + pow(p2.z - p1.z, 2.));
-   //};*/
-   ////double maxDist = countDist(start.rp, finish.rp);
+   /*auto countDist = [](RoutePoint& p1, RoutePoint& p2)->double
+   {
+       return sqrt(pow(p2.x - p1.x, 2.) + pow(p2.z - p1.z, 2.));
+   };*/
+   //double maxDist = countDist(start.rp, finish.rp);
 
-   //if (start.mp.row == finish.mp.row
-   //    && start.mp.col == finish.mp.col)
-   //{
-   //   auto point = CombinedPoint{ RoutePoint(start.rp.x,
-   //                                          logic.heightCorrector(start.rp.y),
-   //                                          start.rp.z,
-   //                                          m_data->Get(start.mp.row, start.mp.col).fly.fza,
-   //                                          m_data->Get(start.mp.row, start.mp.col).go.gza), MatrixPoint(start.mp.row, start.mp.col) };
-   //   exp_route.emplace_back(point);
-   //   exp_route.emplace_back(point);
-   //   *pathFound = true;
-   //   return exp_route;
-   //}
+   if (start.mp.row == finish.mp.row
+       && start.mp.col == finish.mp.col)
+   {
+      auto point = CombinedPoint{ RoutePoint(start.rp.x,
+                                             logic.heightCorrector(start.rp.y),
+                                             start.rp.z,
+                                             m_data->Get(start.mp.row, start.mp.col).fly.fza,
+                                             m_data->Get(start.mp.row, start.mp.col).go.gza), MatrixPoint(start.mp.row, start.mp.col) };
+      exp_route.emplace_back(point);
+      exp_route.emplace_back(point);
+      *pathFound = true;
+      return exp_route;
+   }
 
    //auto isInRowSafeRange = [this](int rowIdx)->bool
    //{

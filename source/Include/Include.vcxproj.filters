@@ -150,9 +150,6 @@
     <ClInclude Include="source\SVCG\route_point.h">
       <Filter>SVCG</Filter>
     </ClInclude>
-    <ClInclude Include="source\SVCG\geo_point.h">
-      <Filter>SVCG</Filter>
-    </ClInclude>
     <ClInclude Include="source\common\base_class.h">
       <Filter>common</Filter>
     </ClInclude>
@@ -163,9 +160,6 @@
       <Filter>common</Filter>
     </ClInclude>
     <ClInclude Include="source\common\coordinates.h">
-      <Filter>common</Filter>
-    </ClInclude>
-    <ClInclude Include="source\common\surface_base_types.h">
       <Filter>common</Filter>
     </ClInclude>
     <ClInclude Include="source\common\file_storage.h">
@@ -218,6 +212,15 @@
     </ClInclude>
     <ClInclude Include="source\common\settings_meta.h">
       <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="source\common\pathfinder_types.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="source\SVCG\positioning.h">
+      <Filter>SVCG</Filter>
+    </ClInclude>
+    <ClInclude Include="source\SVCG\position_point.h">
+      <Filter>SVCG</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

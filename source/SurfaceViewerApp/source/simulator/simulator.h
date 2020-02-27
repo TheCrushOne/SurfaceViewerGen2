@@ -1,13 +1,14 @@
 #pragma once
 #include "colreg/ModuleGuard.h"
 #include "colreg/ColregSimulation.h"
+#include "common/file_storage.h"
 
 namespace simulator
 {
    ColregSimulation::iSimulator* getSimulator();
 
    bool simulatorStep();
-   bool simulatorStart(const char* scenarioPath);
+   bool simulatorStart(const file_utils::sqlite_database_file_storage& fs);
    void simulatorStop(bool simulatorReset = false);
 
    /*const ColregSimulation::iShip* getShip(colreg::id_type id);

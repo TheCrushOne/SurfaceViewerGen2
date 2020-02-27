@@ -1,35 +1,42 @@
 #pragma once
 
-#include "geo_point.h"
+//#include "geo_point.h"
 //#include "pixel_point.h"
 //#include "math_base_types.h"
-#include "common/surface_base_types.h"
+//#include "common/surface_base_types.h"
 
 #include <cmath>
 
 namespace SVCG
 {
-   struct route_point : public position_point
+   struct route_point
    {
-      surface_viewer::FlyZoneAffilation fly;
-      surface_viewer::GoZoneAffilation go;
+      int x, y, z;
+      pathfinder::FlyZoneAffilation fly;
+      pathfinder::GoZoneAffilation go;
       bool is_control;
-      route_point(double lat, double lon, double alt, surface_viewer::FlyZoneAffilation fly, surface_viewer::GoZoneAffilation go, bool isControl = false)
-         : position_point{ lat, lon, alt }
+      route_point(int x, int y, int z, pathfinder::FlyZoneAffilation fly, pathfinder::GoZoneAffilation go, bool isControl = false)
+         : x(x)
+         , y(y)
+         , z(z)
          , fly(fly)
          , go(go)
          , is_control(isControl)
       {}
-      route_point(double lat, double lon, double alt, bool isControl = false)
-         : position_point{ lat, lon, alt }
-         , fly(surface_viewer::FlyZoneAffilation::FZA_NORMAL)
-         , go(surface_viewer::GoZoneAffilation::GZA_NORMAL)
+      route_point(int x, int y, int z, bool isControl = false)
+         : x(x)
+         , y(y)
+         , z(z)
+         , fly(pathfinder::FlyZoneAffilation::FZA_NORMAL)
+         , go(pathfinder::GoZoneAffilation::GZA_NORMAL)
          , is_control(isControl)
       {}
       route_point(bool isControl = false)
-         : position_point{ 0., 0., 0. }
-         , fly(surface_viewer::FlyZoneAffilation::FZA_NORMAL)
-         , go(surface_viewer::GoZoneAffilation::GZA_NORMAL)
+         : x(x)
+         , y(y)
+         , z(z)
+         , fly(pathfinder::FlyZoneAffilation::FZA_NORMAL)
+         , go(pathfinder::GoZoneAffilation::GZA_NORMAL)
          , is_control(isControl)
       {}
 

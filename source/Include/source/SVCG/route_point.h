@@ -11,30 +11,31 @@ namespace SVCG
 {
    struct route_point
    {
-      int x, y, z;
+      int row, col;
+      double height;
       pathfinder::FlyZoneAffilation fly;
       pathfinder::GoZoneAffilation go;
       bool is_control;
-      route_point(int x, int y, int z, pathfinder::FlyZoneAffilation fly, pathfinder::GoZoneAffilation go, bool isControl = false)
-         : x(x)
-         , y(y)
-         , z(z)
+      route_point(int row, int col, double height, pathfinder::FlyZoneAffilation fly, pathfinder::GoZoneAffilation go, bool isControl = false)
+         : row(row)
+         , col(col)
+         , height(height)
          , fly(fly)
          , go(go)
          , is_control(isControl)
       {}
-      route_point(int x, int y, int z, bool isControl = false)
-         : x(x)
-         , y(y)
-         , z(z)
+      route_point(int row, int col, double height, bool isControl = false)
+         : row(row)
+         , col(col)
+         , height(height)
          , fly(pathfinder::FlyZoneAffilation::FZA_NORMAL)
          , go(pathfinder::GoZoneAffilation::GZA_NORMAL)
          , is_control(isControl)
       {}
       route_point(bool isControl = false)
-         : x(x)
-         , y(y)
-         , z(z)
+         : row(0)
+         , col(0)
+         , height(.0)
          , fly(pathfinder::FlyZoneAffilation::FZA_NORMAL)
          , go(pathfinder::GoZoneAffilation::GZA_NORMAL)
          , is_control(isControl)

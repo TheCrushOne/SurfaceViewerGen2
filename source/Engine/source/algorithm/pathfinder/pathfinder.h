@@ -26,9 +26,7 @@ namespace pathfinder
    public:
       void FindPath(strategy_settings settings, std::shared_ptr<route_data>& route, const std::shared_ptr<Matrix<SVCG::route_point>>& rawdata, /*bool multithread = true, size_t countIdx = 0, size_t legnthIdx = 0, bool research = false, bool landPath = true, size_t packetSize = 0*/const path_finder_settings pathFinderSettings, path_finder_statistic& statistic);
    private:
-      bool prepareControlPoint(strategy_settings settings, size_t iterations, std::vector<route>& landRoutes, std::vector<route>& airRoutes/*, const std::shared_ptr<SVM::iMatrix<SurfaceElement>>& rawdata*/);
-      //std::shared_ptr<SVM::iMatrix<size_t>> buildLandCoverage(StrategySettings settings, std::vector<Route>& airRoutes);
-      bool landPathCoverage(strategy_settings settings, std::vector<route>& landRoutes, std::vector<route>& airRoutes);
+      
       SVCG::route_point checkRetranslateFlyPointAffilation(int row, int col/*, const std::shared_ptr<SVM::iMatrix<SurfaceElement>>& rawdata*/);
       route findLandPath(route& route/*, std::shared_ptr<SVM::iMatrix<size_t>>& coverageMatrix*/, bool multithread, bool* pathFounded);
       route findAirPath(route& route, size_t iterations, bool multithread);

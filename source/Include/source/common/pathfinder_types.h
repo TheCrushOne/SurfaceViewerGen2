@@ -24,6 +24,9 @@ namespace pathfinder
 
       type Get(size_t rIdx, size_t cIdx) const { ATLASSERT(m_rowCount > rIdx&& m_colCount > cIdx); return m_data.at(rIdx).at(cIDx); }
       void Set(size_t rIdx, size_t cIdx, type val) { ATLASSERT(m_rowCount > rIdx&& m_colCount > cIdx); m_data[rIdx][cIDx] = val; }
+
+      size_t GetRowCount() const { return m_rowCount; }
+      size_t GetColCount() const { return m_colCount; }
    private:
       size_t m_rowCount, m_colCount;
       type m_inVal;
@@ -107,8 +110,8 @@ namespace pathfinder
 
    struct light_point_data
    {
-      surface_viewer::FlyZoneAffilation fly : 4;
-      surface_viewer::GoZoneAffilation go : 4;
+      FlyZoneAffilation fly : 4;
+      GoZoneAffilation go : 4;
       float x;
       float y;
       float z;

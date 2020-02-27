@@ -19,7 +19,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="source\algorithm\pathfinder\CoverageBuilder.cpp" />
     <ClCompile Include="source\algorithm\pathfinder\pathfinder.cpp" />
+    <ClCompile Include="source\algorithm\pathfinder\StrategyManager.cpp" />
     <ClCompile Include="source\algorithm\statistic.cpp" />
     <ClCompile Include="source\main\calibrator.cpp" />
     <ClCompile Include="source\main\dispatcher.cpp" />
@@ -27,7 +29,9 @@
     <ClCompile Include="source\stdafx.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="source\algorithm\pathfinder\CoverageBuilder.h" />
     <ClInclude Include="source\algorithm\pathfinder\pathfinder.h" />
+    <ClInclude Include="source\algorithm\pathfinder\StrategyManager.h" />
     <ClInclude Include="source\algorithm\statistic.h" />
     <ClInclude Include="source\main\calibrator.h" />
     <ClInclude Include="source\main\dispatchableinterface.h" />

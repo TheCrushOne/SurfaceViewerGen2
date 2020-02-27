@@ -72,6 +72,8 @@ namespace settings
     {
        double angle = 0.; // угол между x и ординатой этой СК
        double scale = 1.; // относительный масштаб(т.е. 1к[scale])
+       double ordinate_bias;  // смещение по ординате
+       double abscissa_bias;  // смещение по абсциссе
     };
 
     struct environment_settings

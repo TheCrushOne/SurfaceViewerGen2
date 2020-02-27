@@ -28,6 +28,12 @@
     <ClCompile Include="source\algorithm\pathfinder\pathfinder.cpp">
       <Filter>algorithm\pathfinder</Filter>
     </ClCompile>
+    <ClCompile Include="source\algorithm\pathfinder\CoverageBuilder.cpp">
+      <Filter>algorithm\pathfinder</Filter>
+    </ClCompile>
+    <ClCompile Include="source\algorithm\pathfinder\StrategyManager.cpp">
+      <Filter>algorithm\pathfinder</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\main\calibrator.h">
@@ -47,6 +53,12 @@
     </ClInclude>
     <ClInclude Include="source\stdafx.h" />
     <ClInclude Include="source\algorithm\pathfinder\pathfinder.h">
+      <Filter>algorithm\pathfinder</Filter>
+    </ClInclude>
+    <ClInclude Include="source\algorithm\pathfinder\CoverageBuilder.h">
+      <Filter>algorithm\pathfinder</Filter>
+    </ClInclude>
+    <ClInclude Include="source\algorithm\pathfinder\StrategyManager.h">
       <Filter>algorithm\pathfinder</Filter>
     </ClInclude>
   </ItemGroup>

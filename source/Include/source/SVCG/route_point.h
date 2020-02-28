@@ -32,6 +32,14 @@ namespace SVCG
          , go(pathfinder::GoZoneAffilation::GZA_NORMAL)
          , is_control(isControl)
       {}
+      route_point(int row, int col, bool isControl = false)
+         : row(row)
+         , col(col)
+         , height(0.)
+         , fly(pathfinder::FlyZoneAffilation::FZA_NORMAL)
+         , go(pathfinder::GoZoneAffilation::GZA_NORMAL)
+         , is_control(isControl)
+      {}
       route_point(bool isControl = false)
          : row(0)
          , col(0)

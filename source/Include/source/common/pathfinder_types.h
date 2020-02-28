@@ -15,18 +15,34 @@ namespace pathfinder
          : m_rowCount(rowCount)
          , m_colCount(colCount)
          , m_inVal(inVal)
-      {}
+      {
+         m_data.resize(m_rowCount);
+         for (auto& vct : m_data)
+            vct.resize(m_colCount);
+      }
       Matrix(type inVal = inVal())
          : m_rowCount(0)
          , m_colCount(0)
          , m_inVal(inVal)
       {}
+      Matrix(const Matrix& mtx)
+         : m_rowCount(mtx.GetRowCount())
+         , m_colCount(mtx.GetColCount())
+         , m_inVal(mtx.GetInVal())
+      {
+         for (size_t rIdx = 0; rIdx < m_rowCount; rIdx++)
+         {
+            for (size_t cIdx = 0; cIdx < m_colCount; cIdx++)
+               Set(rIx, cIdx, mtx.Get(rIdx, cIdx));
+         }
+      }
 
       type Get(size_t rIdx, size_t cIdx) const { ATLASSERT(m_rowCount > rIdx&& m_colCount > cIdx); return m_data.at(rIdx).at(cIDx); }
       void Set(size_t rIdx, size_t cIdx, type val) { ATLASSERT(m_rowCount > rIdx&& m_colCount > cIdx); m_data[rIdx][cIDx] = val; }
 
       size_t GetRowCount() const { return m_rowCount; }
       size_t GetColCount() const { return m_colCount; }
+      type GetInVal() const { return m_inVal; }
    private:
       size_t m_rowCount, m_colCount;
       type m_inVal;
@@ -106,15 +122,6 @@ namespace pathfinder
          : land_routes(landRoutes)
          , air_routes(airRoutes)
       {}
-   };
-
-   struct light_point_data
-   {
-      FlyZoneAffilation fly : 4;
-      GoZoneAffilation go : 4;
-      float x;
-      float y;
-      float z;
    };
 
    using aff_checker = std::function<bool(std::shared_ptr<Matrix<SVCG::route_point>>&, std::shared_ptr<Matrix<size_t>>&, size_t, size_t)>;

@@ -2,6 +2,7 @@
 #include "pathfinder.h"
 #include <math.h>
 #include <limits.h>
+#include <future>
 //#include "framework/base/instance.h"
 //#include "common/matrix.h"
 #include "main/engine.h"
@@ -23,6 +24,8 @@ PathFinder::PathFinder()
    : m_rowCount(0)
    , m_colCount(0)
    , m_statistic(nullptr)
+   , m_coverageBuilder(std::make_unique<CoverageBuilder>())
+   , m_strategyManager(std::make_unique<StrategyManager>())
 {
    //auto stat = WFM::GetSharedInstance<Statistic>(DBG_DATA);
    /*connect(this, &PathFinder::SubTaskDataUpdate
@@ -41,188 +44,167 @@ PathFinder::~PathFinder()
 {}*/
 
 
-SVCG::route_point PathFinder::checkRetranslateFlyPointAffilation(int row, int col/*, const std::shared_ptr<SVM::iMatrix<SurfaceElement>>& rawdata*/)
+SVCG::route_point PathFinder::checkRetranslateFlyPointAffilation(int row, int col, const std::shared_ptr<Matrix<SVCG::route_point>>& rawdata)
 {   
-   //auto rowCount = rawdata->GetRowCount();
-   //auto colCount = rawdata->GetColCount();
-   //auto checkPointBorderCollision = [&rowCount, &colCount](int row, int col)->bool
-   //{
-   //    return !(row >= 0 && row < static_cast<int>(rowCount) && col >= 0 && col < static_cast<int>(colCount));
-   //};
-   //bool /*found = false,*/ stuck = false;
-   //int step = 1;
-   //if (checkPointBorderCollision(row, col) || rawdata->Get(static_cast<size_t>(row), static_cast<size_t>(col)).fly.fza == FZA_FORBIDDEN)
-   //{
-   //   while(!stuck)
-   //   {
-   //      if ((row - step < 0)
-   //          && (row + step >= static_cast<int>(rowCount))
-   //          && (col - step < 0)
-   //          && (col + step >= static_cast<int>(colCount)))
-   //      {
-   //         stuck = true;
-   //         qDebug() << "stucked: " << row << col;
-   //         return MatrixPoint(0, 0);
-   //      }
+   auto rowCount = rawdata->GetRowCount();
+   auto colCount = rawdata->GetColCount();
+   auto checkPointBorderCollision = [&rowCount, &colCount](int row, int col)->bool
+   {
+       return !(row >= 0 && row < static_cast<int>(rowCount) && col >= 0 && col < static_cast<int>(colCount));
+   };
+   bool /*found = false,*/ stuck = false;
+   int step = 1;
+   if (checkPointBorderCollision(row, col) || rawdata->Get(static_cast<size_t>(row), static_cast<size_t>(col)).fly == FlyZoneAffilation::FZA_FORBIDDEN)
+   {
+      while(!stuck)
+      {
+         if ((row - step < 0)
+             && (row + step >= static_cast<int>(rowCount))
+             && (col - step < 0)
+             && (col + step >= static_cast<int>(colCount)))
+         {
+            stuck = true;
+            //qDebug() << "stucked: " << row << col;
+            return SVCG::route_point(0, 0);
+         }
 
-   //      if (!checkPointBorderCollision(row - step, col)
-   //          && (rawdata->Get(static_cast<size_t>(row - step), static_cast<size_t>(col)).fly.fza != FZA_FORBIDDEN))
-   //         return MatrixPoint(static_cast<size_t>(row - step), static_cast<size_t>(col));
+         if (!checkPointBorderCollision(row - step, col)
+             && (rawdata->Get(static_cast<size_t>(row - step), static_cast<size_t>(col)).fly != FlyZoneAffilation::FZA_FORBIDDEN))
+            return SVCG::route_point(row - step, col);
 
-   //      if (!checkPointBorderCollision(row + step, col)
-   //          && (rawdata->Get(static_cast<size_t>(row + step), static_cast<size_t>(col)).fly.fza != FZA_FORBIDDEN))
-   //         return MatrixPoint(static_cast<size_t>(row + step), static_cast<size_t>(col));
+         if (!checkPointBorderCollision(row + step, col)
+             && (rawdata->Get(static_cast<size_t>(row + step), static_cast<size_t>(col)).fly != FlyZoneAffilation::FZA_FORBIDDEN))
+            return SVCG::route_point(row + step, col);
 
-   //      if (!checkPointBorderCollision(row, col - step)
-   //          && (rawdata->Get(static_cast<size_t>(row), static_cast<size_t>(col - step)).fly.fza != FZA_FORBIDDEN))
-   //         return MatrixPoint(static_cast<size_t>(row), static_cast<size_t>(col - step));
+         if (!checkPointBorderCollision(row, col - step)
+             && (rawdata->Get(static_cast<size_t>(row), static_cast<size_t>(col - step)).fly != FlyZoneAffilation::FZA_FORBIDDEN))
+            return SVCG::route_point(row, col - step);
 
-   //      if (!checkPointBorderCollision(row, col + step)
-   //          && (rawdata->Get(static_cast<size_t>(row), static_cast<size_t>(col + step)).fly.fza != FZA_FORBIDDEN))
-   //         return MatrixPoint(static_cast<size_t>(row), static_cast<size_t>(col + step));
-   //      step++;
-   //      //qDebug() << "corrector step:" << step << row << col;//row << static_cast<int>(rowCount) << (row - step < 0) << (row + step >= static_cast<int>(rowCount)) << (col - step < 0) << (col + step >= static_cast<int>(colCount));
-   //   }
-   //}
-   return SVCG::route_point(static_cast<size_t>(row), static_cast<size_t>(col), 0.f);
+         if (!checkPointBorderCollision(row, col + step)
+             && (rawdata->Get(static_cast<size_t>(row), static_cast<size_t>(col + step)).fly != FlyZoneAffilation::FZA_FORBIDDEN))
+            return SVCG::route_point(row, col + step);
+         step++;
+         //qDebug() << "corrector step:" << step << row << col;//row << static_cast<int>(rowCount) << (row - step < 0) << (row + step >= static_cast<int>(rowCount)) << (col - step < 0) << (col + step >= static_cast<int>(colCount));
+      }
+   }
+   return SVCG::route_point(row, col, 0.f);
 }
 
 
 // WARNING: распараллелено!!!
-void PathFinder::FindPath(strategy_settings settings, std::shared_ptr<route_data>& routeData/*, const std::shared_ptr<SVM::iMatrix<SurfaceElement>>& rawdata*/, const path_finder_settings pathFinderSettings, path_finder_statistic& statistic)
+void PathFinder::FindPath(strategy_settings settings, std::shared_ptr<route_data>& routeData, const std::shared_ptr<Matrix<SVCG::route_point>>& rawdata, const path_finder_settings pathFinderSettings, path_finder_statistic& statistic)
 {
    //m_statistic = &statistic;
    //m_vmeta = ExperimentMeta{
    //   pathFinderSettings.statFieldIndex,
    //   pathFinderSettings.multithread
    //};
-   //m_data = rawdata;
-   //fillSupportData(rawdata);
+   m_rawdata = rawdata;
    //qint64 startTime = CURTIME_MS();
-   //size_t iterations = 2;
-   //std::vector<Route> resultAirRoutes;
-   //resultAirRoutes.resize(routeData->airRoutes.size());
-   //m_funLandVector.clear();
-   //m_appSettings = WFM::GetSharedInstance<Dispatcher>(DBG_DATA)->GetSettings();
-   //bool pathFound = false;
-   //if (pathFinderSettings.multithread)
-   //{      
-   //   do
-   //   {
-   //      const int threadCount = 16;   // NOTE: По количеству логических ядер 8+HT
-   //      QThreadPool::globalInstance()->setMaxThreadCount(threadCount);
-   //      //m_funAirVector.clear();
-   //      resultAirRoutes.clear();
-   //      resultAirRoutes.resize(routeData->airRoutes.size());
-   //      if (!pathFinderSettings.research)
-   //         prepareControlPoint(settings, iterations, routeData->landRoutes, resultAirRoutes, rawdata);
-   //      else
-   //         resultAirRoutes = routeData->airRoutes;
-   //      bool finished = true;
-   //      size_t idxDelta = 0;
-   //      while (!finished)
-   //      {
-   //         m_synchronizer.clearFutures();
-   //         for (size_t idx = 0; idx < pathFinderSettings.packetSize == 0 ? resultAirRoutes.size() : std::min(pathFinderSettings.packetSize, resultAirRoutes.size() - idxDelta - pathFinderSettings.packetSize); idx++)
-   //         {
-   //            m_synchronizer.addFuture(run(this, &PathFinder::findAirPath, resultAirRoutes.at(idxDelta + idx), iterations, pathFinderSettings.multithread));
-   //            //qDebug() << "added task" << idx;
-   //         }
+   size_t iterations = 2;
+   std::vector<route> resultAirRoutes;
+   resultAirRoutes.resize(routeData->air_routes.size());
+   m_funLandVector.clear();
+   m_appSettings = std::make_shared<settings::application_settings>();//WFM::GetSharedInstance<Dispatcher>(DBG_DATA)->GetSettings();
+   bool pathFound = false;
+   if (pathFinderSettings.multithread)
+   {      
+      do
+      {
+         const int threadCount = 16;   // NOTE: По количеству логических ядер 8+HT
+         //QThreadPool::globalInstance()->setMaxThreadCount(threadCount);
+         //m_funAirVector.clear();
+         resultAirRoutes.clear();
+         resultAirRoutes.resize(routeData->air_routes.size());
+         if (!pathFinderSettings.research)
+            m_strategyManager->PrepareControlPoint(settings, iterations, routeData->land_routes, resultAirRoutes, rawdata);
+         else
+            resultAirRoutes = routeData->air_routes;
+         bool finished = true;
+         size_t idxDelta = 0;
+         while (!finished)
+         {
+            m_synchronizer.clear();
+            for (size_t idx = 0; idx < pathFinderSettings.packet_size == 0 ? resultAirRoutes.size() : std::min(pathFinderSettings.packet_size, resultAirRoutes.size() - idxDelta - pathFinderSettings.packet_size); idx++)
+            {
+               m_synchronizer.emplace_back(std::async(std::launch::async, PathFinder::findAirPath, resultAirRoutes.at(idxDelta + idx), iterations, pathFinderSettings.multithread));
+               //qDebug() << "added task" << idx;
+            }
 
-   //         if (pathFinderSettings.packetSize == 0 || idxDelta >= resultAirRoutes.size())
-   //            finished = true;
-   //         //m_funAirVector.emplace_back(run(this, &PathFinder::findAirPath, resultAirRoutes.at(idx), iterations, multithread));
-   //         m_synchronizer.waitForFinished();
-   //         //qDebug() << "task list finished";
-   //         for (size_t idx = 0; idx < m_synchronizer.futures().count(); idx++)
-   //         {
-   //            resultAirRoutes.at(idxDelta + idx) = m_synchronizer.futures().at(idx).result();
-   //         }
-   //         idxDelta += pathFinderSettings.packetSize;
-   //      }
+            if (pathFinderSettings.packet_size == 0 || idxDelta >= resultAirRoutes.size())
+               finished = true;
+            //m_funAirVector.emplace_back(run(this, &PathFinder::findAirPath, resultAirRoutes.at(idx), iterations, multithread));
+            //m_synchronizer.waitForFinished();
+            //qDebug() << "task list finished";
+            for (size_t idx = 0; idx < m_synchronizer.size(); idx++)
+            {
+               resultAirRoutes.at(idxDelta + idx) = m_synchronizer.at(idx).get();
+            }
+            idxDelta += pathFinderSettings.packet_size;
+         }
 
-   //      if (pathFinderSettings.landPath)
-   //      {
-   //         auto matrix = buildLandCoverage(settings, resultAirRoutes);
+         if (pathFinderSettings.land_path)
+         {
+            auto matrix = m_coverageBuilder->BuildLandCoverage(m_rowCount, m_colCount, settings, resultAirRoutes);
 
-   //         m_funLandVector.clear();
-   //         for (size_t idx = 0; idx < routeData.get()->landRoutes.size(); idx++)
-   //            m_funLandVector.emplace_back(run(this, &PathFinder::findLandPath, routeData.get()->landRoutes.at(idx), matrix, pathFinderSettings.multithread, &pathFound));
-   //         for (size_t idx = 0; idx < m_funLandVector.size(); idx++)
-   //         {
-   //            m_funLandVector.at(idx).waitForFinished();
-   //            routeData.get()->landRoutes.at(idx) = m_funLandVector.at(idx).result();
-   //         }
-   //      }
-   //      else
-   //         pathFound = true;
+            m_funLandVector.clear();
+            for (size_t idx = 0; idx < routeData.get()->land_routes.size(); idx++)
+               m_funLandVector.emplace_back(std::async(std::launch::async, PathFinder::findLandPath, routeData.get()->land_routes.at(idx), matrix, pathFinderSettings.multithread, &pathFound));
+            for (size_t idx = 0; idx < m_funLandVector.size(); idx++)
+            {
+               //m_funLandVector.at(idx).waitForFinished();
+               routeData.get()->land_routes.at(idx) = m_funLandVector.at(idx).get();
+            }
+         }
+         else
+            pathFound = true;
 
-   //      //qDebug() << pathFound << iterations;
-   //      iterations++;
-   //   }
-   //   while(!pathFound);
-   //}
-   //else
-   //{      
-   //   do
-   //   {
-   //      resultAirRoutes.clear();
-   //      resultAirRoutes.resize(routeData->airRoutes.size());
-   //      if (!pathFinderSettings.research)
-   //         prepareControlPoint(settings, iterations, routeData->landRoutes, resultAirRoutes, rawdata);
-   //      else
-   //         resultAirRoutes = routeData->airRoutes;
-   //      for (size_t idx = 0; idx < resultAirRoutes.size(); idx++)
-   //         resultAirRoutes.at(idx) = findAirPath(resultAirRoutes.at(idx), iterations, pathFinderSettings.multithread);
+         //qDebug() << pathFound << iterations;
+         iterations++;
+      }
+      while(!pathFound);
+   }
+   else
+   {      
+      do
+      {
+         resultAirRoutes.clear();
+         resultAirRoutes.resize(routeData->air_routes.size());
+         if (!pathFinderSettings.research)
+            m_strategyManager->PrepareControlPoint(settings, iterations, routeData->land_routes, resultAirRoutes, rawdata);
+         else
+            resultAirRoutes = routeData->air_routes;
+         for (size_t idx = 0; idx < resultAirRoutes.size(); idx++)
+            resultAirRoutes.at(idx) = findAirPath(resultAirRoutes.at(idx), iterations, pathFinderSettings.multithread);
 
-   //      if (pathFinderSettings.landPath)
-   //      {
-   //         auto matrix = buildLandCoverage(settings, resultAirRoutes);
+         if (pathFinderSettings.land_path)
+         {
+            auto matrix = m_coverageBuilder->BuildLandCoverage(m_rowCount, m_colCount, settings, resultAirRoutes);
 
-   //         for (size_t idx = 0; idx < routeData.get()->landRoutes.size(); idx++)
-   //            routeData.get()->landRoutes.at(idx) = findLandPath(routeData.get()->landRoutes.at(idx), matrix, pathFinderSettings.multithread, &pathFound);
-   //      }
-   //      else
-   //         pathFound = true;
+            for (size_t idx = 0; idx < routeData.get()->land_routes.size(); idx++)
+               routeData.get()->land_routes.at(idx) = findLandPath(routeData.get()->land_routes.at(idx), matrix, pathFinderSettings.multithread, &pathFound);
+         }
+         else
+            pathFound = true;
 
-   //      //qDebug() << pathFound << iterations;
-   //      iterations++;
-   //   }
-   //   while (!pathFound);
-   //}
-   //routeData->airRoutes = std::move(resultAirRoutes);
+         //qDebug() << pathFound << iterations;
+         iterations++;
+      }
+      while (!pathFound);
+   }
+   routeData->air_routes = std::move(resultAirRoutes);
    //qint64 finishTime = CURTIME_MS();
    //qint64 time = finishTime - startTime;
    //qDebug() << "path finding ended: mt: " << pathFinderSettings.multithread << " :" << time;
    //TaskStat stat{m_vmeta, time};
    //QVariant vdata;
    //vdata.setValue(stat);
-   ////WFM::GetSharedInstance<Statistic>(DBG_DATA)->StatUpdateTaskRun(vdata);
-   //if (m_appSettings->type == STT::ApplicationRunType::ART_RESEARCH
-   //    && m_appSettings->res_settings.type == STT::ResearchType::RT_GEN1)
-   //   emit TaskDataUpdate(vdata);
-   ////clearSupportData();
-   //statistic = *m_statistic;
-}
-
-void PathFinder::fillSupportData(/*const std::shared_ptr<SVM::iMatrix<SurfaceElement>> &rawdata*/)
-{
-   //m_rowCount = rawdata->GetRowCount();
-   //m_colCount = rawdata->GetColCount();
-   /*XFM::CreateMatrix(m_data, m_rowCount, m_colCount);
-
-   for (size_t ridx = 0; ridx < m_rowCount; ridx++)
-   {
-      for (size_t cidx = 0; cidx < m_colCount; cidx++)
-      {
-         auto elem = rawdata->Get(ridx, cidx);
-         m_data[ridx][cidx].m_x = elem.x;
-         m_data[ridx][cidx].m_y = elem.y;
-         m_data[ridx][cidx].m_z = elem.z;
-         m_data[ridx][cidx].m_go = elem.go;
-         m_data[ridx][cidx].m_fly = elem.fly;
-      }
-   }*/
+   //WFM::GetSharedInstance<Statistic>(DBG_DATA)->StatUpdateTaskRun(vdata);
+   /*if (m_appSettings->type == STT::ApplicationRunType::ART_RESEARCH
+       && m_appSettings->res_settings.type == STT::ResearchType::RT_GEN1)
+      emit TaskDataUpdate(vdata);*/
+   //clearSupportData();
+   statistic = *m_statistic;
 }
 
 // NOTE: пока что не нужно
@@ -234,58 +216,55 @@ void PathFinder::clearSupportData()
 
 route PathFinder::findAirPath(route& route, size_t iterations, bool multithread)
 {
-   //std::vector<CombinedPoint> exp_route;
-   //std::vector<CombinedPoint> waypointList;
-   //waypointList.emplace_back(route.start);
-   //waypointList.insert(waypointList.end(), route.controlPointList.begin(), route.controlPointList.end());
-   //waypointList.emplace_back(route.finish);
+   std::vector<SVCG::route_point> exp_route;
+   std::vector<SVCG::route_point> waypointList;
+   waypointList.emplace_back(route.start);
+   waypointList.insert(waypointList.end(), route.control_point_list.begin(), route.control_point_list.end());
+   waypointList.emplace_back(route.finish);
    //Q_ASSERT(waypointList.size() >= 2);
    //Q_UNUSED(iterations);
-   //for (auto item : waypointList)
-   //{
-   //   auto coord = m_data->Get(item.mp.row, item.mp.col);
-   //   item.rp.x = coord.x;
-   //   item.rp.y = coord.y;
-   //   item.rp.z = coord.z;
-   //}
+   // NOTE: Миграция чего-то непонятно чего...
+   for (auto& item : waypointList)   
+      item = m_rawdata->Get(item.row, item.col);
+   
    aff_checker checker = [](std::shared_ptr<Matrix<SVCG::route_point>>& data, std::shared_ptr<Matrix<size_t>>& coverageMatrix, size_t row, size_t col) -> bool
    {
       //Q_UNUSED(coverageMatrix);
-      return data->Get(row, col).fly.fza == FZA_FORBIDDEN;
+      return data->Get(row, col).fly == FlyZoneAffilation::FZA_FORBIDDEN;
    };
    height_corrector corrector = [](float y) -> float
    {
       return y + 50.f;
    };
-   //PathFinderLogic logic = { checker, corrector };
-   //std::string wplist;
-   //for (auto wp : waypointList)
-   //   wplist.append(std::string("[" + std::to_string(wp.mp.row) + ";" + std::to_string(wp.mp.col) + "]").c_str());
-   ///*THREADDEBUG("st-fn: "
-   //         << std::string("[" + std::to_string(route.start.mp.row) + ";" + std::to_string(route.start.mp.col) + "]").c_str()
-   //         << std::string("[" + std::to_string(route.finish.mp.row) + ";" + std::to_string(route.finish.mp.col) + "]").c_str());
-   //THREADDEBUG("wp list: " << waypointList.size() << " elems: " << wplist.c_str());*/
-   //exp_route.emplace_back(waypointList.at(0));
-   //for (size_t idx = 0; idx < waypointList.size() - 1; idx++)
-   //{
-   //   bool found = false;
-   //   auto matrix = WFM::CreateSharedObject<SVM::iMatrix<size_t>>(m_rowCount, m_colCount, 0);
-   //   std::vector<CombinedPoint> path = findPath(waypointList.at(idx), waypointList.at(idx + 1), logic, matrix, multithread, &found);
-   //   if (!found)
-   //      Q_ASSERT(false);
-   //   //exp_route.clear();
-   //   std::reverse(path.begin(), path.end());
-   //   //exp_route.emplace_back(waypointList.at(idx));
-   //   exp_route.back().rp.y += 50.f;
-   //   if (path.size() != 0)
-   //   {
-   //      exp_route.insert(exp_route.end(), ++path.begin(), path.end());
-   //      //exp_route.emplace_back(waypointList.at(idx + 1));
-   //      exp_route.back().rp.y += 50.f;
-   //   }
-   //}
-   ////THREADDEBUG("exproute size air: " << exp_route.size());
-   //route.route = exp_route;
+   path_finder_logic logic = { checker, corrector };
+   std::string wplist;
+   for (auto wp : waypointList)
+      wplist.append(std::string("[" + std::to_string(wp.row) + ";" + std::to_string(wp.col) + "]").c_str());
+   /*THREADDEBUG("st-fn: "
+            << std::string("[" + std::to_string(route.start.mp.row) + ";" + std::to_string(route.start.mp.col) + "]").c_str()
+            << std::string("[" + std::to_string(route.finish.mp.row) + ";" + std::to_string(route.finish.mp.col) + "]").c_str());
+   THREADDEBUG("wp list: " << waypointList.size() << " elems: " << wplist.c_str());*/
+   exp_route.emplace_back(waypointList.at(0));
+   for (size_t idx = 0; idx < waypointList.size() - 1; idx++)
+   {
+      bool found = false;
+      auto matrix = std::make_shared<Matrix<size_t>>(m_rowCount, m_colCount, 0);
+      std::vector<SVCG::route_point> path = findPath(waypointList.at(idx), waypointList.at(idx + 1), logic, matrix, multithread, &found);
+      //if (!found)
+         //Q_ASSERT(false);
+      //exp_route.clear();
+      std::reverse(path.begin(), path.end());
+      //exp_route.emplace_back(waypointList.at(idx));
+      exp_route.back().height += 50.f;
+      if (path.size() != 0)
+      {
+         exp_route.insert(exp_route.end(), ++path.begin(), path.end());
+         //exp_route.emplace_back(waypointList.at(idx + 1));
+         exp_route.back().height += 50.f;
+      }
+   }
+   //THREADDEBUG("exproute size air: " << exp_route.size());
+   route.route_list = exp_route;
    return route;
 }
 
@@ -299,7 +278,7 @@ route PathFinder::findLandPath(route& route, std::shared_ptr<Matrix<size_t>>& co
    ATLASSERT(waypointList.size() >= 2);
    aff_checker checker = [](std::shared_ptr<Matrix<SVCG::route_point>>& data, std::shared_ptr<Matrix<size_t>>& coverageMatrix, size_t row, size_t col) -> bool
    {
-      return data->Get(row, col).go.gza == GoZoneAffilation::GZA_FORBIDDEN || coverageMatrix->Get(row, col) == 0;
+      return data->Get(row, col).go == GoZoneAffilation::GZA_FORBIDDEN || coverageMatrix->Get(row, col) == 0;
    };
    height_corrector counter = [](float y) -> float
    {
@@ -324,7 +303,7 @@ route PathFinder::findLandPath(route& route, std::shared_ptr<Matrix<size_t>>& co
    return route;
 }
 
-std::vector<SVCG::route_point> PathFinder::findPath(SVCG::route_point& start, SVCG::route_point& finish, path_finder_logic& logic/*, std::shared_ptr<SVM::iMatrix<size_t>>& coverageMatrix*/, bool multithread, bool* pathFound)
+std::vector<SVCG::route_point> PathFinder::findPath(SVCG::route_point& start, SVCG::route_point& finish, path_finder_logic& logic, std::shared_ptr<Matrix<size_t>>& coverageMatrix, bool multithread, bool* pathFound)
 {
    std::vector<SVCG::route_point> exp_route;
    /*auto countDist = [](RoutePoint& p1, RoutePoint& p2)->double
@@ -333,14 +312,14 @@ std::vector<SVCG::route_point> PathFinder::findPath(SVCG::route_point& start, SV
    };*/
    //double maxDist = countDist(start.rp, finish.rp);
 
-   if (start.mp.row == finish.mp.row
-       && start.mp.col == finish.mp.col)
+   if (start.row == finish.row
+       && start.col == finish.col)
    {
-      auto point = CombinedPoint{ RoutePoint(start.rp.x,
-                                             logic.heightCorrector(start.rp.y),
-                                             start.rp.z,
-                                             m_data->Get(start.mp.row, start.mp.col).fly.fza,
-                                             m_data->Get(start.mp.row, start.mp.col).go.gza), MatrixPoint(start.mp.row, start.mp.col) };
+      auto point = SVCG::route_point(start.x,
+                                    start.y,
+                                    logic.heightCorrector(start.height),
+                                    m_data->Get(start.mp.row, start.mp.col).fly.fza,
+                                    m_data->Get(start.mp.row, start.mp.col).go.gza), MatrixPoint(start.mp.row, start.mp.col) };
       exp_route.emplace_back(point);
       exp_route.emplace_back(point);
       *pathFound = true;

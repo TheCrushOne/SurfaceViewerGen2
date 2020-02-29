@@ -269,7 +269,6 @@
     <ClInclude Include="source\gui\properties\PropertiesWndBase.h" />
     <ClInclude Include="source\gui\ScenarioView.h" />
     <ClInclude Include="source\gui\selection\property.h" />
-    <ClInclude Include="source\gui\selection\PropertyInterface.h" />
     <ClInclude Include="source\gui\selection\property_helper.h" />
     <ClInclude Include="source\gui\selection\ScenarioProperties.h" />
     <ClInclude Include="source\gui\selection\SelectedChartObject.h" />

@@ -4,6 +4,7 @@
 #include "crossdllinterface/ConverterInterface.h"
 #include "crossdllinterface\TransceiverInterface.h"
 #include "crossdllinterface/DataShareInterface.h"
+#include "common/file_storage.h"
 
 namespace ColregSimulation
 {
@@ -37,10 +38,10 @@ public:
    {
       std::weak_ptr<T> wptr{ pObj };
 
-      m_observable.Attach(pObj, [wptr](const wchar_t* name)
+      m_observable.Attach(pObj, [wptr](file_utils::sqlite_database_file_storage& fs)
          {
             auto ptr = wptr.lock();
-            if (ptr)return ptr->OnScenarioLoad(name);
+            if (ptr)return ptr->OnScenarioLoad(fs);
             return false;
          });
 
@@ -72,7 +73,7 @@ public:
          });
    }
 
-   bool OnScenarioLoad(const wchar_t* name) { return m_observable.Notify(false, name); }
+   bool OnScenarioLoad(file_utils::sqlite_database_file_storage& name) { return m_observable.Notify(false, name); }
    bool OnScenarioStatusChanged(CSENARIO_STATUS status) { return m_observable2.Notify(false, status); }
    bool OnScenarioTimeChanged(double time) { return m_observable3.Notify(false, time); }
    bool OnScenarioModified() { return m_observable4.Notify(false); }
@@ -82,7 +83,7 @@ private:
    ScenarioDispather() = default;
    ScenarioDispather(const ScenarioDispather&) = delete;
    ScenarioDispather& operator=(const ScenarioDispather&) = delete;
-   Observable< NoLock, bool, const wchar_t* > m_observable;
+   Observable< NoLock, bool, file_utils::sqlite_database_file_storage& > m_observable;
    Observable< NoLock, bool, CSENARIO_STATUS  > m_observable2;
    Observable< NoLock, bool, double  > m_observable3;
    Observable< NoLock, bool > m_observable4;
@@ -103,7 +104,7 @@ public:
       ScenarioDispather::GetInstance().AddReciever(shared_from_this());
    }
 
-   bool OnScenarioLoad(const wchar_t* name) { return m_pHolder->OnScenarioLoad(name); }
+   bool OnScenarioLoad(file_utils::sqlite_database_file_storage& name) { return m_pHolder->OnScenarioLoad(name); }
    bool OnScenarioStatusChanged(CSENARIO_STATUS status) { return m_pHolder->OnScenarioStatusChanged(status); }
    bool OnScenarioTimeChanged(double time) { return m_pHolder->OnScenarioTimeChanged(time); }
    bool OnScenarioModified() { return m_pHolder->OnScenarioModified(); }
@@ -126,7 +127,7 @@ protected:
       m_spObserver = ScenarioObserver< ScenarioObserverBase >::Create();
       m_spObserver->Init(this);
    }
-   virtual bool OnScenarioLoad(const wchar_t* name) { return false; }
+   virtual bool OnScenarioLoad(file_utils::sqlite_database_file_storage& name) { return false; }
    virtual bool OnScenarioStatusChanged(CSENARIO_STATUS status) { return false; }
    virtual bool OnScenarioTimeChanged(double time) { return false; }
    virtual bool OnScenarioModified() { return false; }
@@ -203,6 +204,5 @@ private:
    bool _recording = false;
    std::wstring _scenarioFile;
    colreg::ModuleGuard<transceiver::iTransceiver> m_transceiver;
-   colreg::ModuleGuard<data_share::iDataShareProvider> m_shareProvider;
    transceiver::transceiver_info m_info;
 };

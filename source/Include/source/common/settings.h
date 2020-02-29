@@ -84,6 +84,12 @@ namespace settings
        coordinate_system_info mtx_info;   // matrix coordinate system
     };
 
+    struct map_settings
+    {
+       size_t row_count;
+       size_t col_count;
+    };
+
     struct application_settings
     {
         pathfinding_settings pth_stt;
@@ -91,13 +97,17 @@ namespace settings
         unit_settings unit_stt;
         environment_settings env_stt;
         simulation_settings sim_stt;
+        map_settings map_stt;
 
         application_settings() = default;
 
-        application_settings(const pathfinding_settings& pthStt, const research_settings& resStt, const unit_settings& unitStt)
-            : pth_stt(pthStt)
-            , res_stt(resStt)
-            , unit_stt(unitStt)
+        application_settings(const pathfinding_settings& pthStt, const research_settings& resStt, const unit_settings& unitStt, const environment_settings& envStt, const simulation_settings& simStt, const map_settings& mapStt)
+           : pth_stt(pthStt)
+           , res_stt(resStt)
+           , unit_stt(unitStt)
+           , env_stt(envStt)
+           , sim_stt(simStt)
+           , map_stt(mapStt)
         {}
     };    
 }

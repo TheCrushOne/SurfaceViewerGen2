@@ -29,16 +29,7 @@ void ScenarioManager::Open(const wchar_t* fileName)
       }
       //return;
    }
-   if (!m_shareProvider.IsValid())
-   {
-      m_shareProvider.Create(SVGUtils::CurrentDllPath("DataShareProvider").c_str(), "CreateDataShareProvider");
-      if (!m_shareProvider.IsValid())
-      {
-         //MessageString(ICommunicator::MS_Error, "Can't load settings serializer!");
-         return;
-      }
-      //return;
-   }
+   
 
    auto hmFS = file_utils::heightmap_file_storage(fileName);
    auto sdFS = file_utils::sqlite_database_file_storage(fileName);
@@ -53,11 +44,11 @@ void ScenarioManager::Open(const wchar_t* fileName)
    simulator::simulatorStart(sdFS);
    //Dispatcher::GetInstance().LoadScenario(fileName);
 
-   //if (ScenarioDispather::GetInstance().OnScenarioLoad(fileName))
-   //{
-   //   setState(CSENARIO_STATUS::SS_PAUSE);
-   //   SetDebugMode(_debugMode);
-   //}
+   if (ScenarioDispather::GetInstance().OnScenarioLoad(sdFS))
+   {
+      setState(CSENARIO_STATUS::SS_PAUSE);
+      //SetDebugMode(_debugMode);
+   }
 }
 
 void ScenarioManager::setState(CSENARIO_STATUS state, bool force)

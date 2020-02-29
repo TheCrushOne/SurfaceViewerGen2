@@ -13,4 +13,10 @@ namespace transceiver
    };
 }
 
-extern "C" EXPRTIMPRT transceiver::iTransceiver * CreateTransceiver();
+#ifdef TRANSCEIVER_DLL
+#define TRANSEXPRTIMPRT __declspec(dllexport) // export DLL information
+#else
+#define TRANSEXPRTIMPRT __declspec(dllimport) // import DLL information
+#endif
+
+extern "C" TRANSEXPRTIMPRT transceiver::iTransceiver * CreateTransceiver();

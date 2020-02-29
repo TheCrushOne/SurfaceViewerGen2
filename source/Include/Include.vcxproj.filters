@@ -60,12 +60,6 @@
     <ClInclude Include="source\colreg\BaseRefHolder.h">
       <Filter>colreg</Filter>
     </ClInclude>
-    <ClInclude Include="source\colreg\ChartSafetyInterface.h">
-      <Filter>colreg</Filter>
-    </ClInclude>
-    <ClInclude Include="source\colreg\ChartSafetyStructs.h">
-      <Filter>colreg</Filter>
-    </ClInclude>
     <ClInclude Include="source\colreg\ColregHelper.h">
       <Filter>colreg</Filter>
     </ClInclude>
@@ -204,9 +198,6 @@
     <ClInclude Include="source\crossdllinterface\DataShareInterface.h">
       <Filter>crossdllinterface</Filter>
     </ClInclude>
-    <ClInclude Include="source\common\share_types.h">
-      <Filter>common</Filter>
-    </ClInclude>
     <ClInclude Include="source\common\transceiver_types.h">
       <Filter>common</Filter>
     </ClInclude>
@@ -227,6 +218,15 @@
     </ClInclude>
     <ClInclude Include="source\common\pathfinder_structs.h">
       <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="source\crossdllinterface\SimulationInterface.h">
+      <Filter>crossdllinterface</Filter>
+    </ClInclude>
+    <ClInclude Include="source\colreg\ChartSafetyInterface.h">
+      <Filter>colreg</Filter>
+    </ClInclude>
+    <ClInclude Include="source\colreg\ChartSafetyStructs.h">
+      <Filter>colreg</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

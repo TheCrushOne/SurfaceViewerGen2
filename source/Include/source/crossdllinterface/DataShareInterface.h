@@ -1,15 +1,20 @@
 #pragma once
 
 #include "SurfaceInterfaces.h"
-#include "common/share_types.h"
 
 namespace data_share
 {
    struct iDataShareProvider : colreg::iReleasable
    {
-      virtual void Share(share_meta&, const double**) = 0;
-      virtual void GetShared(const share_meta&, double***) = 0;
+      virtual void Share(const wchar_t*, const settings::map_settings&, const double**) = 0;
+      virtual void GetShared(const wchar_t*, const settings::map_settings&, double***) = 0;
    };
 }
 
-extern "C" EXPRTIMPRT data_share::iDataShareProvider * CreateDataShareProvider();
+#ifdef DATASHARE_DLL
+#define DSHAREEXPRTIMPRT __declspec(dllexport) // export DLL information
+#else
+#define DSHAREEXPRTIMPRT __declspec(dllimport) // import DLL information
+#endif
+
+extern "C" DSHAREEXPRTIMPRT data_share::iDataShareProvider * CreateDataShareProvider();

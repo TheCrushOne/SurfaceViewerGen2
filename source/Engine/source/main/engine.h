@@ -48,7 +48,7 @@ struct research_result_gen2 : public research_result
 struct research_result_gen3 : public research_result
 {};
 
-class Engine : public iDispatchable/*, public CCommunicableSimple*/
+class Engine : public iDispatchable, public Communicable
 {
 public:
    Engine(const std::shared_ptr<settings::application_settings>);
@@ -60,15 +60,6 @@ public:
    void LengthResearchGen2(/*const std::shared_ptr<SVM::iMatrix<SurfaceElement>>&, std::shared_ptr<ResearchResultGen2>&*/);
    void ThreadResearchGen3(/*const std::shared_ptr<SVM::iMatrix<SurfaceElement>>&, std::shared_ptr<ResearchResultGen3>&*/);
    //void SetCommunicator(ICommunicator* comm);
-   static void Message(ICommunicator::MessageType t, const char* msg, ...)
-   {
-      //if (Engine::m_instance == nullptr)
-      //   return;
-      //va_list ap;
-      //va_start(ap, msg);
-      //CommunicatorMessage(Engine::m_instance->GetCommunicator(), t, msg, ap);
-      //va_end(ap);
-   }
 private:
    void generateResMap(/*std::shared_ptr<SVM::iMatrix<SurfaceElement>>&, const STT::Gen1Settings&*/);
    pathfinder::check_fly_zone_result checkFlyZone(float);

@@ -4,6 +4,7 @@
 #include "WeatherInterface.h"
 #include "StateFullColregInterface.h"
 #include "common/settings.h"
+#include "common/file_storage.h"
 
 struct iPropertyInterface;
 
@@ -212,13 +213,8 @@ namespace ColregSimulation
 
    enum class SIMULATION_PLAYER_TYPE : char
    {
-      SPT_COLREG_LOG = 0,
-      SPT_AIS_LOG,
-      SPT_ONLINE_TRAFFIC,
-      SPT_TXT_SCENARIO,
-      SPT_XML_SCENARIO,
-      SPT_SCRIPTED_XML_SCENARIO,
-      SPT_USER,
+      SPT_SCENARIO = 0,
+      SPT_LOG,
       SPT_SIZE
    };
 
@@ -315,14 +311,6 @@ namespace ColregSimulation
       const char* scenario_result_path = nullptr; ///< Путь по которому будут складываться данные сценария
    };
 
-   struct iSimulatorManager : colreg::iReleasable
-   {
-      //! Подготовка менеджера симуляторов
-      virtual void Init(ICommunicator* pCommunicator, iPropertyInterface* prop) = 0;
-
-      //! Получение симулятора в зависимости от расширения сценария и загрузка сценария
-      virtual iSimulator* Get(const simulation_paths& paths) = 0;
-   };
 
    // отвечает за чтение и обработку данных кораблей из лога
    // участвует в проигрывании логов
@@ -347,11 +335,3 @@ namespace ColregSimulation
    using LogProcessorPtr = std::unique_ptr< iLogProcessor >;
 #pragma pack(pop)
 }
-
-#ifdef COLREGDLL_EXPORTS
-#define SIMULATOR_EXPORT_IMPORT __declspec(dllexport) // export DLL information
-#else
-#define SIMULATOR_EXPORT_IMPORT __declspec(dllimport) // import DLL information
-#endif
-
-extern "C" SIMULATOR_EXPORT_IMPORT ColregSimulation::iSimulatorManager* __cdecl CreateSimulationManager();

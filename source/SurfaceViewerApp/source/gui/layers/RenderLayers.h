@@ -4,7 +4,7 @@
 //#include "renderhelper.h"
 #include "gui/selection/property.h"
 //#include "..\UI\user_interface.h"
-
+#include "gui/user_interface.h"
 
 struct iRenderLayer abstract
 {
@@ -67,7 +67,7 @@ private:
    void OnRenderEnabled()
    {
       onLayerEnabledChanged();
-      //user_interface::InvalidateView();
+      user_interface::InvalidateView();
    }
 protected:
    iProperty* GetLayerEnabledProperty()

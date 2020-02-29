@@ -3,7 +3,7 @@
 #include "gui/WndCommunicator.h"
 //#include "TTCG\Common\FileSystem\Path.h"
 #include "gui/layers/RenderLayers.h"
-//#include "crossdllinterface\SimulatorManagerInterface.h"
+#include "crossdllinterface\SimulationInterface.h"
 
 namespace
 {
@@ -35,7 +35,7 @@ namespace simulator
       if (!_simulator)
          return;
 
-      //simulatorReset ? _simulator->Reset() : _simulator->Stop();
+      simulatorReset ? _simulator->Reset() : _simulator->Stop();
    }
 
    bool simulatorStart(const file_utils::sqlite_database_file_storage& fs)
@@ -45,12 +45,9 @@ namespace simulator
 
       simulatorStop();
 
-      ColregSimulation::simulation_paths p;
-      //p.scenario_path = fileName;
-
       _simulator = nullptr;
 
-      _simulator = _simMgr->Get(p);
+      _simulator = _simMgr->Get(fs);
 
       ATLASSERT(_simulator);
 

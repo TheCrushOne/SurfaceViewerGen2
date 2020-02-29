@@ -4,7 +4,7 @@
 */
 #pragma once
 #include "colreg\XmlProperties\xml_property.h"
-#include "PropertyInterface.h"
+#include "colreg/PropertyInterface.h"
 #include <functional>
 
 enum class PROPERTY_TYPE

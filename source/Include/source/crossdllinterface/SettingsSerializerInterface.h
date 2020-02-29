@@ -20,4 +20,10 @@ namespace colreg
    };
 }
 
-extern "C" EXPRTIMPRT colreg::iSettingsSerializer* CreateSettingsSerializer();
+#ifdef SETTINGSSERIALIZER_DLL
+#define SETSEREXPRTIMPRT __declspec(dllexport) // export DLL information
+#else
+#define SETSEREXPRTIMPRT __declspec(dllimport) // import DLL information
+#endif
+
+extern "C" SETSEREXPRTIMPRT colreg::iSettingsSerializer* CreateSettingsSerializer();

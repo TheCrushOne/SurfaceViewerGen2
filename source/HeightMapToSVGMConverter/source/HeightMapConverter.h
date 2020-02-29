@@ -27,7 +27,6 @@ namespace converter
       png_bytep* m_row_pointers;
       bool m_lock = false;
       double** m_rawData;
-      database::chart_meta m_currentMeta;
       settings::application_settings m_settings;
    };
 }

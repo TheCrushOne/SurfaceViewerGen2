@@ -42,15 +42,17 @@ bool HeightMapConverter::Convert(const file_utils::file_storage_base& src, const
    std::string srcPngPath = SVGUtils::wstringToString((reinterpret_cast<file_utils::heightmap_file_storage&>(const_cast<file_utils::file_storage_base&>(src))).map_path);
    readDataFromPng(srcPngPath.c_str());
    convertToDatabaseFormat();
-   // NOTE: share provider вызываетcя из базы
-   m_databaseController->SaveHeightGrid(dst, const_cast<const double**>(m_rawData), m_currentMeta);
-   safeReleaseData();
+   
    auto& srcFs = reinterpret_cast<const file_utils::heightmap_file_storage&>(src);
    m_settingsSerializer->Deserialize(SVGUtils::wstringToString(srcFs.pathfinder_settings_path).c_str(), m_settings.pth_stt);
    m_settingsSerializer->Deserialize(SVGUtils::wstringToString(srcFs.research_settings_path).c_str(), m_settings.res_stt);
    m_unitDataSerializer->Deserialize(SVGUtils::wstringToString(srcFs.unit_data_path).c_str(), m_settings.unit_stt);
 
-   m_databaseController->SaveAppSettings(m_settings);
+   // NOTE: share provider вызываетcя из базы
+   m_databaseController->Init(dst);
+   m_databaseController->SaveScenarioData(m_settings, const_cast<const double**>(m_rawData));
+
+   safeReleaseData();
    return true;
 }
 
@@ -59,11 +61,11 @@ bool HeightMapConverter::Convert(const file_utils::file_storage_base& src, const
 
 void HeightMapConverter::convertToDatabaseFormat()
 {
-   m_rawData = new double*[m_currentMeta.length];
-   for (int l = 0; l < m_currentMeta.length; l++)
+   m_rawData = new double*[m_settings.map_stt.row_count];
+   for (int l = 0; l < m_settings.map_stt.row_count; l++)
    {
-      m_rawData[l] = new double[m_currentMeta.width];
-      for (int w = 0; w < m_currentMeta.width; w++)
+      m_rawData[l] = new double[m_settings.map_stt.col_count];
+      for (int w = 0; w < m_settings.map_stt.col_count; w++)
          m_rawData[l][w] = HEIGHT_CORRECTOR(m_row_pointers[l][w]);
    }
 }
@@ -72,7 +74,7 @@ void HeightMapConverter::convertToDatabaseFormat()
 
 void HeightMapConverter::safeReleaseData()
 {
-   for (int l = 0; l < m_currentMeta.length; l++)
+   for (int l = 0; l < m_settings.map_stt.row_count; l++)
       delete m_rawData[l];
    delete m_rawData;
 }
@@ -139,8 +141,8 @@ void HeightMapConverter::readDataFromPng(const char* srcPath)
    }
 
    // Так...вроде правильно
-   m_currentMeta.length = height;
-   m_currentMeta.width = png_get_rowbytes(png, info);
+   m_settings.map_stt.row_count = height;
+   m_settings.map_stt.col_count = png_get_rowbytes(png, info);
 
    png_read_image(png, m_row_pointers);
 

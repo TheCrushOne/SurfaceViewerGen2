@@ -60,11 +60,6 @@ void ConnectionManager::parseIncomingCommand(const char* data)
    std::string str(data);
    if (str.find(".") != std::string::npos)
    {
-      m_rawdata = new double* [300];
-      for (int l = 0; l < 300; l++)
-         m_rawdata[l] = new double[300];
-
-      data_share::share_meta meta{SVGUtils::stringToWstring(str)};
-      m_shareProvider->GetShared(meta, &m_rawdata);
+      //m_shareProvider->GetShared(str.capacitystr(), meta, &m_rawdata);
    }
 }

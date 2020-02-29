@@ -17,6 +17,7 @@
     </ClCompile>
     <ClCompile Include="source\SimulatorBase.cpp" />
     <ClCompile Include="source\stdafx.cpp" />
+    <ClCompile Include="source\SimulatorManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\RobotScenarioPlayer\RobotScenarioPlayer.h">
@@ -27,5 +28,6 @@
     </ClInclude>
     <ClInclude Include="source\SimulatorBase.h" />
     <ClInclude Include="source\stdafx.h" />
+    <ClInclude Include="source\SimulatorManager.h" />
   </ItemGroup>
 </Project>

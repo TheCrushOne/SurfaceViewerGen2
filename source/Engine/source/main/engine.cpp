@@ -12,6 +12,7 @@
 
 Engine::Engine(const std::shared_ptr<settings::application_settings> stt)
    : m_appSettings(stt)
+   , Communicable(nullptr)
 {
    /*m_noGoLowLevel = 73.f;
    m_noGoHighLevel = 120.f;

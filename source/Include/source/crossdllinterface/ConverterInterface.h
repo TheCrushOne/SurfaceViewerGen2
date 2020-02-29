@@ -11,4 +11,10 @@ namespace converter
    };
 }
 
-extern "C" EXPRTIMPRT converter::iConverter * CreateConverter();
+#ifdef CONVERTER_DLL
+#define CONVEXPRTIMPRT __declspec(dllexport) // export DLL information
+#else
+#define CONVEXPRTIMPRT __declspec(dllimport) // import DLL information
+#endif
+
+extern "C" CONVEXPRTIMPRT converter::iConverter * CreateConverter();

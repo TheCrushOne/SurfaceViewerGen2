@@ -24,9 +24,10 @@ namespace settings
       RSU_LENGTHRANGEMAX,
    };
 
-   enum class UnitSettingsUID : unsigned short
+   enum class MapSettingsUID : unsigned short
    {
-      USU_
+      MSU_ROWCOUNT = 0,
+      MSU_COLCOUNT,
    };
 
    const static std::unordered_map<PathfindingSettingsUID, std::string> pathfindingSettingsMeta = {
@@ -44,5 +45,10 @@ namespace settings
       { ResearchSettingsUID::RSU_LENGTHRANGEMIN, "length_range_min" },
       { ResearchSettingsUID::RSU_LENGTHRANGESTEP, "length_range_step" },
       { ResearchSettingsUID::RSU_LENGTHRANGEMAX, "length_range_max" },
+   };
+
+   const static std::unordered_map<MapSettingsUID, std::string> mapSettingsMeta = {
+      { MapSettingsUID::MSU_ROWCOUNT, "row_count" },
+      { MapSettingsUID::MSU_COLCOUNT, "col_count" },
    };
 }

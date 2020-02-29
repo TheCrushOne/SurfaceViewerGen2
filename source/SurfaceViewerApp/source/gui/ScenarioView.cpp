@@ -259,7 +259,7 @@ void ScenarioView::OnRButtonUp(UINT /* nFlags */, CPoint point)
 }
 
 
-bool ScenarioView::OnScenarioLoad(const wchar_t* name)
+bool ScenarioView::OnScenarioLoad(file_utils::sqlite_database_file_storage& name)
 {
    _renderer->Clear();
    math::geo_point center = simulator::getCenter();

@@ -8,7 +8,8 @@ namespace database
    {
    public:
       XMLDatabaseController();
-      void SaveHeightGrid(const file_utils::file_storage_base& dst, const double** coordGrid, const chart_meta& meta) override final;
+      void Init(const file_utils::file_storage_base& dst);
+      void SaveScenarioData(const settings::application_settings& settings, const double** coordGrid) override final;
       void SaveAppSettings(const settings::application_settings& settings) override final;
       void Release() override { delete this; }
    };

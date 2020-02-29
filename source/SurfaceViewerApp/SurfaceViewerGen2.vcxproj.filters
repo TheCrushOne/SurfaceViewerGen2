@@ -251,9 +251,6 @@
     <ClInclude Include="source\gui\selection\property_helper.h">
       <Filter>gui\selection</Filter>
     </ClInclude>
-    <ClInclude Include="source\gui\selection\PropertyInterface.h">
-      <Filter>gui\selection</Filter>
-    </ClInclude>
     <ClInclude Include="source\gui\selection\SelectedRoute.h">
       <Filter>gui\selection</Filter>
     </ClInclude>

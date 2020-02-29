@@ -5,7 +5,7 @@
 
 
 #define DMPCORR(oldrow, oldcol, nwp) if (nwp.row != oldrow || nwp.col != oldcol) \
-   Engine::Message(ICommunicator::MS_Info, "Corr: [ %i, %i ] -> [ %i, %i ]", oldrow, oldcol, nwp.row, nwp.col);
+   Message(ICommunicator::MS_Info, "Corr: [ %i, %i ] -> [ %i, %i ]", oldrow, oldcol, nwp.row, nwp.col);
 
 
 using namespace pathfinder;

@@ -11,4 +11,11 @@ namespace raw_data
    };
 }
 
-extern "C" EXPRTIMPRT raw_data::iRawDataController * CreateSQLiteDatabaseController();
+#ifdef RAWDATA_DLL
+#define RDATAEXPRTIMPRT __declspec(dllexport) // export DLL information
+#else
+#define RDATAEXPRTIMPRT __declspec(dllimport) // import DLL information
+#endif
+
+
+extern "C" RDATAEXPRTIMPRT raw_data::iRawDataController * CreateRawDataController();

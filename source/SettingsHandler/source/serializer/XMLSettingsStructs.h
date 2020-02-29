@@ -2,6 +2,7 @@
 
 #include <typeindex>
 #include <limits>
+#include "colreg/CommonStructs.h"
 
 namespace colreg
 {

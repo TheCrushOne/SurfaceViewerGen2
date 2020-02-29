@@ -55,12 +55,12 @@ namespace colreg
          auto readPSEVector = [](const json& elem, settings::point_setting_element& pse)->bool
          {
             pse.name = elem["name"].get<std::string>();
-            pse.start.lat = elem["start"]["x"].get<size_t>();
-            pse.start.lon = elem["start"]["y"].get<size_t>();
-            pse.finish.lat = elem["finish"]["x"].get<size_t>();
-            pse.finish.lon = elem["finish"]["y"].get<size_t>();
+            pse.start.row = elem["start"]["row"].get<size_t>();
+            pse.start.col = elem["start"]["col"].get<size_t>();
+            pse.finish.row = elem["finish"]["row"].get<size_t>();
+            pse.finish.col = elem["finish"]["col"].get<size_t>();
             for (auto& cp : elem["control_points"])
-               pse.control_point_list.emplace_back(SVCG::route_point(cp["x"].get<size_t>(), cp["y"].get<size_t>(), 0.f));
+               pse.control_point_list.emplace_back(SVCG::route_point(cp["row"].get<size_t>(), cp["col"].get<size_t>(), 0.f));
             return true;
          };
          for (auto& elem : j["land_units"])

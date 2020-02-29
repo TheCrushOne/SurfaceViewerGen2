@@ -14,4 +14,10 @@ namespace colreg
    };
 }
 
-extern "C" EXPRTIMPRT colreg::iUnitDataSerializer* CreateUnitDataSerializer();
+#ifdef UNITDATASERIALIZER_DLL
+#define UDATASEREXPRTIMPRT __declspec(dllexport) // export DLL information
+#else
+#define UDATASEREXPRTIMPRT __declspec(dllimport) // import DLL information
+#endif
+
+extern "C" UDATASEREXPRTIMPRT colreg::iUnitDataSerializer* CreateUnitDataSerializer();

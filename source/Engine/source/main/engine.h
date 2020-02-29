@@ -2,6 +2,8 @@
 
 #include "common/settings.h"
 #include "dispatchableinterface.h"
+#include "common\communicator.h"
+#include "common\pathfinder_structs.h"
 //#include "base/instance.h"
 #include <vector>
 
@@ -46,7 +48,7 @@ struct research_result_gen2 : public research_result
 struct research_result_gen3 : public research_result
 {};
 
-class Engine : public iDispatchable
+class Engine : public iDispatchable/*, public CCommunicableSimple*/
 {
 public:
    Engine(const std::shared_ptr<settings::application_settings>);
@@ -57,16 +59,28 @@ public:
    void TimeResearchGen1(/*const std::shared_ptr<SVM::iMatrix<SurfaceElement>>&, std::shared_ptr<ResearchResultGen1>&*/);
    void LengthResearchGen2(/*const std::shared_ptr<SVM::iMatrix<SurfaceElement>>&, std::shared_ptr<ResearchResultGen2>&*/);
    void ThreadResearchGen3(/*const std::shared_ptr<SVM::iMatrix<SurfaceElement>>&, std::shared_ptr<ResearchResultGen3>&*/);
+   //void SetCommunicator(ICommunicator* comm);
+   static void Message(ICommunicator::MessageType t, const char* msg, ...)
+   {
+      //if (Engine::m_instance == nullptr)
+      //   return;
+      //va_list ap;
+      //va_start(ap, msg);
+      //CommunicatorMessage(Engine::m_instance->GetCommunicator(), t, msg, ap);
+      //va_end(ap);
+   }
 private:
    void generateResMap(/*std::shared_ptr<SVM::iMatrix<SurfaceElement>>&, const STT::Gen1Settings&*/);
-   surface_viewer::check_fly_zone_result checkFlyZone(float);
+   pathfinder::check_fly_zone_result checkFlyZone(float);
    //CheckGoZoneResult checkGoZone(const std::shared_ptr<QHeightMapSurfaceDataProxy>, int, int, int, int);
    //CheckGoZoneResult checkAngles(const QSurfaceDataItem*, const QSurfaceDataItem*, const QSurfaceDataItem*, const QSurfaceDataItem*, const QSurfaceDataItem*);
    //SurfaceElement recountElement(const std::shared_ptr<QHeightMapSurfaceDataProxy>, int, int, int, int);
 //signals:
-   void converted() {  }
+protected:
+   /*void converted() {  }
    void percent(int prcnt) {  }
-   void drop() {  }
+   void drop() {  }*/
 private:
    std::shared_ptr<settings::application_settings> m_appSettings;
+   static Engine* m_instance;
 };

@@ -29,6 +29,11 @@ Engine::Engine(const std::shared_ptr<settings::application_settings> stt)
             , Qt::QueuedConnection);*/
 }
 
+//void Engine::SetCommunicator(ICommunicator* pComm)
+//{
+//   CCommunicableSimple::SetCommunicator(pComm);
+//}
+
 void Engine::OnScenarioLoad()
 {}
 
@@ -70,9 +75,9 @@ void Engine::OnScenarioLoad()
 //            , checkGoZone(mapProxy, rowIdx, colIdx, rowCount, colCount));
 //}
 
-surface_viewer::check_fly_zone_result Engine::checkFlyZone(float y)
+pathfinder::check_fly_zone_result Engine::checkFlyZone(float y)
 {
-   return { surface_viewer::FlyZoneAffilation::FZA_NORMAL };// { (y > m_appSettings->sim_settings.levelSettings.maxAirHeight) ? FZA_FORBIDDEN : FZA_NORMAL };
+   return { pathfinder::FlyZoneAffilation::FZA_NORMAL };// { (y > m_appSettings->sim_settings.levelSettings.maxAirHeight) ? FZA_FORBIDDEN : FZA_NORMAL };
 }
 
 //CheckGoZoneResult Engine::checkGoZone(const std::shared_ptr<QHeightMapSurfaceDataProxy> mapProxy, int rowIdx, int colIdx, int rowCount, int colCount)
@@ -328,6 +333,7 @@ void Engine::LengthResearchGen2(/*const std::shared_ptr<SVM::iMatrix<SurfaceElem
 
 void Engine::ThreadResearchGen3(/*const std::shared_ptr<SVM::iMatrix<SurfaceElement>>& resmap, std::shared_ptr<ResearchResultGen3>& result*/)
 {
+   
    //Route landRoute;
    //const auto& resStt = m_appSettings->res_settings.g3s;
    //const auto& pckRange = resStt.packetRange;

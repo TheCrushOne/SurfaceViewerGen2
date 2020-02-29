@@ -1,13 +1,13 @@
 #include "CoverageBuilder.h"
 
-std::shared_ptr<pathfinder::Matrix<size_t>> CoverageBuilder::BuildLandCoverage(size_t rowCount, size_t colCount, pathfinder::strategy_settings settings, std::vector<pathfinder::route>& airRoutes)
+std::shared_ptr<pathfinder::Matrix<size_t>> CoverageBuilder::BuildLandCoverage(size_t rowCount, size_t colCount, pathfinder::strategy_settings strategySettings, std::vector<pathfinder::route>& airRoutes)
 {
    auto countDist = [](int x1, int y1, int x2, int y2)->double
    {
       return sqrt(pow(y2 - y1, 2.) + pow(x2 - x1, 2.));
    };
    auto coverageMatrix = std::make_shared<pathfinder::Matrix<size_t>>(rowCount, colCount, 0);
-   int radius = static_cast<int>(settings.radius) + 2;   // NOTE: костыль
+   int radius = static_cast<int>(strategySettings.radius) + 2;   // NOTE: костыль
 
    for (size_t airIdx = 0; airIdx < airRoutes.size(); airIdx++)
    {
@@ -35,7 +35,7 @@ std::shared_ptr<pathfinder::Matrix<size_t>> CoverageBuilder::BuildLandCoverage(s
    //QString as = a.toString(time_format);
 
    // TODO: подключить нормально и переделать вывод матрицы покрытия
-   settings::pathfinding_settings settings;
+   settings::pathfinding_settings pathSettings;
    //auto stt = WFM::GetSharedInstance<Dispatcher>(DBG_DATA)->GetSettings();
    //QString nwDir;// = stt->sim_settings.fileinfo.path + "/../export/" + as + "/";
    //bool exist = false;

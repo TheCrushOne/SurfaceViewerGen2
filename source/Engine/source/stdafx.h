@@ -15,8 +15,20 @@
 #define VC_EXTRALEAN            // Exclude rarely-used stuff from Windows headers
 #endif
 
-#include <atldef.h>
+#include <SDKDDKVer.h>
 
+#define WIN32_LEAN_AND_MEAN             // Exclude rarely-used stuff from Windows headers
+// Windows Header Files:
+#include <windows.h>
+
+#define _ATL_CSTRING_EXPLICIT_CONSTRUCTORS      // some CString constructors will be explicit
+
+#include <atldef.h>
+#include <atlbase.h>
+#include <atlstr.h>
+
+#define _USE_MATH_DEFINES // for C++
+#include  <cmath>
 // HACK: переопределяем мин и макс для ухода к стл
 #undef min
 #undef max
@@ -37,3 +49,8 @@
 #include <unordered_map>
 #include <sstream>
 #include <iostream>
+#include <math.h>
+#include <stdio.h>
+#include <errno.h>
+#include <xutility>
+#include <comdef.h>

@@ -55,10 +55,12 @@
     <ClInclude Include="source\colreg\XmlProperties\xml_property_container.h" />
     <ClInclude Include="source\colreg\XMLSettingsSerializer.h" />
     <ClInclude Include="source\common\base_class.h" />
+    <ClInclude Include="source\common\communicator.h" />
     <ClInclude Include="source\common\coordinates.h" />
     <ClInclude Include="source\common\database_misc.h" />
     <ClInclude Include="source\common\file_storage.h" />
     <ClInclude Include="source\common\observer.h" />
+    <ClInclude Include="source\common\pathfinder_structs.h" />
     <ClInclude Include="source\common\pathfinder_types.h" />
     <ClInclude Include="source\common\settings.h" />
     <ClInclude Include="source\common\settings_meta.h" />
@@ -168,6 +170,7 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;INCLUDE_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

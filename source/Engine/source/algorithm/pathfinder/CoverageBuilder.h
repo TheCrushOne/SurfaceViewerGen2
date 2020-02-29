@@ -2,7 +2,7 @@
 
 #include <memory>
 #include "common\settings.h"
-#include "common\pathfinder_types.h"
+#include "common\pathfinder_structs.h"
 
 class CoverageBuilder
 {

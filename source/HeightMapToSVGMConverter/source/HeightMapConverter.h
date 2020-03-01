@@ -9,10 +9,12 @@
 
 namespace converter
 {
-   class HeightMapConverter : public iConverter
+   class HeightMapConverter : public iConverter, public Communicable
    {
    public:
       HeightMapConverter();
+
+      bool Init(ICommunicator* comm);
 
       bool Convert(const file_utils::file_storage_base& src, const file_utils::file_storage_base& dst) override final;
       void Release() override final { delete this; }
@@ -26,7 +28,7 @@ namespace converter
       colreg::ModuleGuard<colreg::iUnitDataSerializer> m_unitDataSerializer;
       png_bytep* m_row_pointers;
       bool m_lock = false;
-      double** m_rawData;
+      std::vector<std::vector<double>> m_rawData;
       settings::application_settings m_settings;
    };
 }

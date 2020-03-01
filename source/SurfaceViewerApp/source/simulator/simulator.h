@@ -11,6 +11,8 @@ namespace simulator
    bool simulatorStart(const file_utils::sqlite_database_file_storage& fs);
    void simulatorStop(bool simulatorReset = false);
 
+   ICommunicator* GetCommunicator();
+
    /*const ColregSimulation::iShip* getShip(colreg::id_type id);
    colreg::ReleaseGuard<colreg::iChartObjects> getChartObject(colreg::OBJECT_TYPE chart_object_type, colreg::id_type object_id);*/
    colreg::geo_point getCenter();

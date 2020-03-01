@@ -5,27 +5,9 @@
 #include <string>
 #include "colreg/BaseRef.h"
 #include "colreg/ModuleGuard.h"
-
-namespace settings
-{
-   struct application_settings;
-}
-//namespace SVM
-//{
-//   template<class T>
-//   struct iMatrix;
-//}
-
-class Engine;
-namespace pathfinder
-{
-   class PathFinder;
-}
-
-namespace file_utils
-{
-   struct heightmap_file_storage;
-}
+#include "algorithm\pathfinder\pathfinder.h"
+#include "common\file_storage.h"
+#include "engine.h"
 
 class Dispatcher : public Singleton<Dispatcher>
 {
@@ -80,7 +62,7 @@ private:
    std::shared_ptr<settings::application_settings> m_appSettings;
    std::shared_ptr<file_utils::heightmap_file_storage> m_fileStorage;
 
-   std::unique_ptr<Engine> m_engine;
+   std::unique_ptr<engine::Engine> m_engine;
 
    //QFutureWatcher<void> m_resWatcher;
 

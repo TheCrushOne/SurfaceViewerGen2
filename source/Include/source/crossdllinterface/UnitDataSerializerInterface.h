@@ -9,7 +9,7 @@ namespace colreg
       virtual bool Serialize(const char* filename, const settings::unit_settings& s) const = 0;
       virtual bool Deserialize(const char* filename, settings::unit_settings& s) const = 0;
 
-      virtual const char* ToString(const settings::unit_settings& srcStt) const = 0;
+      virtual std::string ToString(const settings::unit_settings& srcStt) const = 0;
       virtual bool FromString(const char* src, settings::unit_settings& dstStt) const = 0;
    };
 }

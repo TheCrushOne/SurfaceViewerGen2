@@ -10,6 +10,7 @@ using namespace converter;
 
 HeightMapConverter::HeightMapConverter()
    : m_row_pointers(nullptr)
+   , Communicable(nullptr)
 {
    m_databaseController.Create(SVGUtils::CurrentDllPath("SQLiteController").c_str(), "CreateSQLiteDatabaseController");
    if (!m_databaseController.IsValid())
@@ -35,6 +36,12 @@ HeightMapConverter::HeightMapConverter()
    return;
 }
 
+bool HeightMapConverter::Init(ICommunicator* comm)
+{
+   SetCommunicator(comm);
+   return true;
+}
+
 bool HeightMapConverter::Convert(const file_utils::file_storage_base& src, const file_utils::file_storage_base& dst)
 {
    if (m_lock)
@@ -49,8 +56,8 @@ bool HeightMapConverter::Convert(const file_utils::file_storage_base& src, const
    m_unitDataSerializer->Deserialize(SVGUtils::wstringToString(srcFs.unit_data_path).c_str(), m_settings.unit_stt);
 
    // NOTE: share provider вызываетcя из базы
-   m_databaseController->Init(dst);
-   m_databaseController->SaveScenarioData(m_settings, const_cast<const double**>(m_rawData));
+   m_databaseController->Init(m_communicator, dst);
+   m_databaseController->SaveScenarioData(m_settings, /*const_cast<const double**>*/m_rawData);
 
    safeReleaseData();
    return true;
@@ -61,10 +68,10 @@ bool HeightMapConverter::Convert(const file_utils::file_storage_base& src, const
 
 void HeightMapConverter::convertToDatabaseFormat()
 {
-   m_rawData = new double*[m_settings.map_stt.row_count];
+   m_rawData.resize(m_settings.map_stt.row_count);
    for (int l = 0; l < m_settings.map_stt.row_count; l++)
    {
-      m_rawData[l] = new double[m_settings.map_stt.col_count];
+      m_rawData[l].resize(m_settings.map_stt.col_count);
       for (int w = 0; w < m_settings.map_stt.col_count; w++)
          m_rawData[l][w] = HEIGHT_CORRECTOR(m_row_pointers[l][w]);
    }
@@ -74,9 +81,9 @@ void HeightMapConverter::convertToDatabaseFormat()
 
 void HeightMapConverter::safeReleaseData()
 {
-   for (int l = 0; l < m_settings.map_stt.row_count; l++)
-      delete m_rawData[l];
-   delete m_rawData;
+   //for (int l = 0; l < m_settings.map_stt.row_count; l++)
+   //   delete m_rawData[l];
+   //delete m_rawData;
 }
 
 void HeightMapConverter::readDataFromPng(const char* srcPath)

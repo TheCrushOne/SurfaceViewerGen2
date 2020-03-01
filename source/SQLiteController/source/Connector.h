@@ -2,17 +2,19 @@
 
 #include "database/sqlite3.h"
 #include <functional>
+#include "common/communicator.h"
 
 namespace database
 {
-   class Connector 
+   class Connector : public Communicable
    {
    public:
-      Connector();
+      Connector(ICommunicator* comm);
 
       void Connect(const char* baseFileName);
       void Disconnect();
-      void SQLRequest(const char* sql, int(*callback)(void*, int, char**, char**));
+      void SQLNoResRequest(const char* sql);
+      void SQLResRequest(const char* sql, std::function<void(sqlite3_stmt*)> callback);
    protected:
    private:
       sqlite3* m_db = nullptr;

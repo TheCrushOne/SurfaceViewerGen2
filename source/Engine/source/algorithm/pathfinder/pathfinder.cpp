@@ -41,14 +41,14 @@ PathFinder::~PathFinder()
 {}*/
 
 // WARNING: распараллелено!!!
-void PathFinder::FindPath(strategy_settings settings, std::shared_ptr<route_data>& routeData, const std::shared_ptr<Matrix<SVCG::route_point>>& rawdata, const path_finder_settings pathFinderSettings, path_finder_statistic& statistic)
+void PathFinder::FindPath(strategy_settings settings, std::shared_ptr<route_data> routeData, const std::shared_ptr<Matrix<SVCG::route_point>> rawdata, const path_finder_settings pathFinderSettings, path_finder_statistic& statistic)
 {
    //m_statistic = &statistic;
    //m_vmeta = ExperimentMeta{
    //   pathFinderSettings.statFieldIndex,
    //   pathFinderSettings.multithread
    //};
-   m_rawdata = rawdata;
+   //m_rawdata = rawdata;
    //qint64 startTime = CURTIME_MS();
    size_t iterations = 2;
    std::vector<route> resultAirRoutes;
@@ -126,14 +126,14 @@ void PathFinder::FindPath(strategy_settings settings, std::shared_ptr<route_data
          else
             resultAirRoutes = routeData->air_routes;
          for (size_t idx = 0; idx < resultAirRoutes.size(); idx++)
-            resultAirRoutes.at(idx) = findAirPath(resultAirRoutes.at(idx), iterations, pathFinderSettings.multithread);
+            resultAirRoutes.at(idx) = findAirPath(resultAirRoutes.at(idx), rawdata, iterations, pathFinderSettings.multithread);
 
          if (pathFinderSettings.land_path)
          {
             auto matrix = m_coverageBuilder->BuildLandCoverage(m_rowCount, m_colCount, settings, resultAirRoutes);
 
             for (size_t idx = 0; idx < routeData.get()->land_routes.size(); idx++)
-               routeData.get()->land_routes.at(idx) = findLandPath(routeData.get()->land_routes.at(idx), matrix, pathFinderSettings.multithread, &pathFound);
+               routeData.get()->land_routes.at(idx) = findLandPath(routeData.get()->land_routes.at(idx), rawdata, matrix, pathFinderSettings.multithread, &pathFound);
          }
          else
             pathFound = true;
@@ -158,7 +158,7 @@ void PathFinder::FindPath(strategy_settings settings, std::shared_ptr<route_data
    statistic = *m_statistic;
 }
 
-route PathFinder::findAirPath(route& route, size_t iterations, bool multithread)
+route PathFinder::findAirPath(route& route, const std::shared_ptr<Matrix<SVCG::route_point>> rawdata, size_t iterations, bool multithread)
 {
    std::vector<SVCG::route_point> exp_route;
    std::vector<SVCG::route_point> waypointList;
@@ -169,9 +169,9 @@ route PathFinder::findAirPath(route& route, size_t iterations, bool multithread)
    //Q_UNUSED(iterations);
    // NOTE: Миграция чего-то непонятно чего...
    for (auto& item : waypointList)   
-      item = m_rawdata->Get(item.row, item.col);
+      item = rawdata->Get(item.row, item.col);
    
-   aff_checker checker = [](std::shared_ptr<Matrix<SVCG::route_point>>& data, std::shared_ptr<Matrix<size_t>>& coverageMatrix, size_t row, size_t col) -> bool
+   aff_checker checker = [](const std::shared_ptr<Matrix<SVCG::route_point>>& data, std::shared_ptr<Matrix<size_t>>& coverageMatrix, size_t row, size_t col) -> bool
    {
       //Q_UNUSED(coverageMatrix);
       return data->Get(row, col).fly == FlyZoneAffilation::FZA_FORBIDDEN;
@@ -193,7 +193,7 @@ route PathFinder::findAirPath(route& route, size_t iterations, bool multithread)
    {
       bool found = false;
       auto matrix = std::make_shared<Matrix<size_t>>(m_rowCount, m_colCount, 0);
-      std::vector<SVCG::route_point> path = findPath(waypointList.at(idx), waypointList.at(idx + 1), logic, matrix, multithread, &found);
+      std::vector<SVCG::route_point> path = findPath(rawdata, waypointList.at(idx), waypointList.at(idx + 1), logic, matrix, multithread, &found);
       //if (!found)
          //Q_ASSERT(false);
       //exp_route.clear();
@@ -212,7 +212,7 @@ route PathFinder::findAirPath(route& route, size_t iterations, bool multithread)
    return route;
 }
 
-route PathFinder::findLandPath(route& route, std::shared_ptr<Matrix<size_t>>& coverageMatrix, bool multithread, bool* pathFounded)
+route PathFinder::findLandPath(route& route, const std::shared_ptr<Matrix<SVCG::route_point>> rawdata, std::shared_ptr<Matrix<size_t>> coverageMatrix, bool multithread, bool* pathFounded)
 {
    std::vector<SVCG::route_point> exp_route;
    std::vector<SVCG::route_point> waypointList;
@@ -220,9 +220,9 @@ route PathFinder::findLandPath(route& route, std::shared_ptr<Matrix<size_t>>& co
    waypointList.insert(waypointList.end(), route.control_point_list.begin(), route.control_point_list.end());
    waypointList.emplace_back(route.finish);
    ATLASSERT(waypointList.size() >= 2);
-   aff_checker checker = [](std::shared_ptr<Matrix<SVCG::route_point>>& data, std::shared_ptr<Matrix<size_t>>& coverageMatrix, size_t row, size_t col) -> bool
+   aff_checker checker = [](const std::shared_ptr<Matrix<SVCG::route_point>>& data, std::shared_ptr<Matrix<size_t>>& covMatrix, size_t row, size_t col) -> bool
    {
-      return data->Get(row, col).go == GoZoneAffilation::GZA_FORBIDDEN || coverageMatrix->Get(row, col) == 0;
+      return data->Get(row, col).go == GoZoneAffilation::GZA_FORBIDDEN || covMatrix->Get(row, col) == 0;
    };
    height_corrector counter = [](float y) -> float
    {
@@ -233,7 +233,7 @@ route PathFinder::findLandPath(route& route, std::shared_ptr<Matrix<size_t>>& co
    exp_route.emplace_back(waypointList.at(0));
    for (size_t idx = 0; idx < waypointList.size() - 1; idx++)
    {
-      std::vector<SVCG::route_point> path = findPath(waypointList.at(idx), waypointList.at(idx + 1), logic, coverageMatrix, multithread, pathFounded);
+      std::vector<SVCG::route_point> path = findPath(rawdata, waypointList.at(idx), waypointList.at(idx + 1), logic, coverageMatrix, multithread, pathFounded);
       //exp_route.clear();
       //qDebug() << "wpl sz:" << idx;
       std::reverse(path.begin(), path.end());
@@ -247,7 +247,7 @@ route PathFinder::findLandPath(route& route, std::shared_ptr<Matrix<size_t>>& co
    return route;
 }
 
-std::vector<SVCG::route_point> PathFinder::findPath(SVCG::route_point& start, SVCG::route_point& finish, path_finder_logic& logic, std::shared_ptr<Matrix<size_t>>& coverageMatrix, bool multithread, bool* pathFound)
+std::vector<SVCG::route_point> PathFinder::findPath(const std::shared_ptr<Matrix<SVCG::route_point>> rawdata, SVCG::route_point& start, SVCG::route_point& finish, path_finder_logic& logic, std::shared_ptr<Matrix<size_t>> coverageMatrix, bool multithread, bool* pathFound)
 {
    std::vector<SVCG::route_point> exp_route;
    /*auto countDist = [](RoutePoint& p1, RoutePoint& p2)->double
@@ -262,8 +262,8 @@ std::vector<SVCG::route_point> PathFinder::findPath(SVCG::route_point& start, SV
       auto point = SVCG::route_point(start.row,
                                        start.col,
                                        logic.corrector(start.height),
-                                       m_rawdata->Get(start.row, start.col).fly,
-                                       m_rawdata->Get(start.row, start.col).go);
+                                       rawdata->Get(start.row, start.col).fly,
+                                       rawdata->Get(start.row, start.col).go);
       exp_route.emplace_back(point);
       *pathFound = true;
       return exp_route;
@@ -292,7 +292,7 @@ std::vector<SVCG::route_point> PathFinder::findPath(SVCG::route_point& start, SV
 
    for (size_t ridx = 0; ridx < pointScore->GetRowCount(); ridx++)
       for (size_t cidx = 0; cidx < pointScore->GetColCount(); cidx++)
-         pointScore->Set(ridx, cidx, logic.checker(m_rawdata, coverageMatrix, ridx, cidx) ? /*ULONG_LONG_MAX*/ULLONG_MAX : 0);
+         pointScore->Set(ridx, cidx, logic.checker(rawdata, coverageMatrix, ridx, cidx) ? /*ULONG_LONG_MAX*/ULLONG_MAX : 0);
    pointScore->Set(stCurRow, stCurCol, 1);
    //m_pointScore[stCurRow][stCurCol] = 1;
    bool find = false;
@@ -327,7 +327,7 @@ std::vector<SVCG::route_point> PathFinder::findPath(SVCG::route_point& start, SV
             //if (m_pointScore[iter.first][iter.second] == 0)
             {
                //pointScoreCount++;
-               if (logic.checker(m_rawdata, coverageMatrix, iter.first, iter.second))
+               if (logic.checker(rawdata, coverageMatrix, iter.first, iter.second))
                {
                   pointScore->Set(iter.first, iter.second, /*ULONG_LONG_MAX*/ULLONG_MAX);
                   //m_pointScore[iter.first][iter.second] = ULONG_LONG_MAX;
@@ -380,7 +380,7 @@ std::vector<SVCG::route_point> PathFinder::findPath(SVCG::route_point& start, SV
       find = true;
       if (stRow == curRow && stCol == curCol)
          break;
-      auto rp = m_rawdata->Get(curRow, curCol);
+      auto rp = rawdata->Get(curRow, curCol);
       SVCG::route_point current = { rp.row,
                                     rp.col,
                                     logic.corrector(rp.height),
@@ -417,7 +417,7 @@ std::vector<SVCG::route_point> PathFinder::findPath(SVCG::route_point& start, SV
          }
       }
    }
-   auto rp = m_rawdata->Get(curRow, curCol);
+   auto rp = rawdata->Get(curRow, curCol);
    exp_route.emplace_back(SVCG::route_point{ rp.row,
                                              rp.col,
                                              logic.corrector(rp.height),

@@ -68,6 +68,7 @@
     <ClInclude Include="source\common\utils.h" />
     <ClInclude Include="source\crossdllinterface\ConverterInterface.h" />
     <ClInclude Include="source\crossdllinterface\DataShareInterface.h" />
+    <ClInclude Include="source\crossdllinterface\EngineInterface.h" />
     <ClInclude Include="source\crossdllinterface\RawDataInterface.h" />
     <ClInclude Include="source\crossdllinterface\SettingsSerializerInterface.h" />
     <ClInclude Include="source\crossdllinterface\SimulationInterface.h" />

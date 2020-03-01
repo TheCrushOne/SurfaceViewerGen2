@@ -12,7 +12,7 @@ bool SimulatorBase::Init(const file_utils::sqlite_database_file_storage& paths)
       //MessageString(ICommunicator::MS_Error, "Can't load settings serializer!");
       return false;
    }
-   m_databaseController->Init(paths);
+   m_databaseController->Init(m_communicator, paths);
    return true;
 }
 

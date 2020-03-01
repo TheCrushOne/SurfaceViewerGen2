@@ -24,7 +24,7 @@ void ScenarioManager::Open(const wchar_t* fileName)
       m_converter.Create(SVGUtils::CurrentDllPath("HeightMapToSVGMConverter").c_str(), "CreateConverter");
       if (!m_converter.IsValid())
       {
-         //MessageString(ICommunicator::MS_Error, "Can't load settings serializer!");
+         user_interface::SetOutputText(user_interface::OT_ERROR, "Can't load 'HeightMapToSVGMConverter'!");
          return;
       }
       //return;
@@ -34,6 +34,7 @@ void ScenarioManager::Open(const wchar_t* fileName)
    auto hmFS = file_utils::heightmap_file_storage(fileName);
    auto sdFS = file_utils::sqlite_database_file_storage(fileName);
 
+   m_converter->Init(simulator::GetCommunicator());
    m_converter->Convert(hmFS, sdFS);
    
    //data_share::share_meta meta{L"file.bin"};
@@ -125,7 +126,7 @@ void ScenarioManager::createTransceiver()
    m_transceiver.Create(SVGUtils::CurrentDllPath("SocketTransceiverLine").c_str(), "CreateTransceiver");
    if (!m_transceiver.IsValid())
    {
-      user_interface::SetOutputText(user_interface::OT_ERROR, "Can't load Socket Transceiver Line!");
+      user_interface::SetOutputText(user_interface::OT_ERROR, "Can't load 'SocketTransceiverLine'!");
       return;
    }
    std::thread thr(&ScenarioManager::initTransceiver, this);

@@ -26,10 +26,16 @@ namespace
 
 namespace simulator
 {
+   ICommunicator* GetCommunicator()
+   {
+      return comm.get();
+   }
+
    ColregSimulation::iSimulator* getSimulator()
    {
       return _simulator;
    }
+
    void simulatorStop(bool simulatorReset)
    {
       if (!_simulator)

@@ -31,10 +31,10 @@ iSimulatorPtr SimulatorManager::createSimulationPlayer(SIMULATION_PLAYER_TYPE ty
    switch (type)
    {
    case SIMULATION_PLAYER_TYPE::SPT_SCENARIO:
-      sim = new ColregSimulation::RobotScenarioPlayer(m_communicator, m_prop, m_paths);
+      sim = new ColregSimulation::RobotScenarioPlayer(m_communicator, m_prop);
       break;
    case SIMULATION_PLAYER_TYPE::SPT_LOG:
-      sim = new ColregSimulation::RobotLogPlayer(m_communicator, m_prop, m_paths);
+      sim = new ColregSimulation::RobotLogPlayer(m_communicator, m_prop);
       break;
    default:
       ATLASSERT(false);

@@ -9,7 +9,7 @@ namespace request_storage
       // Create
       RT_CRPTHSTT= 0,
       RT_CRRESSTT,
-      RT_CRUNITLIST,
+      //RT_CRUNITLIST,
       RT_CRUNITDATA,
       RT_CRMAPOBJ,
       RT_CRMAPSTT,
@@ -18,9 +18,11 @@ namespace request_storage
       RT_SETPTHSTT,
       RT_SETRESSTT,
       RT_SETMAPSTT,
+      RT_SETUNTDAT,
 
       // Select
       RT_SELMAPSTT,
+      RT_SELUNTDAT,
    };
 
    const static std::unordered_map<RequestToken, std::string> createReqList = {
@@ -34,7 +36,7 @@ namespace request_storage
          "setting_id INTEGER PRIMARY KEY, "
          "setting_parameter TEXT NOT NULL UNIQUE, "
          "setting_value TEXT NOT NULL)" },
-      { RequestToken::RT_CRUNITLIST,
+      /*{ RequestToken::RT_CRUNITLIST,
          "CREATE TABLE IF NOT EXISTS unit_list("
          "unit_id INTEGER PRIMARY KEY, "
          "unit_name TEXT NOT NULL)" },
@@ -42,10 +44,15 @@ namespace request_storage
          "CREATE TABLE IF NOT EXISTS unit_data("
          "data_id INTEGER PRIMARY KEY, "
          "data_unitId INTEGER NOT NULL, "
-         "data_x DOUBLE, "
-         "data_y DOUBLE, "
+         "data_row INTEGER, "
+         "data_col INTEGER, "
          "data_type INTEGER NOT NULL, "
-         "FOREIGN KEY(data_unitId) REFERENCES unit_list(unit_id) ON DELETE CASCADE)" },
+         "FOREIGN KEY(data_unitId) REFERENCES unit_list(unit_id) ON DELETE CASCADE)" }*,*/
+      { RequestToken::RT_CRUNITDATA,
+         "CREATE TABLE IF NOT EXISTS unit_data("
+         "unit_id INTEGER PRIMARY KEY, "
+         "unit_uniqId INTEGER UNIQUE, "
+         "unit_json TEXT)" },
       { RequestToken::RT_CRMAPOBJ,
          "CREATE TABLE IF NOT EXISTS map_object("
          "object_id INTEGER PRIMARY KEY, "
@@ -64,7 +71,7 @@ namespace request_storage
          "VALUES ('%s', '%s') "
          "ON CONFLICT(setting_parameter) "
          "DO UPDATE SET setting_value = excluded.setting_value" },
-      { RequestToken::RT_SETPTHSTT,
+      { RequestToken::RT_SETRESSTT,
          "INSERT INTO research_settings(setting_parameter, setting_value) "
          "VALUES ('%s', '%s')"
          "ON CONFLICT(setting_parameter) "
@@ -74,12 +81,21 @@ namespace request_storage
          "VALUES ('%s', '%s')"
          "ON CONFLICT(setting_parameter) "
          "DO UPDATE SET setting_value = excluded.setting_value" },
+      { RequestToken::RT_SETUNTDAT,
+         "INSERT INTO unit_data(unit_uniqId, unit_json) "
+         "VALUES ('1', '%s')"
+         "ON CONFLICT(unit_uniqId) "
+         "DO UPDATE SET unit_json = excluded.unit_json" },
    };
 
    const static std::unordered_map<RequestToken, std::string> selectReqList = {
       { RequestToken::RT_SELMAPSTT,
-         "SELECT 'setting_parameter', 'setting_value' "
-         "FROM 'map_settings'"
+         "SELECT setting_parameter, setting_value "
+         "FROM map_settings "
          "WHERE setting_parameter='%s'" },
+      { RequestToken::RT_SELUNTDAT,
+         "SELECT unit_uniqId, unit_json "
+         "FROM unit_data "
+         "WHERE unit_uniqId='1'" },
    };
 }

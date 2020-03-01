@@ -27,7 +27,7 @@ struct ICommunicator
       MS_InProgress = 16,
       MS_AbortSupport = 32
    };
-   virtual bool stdCallConv Message(MessageType t, const char* msg) = 0;
+   virtual bool stdCallConv Message(MessageType t, const char* msg, ...) = 0;
    virtual void stdCallConv SetProgress(unsigned int progress) = 0;  // 0..100
    virtual bool stdCallConv GetTerminateFlag() = 0;
    virtual bool stdCallConv UpdateUI() = 0;

@@ -41,6 +41,19 @@ namespace pathfinder
       type Get(size_t rIdx, size_t cIdx) const { if(m_rowCount > rIdx&& m_colCount > cIdx) return m_inVal; return m_data.at(rIdx).at(cIdx); }
       void Set(size_t rIdx, size_t cIdx, type val) { if (!(m_rowCount > rIdx&& m_colCount > cIdx)) m_data[rIdx][cIdx] = val; }
 
+      void SetRowCount(size_t rowCount)
+      {
+         m_rowCount = rowCount;
+         m_data.resize(m_rowCount);
+         SetColCount(m_colCount);
+      }
+      void SetColCount(size_t colCount)
+      {
+         m_colCount = colCount;
+         for (auto& vct : m_data)
+            vct.resize(m_colCount);
+      }
+
       size_t GetRowCount() const { return m_rowCount; }
       size_t GetColCount() const { return m_colCount; }
       type GetInVal() const { return m_inVal; }
@@ -105,7 +118,7 @@ namespace pathfinder
       {}
    };
 
-   using aff_checker = std::function<bool(std::shared_ptr<Matrix<SVCG::route_point>>&, std::shared_ptr<Matrix<size_t>>&, size_t, size_t)>;
+   using aff_checker = std::function<bool(const std::shared_ptr<Matrix<SVCG::route_point>>&, std::shared_ptr<Matrix<size_t>>&, size_t, size_t)>;
 
    struct path_finder_logic
    {

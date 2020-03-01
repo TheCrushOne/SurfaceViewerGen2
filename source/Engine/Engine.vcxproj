@@ -34,7 +34,6 @@
     <ClInclude Include="source\algorithm\pathfinder\StrategyManager.h" />
     <ClInclude Include="source\algorithm\statistic.h" />
     <ClInclude Include="source\main\calibrator.h" />
-    <ClInclude Include="source\main\dispatchableinterface.h" />
     <ClInclude Include="source\main\dispatcher.h" />
     <ClInclude Include="source\main\engine.h" />
     <ClInclude Include="source\stdafx.h" />
@@ -117,7 +116,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_DEBUG;ENGINE_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;ENGINE_EXPORTS;_WINDOWS;_USRDLL;ENGINE_DLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>source;$(SolutionDir)Include\source\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>

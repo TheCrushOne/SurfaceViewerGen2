@@ -39,9 +39,6 @@
     <ClInclude Include="source\main\calibrator.h">
       <Filter>main</Filter>
     </ClInclude>
-    <ClInclude Include="source\main\dispatchableinterface.h">
-      <Filter>main</Filter>
-    </ClInclude>
     <ClInclude Include="source\main\dispatcher.h">
       <Filter>main</Filter>
     </ClInclude>

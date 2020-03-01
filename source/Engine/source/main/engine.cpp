@@ -10,9 +10,10 @@
 #include <windows.h>
 #include "algorithm/statistic.h"
 
-Engine::Engine(const std::shared_ptr<settings::application_settings> stt)
-   : m_appSettings(stt)
-   , Communicable(nullptr)
+using namespace engine;
+
+Engine::Engine()
+   : Communicable(nullptr)
 {
    /*m_noGoLowLevel = 73.f;
    m_noGoHighLevel = 120.f;
@@ -28,15 +29,35 @@ Engine::Engine(const std::shared_ptr<settings::application_settings> stt)
    /*connect(this, SIGNAL(percent(int))
             , WFM::GetSharedInstance<LoadingDlg>(DBG_DATA).get(), SLOT(SetPercent(int))
             , Qt::QueuedConnection);*/
+   m_rawdata = std::make_shared<pathfinder::Matrix<SVCG::route_point>>(SVCG::route_point{});
+}
+
+void Engine::ProcessPathFind(std::shared_ptr<pathfinder::route_data> routeData, const std::vector<std::vector<double>>& rawData)
+{
+   pathfinder::strategy_settings stratStt{ pathfinder::StrategyType::ST_RHOMBOID, 1. };
+   pathfinder::path_finder_settings pathStt;
+   pathfinder::path_finder_statistic stat;
+   ConvertMap(rawData, m_rawdata);
+   m_pathfinder->FindPath(stratStt, routeData, m_rawdata, pathStt, stat);
+}
+
+void Engine::ConvertMap(const std::vector<std::vector<double>>& rawdataSrc, std::shared_ptr<pathfinder::Matrix<SVCG::route_point>> rawdataDst)
+{
+   size_t rwCount = rawdataSrc.size();
+   rawdataDst->SetRowCount(rwCount);
+   if (rwCount > 0)
+      rawdataDst->SetColCount(rawdataSrc.at(0).size());
+   for (size_t rIdx = 0; rIdx < rwCount; rIdx++)
+   {
+      for (size_t cIdx = 0; cIdx < rawdataSrc.at(rIdx).size(); cIdx++)
+         rawdataDst->Set(rIdx, cIdx, rawdataSrc.at(rIdx).at(cIdx));
+   }
 }
 
 //void Engine::SetCommunicator(ICommunicator* pComm)
 //{
 //   CCommunicableSimple::SetCommunicator(pComm);
 //}
-
-void Engine::OnScenarioLoad()
-{}
 
 //void Engine::ConvertMap(const std::shared_ptr<QHeightMapSurfaceDataProxy> mapProxy, std::shared_ptr<SVM::iMatrix<SurfaceElement>> &rawmap, std::shared_ptr<settings::application_settings> &settings)
 //{
@@ -393,4 +414,9 @@ void Engine::ThreadResearchGen3(/*const std::shared_ptr<SVM::iMatrix<SurfaceElem
    //   }
    //   packetIdx++;
    //}
+}
+
+engine::iEngine* CreateEngine()
+{
+   return new engine::Engine();
 }

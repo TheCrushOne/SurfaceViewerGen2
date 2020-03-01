@@ -53,8 +53,8 @@ Dispatcher::Dispatcher(/*GlViewerDlg::ViewerCluster cluster
    //m_stat = WFM::CreateSharedInstance<RuntimeStatistic>(DBG_DATA);
    
    m_appSettings = std::make_unique<settings::application_settings>();
-   m_engine = std::make_unique<Engine>(m_appSettings);
-   m_pathfinder = std::make_unique<pathfinder::PathFinder>(/*DBG_DATA*/);
+   m_engine = std::make_unique<engine::Engine>();
+   m_pathfinder = std::make_unique<pathfinder::PathFinder>();
    
    //createUnitDataSerializer();
    //createSettingsSerializer();
@@ -83,7 +83,7 @@ void Dispatcher::LoadScenario(const wchar_t* name)
 
 void Dispatcher::onScenarioLoad()
 {
-   m_engine->OnScenarioLoad();
+   //m_engine->OnScenarioLoad();
    //m_qtMapViewer->OnScenarioLoad();
    //m_qtResViewer->OnScenarioLoad();
    //m_glMapViewer->OnScenarioLoad();

@@ -1,9 +1,10 @@
 #pragma once
 
 #include "common/settings.h"
-#include "dispatchableinterface.h"
 #include "common\communicator.h"
 #include "common\pathfinder_structs.h"
+#include "crossdllinterface\EngineInterface.h"
+#include "algorithm\pathfinder\pathfinder.h"
 //#include "base/instance.h"
 #include <vector>
 
@@ -48,30 +49,37 @@ struct research_result_gen2 : public research_result
 struct research_result_gen3 : public research_result
 {};
 
-class Engine : public iDispatchable, public Communicable
+namespace engine
 {
-public:
-   Engine(const std::shared_ptr<settings::application_settings>);
-public:
-   void OnScenarioLoad() override;
-   void SetSettings(std::shared_ptr<settings::application_settings> settings) { m_appSettings = settings; }
-   //void ConvertMap(const std::shared_ptr<QHeightMapSurfaceDataProxy>, std::shared_ptr<SVM::iMatrix<SurfaceElement>> &, std::shared_ptr<STT::ApplicationSettings> &);
-   void TimeResearchGen1(/*const std::shared_ptr<SVM::iMatrix<SurfaceElement>>&, std::shared_ptr<ResearchResultGen1>&*/);
-   void LengthResearchGen2(/*const std::shared_ptr<SVM::iMatrix<SurfaceElement>>&, std::shared_ptr<ResearchResultGen2>&*/);
-   void ThreadResearchGen3(/*const std::shared_ptr<SVM::iMatrix<SurfaceElement>>&, std::shared_ptr<ResearchResultGen3>&*/);
-   //void SetCommunicator(ICommunicator* comm);
-private:
-   void generateResMap(/*std::shared_ptr<SVM::iMatrix<SurfaceElement>>&, const STT::Gen1Settings&*/);
-   pathfinder::check_fly_zone_result checkFlyZone(float);
-   //CheckGoZoneResult checkGoZone(const std::shared_ptr<QHeightMapSurfaceDataProxy>, int, int, int, int);
-   //CheckGoZoneResult checkAngles(const QSurfaceDataItem*, const QSurfaceDataItem*, const QSurfaceDataItem*, const QSurfaceDataItem*, const QSurfaceDataItem*);
-   //SurfaceElement recountElement(const std::shared_ptr<QHeightMapSurfaceDataProxy>, int, int, int, int);
-//signals:
-protected:
-   /*void converted() {  }
-   void percent(int prcnt) {  }
-   void drop() {  }*/
-private:
-   std::shared_ptr<settings::application_settings> m_appSettings;
-   static Engine* m_instance;
-};
+   class Engine : public iEngine, public Communicable
+   {
+   public:
+      Engine();
+   public:
+      void SetSettings(std::shared_ptr<settings::application_settings> settings) { m_appSettings = settings; }
+      void ConvertMap(const std::vector<std::vector<double>>& rawdataSrc, std::shared_ptr<pathfinder::Matrix<SVCG::route_point>> rawdataDst);
+      void TimeResearchGen1(/*const std::shared_ptr<SVM::iMatrix<SurfaceElement>>&, std::shared_ptr<ResearchResultGen1>&*/);
+      void LengthResearchGen2(/*const std::shared_ptr<SVM::iMatrix<SurfaceElement>>&, std::shared_ptr<ResearchResultGen2>&*/);
+      void ThreadResearchGen3(/*const std::shared_ptr<SVM::iMatrix<SurfaceElement>>&, std::shared_ptr<ResearchResultGen3>&*/);
+      //void SetCommunicator(ICommunicator* comm);
+      void ProcessPathFind(std::shared_ptr<pathfinder::route_data> routeData, const std::vector<std::vector<double>>& rawData) override final;
+      void Release() { delete this; }
+   private:
+      void generateResMap(/*std::shared_ptr<SVM::iMatrix<SurfaceElement>>&, const STT::Gen1Settings&*/);
+      pathfinder::check_fly_zone_result checkFlyZone(float);
+      //CheckGoZoneResult checkGoZone(const std::shared_ptr<QHeightMapSurfaceDataProxy>, int, int, int, int);
+      //CheckGoZoneResult checkAngles(const QSurfaceDataItem*, const QSurfaceDataItem*, const QSurfaceDataItem*, const QSurfaceDataItem*, const QSurfaceDataItem*);
+      //SurfaceElement recountElement(const std::shared_ptr<QHeightMapSurfaceDataProxy>, int, int, int, int);
+   //signals:
+   protected:
+      /*void converted() {  }
+      void percent(int prcnt) {  }
+      void drop() {  }*/
+   private:
+      std::shared_ptr<settings::application_settings> m_appSettings;
+      std::unique_ptr<pathfinder::PathFinder> m_pathfinder;
+
+      std::shared_ptr<pathfinder::Matrix<SVCG::route_point>> m_rawdata;
+      //std::shared_ptr<pathfinder::route_data> m_routedata;
+   };
+}

@@ -228,6 +228,9 @@
     <ClInclude Include="source\colreg\ChartSafetyStructs.h">
       <Filter>colreg</Filter>
     </ClInclude>
+    <ClInclude Include="source\crossdllinterface\EngineInterface.h">
+      <Filter>crossdllinterface</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\colreg\ThirdParty\tinyxml2\tinyxml2.cpp">

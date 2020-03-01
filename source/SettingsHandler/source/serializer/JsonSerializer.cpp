@@ -17,12 +17,12 @@ namespace colreg
       bool Serialize(const char* filename, const settings::unit_settings& s) const final { return serialize(filename, s); }
       bool Deserialize(const char* filename, settings::unit_settings& s) const final { return deserialize(filename, s); }
 
-      const char* ToString(const settings::unit_settings& srcStt) const final { return toString(srcStt); }
+      std::string ToString(const settings::unit_settings& srcStt) const final { return toString(srcStt); }
       bool FromString(const char* src, settings::unit_settings& dstStt) const final { return fromString(src, dstStt); }
    private:
       static bool serialize(const char* filename, const settings::unit_settings& data)
       {
-         //std::ofstream o("pretty.json");
+         std::ofstream o(filename, std::ios_base::in | std::ios::binary);
          //o << std::setw(4) << j << std::endl;
 
          return true;
@@ -40,13 +40,20 @@ namespace colreg
          return true;
       }
 
-      static const char* toString(const settings::unit_settings& data)
+      static std::string toString(const settings::unit_settings& data)
       {
-         return nullptr;
+         json j;
+         unitDataToJson(j, data);
+         return j.dump();
       }
 
       static bool fromString(const char* src, settings::unit_settings& data)
       {
+         std::stringstream i(src, std::ios_base::in | std::ios::binary);
+         json j;
+         i >> j;
+         jsonToUnitData(j, data);
+
          return true;
       }
 
@@ -75,6 +82,40 @@ namespace colreg
             settings::point_setting_element pse;
             readPSEVector(elem, pse);
             data.air_units.emplace_back(pse);
+         }
+         return true;
+      }
+
+      static bool unitDataToJson(json& j, const settings::unit_settings& data)
+      {
+         auto writePSEVector = [](json& elem, const settings::point_setting_element& pse)->bool
+         {
+            elem["name"] = pse.name;
+            elem["start"]["row"] = pse.start.row;
+            elem["start"]["col"] = pse.start.col;
+            elem["finish"]["row"] = pse.finish.row;
+            elem["finish"]["col"] = pse.finish.col;
+            for (auto& cp : pse.control_point_list)
+            {
+               json o;
+               o["row"] = cp.row;
+               o["col"] = cp.col;
+               elem["control_points"].emplace_back(o);
+            }
+            return true;
+         };
+         for (auto& elem : data.land_units)
+         {
+            json j_temp;
+            writePSEVector(j_temp, elem);
+            j.emplace_back(j_temp);
+         }
+
+         for (auto& elem : data.air_units)
+         {
+            json j_temp;
+            writePSEVector(j_temp, elem);
+            j.emplace_back(j_temp);
          }
          return true;
       }

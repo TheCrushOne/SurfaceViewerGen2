@@ -1,6 +1,8 @@
 #pragma once
 
 #include "SimulatorBase.h"
+#include "crossdllinterface\EngineInterface.h"
+#include "common\pathfinder_structs.h"
 
 namespace ColregSimulation
 {
@@ -25,7 +27,11 @@ namespace ColregSimulation
       void SetSettings(const settings::application_settings& s) override;
       void ReloadSettings() override;
       const settings::application_settings& GetSettings() const override;
+   protected:
+      void prepareRootData();
    private:
-      double** m_coordGrid;
+      std::shared_ptr<pathfinder::route_data> m_routedata;
+      std::vector<std::vector<double>> m_coordGrid;
+      colreg::ModuleGuard<engine::iEngine> m_engine;
    };
 }

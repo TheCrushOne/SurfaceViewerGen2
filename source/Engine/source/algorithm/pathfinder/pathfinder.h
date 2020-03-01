@@ -27,20 +27,18 @@ namespace pathfinder
       /*virtual void initPowertrain() override;
       virtual void initMiscellaneous() override;*/
    public:
-      void FindPath(strategy_settings settings, std::shared_ptr<route_data>& route, const std::shared_ptr<Matrix<SVCG::route_point>>& rawdata, /*bool multithread = true, size_t countIdx = 0, size_t legnthIdx = 0, bool research = false, bool landPath = true, size_t packetSize = 0*/const path_finder_settings pathFinderSettings, path_finder_statistic& statistic);
+      void FindPath(strategy_settings settings, std::shared_ptr<route_data> route, const std::shared_ptr<Matrix<SVCG::route_point>> rawdata, /*bool multithread = true, size_t countIdx = 0, size_t legnthIdx = 0, bool research = false, bool landPath = true, size_t packetSize = 0*/const path_finder_settings pathFinderSettings, path_finder_statistic& statistic);
    private:
-      
-      
-      route findLandPath(route& route, std::shared_ptr<Matrix<size_t>>& coverageMatrix, bool multithread, bool* pathFounded);
-      route findAirPath(route& route, size_t iterations, bool multithread);
-      std::vector<SVCG::route_point> findPath(SVCG::route_point& start, SVCG::route_point& finish, path_finder_logic& logic, std::shared_ptr<Matrix<size_t>>& coverageMatrix, bool multithread, bool* pathFound);
+      route findLandPath(route& route, const std::shared_ptr<Matrix<SVCG::route_point>> rawdata, std::shared_ptr<Matrix<size_t>> coverageMatrix, bool multithread, bool* pathFounded);
+      route findAirPath(route& route, const std::shared_ptr<Matrix<SVCG::route_point>> rawdata, size_t iterations, bool multithread);
+      std::vector<SVCG::route_point> findPath(const std::shared_ptr<Matrix<SVCG::route_point>> rawdata, SVCG::route_point& start, SVCG::route_point& finish, path_finder_logic& logic, std::shared_ptr<Matrix<size_t>> coverageMatrix, bool multithread, bool* pathFound);
       //inline void AddItem();
    //signals:
       //void TimeUpdate(ProfilingData);
       //void TaskDataUpdate(QVariant);
       //void SubTaskDataUpdate(QVariant);
    private:
-      std::shared_ptr<Matrix<SVCG::route_point>> m_rawdata;
+      //std::shared_ptr<Matrix<SVCG::route_point>> m_rawdata;
       //size_t m_rowCount, m_colCount;
       //std::shared_ptr<iMatrix> m_rawdata;
       std::vector<std::future<route>> m_funAirVector;

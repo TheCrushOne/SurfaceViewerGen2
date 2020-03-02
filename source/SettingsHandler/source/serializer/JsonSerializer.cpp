@@ -17,7 +17,7 @@ namespace colreg
       bool Serialize(const char* filename, const settings::unit_settings& s) const final { return serialize(filename, s); }
       bool Deserialize(const char* filename, settings::unit_settings& s) const final { return deserialize(filename, s); }
 
-      std::string ToString(const settings::unit_settings& srcStt) const final { return toString(srcStt); }
+      const char* ToString(const settings::unit_settings& srcStt) const final { return toString(srcStt); }
       bool FromString(const char* src, settings::unit_settings& dstStt) const final { return fromString(src, dstStt); }
    private:
       static bool serialize(const char* filename, const settings::unit_settings& data)
@@ -40,11 +40,13 @@ namespace colreg
          return true;
       }
 
-      static std::string toString(const settings::unit_settings& data)
+      static const char* toString(const settings::unit_settings& data)
       {
+         static std::string staticBuffer;
          json j;
          unitDataToJson(j, data);
-         return j.dump();
+         staticBuffer = j.dump();
+         return staticBuffer.c_str();
       }
 
       static bool fromString(const char* src, settings::unit_settings& data)

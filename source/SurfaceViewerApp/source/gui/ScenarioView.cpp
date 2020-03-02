@@ -4,6 +4,7 @@
 
 #include "Render\GDIRender.h"
 #include "Layers\UnitLayer.h"
+#include "Layers\NetLayer.h"
 //#include "Layers\NaveStateLayer.h"
 #include "MainFrm.h"
 #include "simulator\simulator.h"

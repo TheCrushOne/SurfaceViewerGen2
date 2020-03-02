@@ -73,17 +73,17 @@ namespace request_storage
          "DO UPDATE SET setting_value = excluded.setting_value" },
       { RequestToken::RT_SETRESSTT,
          "INSERT INTO research_settings(setting_parameter, setting_value) "
-         "VALUES ('%s', '%s')"
+         "VALUES ('%s', '%s') "
          "ON CONFLICT(setting_parameter) "
          "DO UPDATE SET setting_value = excluded.setting_value" },
       { RequestToken::RT_SETMAPSTT,
          "INSERT INTO map_settings(setting_parameter, setting_value) "
-         "VALUES ('%s', '%s')"
+         "VALUES ('%s', '%s') "
          "ON CONFLICT(setting_parameter) "
          "DO UPDATE SET setting_value = excluded.setting_value" },
       { RequestToken::RT_SETUNTDAT,
          "INSERT INTO unit_data(unit_uniqId, unit_json) "
-         "VALUES ('1', '%s')"
+         "VALUES ('1', '%s') "
          "ON CONFLICT(unit_uniqId) "
          "DO UPDATE SET unit_json = excluded.unit_json" },
    };

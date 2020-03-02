@@ -19,11 +19,18 @@ namespace ColregSimulation
    //!тип маршрута
    enum class ROUTE_TYPE : char
    {
-      RT_COLREG = 0,    //< Для передачив COLREG
+      RT_COLREG = 0,    //< Для передачи в COLREG/pathfinder
       RT_SIMULAION,     //< Для симуляции движения
       RT_SOURSE,        //< Исходный маршрут движения из сценария
       RT_DISIGION,      //< Маршрут-решение
       RT_SUB_OPTIMAL,   //< Маршрут-решение
+   };
+
+   enum class UNIT_TYPE : char
+   {
+      UT_ROVER = 0,
+      UT_DRONE,
+      UT_SHIP,
    };
 
    struct control_point_info
@@ -78,21 +85,14 @@ namespace ColregSimulation
       double offset_ship_pos_from_route_right = 0.; ///< Отступ текущей позиции корабля перпендикулярно маршруту, мили
    };
 
-   //! Интерфейс доступа к данным корабля
-   struct iShip
+   struct iUnit
    {
-      //! Информационные данные корабля
-      virtual colreg::ship_info GetInfo() const = 0;
-
-      virtual const simulation_ship_settings& GetSimulationSettings() const = 0;
-
-      virtual const colreg::domain_scales& GetDomainScales() const = 0;
-
       //! Полная информация по текущему местоположению
       virtual track_point_full_info GetPos() const = 0;
 
+      //! Псевдосписок путей
       virtual const ship_path_ref* GetRoute(ROUTE_TYPE type)const = 0;
-      
+
       //! Исходный путь
       virtual const ship_path_ref* GetSrcPath() const = 0;
 
@@ -102,6 +102,27 @@ namespace ColregSimulation
       //! Симулированный путь
       virtual const ship_path_ref* GetPredictionPath() const = 0;
 
+      virtual ~iUnit() = default;
+   };
+
+   //! Интерфейс доступа к данным ровера
+   struct iRover : public iUnit
+   {};
+    
+   //! Интерфейс доступа к данным дрона
+   struct iDrone : public iUnit
+   {};
+
+   //! Интерфейс доступа к данным корабля
+   struct iShip : public iUnit
+   {
+      //! Информационные данные корабля
+      virtual colreg::ship_info GetInfo() const = 0;
+
+      virtual const simulation_ship_settings& GetSimulationSettings() const = 0;
+
+      virtual const colreg::domain_scales& GetDomainScales() const = 0;
+    
       //! Путь из модели colreg
       virtual const ship_path_ref* GetModelPath() const = 0;
 
@@ -171,16 +192,16 @@ namespace ColregSimulation
       Сохранение данных в файл
       \param[in] scenarioPath Путь по которому необходимо сохранить
       */
-      virtual bool Save(const char* scenarioPath, const char* mapFolderPath, const bool focused, const colreg::geo_points_ref& ships, const colreg::base_ref<colreg::geo_points_ref>& chart_objects) const = 0;
+      //virtual bool Save(const char* scenarioPath, const char* mapFolderPath, const bool focused, const colreg::geo_points_ref& ships, const colreg::base_ref<colreg::geo_points_ref>& chart_objects) const = 0;
 
       /*!
       Сохранение настроек в файл рядом со сценарием
       \param[in] scenarioPath Путь по которому лежит сценарий сохранить
       */
-      virtual bool SaveSettings(const char* scenarioPath) const = 0;
+      //virtual bool SaveSettings(const char* scenarioPath) const = 0;
 
-      virtual size_t       GetShipCount()      const = 0;
-      virtual const iShip& GetShip(size_t idx) const = 0;
+      virtual size_t       GetUnitCount(UNIT_TYPE type)      const = 0;
+      virtual const iShip& GetUnit(UNIT_TYPE type, size_t idx) const = 0;
 
       //! Абсолютное время (UTC) среза симуляции
       virtual double GetTime() const = 0;
@@ -258,7 +279,7 @@ namespace ColregSimulation
       virtual size_t GetCurrentControlPointIdx() const = 0;
 
       //! Получить доступ к текущему срезу состояния симулятора
-      //virtual const iSimulationState& GetState() const = 0;
+      virtual const iSimulationState& GetState() const = 0;
 
       //! Сохранение комбинации лога и карты
       virtual bool SaveLogPair(const char* filename) const = 0;

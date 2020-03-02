@@ -110,14 +110,14 @@ namespace colreg
          {
             json j_temp;
             writePSEVector(j_temp, elem);
-            j.emplace_back(j_temp);
+            j["land_units"].emplace_back(j_temp);
          }
 
          for (auto& elem : data.air_units)
          {
             json j_temp;
             writePSEVector(j_temp, elem);
-            j.emplace_back(j_temp);
+            j["air_units"].emplace_back(j_temp);
          }
          return true;
       }

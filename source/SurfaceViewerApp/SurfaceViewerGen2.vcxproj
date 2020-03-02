@@ -255,6 +255,7 @@
     <ClInclude Include="source\gui\graph2d\points.h" />
     <ClInclude Include="source\gui\graph2d\pviewbar.h" />
     <ClInclude Include="source\gui\graph2d\sizecbar.h" />
+    <ClInclude Include="source\gui\layers\NetLayer.h" />
     <ClInclude Include="source\gui\layers\RenderHelper.h" />
     <ClInclude Include="source\gui\layers\RenderLayers.h" />
     <ClInclude Include="source\gui\layers\UnitLayer.h" />
@@ -310,6 +311,7 @@
     <ClCompile Include="source\gui\graph2d\points.cpp" />
     <ClCompile Include="source\gui\graph2d\pviewbar.cpp" />
     <ClCompile Include="source\gui\graph2d\sizecbar.cpp" />
+    <ClCompile Include="source\gui\layers\NetLayer.cpp" />
     <ClCompile Include="source\gui\layers\RenderHelper.cpp" />
     <ClCompile Include="source\gui\layers\UnitLayer.cpp" />
     <ClCompile Include="source\gui\MainFrm.cpp" />

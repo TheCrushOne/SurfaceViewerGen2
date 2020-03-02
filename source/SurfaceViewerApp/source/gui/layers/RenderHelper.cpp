@@ -1,5 +1,5 @@
-//#include "stdafx.h"
-//#include "renderhelper.h"
+#include "stdafx.h"
+#include "renderhelper.h"
 //#include "domain_utils.h"
 //
 //
@@ -47,14 +47,13 @@
 //
 //
 //
-//void RenderArrow(render::iRender* renderer, const geo_point& pTo, double direction, const render::object_info& info, double sizeKoef)
-//{
-//   const auto length = math::distance(renderer->PixelToGeo(math::point{}), renderer->PixelToGeo(math::point{ 10., 10. })) * sizeKoef;
-//
-//   geo_point& pStart = math::calc_point(pTo, length * 3, direction + 180);
-//   geo_point& p1 = math::calc_point(pStart, length, direction + 90);
-//   geo_point& p2 = math::calc_point(pStart, length, direction - 90);
-//
-//   renderer->AddObject({ {p1, pTo, p2}, info });
-//}
-//
+void RenderArrow(render::iRender* renderer, const geo_point& pTo, double direction, const render::object_info& info, double sizeKoef)
+{
+   const auto length = math::distance(renderer->PixelToGeo(math::point{}), renderer->PixelToGeo(math::point{ 10., 10. })) * sizeKoef;
+
+   geo_point& pStart = math::calc_point(pTo, length * 3, direction + 180);
+   geo_point& p1 = math::calc_point(pStart, length, direction + 90);
+   geo_point& p2 = math::calc_point(pStart, length, direction - 90);
+
+   renderer->AddObject({ {p1, pTo, p2}, info });
+}

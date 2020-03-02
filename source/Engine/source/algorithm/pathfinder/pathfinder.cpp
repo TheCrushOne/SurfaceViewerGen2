@@ -100,6 +100,7 @@ void PathFinder::FindPath(strategy_settings settings, std::shared_ptr<route_data
             for (size_t idx = 0; idx < routeData.get()->land_routes.size(); idx++)
             {
                //m_funLandVector.emplace_back(std::async(std::launch::async, &PathFinder::findLandPath, routeData.get()->land_routes.at(idx), matrix, pathFinderSettings.multithread, &pathFound));
+               pathFound = true;
             }
             for (size_t idx = 0; idx < m_funLandVector.size(); idx++)
             {

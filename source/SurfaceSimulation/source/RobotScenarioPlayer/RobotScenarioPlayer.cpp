@@ -5,6 +5,7 @@ using namespace ColregSimulation;
 
 RobotScenarioPlayer::RobotScenarioPlayer(ICommunicator* pCommunicator, iPropertyInterface* prop)
    : SimulatorBase(pCommunicator, prop)
+   , m_routedata(std::make_shared<pathfinder::route_data>())
 {
    m_engine.Create(SVGUtils::CurrentDllPath("Engine").c_str(), "CreateEngine");
    if (!m_engine.IsValid())
@@ -49,7 +50,10 @@ void RobotScenarioPlayer::Stop()
 {}
 
 void RobotScenarioPlayer::Reset()
-{}
+{
+   Stop();
+   Start();
+}
 
 bool RobotScenarioPlayer::IsRunning() const
 {

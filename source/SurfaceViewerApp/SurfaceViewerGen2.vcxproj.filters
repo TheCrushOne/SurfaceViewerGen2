@@ -272,6 +272,9 @@
     <ClInclude Include="source\gui\WndCommunicator.h">
       <Filter>gui</Filter>
     </ClInclude>
+    <ClInclude Include="source\gui\layers\NetLayer.h">
+      <Filter>gui\layers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\stdafx.cpp" />
@@ -400,6 +403,9 @@
     </ClCompile>
     <ClCompile Include="source\simulator\simulator.cpp">
       <Filter>simulator</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gui\layers\NetLayer.cpp">
+      <Filter>gui\layers</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

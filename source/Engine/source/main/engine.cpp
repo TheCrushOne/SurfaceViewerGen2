@@ -14,6 +14,8 @@ using namespace engine;
 
 Engine::Engine()
    : Communicable(nullptr)
+   , m_rawdata(std::make_shared<pathfinder::Matrix<SVCG::route_point>>(SVCG::route_point{}))
+   , m_pathfinder(std::make_unique<pathfinder::PathFinder>())
 {
    /*m_noGoLowLevel = 73.f;
    m_noGoHighLevel = 120.f;
@@ -29,7 +31,6 @@ Engine::Engine()
    /*connect(this, SIGNAL(percent(int))
             , WFM::GetSharedInstance<LoadingDlg>(DBG_DATA).get(), SLOT(SetPercent(int))
             , Qt::QueuedConnection);*/
-   m_rawdata = std::make_shared<pathfinder::Matrix<SVCG::route_point>>(SVCG::route_point{});
 }
 
 void Engine::ProcessPathFind(std::shared_ptr<pathfinder::route_data> routeData, const std::vector<std::vector<double>>& rawData)
@@ -53,11 +54,6 @@ void Engine::ConvertMap(const std::vector<std::vector<double>>& rawdataSrc, std:
          rawdataDst->Set(rIdx, cIdx, rawdataSrc.at(rIdx).at(cIdx));
    }
 }
-
-//void Engine::SetCommunicator(ICommunicator* pComm)
-//{
-//   CCommunicableSimple::SetCommunicator(pComm);
-//}
 
 //void Engine::ConvertMap(const std::shared_ptr<QHeightMapSurfaceDataProxy> mapProxy, std::shared_ptr<SVM::iMatrix<SurfaceElement>> &rawmap, std::shared_ptr<settings::application_settings> &settings)
 //{

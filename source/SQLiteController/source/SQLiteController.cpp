@@ -138,8 +138,8 @@ void SQLiteController::saveUnitData(const settings::unit_settings& settings)
    NO_RES_PREP;
    std::string jsonSettings = m_unitDataSerializer->ToString(settings);
 
-   sprintf_s(buffer, request_storage::insupdReqList.at(request_storage::RequestToken::RT_SETUNTDAT).c_str(), jsonSettings.c_str()); m_connector->SQLNoResRequest(buffer);
-   //UNT_INSUPD_NORES_RL(jsonSettings.c_str());
+   //sprintf_s(buffer, request_storage::insupdReqList.at(request_storage::RequestToken::RT_SETUNTDAT).c_str(), jsonSettings.c_str()); m_connector->SQLNoResRequest(buffer);
+   UNT_INSUPD_NORES_RL(jsonSettings.c_str());
 }
 
 void SQLiteController::saveMapSettings(const settings::map_settings& settings)

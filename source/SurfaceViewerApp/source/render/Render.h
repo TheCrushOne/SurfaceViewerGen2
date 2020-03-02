@@ -55,10 +55,12 @@ namespace render
    {
       FOT_NONE = 0,
       FOT_ROVER,
+      FOT_SHIP,
       FOT_DRONE,
       FOT_ROUTE_SEGMENT,
       FOT_ROUTE_POINT,
       FOT_TRACK,
+      FOT_DOMAIN,
       FOT_SELECTED,
       /*FOT_SHIP,
       FOT_ROUTE_SEGMENT,

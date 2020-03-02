@@ -87,6 +87,9 @@ namespace ColregSimulation
 
    struct iUnit
    {
+      //! Информационные данные юнита
+      virtual colreg::ship_info GetInfo() const = 0;
+
       //! Полная информация по текущему местоположению
       virtual track_point_full_info GetPos() const = 0;
 
@@ -102,6 +105,11 @@ namespace ColregSimulation
       //! Симулированный путь
       virtual const ship_path_ref* GetPredictionPath() const = 0;
 
+      /*! Получить топологию домена юнита в момент времени
+      \param[in] scales Получить топологию с переданными коэффициентами сжатия
+      */
+      virtual const colreg::domain_geometry_ref* GetDomainTopology(double time, const colreg::domain_scales* scales = nullptr) const = 0;
+
       virtual ~iUnit() = default;
    };
 
@@ -116,8 +124,7 @@ namespace ColregSimulation
    //! Интерфейс доступа к данным корабля
    struct iShip : public iUnit
    {
-      //! Информационные данные корабля
-      virtual colreg::ship_info GetInfo() const = 0;
+      
 
       virtual const simulation_ship_settings& GetSimulationSettings() const = 0;
 
@@ -128,11 +135,6 @@ namespace ColregSimulation
 
       //! Получить проекцию текущей позиции на маршрут
       virtual colreg::track_point_info GetProjectionToRoute() const = 0;
-
-      /*! Получить топологию домена корабля в момент времени
-      \param[in] scales Получить топологию с переданными коэффициентами сжатия 
-      */
-      virtual const colreg::domain_geometry_ref* GetDomainTopology(double time, const colreg::domain_scales* scales = nullptr) const = 0;
     
       virtual const colreg::iVesselMathModel* GetMathModel()const = 0;
       virtual bool IsRouteExtended()const { return false; }
@@ -201,25 +203,25 @@ namespace ColregSimulation
       //virtual bool SaveSettings(const char* scenarioPath) const = 0;
 
       virtual size_t       GetUnitCount(UNIT_TYPE type)      const = 0;
-      virtual const iShip& GetUnit(UNIT_TYPE type, size_t idx) const = 0;
+      virtual const iUnit& GetUnit(UNIT_TYPE type, size_t idx) const = 0;
 
       //! Абсолютное время (UTC) среза симуляции
       virtual double GetTime() const = 0;
 
       //! Текущая навигационная оценка с решениями
-      virtual const iSimulationEstimation* GetEstimation() const = 0;
+      //virtual const iSimulationEstimation* GetEstimation() const = 0;
 
-      virtual const colreg::iChartSafetyCheck* GetSafetyChecker() const = 0;
+      //virtual const colreg::iChartSafetyCheck* GetSafetyChecker() const = 0;
 
-      virtual const colreg::settings& GetSettings() const = 0;
+      //virtual const colreg::settings& GetSettings() const = 0;
 
-      virtual const colreg::environment& GetEnvironment() const = 0;
+      //virtual const colreg::environment& GetEnvironment() const = 0;
 
-      virtual const ColregSimulation::simulation_settings& GetSimulationSettings() const = 0;
+      //virtual const ColregSimulation::simulation_settings& GetSimulationSettings() const = 0;
 
-      virtual const colreg::weather_influence_info& GetWeatherSettings() const = 0;
+      //virtual const colreg::weather_influence_info& GetWeatherSettings() const = 0;
 
-      virtual colreg::id_type OwnShipId() const = 0;
+      //virtual colreg::id_type OwnShipId() const = 0;
 
       virtual bool PrepareDataForSave(const ScenarioIO::scenario_data* pInputScenarioData, ScenarioIO::scenario_data* pScenarioData, const bool focused, const colreg::geo_points_ref& ships, const colreg::base_ref<colreg::geo_points_ref>& chart_objects) const = 0;
 
@@ -288,13 +290,13 @@ namespace ColregSimulation
       virtual const ColregSimulation::SIMULATION_PLAYER_TYPE GetSimulationType() = 0;
 
       //! Установить настройки
-      virtual void SetSettings(const settings::application_settings& s) = 0;
+      virtual void SetAppSettings(const settings::application_settings& s) = 0;
       
       //! Перезагрузить настройки с xml
       virtual void ReloadSettings() = 0;
 
       //! Взять настройки
-      virtual const settings::application_settings& GetSettings() const = 0;
+      virtual const settings::application_settings& GetAppSettings() const = 0;
       
       /*!
       \brief Добавить динамические объекты карты в симуляцию

@@ -55,6 +55,10 @@ void RobotScenarioPlayer::Reset()
    Start();
 }
 
+const iSimulationState& RobotScenarioPlayer::GetState() const
+{
+}
+
 bool RobotScenarioPlayer::IsRunning() const
 {
    return false;
@@ -95,13 +99,25 @@ const ColregSimulation::SIMULATION_PLAYER_TYPE RobotScenarioPlayer::GetSimulatio
    return ColregSimulation::SIMULATION_PLAYER_TYPE::SPT_LOG;
 }
 
-void RobotScenarioPlayer::SetSettings(const settings::application_settings& s)
+void RobotScenarioPlayer::SetAppSettings(const settings::application_settings& s)
 {}
 
 void RobotScenarioPlayer::ReloadSettings()
 {}
 
-const settings::application_settings& RobotScenarioPlayer::GetSettings() const
+const settings::application_settings& RobotScenarioPlayer::GetAppSettings() const
 {
    return m_settings;
 }
+
+size_t RobotScenarioPlayer::GetUnitCount(UNIT_TYPE type) const
+{}
+
+const iUnit& RobotScenarioPlayer::GetUnit(UNIT_TYPE type, size_t idx) const
+{}
+
+double RobotScenarioPlayer::GetTime() const
+{}
+
+bool RobotScenarioPlayer::PrepareDataForSave(const ScenarioIO::scenario_data* pInputScenarioData, ScenarioIO::scenario_data* pScenarioData, const bool focused, const colreg::geo_points_ref& ships, const colreg::base_ref<colreg::geo_points_ref>& chart_objects) const
+{}

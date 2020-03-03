@@ -23,6 +23,7 @@
     <ClInclude Include="source\colreg\BaseRefHolder.h" />
     <ClInclude Include="source\colreg\ChartSafetyInterface.h" />
     <ClInclude Include="source\colreg\ChartSafetyStructs.h" />
+    <ClInclude Include="source\colreg\ColregContainers.h" />
     <ClInclude Include="source\colreg\ColregHelper.h" />
     <ClInclude Include="source\colreg\ColregInterfaces.h" />
     <ClInclude Include="source\colreg\ColregSettings.h" />

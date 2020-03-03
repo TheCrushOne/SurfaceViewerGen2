@@ -55,10 +55,6 @@ void RobotScenarioPlayer::Reset()
    Start();
 }
 
-const iSimulationState& RobotScenarioPlayer::GetState() const
-{
-}
-
 bool RobotScenarioPlayer::IsRunning() const
 {
    return false;
@@ -111,13 +107,37 @@ const settings::application_settings& RobotScenarioPlayer::GetAppSettings() cons
 }
 
 size_t RobotScenarioPlayer::GetUnitCount(UNIT_TYPE type) const
-{}
+{
+   switch (type)
+   {
+   case UNIT_TYPE::UT_DRONE:
+      return m_settings.unit_stt.air_units.size();
+   case UNIT_TYPE::UT_ROVER:
+      return m_settings.unit_stt.land_units.size();
+   }
+   return 0;
+}
 
 const iUnit& RobotScenarioPlayer::GetUnit(UNIT_TYPE type, size_t idx) const
-{}
+{
+   switch (type)
+   {
+   case UNIT_TYPE::UT_ROVER:
+      return m_rovers.at(idx);
+   case UNIT_TYPE::UT_DRONE:
+      return m_drones.at(idx);
+   case UNIT_TYPE::UT_SHIP:
+   default:
+      return m_ships.at(idx);
+   }
+}
 
 double RobotScenarioPlayer::GetTime() const
-{}
+{
+   return 1.;
+}
 
 bool RobotScenarioPlayer::PrepareDataForSave(const ScenarioIO::scenario_data* pInputScenarioData, ScenarioIO::scenario_data* pScenarioData, const bool focused, const colreg::geo_points_ref& ships, const colreg::base_ref<colreg::geo_points_ref>& chart_objects) const
-{}
+{
+   return false;
+}

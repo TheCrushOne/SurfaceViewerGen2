@@ -90,6 +90,8 @@ namespace ColregSimulation
       //! Информационные данные юнита
       virtual colreg::ship_info GetInfo() const = 0;
 
+      virtual const colreg::domain_scales& GetDomainScales() const = 0;
+
       //! Полная информация по текущему местоположению
       virtual track_point_full_info GetPos() const = 0;
 
@@ -110,6 +112,8 @@ namespace ColregSimulation
       */
       virtual const colreg::domain_geometry_ref* GetDomainTopology(double time, const colreg::domain_scales* scales = nullptr) const = 0;
 
+      virtual const char* GetETA() const = 0;
+
       virtual ~iUnit() = default;
    };
 
@@ -124,29 +128,25 @@ namespace ColregSimulation
    //! Интерфейс доступа к данным корабля
    struct iShip : public iUnit
    {
-      
-
-      virtual const simulation_ship_settings& GetSimulationSettings() const = 0;
-
-      virtual const colreg::domain_scales& GetDomainScales() const = 0;
-    
+      //virtual const simulation_ship_settings& GetSimulationSettings() const = 0;
+  
       //! Путь из модели colreg
-      virtual const ship_path_ref* GetModelPath() const = 0;
+      //virtual const ship_path_ref* GetModelPath() const = 0;
 
       //! Получить проекцию текущей позиции на маршрут
-      virtual colreg::track_point_info GetProjectionToRoute() const = 0;
+      //virtual colreg::track_point_info GetProjectionToRoute() const = 0;
     
-      virtual const colreg::iVesselMathModel* GetMathModel()const = 0;
-      virtual bool IsRouteExtended()const { return false; }
+      //virtual const colreg::iVesselMathModel* GetMathModel()const = 0;
+      virtual bool IsRouteExtended() const { return false; }
 
       //для AIS Log должно возвращаться true
-      virtual bool IsReadOnly() const = 0; 
+      //virtual bool IsReadOnly() const = 0; 
 
-      virtual const char* GetDestination() const = 0;
-      virtual const char* GetETA() const = 0;
+      //virtual const char* GetDestination() const = 0;
+      //virtual const char* GetETA() const = 0;
 
-      virtual double GetColregRouteZoneWidth(unsigned int routeIndex, bool left, colreg::ROUTE_ZONE_TYPE zone) const = 0;
-      virtual const colreg::iModel* GetSourceRouteModel() const = 0;
+      //virtual double GetColregRouteZoneWidth(unsigned int routeIndex, bool left, colreg::ROUTE_ZONE_TYPE zone) const = 0;
+      //virtual const colreg::iModel* GetSourceRouteModel() const = 0;
       virtual ~iShip() = default;
    };
 

@@ -16,10 +16,6 @@ void RobotLogPlayer::Stop()
 void RobotLogPlayer::Reset()
 {}
 
-const iSimulationState& RobotLogPlayer::GetState() const
-{
-}
-
 bool RobotLogPlayer::IsRunning() const
 {
    return false;
@@ -78,7 +74,8 @@ size_t RobotLogPlayer::GetUnitCount(UNIT_TYPE type) const
 
 const iUnit& RobotLogPlayer::GetUnit(UNIT_TYPE type, size_t idx) const
 {
-
+   static SimulationShip ship;
+   return ship;
 }
 
 double RobotLogPlayer::GetTime() const

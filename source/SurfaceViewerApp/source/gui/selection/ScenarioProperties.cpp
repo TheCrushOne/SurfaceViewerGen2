@@ -13,7 +13,7 @@ ScenarioProperties::ScenarioProperties()
    {
       //const auto& simulationState = sim->GetState();
 
-      m_settings = sim->GetSettings();
+      m_settings = sim->GetAppSettings();
       prepareScenarioPathfindingSettingsFolder();
       prepareScenarioResearchSettingsFolder();
    }

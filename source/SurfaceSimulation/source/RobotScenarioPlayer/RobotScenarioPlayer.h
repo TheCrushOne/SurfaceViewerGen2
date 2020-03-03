@@ -3,6 +3,7 @@
 #include "SimulatorBase.h"
 #include "crossdllinterface\EngineInterface.h"
 #include "common\pathfinder_structs.h"
+#include "SimulationModel/ColregSimulationImpl.h"
 
 namespace ColregSimulation
 {
@@ -42,5 +43,9 @@ namespace ColregSimulation
       std::shared_ptr<pathfinder::route_data> m_routedata;
       std::vector<std::vector<double>> m_coordGrid;
       colreg::ModuleGuard<engine::iEngine> m_engine;
+
+      std::vector<SimulationShip> m_ships;
+      std::vector<SimulationRover> m_rovers;
+      std::vector<SimulationDrone> m_drones;
    };
 }

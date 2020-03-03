@@ -21,6 +21,7 @@
   <ItemGroup>
     <ClCompile Include="source\RobotLogPlayer\RobotLogPlayer.cpp" />
     <ClCompile Include="source\RobotScenarioPlayer\RobotScenarioPlayer.cpp" />
+    <ClCompile Include="source\SimulationModel\ColregSimulationImpl.cpp" />
     <ClCompile Include="source\SimulatorBase.cpp" />
     <ClCompile Include="source\SimulatorManager.cpp" />
     <ClCompile Include="source\stdafx.cpp" />
@@ -28,6 +29,7 @@
   <ItemGroup>
     <ClInclude Include="source\RobotLogPlayer\RobotLogPlayer.h" />
     <ClInclude Include="source\RobotScenarioPlayer\RobotScenarioPlayer.h" />
+    <ClInclude Include="source\SimulationModel\ColregSimulationImpl.h" />
     <ClInclude Include="source\SimulatorBase.h" />
     <ClInclude Include="source\SimulatorManager.h" />
     <ClInclude Include="source\stdafx.h" />

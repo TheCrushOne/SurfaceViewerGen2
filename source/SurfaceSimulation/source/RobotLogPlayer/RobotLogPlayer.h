@@ -1,6 +1,7 @@
 #pragma once
 
 #include "SimulatorBase.h"
+#include "SimulationModel/ColregSimulationImpl.h"
 
 namespace ColregSimulation
 {

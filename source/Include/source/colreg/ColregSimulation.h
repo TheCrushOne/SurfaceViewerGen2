@@ -118,15 +118,15 @@ namespace ColregSimulation
    };
 
    //! Интерфейс доступа к данным ровера
-   struct iRover : public iUnit
+   struct iRover
    {};
     
    //! Интерфейс доступа к данным дрона
-   struct iDrone : public iUnit
+   struct iDrone
    {};
 
    //! Интерфейс доступа к данным корабля
-   struct iShip : public iUnit
+   struct iShip
    {
       //virtual const simulation_ship_settings& GetSimulationSettings() const = 0;
   

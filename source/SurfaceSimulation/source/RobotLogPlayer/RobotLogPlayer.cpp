@@ -28,7 +28,8 @@ size_t RobotLogPlayer::GetControlPointsCount() const
 
 const control_point_info& RobotLogPlayer::GetControlPointInfo(size_t controlPntIdx) const
 {
-   return control_point_info{ 0 };
+   static control_point_info cp{ 0 };
+   return cp;
 }
 
 bool RobotLogPlayer::PlayFrom(size_t controlPointIdx)
@@ -79,7 +80,11 @@ const iUnit& RobotLogPlayer::GetUnit(UNIT_TYPE type, size_t idx) const
 }
 
 double RobotLogPlayer::GetTime() const
-{}
+{
+   return 0.;
+}
 
 bool RobotLogPlayer::PrepareDataForSave(const ScenarioIO::scenario_data* pInputScenarioData, ScenarioIO::scenario_data* pScenarioData, const bool focused, const colreg::geo_points_ref& ships, const colreg::base_ref<colreg::geo_points_ref>& chart_objects) const
-{}
+{
+   return false;
+}

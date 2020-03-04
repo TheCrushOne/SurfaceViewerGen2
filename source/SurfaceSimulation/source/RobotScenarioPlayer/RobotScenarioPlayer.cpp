@@ -1,5 +1,7 @@
 #include "stdafx.h"
 #include "RobotScenarioPlayer.h"
+#include "colreg\ColregContainers.h"
+#include "SVCG/positioning.h"
 
 using namespace ColregSimulation;
 
@@ -42,7 +44,9 @@ void RobotScenarioPlayer::Start()
 {
    m_databaseController->LoadScenarioData(m_settings, m_coordGrid);
    prepareRootData();
+   addUnitsFromScenario();
    m_engine->ProcessPathFind(m_routedata, m_coordGrid);
+   updateUnitsPath();
    int i = 0;
 }
 
@@ -140,4 +144,72 @@ double RobotScenarioPlayer::GetTime() const
 bool RobotScenarioPlayer::PrepareDataForSave(const ScenarioIO::scenario_data* pInputScenarioData, ScenarioIO::scenario_data* pScenarioData, const bool focused, const colreg::geo_points_ref& ships, const colreg::base_ref<colreg::geo_points_ref>& chart_objects) const
 {
    return false;
+}
+
+void RobotScenarioPlayer::addUnit(const settings::point_setting_element& setting, UNIT_TYPE type)
+{
+   switch (type)
+   {
+   case UNIT_TYPE::UT_DRONE:
+   {
+      SimulationDrone drone;
+      track_point_full_info info;
+      info.point.pos = SVCG::RoutePointToPositionPoint(setting.start);
+      m_drones.emplace_back(std::move(drone));
+      return;
+   }
+   case UNIT_TYPE::UT_ROVER:
+   {
+      SimulationRover rover;
+      track_point_full_info info;
+      info.point.pos = SVCG::RoutePointToPositionPoint(setting.start);
+      m_rovers.emplace_back(std::move(rover));
+      return;
+   }
+   case UNIT_TYPE::UT_SHIP:
+   {
+      SimulationShip ship;
+      track_point_full_info info;
+      info.point.pos = SVCG::RoutePointToPositionPoint(setting.start);
+      m_ships.emplace_back(std::move(ship));
+      return;
+   }
+   }
+   
+}
+
+void RobotScenarioPlayer::updateUnitsPath()
+{
+   for (size_t idx = 0; idx < GetUnitCount(UNIT_TYPE::UT_DRONE); idx++)
+   {
+      auto& unit = GetUnit(UNIT_TYPE::UT_DRONE, idx);
+     
+      /*if (ship.GetSimulationSettings().calculate_chart_context || ship.GetSimulationSettings().calculate_domain_border)
+         chartContext = getTrackChartContext(ship.Info(), track, _scenarioSettings.environment.chart_settings.analysisObjectsMask);
+      if (ship.GetSimulationSettings().calculate_domain_border)
+         domainBorder = getTrackDomainBorderInfo(ship.Info().id, track, &chartContext);*/
+      //ColregTrackPoints track = getTrack(pColregModel, ship.GetPos().point, ship.ProjToRoute().time,
+         //_scenarioSettings.setting.timePrediction, _scenarioSettings.settings.timeStep);
+
+      //ship.SetModelTrack(std::move(track), {},
+         //ship.GetSimulationSettings().calculate_chart_context ? std::move(chartContext) : ColregChartContext(), std::move(domainBorder));
+      //ship.SetModelRoute(getRoute(pColregModel));
+   }
+}
+
+void RobotScenarioPlayer::addUnitsFromScenario()
+{
+   auto& air_units = m_settings.unit_stt.air_units;
+
+   for (auto& elem : air_units)
+   {
+      addUnit(elem, UNIT_TYPE::UT_DRONE);
+   }
+
+   auto& land_units = m_settings.unit_stt.land_units;
+
+   for (auto& elem : land_units)
+   {
+      addUnit(elem, UNIT_TYPE::UT_ROVER);
+   }
 }

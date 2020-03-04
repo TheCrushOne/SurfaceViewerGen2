@@ -39,6 +39,9 @@ namespace ColregSimulation
       const colreg::domain_geometry_ref* GetDomainTopology(double time, const colreg::domain_scales* scales = nullptr) const override final { return nullptr; }
 
       const char* GetETA() const override final { return m_eta.c_str(); /*ETA formatted as: MMDDHHMM, (Month, day, hour, minute). Example: 02.06.1982 19:40 encoded as 06021940*/ }
+
+
+      void SetPosInfo(const track_point_full_info& info) { m_posInfo = info; }
    private:
       colreg::ship_info m_info;
       colreg::domain_scales m_domainScales;

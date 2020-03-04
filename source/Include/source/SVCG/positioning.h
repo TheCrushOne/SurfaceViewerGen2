@@ -9,7 +9,7 @@ namespace SVCG
 {
    inline route_point PositionPointToRoutePoint(const position_point& pPoint, const settings::environment_settings settings = settings::environment_settings())
    {
-      return ;
+      return route_point{};
    }
 
    inline math::point PositionPointToMathPoint(const position_point& pPoint, const settings::environment_settings settings = settings::environment_settings())
@@ -33,5 +33,10 @@ namespace SVCG
       auto& info = settings.mtx_info;
       //auto ord_spos = ;
       return math::point();
+   }
+
+   inline position_point RoutePointToPositionPoint(const route_point& pPoint, const settings::environment_settings settings = settings::environment_settings())
+   {
+      return MathPointToPositionPoint(RoutePointToMathPoint(pPoint, settings), settings);
    }
 }

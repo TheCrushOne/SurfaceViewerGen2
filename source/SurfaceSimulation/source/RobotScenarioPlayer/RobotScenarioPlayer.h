@@ -39,6 +39,9 @@ namespace ColregSimulation
       bool PrepareDataForSave(const ScenarioIO::scenario_data* pInputScenarioData, ScenarioIO::scenario_data* pScenarioData, const bool focused, const colreg::geo_points_ref& ships, const colreg::base_ref<colreg::geo_points_ref>& chart_objects) const;
    protected:
       void prepareRootData();
+      void updateUnitsPath();
+      void addUnit(const settings::point_setting_element&, UNIT_TYPE);
+      void addUnitsFromScenario();
    private:
       std::shared_ptr<pathfinder::route_data> m_routedata;
       std::vector<std::vector<double>> m_coordGrid;

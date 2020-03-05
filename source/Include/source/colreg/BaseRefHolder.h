@@ -49,8 +49,8 @@ public:
    inline void Resize(size_t new_size)
    {
       _vec.resize(new_size);
-      size = new_size;
-      arr = _vec.data();
+      colreg::base_ref<T>::size = new_size;
+      colreg::base_ref<T>::arr = _vec.data();
    }
 
    inline T& operator[](size_t index) { return _vec[index]; }
@@ -59,8 +59,8 @@ public:
 
    inline void Rebase()
    {
-      size = _vec.size();
-      arr = _vec.data();
+      colreg::base_ref<T>::size = _vec.size();
+      colreg::base_ref<T>::arr = _vec.data();
    }
 
 private:
@@ -81,5 +81,5 @@ public:
 
    void Release() final { delete this; }
 
-   const base_ref<T>* Get() const final { return this; }
+   const colreg::base_ref<T>* Get() const final { return this; }
 };

@@ -5,15 +5,9 @@
 #include "ColregInterfaces.h"
 #include "ChartSafetyInterface.h"
 
-using NavEstimationGuard = colreg::ReleaseGuard<colreg::iNavEstimation>;
-
-using ModelTrackGuard   = colreg::ReleaseGuard<colreg::iModelTrack>;
 
 using RouteRefHolder     = BaseRefHolder<colreg::route_point>;
 using RouteInfoRefHolder = BaseRefHolder<colreg::maneuver_route_info>;
-using RelationsHolder    = BaseRefHolder<colreg::ship_relation_info>;
-
-using SolutionManeuverRefHolder = BaseRefHolder<colreg::iSolutionManeuver*>;
 
 using ColregRoutePoints  = std::vector<colreg::route_point>;
 using ColregTrackPoints  = std::vector<colreg::track_point_info>;

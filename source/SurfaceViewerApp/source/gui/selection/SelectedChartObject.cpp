@@ -4,11 +4,11 @@
 #include "gui/layers/renderhelper.h"
 #include "gui/user_interface.h"
 
-SelectedChartObject::SelectedChartObject(colreg::id_type id, colreg::OBJECT_TYPE chart_object_type)
+SelectedChartObject::SelectedChartObject(colreg::id_type id/*, colreg::OBJECT_TYPE chart_object_type*/)
    : _id{ id }
-   , _chart_object_type{ chart_object_type }
+   //, _chart_object_type{ chart_object_type }
 {
-   colreg::check_chart_obj_type(colreg::OT_DYNAMIC_AREAS | colreg::OT_SHIP_DOMAIN_STATISTIC_AREA, chart_object_type) ? _obj_id.dynamic_id = id : _obj_id.static_id = id;
+   //colreg::check_chart_obj_type(colreg::OT_DYNAMIC_AREAS | colreg::OT_SHIP_DOMAIN_STATISTIC_AREA, chart_object_type) ? _obj_id.dynamic_id = id : _obj_id.static_id = id;
 
    // NOTE: загрузка инфы по выбранному объекту
    //auto pObj = simulator::getSimulator()->GetState().GetSafetyChecker()->GetChartObjects(&_obj_id, 1);
@@ -105,19 +105,19 @@ void SelectedChartObject::OnSimSettingChanged()
 
 void SelectedChartObject::Render(render::iRender* renderer)
 {
-   if (colreg::check_chart_obj_type(colreg::OT_AREAS, _chart_object_type) || colreg::check_chart_obj_type(colreg::OT_DYNAMIC_AREAS, _chart_object_type))
-   {
-      renderer->AddObject({ _points,{ 2, render::LINE_STYLE::LL_NONE, render::FILL_TYPE::FT_SOLID, user_interface::selectedColor, "", 0, 0, user_interface::selectedAlpha } });
-      renderer->AddObject({ _points,{ 4, render::LINE_STYLE::LL_DASH, render::FILL_TYPE::FT_NONE, user_interface::selectedColor, "", 0, 0, 200} });
-   }
-   else if (colreg::check_chart_obj_type(colreg::OT_LINES, _chart_object_type))
-   {
-      renderer->AddObject({ _points,{ 4, render::LINE_STYLE::LL_DASH, render::FILL_TYPE::FT_NONE, user_interface::selectedColor, "", 0, 0, 200 } });
-   }
+   //if (colreg::check_chart_obj_type(colreg::OT_AREAS, _chart_object_type) || colreg::check_chart_obj_type(colreg::OT_DYNAMIC_AREAS, _chart_object_type))
+   //{
+   //   renderer->AddObject({ _points,{ 2, render::LINE_STYLE::LL_NONE, render::FILL_TYPE::FT_SOLID, user_interface::selectedColor, "", 0, 0, user_interface::selectedAlpha } });
+   //   renderer->AddObject({ _points,{ 4, render::LINE_STYLE::LL_DASH, render::FILL_TYPE::FT_NONE, user_interface::selectedColor, "", 0, 0, 200} });
+   //}
+   //else if (colreg::check_chart_obj_type(colreg::OT_LINES, _chart_object_type))
+   //{
+   //   renderer->AddObject({ _points,{ 4, render::LINE_STYLE::LL_DASH, render::FILL_TYPE::FT_NONE, user_interface::selectedColor, "", 0, 0, 200 } });
+   //}
 
-   for (size_t i = 0; i < _points.size(); ++i)
-      renderer->AddObject({ { _points[i] },{ 5, render::LINE_STYLE::LL_SOLID, render::FILL_TYPE::FT_NONE, RGB(200, 0, 0), ""}
-                                                            ,{render::FIND_TYPE::FT_FIND_FAST, (colreg::id_type) i, render::FIND_OBJECT_TYPE::FOT_SELECTED, SELECT_TYPE::ST_POINT } });
+   //for (size_t i = 0; i < _points.size(); ++i)
+   //   renderer->AddObject({ { _points[i] },{ 5, render::LINE_STYLE::LL_SOLID, render::FILL_TYPE::FT_NONE, RGB(200, 0, 0), ""}
+   //                                                         ,{render::FIND_TYPE::FT_FIND_FAST, (colreg::id_type) i, render::FIND_OBJECT_TYPE::FOT_SELECTED, SELECT_TYPE::ST_POINT } });
 
 }
 void SelectedChartObject::StartEdit(render::iRender* renderer, CPoint point, render::find_info info)
@@ -157,7 +157,7 @@ void SelectedChartObject::Edit(render::iRender* renderer, CPoint point)
    }
    _geoEdit = renderer->PixelToGeo(math::point{ (double)point.y, (double)point.x });
 
-   if (!check_chart_obj_type(colreg::OBJECT_TYPE::OT_AREAS, _chart_object_type) || _points.size() < 3)
+   if (/*!check_chart_obj_type(colreg::OBJECT_TYPE::OT_AREAS, _chart_object_type) ||*/ _points.size() < 3)
    {
       if (_index > 0)
       {
@@ -216,7 +216,7 @@ void SelectedChartObject::EndEdit()
    {
       _points[_index] = _geoEdit;
 
-      if (check_chart_obj_type(colreg::OBJECT_TYPE::OT_AREAS, _chart_object_type))
+      //if (check_chart_obj_type(colreg::OBJECT_TYPE::OT_AREAS, _chart_object_type))
       {//поддержим замкнутость 
          if (_index == 0)
          {
@@ -237,7 +237,7 @@ void SelectedChartObject::EndEdit()
    }
 
 
-   colreg::chart_object object;
+   //colreg::chart_object object;
    object.type = _chart_object_type;
    object.id = _obj_id;
 
@@ -251,7 +251,7 @@ void SelectedChartObject::EndEdit()
 void SelectedChartObject::Delete()
 {
    colreg::chart_object_id cid;
-   colreg::check_chart_obj_type(colreg::OT_DYNAMIC_AREAS | colreg::OT_STATISTIC_AREA, _chart_object_type) ? cid.dynamic_id = _id : cid.static_id = _id;
+   //colreg::check_chart_obj_type(colreg::OT_DYNAMIC_AREAS | colreg::OT_STATISTIC_AREA, _chart_object_type) ? cid.dynamic_id = _id : cid.static_id = _id;
    //ScenarioManager::GetInstance().RemoveObject(cid, _chart_object_type);
 }
 

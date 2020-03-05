@@ -272,7 +272,10 @@
     <ClInclude Include="source\gui\selection\property.h" />
     <ClInclude Include="source\gui\selection\property_helper.h" />
     <ClInclude Include="source\gui\selection\ScenarioProperties.h" />
-    <ClInclude Include="source\gui\selection\SelectedChartObject.h" />
+    <ClInclude Include="source\gui\selection\SelectedChartObject.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="source\gui\selection\SelectedObjectManager.h" />
     <ClInclude Include="source\gui\selection\SelectedRoute.h" />
     <ClInclude Include="source\gui\tools\CreateObjectTool.h" />
@@ -325,7 +328,10 @@
     <ClCompile Include="source\gui\properties\PropertiesWndBase.cpp" />
     <ClCompile Include="source\gui\ScenarioView.cpp" />
     <ClCompile Include="source\gui\selection\ScenarioProperties.cpp" />
-    <ClCompile Include="source\gui\selection\SelectedChartObject.cpp" />
+    <ClCompile Include="source\gui\selection\SelectedChartObject.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="source\gui\selection\SelectedObjectManager.cpp" />
     <ClCompile Include="source\gui\selection\SelectedRoute.cpp" />
     <ClCompile Include="source\gui\tools\CreateObjectTool.cpp" />

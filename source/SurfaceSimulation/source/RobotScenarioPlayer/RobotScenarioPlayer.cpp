@@ -141,7 +141,7 @@ double RobotScenarioPlayer::GetTime() const
    return 1.;
 }
 
-bool RobotScenarioPlayer::PrepareDataForSave(const ScenarioIO::scenario_data* pInputScenarioData, ScenarioIO::scenario_data* pScenarioData, const bool focused, const colreg::geo_points_ref& ships, const colreg::base_ref<colreg::geo_points_ref>& chart_objects) const
+bool RobotScenarioPlayer::PrepareDataForSave(/*const ScenarioIO::scenario_data* pInputScenarioData, ScenarioIO::scenario_data* pScenarioData, */const bool focused, const colreg::geo_points_ref& ships, const colreg::base_ref<colreg::geo_points_ref>& chart_objects) const
 {
    return false;
 }
@@ -155,6 +155,7 @@ void RobotScenarioPlayer::addUnit(const settings::point_setting_element& setting
       SimulationDrone drone;
       track_point_full_info info;
       info.point.pos = SVCG::RoutePointToPositionPoint(setting.start);
+      drone.SetPosInfo(info);
       m_drones.emplace_back(std::move(drone));
       return;
    }
@@ -163,6 +164,7 @@ void RobotScenarioPlayer::addUnit(const settings::point_setting_element& setting
       SimulationRover rover;
       track_point_full_info info;
       info.point.pos = SVCG::RoutePointToPositionPoint(setting.start);
+      rover.SetPosInfo(info);
       m_rovers.emplace_back(std::move(rover));
       return;
    }
@@ -171,6 +173,7 @@ void RobotScenarioPlayer::addUnit(const settings::point_setting_element& setting
       SimulationShip ship;
       track_point_full_info info;
       info.point.pos = SVCG::RoutePointToPositionPoint(setting.start);
+      ship.SetPosInfo(info);
       m_ships.emplace_back(std::move(ship));
       return;
    }

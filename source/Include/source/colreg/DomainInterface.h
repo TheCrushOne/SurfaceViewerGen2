@@ -30,7 +30,7 @@ namespace colreg
       Get safe radius
       \return Radius at which it is guaranteed that no dangerous situation will occur, miles
       */
-      virtual double GetSafeRadius(const ship_info& targetShip, double speed, const colreg::chart_context* chartContext = nullptr) const = 0;
+      virtual double GetSafeRadius(const ship_info& targetShip, double speed) const = 0;
 
       /*!
       Get domain width
@@ -38,7 +38,7 @@ namespace colreg
       \param[in] chartContext Track point's chart context
       \return Domain's border information, miles
       */
-      virtual domain_border_info GetBorderInfo(const track_point_info& position, const chart_context& chartContext) const = 0;
+      virtual domain_border_info GetBorderInfo(const track_point_info& position) const = 0;
 
       /*!
       Get domain topology for the specified track point
@@ -47,7 +47,7 @@ namespace colreg
       \param[in] size Track points count
       \return Calculated domain topology at provided track point
       */
-      virtual const domain_geometry_ref* GetTopology(const track_point_info* points, const chart_context* chartContext, size_t size) const = 0;
+      virtual const domain_geometry_ref* GetTopology(const track_point_info* points, size_t size) const = 0;
 
       /*! 
       Get ship danger estimation
@@ -59,7 +59,7 @@ namespace colreg
       \param[in] targetPosNext Target ship position at the next time step moment the check is performed
       \return Estimated danger information
       */
-      virtual ship_danger_estimation EstimateShipDanger(const track_point_info* points, const chart_context* chartContext, size_t size,
+      virtual ship_danger_estimation EstimateShipDanger(const track_point_info* points, size_t size,
                                                         const ship_info& targetShip,
                                                         const track_point_info& targetPos,
                                                         const track_point_info& targetPosNext) const = 0;

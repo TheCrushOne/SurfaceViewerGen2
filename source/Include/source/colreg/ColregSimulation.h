@@ -8,11 +8,6 @@
 
 struct iPropertyInterface;
 
-namespace ScenarioIO
-{
-   struct scenario_data;
-}
-
 namespace ColregSimulation
 {
 #pragma pack (push, 4)
@@ -55,7 +50,6 @@ namespace ColregSimulation
 
       colreg::track_point_info   point;
       colreg::model_point_info   model_info;
-      colreg::chart_context      chart_context;
       colreg::domain_border_info domain_border;
    };
 
@@ -66,23 +60,6 @@ namespace ColregSimulation
 
       const colreg::route_ref*           route = nullptr;
       const colreg::track_full_info_ref* track = nullptr;
-   };
-
-   struct simulation_ship_settings
-   {
-      bool no_accept_route = false; ///< Игнорировать предложенный маршурт
-      bool ignore_route_suggestions = true; ///< Игнорировать рекомендации по смене маршрута
-
-      bool move_with_custom_params = false;       ///< Игнорировать модельную траекторию и двигаться по параметрам movement_course и movement_speed
-      double movement_course  = colreg::NO_VALUE; ///< Курс, по которому двигается судно при игнорировании траектории (NO_VALUE == остается текущим)
-      double movement_heading = colreg::NO_VALUE; ///< Направление носа судна при игнорировании траектории (NO_VALUE == остается текущим)
-      double movement_speed   = colreg::NO_VALUE; ///< Скорость, с которой двигается судно при игнорировании траектории (NO_VALUE == остается текущим)
-
-      bool calculate_chart_context = false; ///< Просчет контекста карты для модельной траектории корабля (если выкл, то контекст по-умолчанию)
-      bool calculate_domain_border = false; ///< Просчет коридора домена для модельной траектории корабля (если выкл, то контекст по-умолчанию)
-
-      double offset_ship_pos_from_route_left = 0.; ///< Отступ текущей позиции корабля перпендикулярно маршруту, мили
-      double offset_ship_pos_from_route_right = 0.; ///< Отступ текущей позиции корабля перпендикулярно маршруту, мили
    };
 
    struct iUnit
@@ -150,43 +127,6 @@ namespace ColregSimulation
       virtual ~iShip() = default;
    };
 
-   struct iSimulationEstimation
-   {
-      virtual bool Solve(bool isCooperative) const = 0;
-
-      virtual const colreg::clusters_ref* GetClusters() const = 0;
-      virtual size_t GetSolutionCount(size_t clusterIdx) const = 0;
-
-      virtual const colreg::danger_ship_info* GetDangerInfoById(colreg::id_type shipId) const = 0;
-      virtual const colreg::danger_ship_info* GetDangerInfoById(size_t clusterIdx, colreg::id_type shipId) const = 0;
-
-      virtual const colreg::iSingleSolution* GetSolution(size_t clusterIdx, size_t solIdx) const = 0;
-      virtual const colreg::iSingleSolution* GetSolutionById(size_t clusterIdx, colreg::id_type shipId) const = 0;
-
-      virtual const colreg::iNavEstimation* GetResult() const = 0;
-   };
-
-#pragma pack (push, 1)
-   struct simulation_settings
-   {
-      colreg::id_type ownship_id;      // Colreg работает для корабля self
-      double simulationTimeStep;       // интервал step()
-      double estimationInterval;       // интервал для Estimate
-      bool auto_apply;                 // авто принятие решения COLREG
-      bool extend_route_last_point;    // автоматически продлевать маршруты из сценария
-      bool scripted_scenario;          // является ли сценарий скриптовым
-      size_t stepCount;                // количество шагов сценария      
-      simulation_settings()
-         : ownship_id{ colreg::INVALID_ID }
-         , simulationTimeStep{ 60 }
-         , estimationInterval{ 60 }
-         , auto_apply{true}
-         , extend_route_last_point{true}
-         , scripted_scenario{false}
-         , stepCount{ 0 }
-      {}
-   };
-#pragma pack (pop)
    //! Срез состояния симуляции
    struct iSimulationState
    {
@@ -223,15 +163,9 @@ namespace ColregSimulation
 
       //virtual colreg::id_type OwnShipId() const = 0;
 
-      virtual bool PrepareDataForSave(const ScenarioIO::scenario_data* pInputScenarioData, ScenarioIO::scenario_data* pScenarioData, const bool focused, const colreg::geo_points_ref& ships, const colreg::base_ref<colreg::geo_points_ref>& chart_objects) const = 0;
+      virtual bool PrepareDataForSave(/*const ScenarioIO::scenario_data* pInputScenarioData, ScenarioIO::scenario_data* pScenarioData, */const bool focused, const colreg::geo_points_ref& ships, const colreg::base_ref<colreg::geo_points_ref>& chart_objects) const = 0;
 
       virtual ~iSimulationState() = default;
-   };
-
-   enum ActionType
-   {
-      AT_ACCEPTMAN,
-      AT_CANCELMAN
    };
 
    enum class SIMULATION_PLAYER_TYPE : char
@@ -239,15 +173,6 @@ namespace ColregSimulation
       SPT_SCENARIO = 0,
       SPT_LOG,
       SPT_SIZE
-   };
-
-   struct ActionData
-   {
-      colreg::id_type id;
-      double time;
-      ActionType actType;
-      bool isAction;
-      colreg::MANEUVER_TYPE manType;
    };
 
    //! Интерфейс симулятора колрега
@@ -327,34 +252,5 @@ namespace ColregSimulation
 
       //virtual const char* GetSimulationTimeStr() const = 0;
    };
-
-   struct simulation_paths
-   {
-      const char* scenario_path = nullptr; ///< Путь к сценарию (png, svgm)
-      const char* scenario_result_path = nullptr; ///< Путь по которому будут складываться данные сценария
-   };
-
-
-   // отвечает за чтение и обработку данных кораблей из лога
-   // участвует в проигрывании логов
-   struct iLogProcessor
-   {
-      virtual double GetFirstRecordTime() const = 0; 
-      virtual double GetCurrentRecordTime() const = 0;
-      virtual double GetLastRecordTime() const = 0;
-      virtual void Reset() = 0;
-      
-      //передвинуть корабли вперед на deltaSeconds секунд вперед
-      // если continueOverLast = true, Двигает вперед даже если зашли за конец лога, в соответствии с последним
-      // курсом корабля
-      // возвращает false, если зашли за последнюю запись и continueOverLast = false
-      virtual bool MoveShips(double deltaSeconds, bool continueOverLast = false ) = 0;
-      virtual size_t       GetShipCount()      const = 0;
-      virtual const iShip* GetShip(size_t idx) const = 0;
-      virtual const iShip* GetShipById(colreg::id_type shipId) const = 0;
-      virtual ~iLogProcessor() = default;
-   };
-
-   using LogProcessorPtr = std::unique_ptr< iLogProcessor >;
 #pragma pack(pop)
 }

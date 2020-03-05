@@ -5,7 +5,7 @@
 
 namespace colreg
 {
-   struct iSettingsSerializer : iReleasable
+   /*struct iSettingsSerializer : iReleasable
    {
       virtual bool Serialize(const char* filename, const settings& s) const = 0;
       virtual bool Deserialize(const char* filename, settings& s) const = 0;
@@ -18,7 +18,7 @@ namespace colreg
 
       virtual const char* ToString(const environment& srcStt) const = 0;
       virtual bool FromString(const char* src, environment& dstStt) const = 0;
-   };
+   };*/
 }
 
-extern "C" EXPRTIMPRT colreg::iSettingsSerializer* CreateSettingsSerializer();
+//extern "C" EXPRTIMPRT colreg::iSettingsSerializer* CreateSettingsSerializer();

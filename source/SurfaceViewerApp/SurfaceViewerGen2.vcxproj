@@ -258,6 +258,8 @@
     <ClInclude Include="source\gui\layers\NetLayer.h" />
     <ClInclude Include="source\gui\layers\RenderHelper.h" />
     <ClInclude Include="source\gui\layers\RenderLayers.h" />
+    <ClInclude Include="source\gui\layers\TrackLayer.h" />
+    <ClInclude Include="source\gui\layers\TrackLayerHelper.h" />
     <ClInclude Include="source\gui\layers\UnitLayer.h" />
     <ClInclude Include="source\gui\MainFrm.h" />
     <ClInclude Include="source\gui\modal\modalframe.h" />
@@ -316,6 +318,8 @@
     <ClCompile Include="source\gui\graph2d\sizecbar.cpp" />
     <ClCompile Include="source\gui\layers\NetLayer.cpp" />
     <ClCompile Include="source\gui\layers\RenderHelper.cpp" />
+    <ClCompile Include="source\gui\layers\TrackLayer.cpp" />
+    <ClCompile Include="source\gui\layers\TrackLayerHelper.cpp" />
     <ClCompile Include="source\gui\layers\UnitLayer.cpp" />
     <ClCompile Include="source\gui\MainFrm.cpp" />
     <ClCompile Include="source\gui\modal\modalframe.cpp" />

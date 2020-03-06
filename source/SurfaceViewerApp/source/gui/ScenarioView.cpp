@@ -156,7 +156,8 @@ int ScenarioView::OnCreate(LPCREATESTRUCT lpCreateStruct)
    CRect rect;
    GetClientRect(rect);
 
-   _renderer->SetScale(30);
+   //_renderer->SetScale(30);
+   _renderer->SetScale(300);
    _renderer->SetCenter(math::geo_point{ 0, 0 });
 
    _layers = std::make_unique<LayersContainer>();

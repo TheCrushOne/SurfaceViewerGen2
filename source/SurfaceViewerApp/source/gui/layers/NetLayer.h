@@ -7,9 +7,7 @@ class NetLayer : public LayersContainer
 public:
    NetLayer()
       : _step{ 1.}
-   {
-      int i = 0;
-   }
+   {}
 
    void SetStep(double step) { _step = step; }
 

@@ -37,7 +37,7 @@ void UnitLayer::renderRovers(render::iRender* renderer)
       if (renderer->IsNeedRender({ center }))
       {
          renderer->AddObject({ { rover.GetPos().point.pos }, { 2, render::LINE_STYLE::LL_SOLID, render::FILL_TYPE::FT_NONE, RGB(0,0,0), "[place for id]", 0, 25} });
-         RenderUnitContour(renderer, rover.GetInfo(), rover.GetPos().point, { 1, render::LINE_STYLE::LL_SOLID, render::FILL_TYPE::FT_SOLID, RGB(75, 100, 155) });
+         RenderUnitContour(renderer, ColregSimulation::UNIT_TYPE::UT_ROVER, rover.GetInfo(), rover.GetPos().point, { 1, render::LINE_STYLE::LL_SOLID, render::FILL_TYPE::FT_SOLID, RGB(75, 100, 155) });
          RenderDomain(renderer, rover, rover.GetPos().point, 0., { 2, render::LINE_STYLE::LL_SOLID, render::FILL_TYPE::FT_NONE, RGB(75, 100, 155) });
       }
 

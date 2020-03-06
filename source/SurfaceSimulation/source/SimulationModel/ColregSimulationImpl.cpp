@@ -14,3 +14,14 @@ const ship_path_ref* SimulationUnit::GetRoute(ROUTE_TYPE type) const
 
    return nullptr;
 }
+
+void SimulationUnit::createDomain(double radius)
+{
+   m_domainPts.resize(1);
+   size_t pointCount = 10;
+   for (double angle = 0.; angle <= 360.; angle += 360. / (double)pointCount)
+      m_domainPts[0].emplace_back(colreg::polar{angle, radius});
+   m_domain.emplace_back(colreg::domain_geometry{ colreg::DOMAIN_GEOMETRY_TYPE::DOGT_SECTOR, colreg::polar_ref(&m_domainPts[0][0], m_domainPts[0].size()) });
+
+   m_domainRef = colreg::domain_geometry_ref(&m_domain[0], m_domain.size());
+}

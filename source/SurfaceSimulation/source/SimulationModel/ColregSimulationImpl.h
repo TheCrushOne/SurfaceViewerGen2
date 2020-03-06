@@ -27,7 +27,10 @@ namespace ColregSimulation
    class SimulationUnit : public iUnit
    {
    public:
-      SimulationUnit() {}
+      SimulationUnit()
+      {
+         createDomain(.5);
+      }
 
       colreg::ship_info GetInfo() const override final { return m_info; }
       const colreg::domain_scales& GetDomainScales() const override final { return m_domainScales; }
@@ -36,16 +39,20 @@ namespace ColregSimulation
       const ship_path_ref* GetSrcPath() const override final { return nullptr/*&m_srcPath*/; }
       const ship_path_ref* GetSimulationPath() const override final { return nullptr/*&m_simulationPath*/; }
       const ship_path_ref* GetPredictionPath() const override final { return nullptr/*&m_predictionPath*/; }
-      const colreg::domain_geometry_ref* GetDomainTopology(double time, const colreg::domain_scales* scales = nullptr) const override final { return nullptr; }
+      const colreg::domain_geometry_ref* GetDomainTopology(double time, const colreg::domain_scales* scales = nullptr) const override final { return &m_domainRef; }
+
+      void createDomain(double);
 
       const char* GetETA() const override final { return m_eta.c_str(); /*ETA formatted as: MMDDHHMM, (Month, day, hour, minute). Example: 02.06.1982 19:40 encoded as 06021940*/ }
 
-
+      void SetInfo(const colreg::ship_info& info) { m_info = info; }
       void SetPosInfo(const track_point_full_info& info) { m_posInfo = info; }
    private:
       colreg::ship_info m_info;
       colreg::domain_scales m_domainScales;
-
+      colreg::domain_geometry_ref m_domainRef;
+      std::vector<std::vector<colreg::polar>> m_domainPts;
+      std::vector<colreg::domain_geometry> m_domain;
       //ShipPathHolder m_srcPath;
       //ShipPathHolder m_simulationPath; // Как двигается корабль реально
       //ShipPathHolder m_predictionPath; // предикшн чисто для информационных целей

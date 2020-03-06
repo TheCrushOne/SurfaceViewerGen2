@@ -238,10 +238,10 @@ void SelectedChartObject::EndEdit()
 
 
    //colreg::chart_object object;
-   object.type = _chart_object_type;
-   object.id = _obj_id;
+   //object.type = _chart_object_type;
+   //object.id = _obj_id;
 
-   object.geom = colreg::object_geometry_ref{ &colreg::geo_points_ref{ reinterpret_cast<colreg::geo_point*>(_points.data()), _points.size() } , 1 };
+   //object.geom = colreg::object_geometry_ref{ &colreg::geo_points_ref{ reinterpret_cast<colreg::geo_point*>(_points.data()), _points.size() } , 1 };
 
    Delete();
 

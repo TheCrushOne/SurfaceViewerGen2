@@ -40,6 +40,8 @@ namespace render
       char text_offset_y = 10;                  ///< Смещение текста по Y
       int alpha = 255;                          ///< Прозрачночть(0-255)
       std::string imageFile;
+      double angle = 0;
+      bool useAngle = false;                    ///< Использовать угол при позиционировании картинки
       bool pixels = false;
    };
 

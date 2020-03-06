@@ -5,6 +5,13 @@
 
 namespace SVGUtils
 {
+   inline std::string CurrentCurrentPath()
+   {
+      char cCurrentPath[FILENAME_MAX];
+      _getcwd(cCurrentPath, sizeof(cCurrentPath));
+      return std::string{cCurrentPath};
+   }
+
    inline std::string CurrentDllPath(const char* dllFileName)
    {
       char cCurrentPath[FILENAME_MAX];

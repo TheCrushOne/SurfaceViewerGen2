@@ -313,7 +313,11 @@ void GDIRender::renderAlphaObjects(CDC* dc, pixelObjects& objects)
       if (!obj.info.imageFile.empty())
       {
          const auto& center = obj.pixels[0];
-         graphics.DrawImage(getImage(obj.info.imageFile.c_str()), (int)(center.x + obj.info.text_offset_x * .5), (int)(center.y + obj.info.text_offset_y * .5), obj.info.width, obj.info.width);
+         graphics.DrawImage(getImage(obj.info.imageFile.c_str()),
+            (int)(center.x + obj.info.text_offset_x * .5),
+            (int)(center.y + obj.info.text_offset_y * .5),
+            obj.info.width,
+            obj.info.width);
 
          USES_CONVERSION;
          graphics.DrawString(A2W(obj.info.text.c_str()), -1, &font, Gdiplus::PointF(center.x + obj.info.text_offset_x, center.y + obj.info.text_offset_y), getAlphaBrush(obj.info));

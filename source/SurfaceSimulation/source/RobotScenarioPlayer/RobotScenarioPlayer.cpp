@@ -155,6 +155,7 @@ void RobotScenarioPlayer::addUnit(const settings::point_setting_element& setting
       SimulationDrone drone;
       track_point_full_info info;
       info.point.pos = SVCG::RoutePointToPositionPoint(setting.start);
+      
       drone.SetPosInfo(info);
       m_drones.emplace_back(std::move(drone));
       return;
@@ -164,7 +165,20 @@ void RobotScenarioPlayer::addUnit(const settings::point_setting_element& setting
       SimulationRover rover;
       track_point_full_info info;
       info.point.pos = SVCG::RoutePointToPositionPoint(setting.start);
+      info.point.course = 0;
+      info.point.heading = 0;
+      info.point.left_XTE = 1;
+      info.point.right_XTE = 0;
+      info.point.speed = 10;
       rover.SetPosInfo(info);
+      colreg::ship_info sInfo;
+      const std::string& strName = setting.name;
+      memcpy(sInfo.name, &strName[0], strName.size());
+      sInfo.length = 100;
+      sInfo.width = 20;
+      sInfo.draft = 5;
+      sInfo.safety_contour = 5;
+      rover.SetInfo(sInfo);
       m_rovers.emplace_back(std::move(rover));
       return;
    }

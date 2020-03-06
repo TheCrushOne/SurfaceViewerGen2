@@ -7,7 +7,7 @@ void	RenderUnitContour(render::iRender* renderer, ColregSimulation::UNIT_TYPE ty
 {
    switch (type)
    {
-   case ColregSimulation::UNIT_TYPE::UT_SHIP:
+   case ColregSimulation::UNIT_TYPE::UT_ROVER:
    {
       const auto heading = center.heading == colreg::NO_VALUE ? center.course : center.heading;
       const auto L = ship_info.length * METERS_TO_MILE;
@@ -20,28 +20,34 @@ void	RenderUnitContour(render::iRender* renderer, ColregSimulation::UNIT_TYPE ty
       auto p3 = math::calc_point(p2, N, heading + 45.);
       auto p4 = math::calc_point(p3, N, heading + 135.);
       auto p5 = math::calc_point(p4, L - W * .5, heading + 180.);
+
       renderer->AddObject({ { p1, p2, p3, p4, p5, p1 }
                            , info
                            ,{render::FIND_TYPE::FT_FIND_FAST, ship_info.id, render::FIND_OBJECT_TYPE::FOT_SHIP } });
       break;
    }
-   case ColregSimulation::UNIT_TYPE::UT_ROVER:
+   case ColregSimulation::UNIT_TYPE::UT_SHIP:
    {
-      const auto heading = 0;
-      const auto L = 2 * METERS_TO_MILE;
-      const auto W = 1 * METERS_TO_MILE;
+      //const auto heading = 0;
+      //const auto L = 2 * METERS_TO_MILE;
+      //const auto W = 1 * METERS_TO_MILE;
 
-      const auto N = W * sqrt(2 * .5);
+      //const auto N = W * sqrt(2 * .5);
 
-      auto p1 = math::calc_point(center.pos, L * .5, heading + 180.);
-      p1 = math::calc_point(p1, W * .5, heading - 90.);
-      auto p2 = math::calc_point(p1, W, heading + 90);
-      auto p3 = math::calc_point(p2, N, heading + 45.);
-      auto p4 = math::calc_point(p3, N, heading + 135.);
+      //auto p1 = math::calc_point(center.pos, L * .5, heading + 180.);
+      //p1 = math::calc_point(p1, W * .5, heading - 90.);
+      //auto p2 = math::calc_point(p1, W, heading + 90);
+      //auto p3 = math::calc_point(p2, N, heading + 45.);
+      //auto p4 = math::calc_point(p3, N, heading + 135.);
       //auto p5 = math::calc_point(p4, L - W * .5, heading + 180.);
-      renderer->AddObject({ { p1, p2, p3, p4, p5, p1 }
-                           , info
-                           ,{render::FIND_TYPE::FT_FIND_FAST, ship_info.id, render::FIND_OBJECT_TYPE::FOT_SHIP } });
+      std::string imagePath = SVGUtils::CurrentCurrentPath() + "\\citroen.png";
+      COLORREF clrDanger = 255;
+      renderer->AddObject({ { center.pos/*ship->GetPos().point.pos*/  }
+                           , { 32, render::LINE_STYLE::LL_SOLID, render::FILL_TYPE::FT_NONE, clrDanger, "[string]", 0, 0, 255, imagePath.c_str()}
+                           , {} });
+      //renderer->AddObject({ { p1, p2, p3, p4, p5, p1 }
+      //                     , info
+      //                     ,{render::FIND_TYPE::FT_FIND_FAST, ship_info.id, render::FIND_OBJECT_TYPE::FOT_SHIP } });
       break;
    }
    default:

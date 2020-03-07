@@ -3,6 +3,10 @@
 #include "simulator/simulator.h"
 #include "TrackLayerHelper.h"
 
+namespace
+{
+   TrackLayer layer;
+}
 void TrackLayer::renderTracks(render::iRender* renderer)
 {
    const auto* sim = simulator::getSimulator();

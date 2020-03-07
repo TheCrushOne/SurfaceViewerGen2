@@ -4,6 +4,7 @@
 #include "colreg/ColregSimulation.h"
 #include "colreg/ModuleGuard.h"
 #include "crossdllinterface/SVGMDatabaseInterface.h"
+#include "common/simulation_structs.h"
 
 namespace ColregSimulation
 {
@@ -26,6 +27,7 @@ namespace ColregSimulation
       iPropertyInterface* m_prop;
       ColregSimulation::SIMULATION_PLAYER_TYPE m_simulationType = ColregSimulation::SIMULATION_PLAYER_TYPE::SPT_SIZE;
       settings::application_settings m_settings;
+      scenario_data m_data;
       colreg::ModuleGuard<database::iSVGMDatabaseController> m_databaseController;
    };
 }

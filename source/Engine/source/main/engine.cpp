@@ -38,11 +38,13 @@ void Engine::ProcessPathFind(std::shared_ptr<pathfinder::route_data> routeData, 
    pathfinder::strategy_settings stratStt{ pathfinder::StrategyType::ST_RHOMBOID, 1. };
    pathfinder::path_finder_settings pathStt;
    pathfinder::path_finder_statistic stat;
-   ConvertMap(rawData, m_rawdata);
+   
+   convertMap(rawData, m_rawdata);
+   convertData();
    m_pathfinder->FindPath(stratStt, routeData, m_rawdata, pathStt, stat);
 }
 
-void Engine::ConvertMap(const std::vector<std::vector<double>>& rawdataSrc, std::shared_ptr<pathfinder::Matrix<SVCG::route_point>> rawdataDst)
+void Engine::convertMap(const std::vector<std::vector<double>>& rawdataSrc, std::shared_ptr<pathfinder::Matrix<SVCG::route_point>> rawdataDst)
 {
    size_t rwCount = rawdataSrc.size();
    rawdataDst->SetRowCount(rwCount);
@@ -52,6 +54,29 @@ void Engine::ConvertMap(const std::vector<std::vector<double>>& rawdataSrc, std:
    {
       for (size_t cIdx = 0; cIdx < rawdataSrc.at(rIdx).size(); cIdx++)
          rawdataDst->Set(rIdx, cIdx, rawdataSrc.at(rIdx).at(cIdx));
+   }
+}
+
+void Engine::convertData(const std::shared_ptr<settings::unit_source_data>& rawdataSrc, std::shared_ptr<pathfinder::route_data> rawdataDst)
+{
+   auto PointSettingElementToRoute = [](const settings::unit_data_element& elem) -> pathfinder::route
+   {
+      pathfinder::route route;
+      route.control_point_list = elem.control_point_list;
+      route.start = elem.start;
+      route.finish = elem.finish;
+      return route;
+   };
+   rawdataDst->air_routes.resize(rawdataSrc->air_units.size());
+   for (size_t idx = 0; idx < m_data.unit_data.air_units.size(); idx++)
+   {
+      m_routedata->air_routes[idx] = PointSettingElementToRoute(m_data.unit_data.air_units.at(idx));
+   }
+
+   m_routedata->land_routes.resize(m_data.unit_data.land_units.size());
+   for (size_t idx = 0; idx < m_data.unit_data.land_units.size(); idx++)
+   {
+      m_routedata->land_routes[idx] = PointSettingElementToRoute(m_data.unit_data.land_units.at(idx));
    }
 }
 

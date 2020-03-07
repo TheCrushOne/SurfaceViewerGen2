@@ -10,19 +10,18 @@
 
 namespace settings
 {
-   struct point_setting_element
+   struct unit_data_element
    {
-      // TODO: заменить комбинеды на что-нибудь нормальное
       std::string name;
       SVCG::route_point start;
       SVCG::route_point finish;
       std::vector<SVCG::route_point> control_point_list;
    };
 
-   struct unit_settings
+   struct unit_source_data
    {
-      std::vector<point_setting_element> land_units;
-      std::vector<point_setting_element> air_units;
+      std::vector<unit_data_element> land_units;
+      std::vector<unit_data_element> air_units;
    };
 
    struct level_settings
@@ -41,18 +40,18 @@ namespace settings
       {}
    };
 
-    struct pathfinding_settings
-    {
-       level_settings level_settings;
-    };
+   struct pathfinding_settings
+   {
+      level_settings level_settings;
+   };
 
-    template<typename T>
-    struct range_data
-    {
-        T min;
-        T max;
-        T step;
-    };
+   template<typename T>
+   struct range_data
+   {
+      T min;
+      T max;
+      T step;
+   };
 
     struct research_settings
     {
@@ -94,17 +93,15 @@ namespace settings
     {
         pathfinding_settings pth_stt;
         research_settings res_stt;
-        unit_settings unit_stt;
         environment_settings env_stt;
         simulation_settings sim_stt;
         map_settings map_stt;
 
         application_settings() = default;
 
-        application_settings(const pathfinding_settings& pthStt, const research_settings& resStt, const unit_settings& unitStt, const environment_settings& envStt, const simulation_settings& simStt, const map_settings& mapStt)
+        application_settings(const pathfinding_settings& pthStt, const research_settings& resStt, const environment_settings& envStt, const simulation_settings& simStt, const map_settings& mapStt)
            : pth_stt(pthStt)
            , res_stt(resStt)
-           , unit_stt(unitStt)
            , env_stt(envStt)
            , sim_stt(simStt)
            , map_stt(mapStt)

@@ -40,7 +40,7 @@ namespace ColregSimulation
    protected:
       void prepareRootData();
       void updateUnitsPath();
-      void addUnit(const settings::point_setting_element&, UNIT_TYPE);
+      void addUnit(const settings::unit_data_element&, UNIT_TYPE);
       void addUnitsFromScenario();
    private:
       std::shared_ptr<pathfinder::route_data> m_routedata;

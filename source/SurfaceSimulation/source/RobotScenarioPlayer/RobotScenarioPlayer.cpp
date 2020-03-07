@@ -19,25 +19,7 @@ RobotScenarioPlayer::RobotScenarioPlayer(ICommunicator* pCommunicator, iProperty
 
 void RobotScenarioPlayer::prepareRootData()
 {
-   auto PointSettingElementToRoute = [](const settings::point_setting_element& elem) -> pathfinder::route
-   {
-      pathfinder::route route;
-      route.control_point_list = elem.control_point_list;
-      route.start = elem.start;
-      route.finish = elem.finish;
-      return route;
-   };
-   m_routedata->air_routes.resize(m_settings.unit_stt.air_units.size());
-   for (size_t idx = 0; idx < m_settings.unit_stt.air_units.size(); idx++)
-   {
-      m_routedata->air_routes[idx] = PointSettingElementToRoute(m_settings.unit_stt.air_units.at(idx));
-   }
-
-   m_routedata->land_routes.resize(m_settings.unit_stt.land_units.size());
-   for (size_t idx = 0; idx < m_settings.unit_stt.land_units.size(); idx++)
-   {
-      m_routedata->land_routes[idx] = PointSettingElementToRoute(m_settings.unit_stt.land_units.at(idx));
-   }
+   
 }
 
 void RobotScenarioPlayer::Start()
@@ -115,9 +97,9 @@ size_t RobotScenarioPlayer::GetUnitCount(UNIT_TYPE type) const
    switch (type)
    {
    case UNIT_TYPE::UT_DRONE:
-      return m_settings.unit_stt.air_units.size();
+      return m_data.unit_data.air_units.size();
    case UNIT_TYPE::UT_ROVER:
-      return m_settings.unit_stt.land_units.size();
+      return m_data.unit_data.land_units.size();
    }
    return 0;
 }
@@ -146,7 +128,7 @@ bool RobotScenarioPlayer::PrepareDataForSave(/*const ScenarioIO::scenario_data* 
    return false;
 }
 
-void RobotScenarioPlayer::addUnit(const settings::point_setting_element& setting, UNIT_TYPE type)
+void RobotScenarioPlayer::addUnit(const settings::unit_data_element& setting, UNIT_TYPE type)
 {
    switch (type)
    {
@@ -208,6 +190,9 @@ void RobotScenarioPlayer::updateUnitsPath()
       //ColregTrackPoints track = getTrack(pColregModel, ship.GetPos().point, ship.ProjToRoute().time,
          //_scenarioSettings.setting.timePrediction, _scenarioSettings.settings.timeStep);
 
+      std::vector<colreg::route_point> route;
+      
+      for (a)
       //ship.SetModelTrack(std::move(track), {},
          //ship.GetSimulationSettings().calculate_chart_context ? std::move(chartContext) : ColregChartContext(), std::move(domainBorder));
       //ship.SetModelRoute(getRoute(pColregModel));
@@ -216,14 +201,14 @@ void RobotScenarioPlayer::updateUnitsPath()
 
 void RobotScenarioPlayer::addUnitsFromScenario()
 {
-   auto& air_units = m_settings.unit_stt.air_units;
+   auto& air_units = m_data.unit_data.air_units;
 
    for (auto& elem : air_units)
    {
       addUnit(elem, UNIT_TYPE::UT_DRONE);
    }
 
-   auto& land_units = m_settings.unit_stt.land_units;
+   auto& land_units = m_data.unit_data.land_units;
 
    for (auto& elem : land_units)
    {

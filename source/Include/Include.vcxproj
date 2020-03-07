@@ -65,6 +65,7 @@
     <ClInclude Include="source\common\pathfinder_types.h" />
     <ClInclude Include="source\common\settings.h" />
     <ClInclude Include="source\common\settings_meta.h" />
+    <ClInclude Include="source\common\simulation_structs.h" />
     <ClInclude Include="source\common\transceiver_types.h" />
     <ClInclude Include="source\common\utils.h" />
     <ClInclude Include="source\crossdllinterface\ConverterInterface.h" />

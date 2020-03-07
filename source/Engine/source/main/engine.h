@@ -6,6 +6,7 @@
 #include "crossdllinterface\EngineInterface.h"
 #include "algorithm\pathfinder\pathfinder.h"
 //#include "base/instance.h"
+#include "common/simulation_structs.h"
 #include <vector>
 
 //#define CURTIME_MS() QDateTime::currentDateTime().toMSecsSinceEpoch()
@@ -62,13 +63,14 @@ namespace engine
       void LengthResearchGen2(/*const std::shared_ptr<SVM::iMatrix<SurfaceElement>>&, std::shared_ptr<ResearchResultGen2>&*/);
       void ThreadResearchGen3(/*const std::shared_ptr<SVM::iMatrix<SurfaceElement>>&, std::shared_ptr<ResearchResultGen3>&*/);
       //void SetCommunicator(ICommunicator* comm);
-      void ProcessPathFind(std::shared_ptr<pathfinder::route_data> routeData, const std::vector<std::vector<double>>& rawData) override final;
+      void ProcessPathFind(ColregSimulation::scenario_data& scenarioData, const std::vector<std::vector<double>>& rawData) override final;
       void Release() { delete this; }
    private:
       void generateResMap(/*std::shared_ptr<SVM::iMatrix<SurfaceElement>>&, const STT::Gen1Settings&*/);
       pathfinder::check_fly_zone_result checkFlyZone(float);
       void convertMap(const std::vector<std::vector<double>>& rawdataSrc, std::shared_ptr<pathfinder::Matrix<SVCG::route_point>> rawdataDst);
-      void convertData(const std::shared_ptr<settings::unit_source_data>& rawdataSrc, std::shared_ptr<pathfinder::route_data> rawdataDst);
+      void convertData(const settings::unit_source_data& rawdataSrc, std::shared_ptr<pathfinder::route_data> rawdataDst);
+      void pathDump(const std::shared_ptr<pathfinder::route_data> rawdataSrc, settings::unit_source_data& rawdataDst);
       //CheckGoZoneResult checkGoZone(const std::shared_ptr<QHeightMapSurfaceDataProxy>, int, int, int, int);
       //CheckGoZoneResult checkAngles(const QSurfaceDataItem*, const QSurfaceDataItem*, const QSurfaceDataItem*, const QSurfaceDataItem*, const QSurfaceDataItem*);
       //SurfaceElement recountElement(const std::shared_ptr<QHeightMapSurfaceDataProxy>, int, int, int, int);
@@ -82,6 +84,7 @@ namespace engine
       std::unique_ptr<pathfinder::PathFinder> m_pathfinder;
 
       std::shared_ptr<pathfinder::Matrix<SVCG::route_point>> m_rawdata;
+      std::shared_ptr<pathfinder::route_data> m_routedata;
       //std::shared_ptr<pathfinder::route_data> m_routedata;
    };
 }

@@ -3,12 +3,13 @@
 #include "common/communicator.h"
 #include "colreg/BaseRef.h"
 #include "common/pathfinder_structs.h"
+#include "common/simulation_structs.h"
 
 namespace engine
 {
    struct iEngine : colreg::iReleasable
    {
-      virtual void ProcessPathFind(std::shared_ptr<pathfinder::route_data> routeData, const std::vector<std::vector<double>>& rawData) = 0;
+      virtual void ProcessPathFind(ColregSimulation::scenario_data& scenarioData, const std::vector<std::vector<double>>& rawData) = 0;
    };
 }
 

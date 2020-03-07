@@ -38,8 +38,17 @@ namespace pathfinder
          }
       }
 
-      type Get(size_t rIdx, size_t cIdx) const { if(m_rowCount > rIdx&& m_colCount > cIdx) return m_inVal; return m_data.at(rIdx).at(cIdx); }
-      void Set(size_t rIdx, size_t cIdx, type val) { if (!(m_rowCount > rIdx&& m_colCount > cIdx)) m_data[rIdx][cIdx] = val; }
+      type Get(size_t rIdx, size_t cIdx) const
+      {
+         if(m_rowCount <= rIdx || m_colCount <= cIdx)
+            return m_inVal;
+         return m_data.at(rIdx).at(cIdx);
+      }
+      void Set(size_t rIdx, size_t cIdx, type val)
+      {
+         if (m_rowCount > rIdx && m_colCount > cIdx)
+            m_data[rIdx][cIdx] = val;
+      }
 
       void SetRowCount(size_t rowCount)
       {

@@ -53,11 +53,11 @@ bool HeightMapConverter::Convert(const file_utils::file_storage_base& src, const
    auto& srcFs = reinterpret_cast<const file_utils::heightmap_file_storage&>(src);
    m_settingsSerializer->Deserialize(SVGUtils::wstringToString(srcFs.pathfinder_settings_path).c_str(), m_settings.pth_stt);
    m_settingsSerializer->Deserialize(SVGUtils::wstringToString(srcFs.research_settings_path).c_str(), m_settings.res_stt);
-   m_unitDataSerializer->Deserialize(SVGUtils::wstringToString(srcFs.unit_data_path).c_str(), m_settings.unit_stt);
+   m_unitDataSerializer->Deserialize(SVGUtils::wstringToString(srcFs.unit_data_path).c_str(), m_unitData);
 
    // NOTE: share provider вызываетcя из базы
    m_databaseController->Init(m_communicator, dst);
-   m_databaseController->SaveScenarioData(m_settings, /*const_cast<const double**>*/m_rawData);
+   m_databaseController->SaveScenarioData(m_settings, m_unitData, m_rawData);
 
    safeReleaseData();
    return true;

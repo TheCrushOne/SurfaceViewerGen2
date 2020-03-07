@@ -78,30 +78,32 @@ void SQLiteController::Init(ICommunicator* comm, const file_utils::file_storage_
    baseCheckCreate();
 }
 
-void SQLiteController::SaveScenarioData(const settings::application_settings& settings, const std::vector<std::vector<double>>& coordGrid)
+void SQLiteController::SaveScenarioData(const settings::application_settings& settings, const settings::unit_source_data& unitData, const std::vector<std::vector<double>>& coordGrid)
 {
    m_shareProvider->Share(m_filestorage.coordinate_map_path.c_str(), settings.map_stt, coordGrid);
    SaveAppSettings(settings);
+   saveUnitData(unitData);
 }
 
 void SQLiteController::SaveAppSettings(const settings::application_settings& settings)
 {
    savePathfindingSettings(settings.pth_stt);
    saveResearchSettings(settings.res_stt);
-   saveUnitData(settings.unit_stt);
+   //saveUnitData(settings.unit_stt);
    saveMapSettings(settings.map_stt);
 }
 
-void SQLiteController::LoadScenarioData(settings::application_settings& settings, std::vector<std::vector<double>>& coordGrid)
+void SQLiteController::LoadScenarioData(settings::application_settings& settings, settings::unit_source_data& unitData, std::vector<std::vector<double>>& coordGrid)
 {
    LoadAppSettings(settings);
+   loadUnitData(unitData);
    m_shareProvider->GetShared(m_filestorage.coordinate_map_path.c_str(), settings.map_stt, coordGrid);
 }
 
 void SQLiteController::LoadAppSettings(settings::application_settings& settings)
 {
    loadMapSettings(settings.map_stt);
-   loadUnitData(settings.unit_stt);
+   //loadUnitData(settings.unit_stt);
 }
 
 void SQLiteController::baseCheckCreate()
@@ -133,7 +135,7 @@ void SQLiteController::saveResearchSettings(const settings::research_settings& s
    RES_INSUPD_STT_NORES_RL(RSU_LENGTHRANGEMAX, settings.length_range.max);
 }
 
-void SQLiteController::saveUnitData(const settings::unit_settings& settings)
+void SQLiteController::saveUnitData(const settings::unit_source_data& settings)
 {
    NO_RES_PREP;
    std::string jsonSettings = m_unitDataSerializer->ToString(settings);
@@ -160,7 +162,7 @@ void SQLiteController::loadResearchSettings(settings::research_settings& setting
 
 }
 
-void SQLiteController::loadUnitData(settings::unit_settings& settings)
+void SQLiteController::loadUnitData(settings::unit_source_data& settings)
 {
    RES_PREP_STR;
    std::string dat;

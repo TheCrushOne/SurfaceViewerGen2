@@ -6,11 +6,11 @@ namespace colreg
 {
    struct iUnitDataSerializer : iReleasable
    {
-      virtual bool Serialize(const char* filename, const settings::unit_settings& s) const = 0;
-      virtual bool Deserialize(const char* filename, settings::unit_settings& s) const = 0;
+      virtual bool Serialize(const char* filename, const settings::unit_source_data& s) const = 0;
+      virtual bool Deserialize(const char* filename, settings::unit_source_data& s) const = 0;
 
-      virtual const char* ToString(const settings::unit_settings& srcStt) const = 0;
-      virtual bool FromString(const char* src, settings::unit_settings& dstStt) const = 0;
+      virtual const char* ToString(const settings::unit_source_data& srcStt) const = 0;
+      virtual bool FromString(const char* src, settings::unit_source_data& dstStt) const = 0;
    };
 }
 

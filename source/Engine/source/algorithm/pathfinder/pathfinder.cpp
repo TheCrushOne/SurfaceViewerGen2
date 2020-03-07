@@ -50,16 +50,19 @@ void PathFinder::FindPath(strategy_settings settings, std::shared_ptr<route_data
    //};
    //m_rawdata = rawdata;
    //qint64 startTime = CURTIME_MS();
+   m_rowCount = rawdata->GetRowCount();
+   m_colCount = rawdata->GetColCount();
    size_t iterations = 2;
    std::vector<route> resultAirRoutes;
    resultAirRoutes.resize(routeData->air_routes.size());
    m_funLandVector.clear();
    m_appSettings = std::make_shared<settings::application_settings>();//WFM::GetSharedInstance<Dispatcher>(DBG_DATA)->GetSettings();
    bool pathFound = false;
-   if (pathFinderSettings.multithread)
+   if (/*pathFinderSettings.multithread*/false)
    {      
       do
       {
+         // test 4/8
          const int threadCount = 16;   // NOTE: По количеству логических ядер 8+HT
          //QThreadPool::globalInstance()->setMaxThreadCount(threadCount);
          //m_funAirVector.clear();

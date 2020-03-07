@@ -38,12 +38,11 @@ namespace ColregSimulation
       double GetTime() const;
       bool PrepareDataForSave(/*const ScenarioIO::scenario_data* pInputScenarioData, ScenarioIO::scenario_data* pScenarioData, */const bool focused, const colreg::geo_points_ref& ships, const colreg::base_ref<colreg::geo_points_ref>& chart_objects) const;
    protected:
-      void prepareRootData();
+      SimulationUnit& getUnit(UNIT_TYPE type, size_t idx);
       void updateUnitsPath();
       void addUnit(const settings::unit_data_element&, UNIT_TYPE);
       void addUnitsFromScenario();
    private:
-      std::shared_ptr<pathfinder::route_data> m_routedata;
       std::vector<std::vector<double>> m_coordGrid;
       colreg::ModuleGuard<engine::iEngine> m_engine;
 

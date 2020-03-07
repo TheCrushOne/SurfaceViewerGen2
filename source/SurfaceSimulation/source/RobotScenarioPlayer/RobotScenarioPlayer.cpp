@@ -7,7 +7,6 @@ using namespace ColregSimulation;
 
 RobotScenarioPlayer::RobotScenarioPlayer(ICommunicator* pCommunicator, iPropertyInterface* prop)
    : SimulatorBase(pCommunicator, prop)
-   , m_routedata(std::make_shared<pathfinder::route_data>())
 {
    m_engine.Create(SVGUtils::CurrentDllPath("Engine").c_str(), "CreateEngine");
    if (!m_engine.IsValid())
@@ -17,17 +16,12 @@ RobotScenarioPlayer::RobotScenarioPlayer(ICommunicator* pCommunicator, iProperty
    }
 }
 
-void RobotScenarioPlayer::prepareRootData()
-{
-   
-}
-
 void RobotScenarioPlayer::Start()
 {
-   m_databaseController->LoadScenarioData(m_settings, m_coordGrid);
-   prepareRootData();
+   m_databaseController->LoadScenarioData(m_settings, m_data.unit_data, m_coordGrid);
+   m_settings.env_stt.gcs_info.scale = 0.001;
    addUnitsFromScenario();
-   m_engine->ProcessPathFind(m_routedata, m_coordGrid);
+   m_engine->ProcessPathFind(m_data, m_coordGrid);
    updateUnitsPath();
    int i = 0;
 }
@@ -106,16 +100,7 @@ size_t RobotScenarioPlayer::GetUnitCount(UNIT_TYPE type) const
 
 const iUnit& RobotScenarioPlayer::GetUnit(UNIT_TYPE type, size_t idx) const
 {
-   switch (type)
-   {
-   case UNIT_TYPE::UT_ROVER:
-      return m_rovers.at(idx);
-   case UNIT_TYPE::UT_DRONE:
-      return m_drones.at(idx);
-   case UNIT_TYPE::UT_SHIP:
-   default:
-      return m_ships.at(idx);
-   }
+   return const_cast<RobotScenarioPlayer*>(this)->getUnit(type, idx);
 }
 
 double RobotScenarioPlayer::GetTime() const
@@ -128,6 +113,20 @@ bool RobotScenarioPlayer::PrepareDataForSave(/*const ScenarioIO::scenario_data* 
    return false;
 }
 
+SimulationUnit& RobotScenarioPlayer::getUnit(UNIT_TYPE type, size_t idx)
+{
+   switch (type)
+   {
+   case UNIT_TYPE::UT_ROVER:
+      return m_rovers.at(idx);
+   case UNIT_TYPE::UT_DRONE:
+      return m_drones.at(idx);
+   case UNIT_TYPE::UT_SHIP:
+   default:
+      return m_ships.at(idx);
+   }
+}
+
 void RobotScenarioPlayer::addUnit(const settings::unit_data_element& setting, UNIT_TYPE type)
 {
    switch (type)
@@ -136,7 +135,7 @@ void RobotScenarioPlayer::addUnit(const settings::unit_data_element& setting, UN
    {
       SimulationDrone drone;
       track_point_full_info info;
-      info.point.pos = SVCG::RoutePointToPositionPoint(setting.start);
+      info.point.pos = SVCG::RoutePointToPositionPoint(setting.start, m_settings.env_stt);
       
       drone.SetPosInfo(info);
       m_drones.emplace_back(std::move(drone));
@@ -146,7 +145,7 @@ void RobotScenarioPlayer::addUnit(const settings::unit_data_element& setting, UN
    {
       SimulationRover rover;
       track_point_full_info info;
-      info.point.pos = SVCG::RoutePointToPositionPoint(setting.start);
+      info.point.pos = SVCG::RoutePointToPositionPoint(setting.start, m_settings.env_stt);
       info.point.course = 0;
       info.point.heading = 0;
       info.point.left_XTE = 1;
@@ -168,7 +167,7 @@ void RobotScenarioPlayer::addUnit(const settings::unit_data_element& setting, UN
    {
       SimulationShip ship;
       track_point_full_info info;
-      info.point.pos = SVCG::RoutePointToPositionPoint(setting.start);
+      info.point.pos = SVCG::RoutePointToPositionPoint(setting.start, m_settings.env_stt);
       ship.SetPosInfo(info);
       m_ships.emplace_back(std::move(ship));
       return;
@@ -179,23 +178,35 @@ void RobotScenarioPlayer::addUnit(const settings::unit_data_element& setting, UN
 
 void RobotScenarioPlayer::updateUnitsPath()
 {
-   for (size_t idx = 0; idx < GetUnitCount(UNIT_TYPE::UT_DRONE); idx++)
+   for (size_t idx = 0; idx < GetUnitCount(UNIT_TYPE::UT_ROVER); idx++)
    {
-      auto& unit = GetUnit(UNIT_TYPE::UT_DRONE, idx);
+      auto& unit = getUnit(UNIT_TYPE::UT_ROVER, idx);
      
       /*if (ship.GetSimulationSettings().calculate_chart_context || ship.GetSimulationSettings().calculate_domain_border)
-         chartContext = getTrackChartContext(ship.Info(), track, _scenarioSettings.environment.chart_settings.analysisObjectsMask);
-      if (ship.GetSimulationSettings().calculate_domain_border)
-         domainBorder = getTrackDomainBorderInfo(ship.Info().id, track, &chartContext);*/
+         chartContext = getTrackChartContext(ship.Info(), track, _scenarioSettings.environment.chart_settings.analysisObjectsMask);*/
+      //if (/*ship.GetSimulationSettings().calculate_domain_border*/true)
+         //domainBorder = getTrackDomainBorderInfo(ship.Info().id, track, &chartContext);
       //ColregTrackPoints track = getTrack(pColregModel, ship.GetPos().point, ship.ProjToRoute().time,
          //_scenarioSettings.setting.timePrediction, _scenarioSettings.settings.timeStep);
 
-      std::vector<colreg::route_point> route;
-      
-      for (a)
+      ColregRoutePoints route;
+      for (const auto& point : m_data.unit_data.land_units.at(idx).route_point_list)
+         route.emplace_back(SVCG::RoutePointToPositionPoint(point, m_settings.env_stt));
+      unit.SetSrcRoute(std::forward<ColregRoutePoints>(route));
+      //for (a)
       //ship.SetModelTrack(std::move(track), {},
          //ship.GetSimulationSettings().calculate_chart_context ? std::move(chartContext) : ColregChartContext(), std::move(domainBorder));
       //ship.SetModelRoute(getRoute(pColregModel));
+   }
+
+   for (size_t idx = 0; idx < GetUnitCount(UNIT_TYPE::UT_DRONE); idx++)
+   {
+      auto& unit = getUnit(UNIT_TYPE::UT_DRONE, idx);
+
+      ColregRoutePoints route;
+      for (const auto& point : m_data.unit_data.air_units.at(idx).route_point_list)
+         route.emplace_back(SVCG::RoutePointToPositionPoint(point, m_settings.env_stt));
+      unit.SetSrcRoute(std::forward<ColregRoutePoints>(route));
    }
 }
 

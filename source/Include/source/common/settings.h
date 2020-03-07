@@ -16,6 +16,7 @@ namespace settings
       SVCG::route_point start;
       SVCG::route_point finish;
       std::vector<SVCG::route_point> control_point_list;
+      std::vector<SVCG::route_point> route_point_list;
    };
 
    struct unit_source_data

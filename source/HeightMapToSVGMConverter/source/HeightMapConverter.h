@@ -30,5 +30,6 @@ namespace converter
       bool m_lock = false;
       std::vector<std::vector<double>> m_rawData;
       settings::application_settings m_settings;
+      settings::unit_source_data m_unitData;
    };
 }

@@ -13,9 +13,9 @@ namespace ColregSimulation
          route = _routePtr.get();
       }
 
-      void SetTrack(ColregTrackPoints&& tr, ColregModelInfo&& modelInfo/*, ColregChartContext&& chartContext, ColregDomainBorder&& domainBorder*/)
+      void SetTrack(ColregTrackPoints&& tr, ColregModelInfo&& modelInfo/*, ColregChartContext&& chartContext*/, ColregDomainBorder&& domainBorder)
       {
-         _trackPtr = std::make_unique<TrackFullInfoRefHolder>(std::move(tr), std::move(modelInfo)/*, std::move(chartContext), std::move(domainBorder)*/);
+         _trackPtr = std::make_unique<TrackFullInfoRefHolder>(std::move(tr), std::move(modelInfo)/*, std::move(chartContext)*/, std::move(domainBorder));
          track = _trackPtr.get();
       }
 

@@ -6,7 +6,7 @@
 
 #pragma once
 #include "point.h"
-#include "CommonStructs.h"
+#include "colreg/CommonStructs.h"
 #include "math_utils.h"
 
 namespace math

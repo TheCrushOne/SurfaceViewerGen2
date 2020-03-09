@@ -23,7 +23,7 @@ namespace colreg
       }
    };
    
-   static auto interfaceDeleter = [](auto* releasableIntarface) { releasableIntarface->Release(); };
+   static auto interfaceDeleter = [](auto* releasableInterface) { releasableInterface->Release(); };
   
 
    /*
@@ -45,7 +45,7 @@ namespace colreg
 
       const T* begin()const{ return arr; }
       const T* end()const  { return arr + size; }
-      const T& back()const { return arr[size-1]; }    
+      const T& back()const { return arr[size-1]; }
       const T& operator[](size_t index) const { return arr[index]; }
    };
 

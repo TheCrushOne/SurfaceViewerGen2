@@ -4,6 +4,7 @@
 #include "crossdllinterface\SettingsSerializerInterface.h"
 #include "crossdllinterface\UnitDataSerializerInterface.h"
 #include "colreg/ModuleGuard.h"
+#include "common/converter_structs.h"
 
 #include <png.h>
 
@@ -28,7 +29,10 @@ namespace converter
       colreg::ModuleGuard<colreg::iUnitDataSerializer> m_unitDataSerializer;
       png_bytep* m_row_pointers;
       bool m_lock = false;
+
       std::vector<std::vector<double>> m_rawData;
+      raw_data_ref m_rawDataRef;
+
       settings::application_settings m_settings;
       settings::unit_source_data m_unitData;
    };

@@ -237,6 +237,12 @@
     <ClInclude Include="source\common\simulation_structs.h">
       <Filter>common</Filter>
     </ClInclude>
+    <ClInclude Include="source\crossdllinterface\ChartObjectGeneratorInterface.h">
+      <Filter>crossdllinterface</Filter>
+    </ClInclude>
+    <ClInclude Include="source\common\converter_structs.h">
+      <Filter>common</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\colreg\ThirdParty\tinyxml2\tinyxml2.cpp">

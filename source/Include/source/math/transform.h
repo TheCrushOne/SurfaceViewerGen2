@@ -1,5 +1,6 @@
 #pragma once
 #include "colreg/CommonStructs.h"
+#include <cmath>
 
 namespace math
 {
@@ -8,7 +9,7 @@ namespace math
    * Для преоброзование из одной координатной системы в другую
    */
    template <class TransforImpl, class LocalPoint, class GlobalPoint>
-   class Transform : private TransforImpl
+   class Transform : protected TransforImpl
    {
    public:
       Transform(const geo_point& center, double course)

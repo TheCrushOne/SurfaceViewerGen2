@@ -2,6 +2,7 @@
 #include <vector>
 #include <string>
 #include "math/math_utils.h"
+#include "colreg/ChartSafetyStructs.h"
 
 namespace render
 {
@@ -64,13 +65,14 @@ namespace render
       FOT_TRACK,
       FOT_DOMAIN,
       FOT_SELECTED,
+      FOT_CHART_OBJECT,
       /*FOT_SHIP,
       FOT_ROUTE_SEGMENT,
       FOT_ROUTE_POINT,
       FOT_TRACK,
       FOT_DANGER,
       FOT_DOMAIN,
-      FOT_CHART_OBJECT,
+      
       FOT_DEBUG_INFO,
       
       FOT_GRAPH_RELATION,
@@ -87,7 +89,7 @@ namespace render
       colreg::id_type id = colreg::INVALID_ID;
       FIND_OBJECT_TYPE find_object_type = FIND_OBJECT_TYPE::FOT_NONE;
       size_t user_data = 0;
-      //STT::OBJECT_TYPE chart_object_type = STT::OBJECT_TYPE::OT_NONE;
+      colreg::OBJECT_TYPE chart_object_type = colreg::OBJECT_TYPE::OT_NONE;
    };
 
    struct object

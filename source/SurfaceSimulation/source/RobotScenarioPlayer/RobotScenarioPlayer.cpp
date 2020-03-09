@@ -14,16 +14,30 @@ RobotScenarioPlayer::RobotScenarioPlayer(ICommunicator* pCommunicator, iProperty
       m_communicator->Message(ICommunicator::MS_Error, "Can't load 'Engine'");
       return;
    }
+
+   m_generator.Create(SVGUtils::CurrentDllPath("ChartObjectGenerator").c_str(), "CreateGenerator");
+   if (!m_generator.IsValid())
+   {
+      m_communicator->Message(ICommunicator::MS_Error, "Can't load 'ChartObjectGenerator'");
+      return;
+   }
 }
 
 void RobotScenarioPlayer::Start()
 {
    m_databaseController->LoadScenarioData(m_settings, m_data.unit_data, m_coordGrid);
    m_settings.env_stt.gcs_info.scale = 0.001;
+   m_generator->Init(m_communicator, &(m_settings.env_stt));
    addUnitsFromScenario();
+   correctCoordinateGrid();
+   converter::raw_data_ref ref;
+   std::vector<converter::data_line_ref> lines;
+   for (auto& elem : m_coordGrid)
+      lines.emplace_back(converter::data_line_ref{ elem.data(), elem.size() });
+   ref = converter::raw_data_ref{ lines.data(), lines.size() };
+   m_generator->GenerateStatic(ref);
    m_engine->ProcessPathFind(m_data, m_coordGrid);
    updateUnitsPath();
-   int i = 0;
 }
 
 void RobotScenarioPlayer::Stop()
@@ -108,6 +122,11 @@ double RobotScenarioPlayer::GetTime() const
    return 1.;
 }
 
+const colreg::chart_objects_ref& RobotScenarioPlayer::GetChartObjects() const
+{
+   return m_generator->GetChartObjects();
+}
+
 bool RobotScenarioPlayer::PrepareDataForSave(/*const ScenarioIO::scenario_data* pInputScenarioData, ScenarioIO::scenario_data* pScenarioData, */const bool focused, const colreg::geo_points_ref& ships, const colreg::base_ref<colreg::geo_points_ref>& chart_objects) const
 {
    return false;
@@ -174,6 +193,11 @@ void RobotScenarioPlayer::addUnit(const settings::unit_data_element& setting, UN
    }
    }
    
+}
+
+void RobotScenarioPlayer::correctCoordinateGrid()
+{
+
 }
 
 void RobotScenarioPlayer::updateUnitsPath()

@@ -84,6 +84,11 @@ double RobotLogPlayer::GetTime() const
    return 0.;
 }
 
+const colreg::chart_objects_ref& RobotLogPlayer::GetChartObjects() const
+{
+   return m_chartObjects;
+}
+
 bool RobotLogPlayer::PrepareDataForSave(/*const ScenarioIO::scenario_data* pInputScenarioData, ScenarioIO::scenario_data* pScenarioData, */const bool focused, const colreg::geo_points_ref& ships, const colreg::base_ref<colreg::geo_points_ref>& chart_objects) const
 {
    return false;

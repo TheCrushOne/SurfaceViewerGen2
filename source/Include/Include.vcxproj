@@ -57,6 +57,7 @@
     <ClInclude Include="source\colreg\XMLSettingsSerializer.h" />
     <ClInclude Include="source\common\base_class.h" />
     <ClInclude Include="source\common\communicator.h" />
+    <ClInclude Include="source\common\converter_structs.h" />
     <ClInclude Include="source\common\coordinates.h" />
     <ClInclude Include="source\common\database_misc.h" />
     <ClInclude Include="source\common\file_storage.h" />
@@ -68,6 +69,7 @@
     <ClInclude Include="source\common\simulation_structs.h" />
     <ClInclude Include="source\common\transceiver_types.h" />
     <ClInclude Include="source\common\utils.h" />
+    <ClInclude Include="source\crossdllinterface\ChartObjectGeneratorInterface.h" />
     <ClInclude Include="source\crossdllinterface\ConverterInterface.h" />
     <ClInclude Include="source\crossdllinterface\DataShareInterface.h" />
     <ClInclude Include="source\crossdllinterface\EngineInterface.h" />

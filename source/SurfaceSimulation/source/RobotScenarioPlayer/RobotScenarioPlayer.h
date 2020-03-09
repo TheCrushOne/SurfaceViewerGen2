@@ -4,6 +4,7 @@
 #include "crossdllinterface\EngineInterface.h"
 #include "common\pathfinder_structs.h"
 #include "SimulationModel/ColregSimulationImpl.h"
+#include "crossdllinterface\ChartObjectGeneratorInterface.h"
 
 namespace ColregSimulation
 {
@@ -36,15 +37,18 @@ namespace ColregSimulation
       size_t GetUnitCount(UNIT_TYPE type) const;
       const iUnit& GetUnit(UNIT_TYPE type, size_t idx) const;
       double GetTime() const;
+      const colreg::chart_objects_ref& GetChartObjects() const;
       bool PrepareDataForSave(/*const ScenarioIO::scenario_data* pInputScenarioData, ScenarioIO::scenario_data* pScenarioData, */const bool focused, const colreg::geo_points_ref& ships, const colreg::base_ref<colreg::geo_points_ref>& chart_objects) const;
    protected:
       SimulationUnit& getUnit(UNIT_TYPE type, size_t idx);
       void updateUnitsPath();
       void addUnit(const settings::unit_data_element&, UNIT_TYPE);
       void addUnitsFromScenario();
+      void correctCoordinateGrid();
    private:
       std::vector<std::vector<double>> m_coordGrid;
       colreg::ModuleGuard<engine::iEngine> m_engine;
+      colreg::ModuleGuard<chart_object::iGenerator> m_generator;
 
       std::vector<SimulationShip> m_ships;
       std::vector<SimulationRover> m_rovers;

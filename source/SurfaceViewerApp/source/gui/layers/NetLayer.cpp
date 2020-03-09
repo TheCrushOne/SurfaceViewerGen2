@@ -1,9 +1,6 @@
 #include "stdafx.h"
 #include "NetLayer.h"
 
-// HACK: шайтан каст...но без него не линкуется автоконтейнер
-// HACK: этот объект должен стоять в первом классе слоёв по списку из .vcxproj, иначе игнорятся модули
-AutoContainer< LayersContainer>::ListObjects AutoContainer< LayersContainer>::_objects;
 namespace
 {
    NetLayer layer;

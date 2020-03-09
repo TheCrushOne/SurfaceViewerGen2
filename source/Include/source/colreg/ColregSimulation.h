@@ -143,7 +143,10 @@ namespace ColregSimulation
       //virtual bool SaveSettings(const char* scenarioPath) const = 0;
 
       virtual size_t       GetUnitCount(UNIT_TYPE type)      const = 0;
+
       virtual const iUnit& GetUnit(UNIT_TYPE type, size_t idx) const = 0;
+
+      virtual const colreg::chart_objects_ref& GetChartObjects() const = 0;
 
       //! Абсолютное время (UTC) среза симуляции
       virtual double GetTime() const = 0;

@@ -281,6 +281,9 @@
     <ClInclude Include="source\gui\layers\TrackLayerHelper.h">
       <Filter>gui\layers</Filter>
     </ClInclude>
+    <ClInclude Include="source\gui\layers\ChartLayer.h">
+      <Filter>gui\layers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\stdafx.cpp" />
@@ -417,6 +420,9 @@
       <Filter>gui\layers</Filter>
     </ClCompile>
     <ClCompile Include="source\gui\layers\TrackLayerHelper.cpp">
+      <Filter>gui\layers</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gui\layers\ChartLayer.cpp">
       <Filter>gui\layers</Filter>
     </ClCompile>
   </ItemGroup>

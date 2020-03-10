@@ -66,7 +66,7 @@ void ScenarioProperties::prepareScenarioResearchSettingsFolder()
    CRSCENRESSTT(settings::research_settings, m_settings.res_stt, debug_level, ScenarioResearchSettingsFieldIndex::SRSFI_DEBUGLEVEL);
    m_prop_research_settings[ScenarioResearchSettingsFieldIndex::SRSFI_DEBUGLEVEL]->set_list(debugModes);
 
-   for (size_t idx = SRSFI_ITERCOUNT; idx <= SRSFI_END; idx++)
+   for (size_t idx = SRSFI_ITERCOUNT; idx < SRSFI_END; idx++)
       m_scenario_research_settings_folder->AddChild(m_prop_research_settings[idx].get());
 
    m_scenario_research_settings_folder->AddChild(m_scenario_research_settings_countrange_folder.get());

@@ -35,6 +35,7 @@ namespace ColregSimulation
       const iUnit& GetUnit(UNIT_TYPE type, size_t idx) const;
       double GetTime() const;
       const colreg::chart_objects_ref& GetChartObjects() const;
+      const colreg::chart_object* GetChartObject(colreg::chart_object_id id) const;
       bool PrepareDataForSave(/*const ScenarioIO::scenario_data* pInputScenarioData, ScenarioIO::scenario_data* pScenarioData, */const bool focused, const colreg::geo_points_ref& ships, const colreg::base_ref<colreg::geo_points_ref>& chart_objects) const;
    private:
       colreg::chart_objects_ref m_chartObjects;

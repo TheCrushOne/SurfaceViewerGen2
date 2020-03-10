@@ -16,7 +16,7 @@
 CMainFrame* pFrame;
 void user_interface::SetStatusBarText(const wchar_t* text)
 {
-   //pFrame->SetPanelText(text);
+   pFrame->SetPanelText(text);
 }
 void user_interface::SetOutputText(OUTPUT_TYPE type, const char* text, COLORREF color, bool bold, bool italic)
 {
@@ -281,6 +281,11 @@ void CMainFrame::Dump(CDumpContext& dc) const
 void CMainFrame::SetOutputText(user_interface::OUTPUT_TYPE mode, const char* text, COLORREF color, bool bold, bool italic)
 {
    m_wndOutput.SetOutputText(mode, text, color, bold, italic);
+}
+
+void CMainFrame::SetPanelText(const wchar_t* text)
+{
+   m_wndStatusBar.SetPaneText(0, text);
 }
 
 // Обработчики сообщений CMainFrame

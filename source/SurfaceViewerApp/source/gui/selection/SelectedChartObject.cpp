@@ -4,75 +4,56 @@
 #include "gui/layers/renderhelper.h"
 #include "gui/user_interface.h"
 
-SelectedChartObject::SelectedChartObject(colreg::id_type id/*, colreg::OBJECT_TYPE chart_object_type*/)
+SelectedChartObject::SelectedChartObject(colreg::id_type id, colreg::OBJECT_TYPE chart_object_type)
    : _id{ id }
-   //, _chart_object_type{ chart_object_type }
+   , _chart_object_type{ chart_object_type }
+   , _obj_id{ id }
 {
-   //colreg::check_chart_obj_type(colreg::OT_DYNAMIC_AREAS | colreg::OT_SHIP_DOMAIN_STATISTIC_AREA, chart_object_type) ? _obj_id.dynamic_id = id : _obj_id.static_id = id;
-
    // NOTE: загрузка инфы по выбранному объекту
-   //auto pObj = simulator::getSimulator()->GetState().GetSafetyChecker()->GetChartObjects(&_obj_id, 1);
+   auto pObj = simulator::getSimulator()->GetState().GetChartObject(_obj_id);
 
    //if (pObj && pObj->Get() && pObj->Get()->size)
    //{
    //   _chart_object_type = pObj->Get()->arr[0].type;
    //}
-   //_info_folder = std::make_unique< FolderProperty>("chart object info");
-   //_prop_id = std::make_unique< ValuePropertyHolder< SelectedChartObject, decltype(_id)>>
-   //   ("ID", "Chart object id", true, VALUE_FORMAT_TYPE::VFT_NONE, this, &SelectedChartObject::_id, &SelectedChartObject::OnSimSettingChanged, this);
-   //_info_folder->AddChild(_prop_id.get());
+   _info_folder = std::make_unique< FolderProperty>("chart object info");
+   _prop_id = std::make_unique< ValuePropertyHolder< SelectedChartObject, decltype(_id)>>
+      ("ID", "Chart object id", true, VALUE_FORMAT_TYPE::VFT_NONE, this, &SelectedChartObject::_id, &SelectedChartObject::OnSimSettingChanged, this);
+   _info_folder->AddChild(_prop_id.get());
 
-   //if (!colreg::check_chart_obj_type(colreg::OT_SHIP_DOMAIN_STATISTIC_AREA, chart_object_type))
-   //{
-   //   ATLASSERT(pObj);
-   //   if (pObj->Get()->size)
-   //   {
-   //      const auto obj = pObj->Get()->arr[0];
-   //      _points = geo_points{ obj.geom.arr->begin(), obj.geom.arr->end() };
+   if (pObj)
+   {
+      //const auto obj = pObj.arr[0];
+      _points = math::geo_points{ pObj->geom.arr->begin(), pObj->geom.arr->end() };
 
-   //      if (obj.props.arr)
-   //         //&& _stricmp(obj.props.arr[0].key, "depth") == 0)
-   //      {
-   //         size_t i = 0;
-   //         for (const auto& p : obj.props)
-   //         {
-   //            _props[i].key = p.key;
-   //            _props[i].value = p.val;
-   //            bool readonly = check_chart_obj_type(obj.type, colreg::OT_XTE_AREA) && p.key && strcmp(p.key, "STATISTIC_INFO") == 0;
-   //            _props[i].prop_prop = std::make_unique< ValuePropertyHolder< prop_info, decltype(_props[i].value)>>
-   //               (p.key, p.key, readonly, VALUE_FORMAT_TYPE::VFT_NONE, &_props[i], &prop_info::value, &SelectedChartObject::OnSimSettingChanged, this);
-   //            _info_folder->AddChild(_props[i].prop_prop.get());
-   //            ++i;
-   //         }
-   //      }
-   //      pObj->Release();
-   //   }
-   //   else
-   //   {
-   //      pObj->Release();
-   //      SelectetObjectManager::GetInstance().Unselect();
-   //   }
-   //}
-   //else
-   //{
-   //   colreg::chart_object_id cid;
-   //   cid.dynamic_id = id;
-   //   auto obj = simulator::getSimulator()->GetStatisticsAreaObjects(cid);
-   //   if (obj.id.dynamic_id == id && obj.geom.arr)
-   //   {
-   //      _points = geo_points{ obj.geom.arr->begin(), obj.geom.arr->end() };
-   //   }
+      if ((pObj->props.arr)
+         && _stricmp(pObj->props.arr[0].key, "depth") == 0)
+      {
+         size_t i = 0;
+         for (const auto& p : pObj->props)
+         {
+            _props[i].key = p.key;
+            _props[i].value = p.val;
+            bool readonly = true/*check_chart_obj_type(obj.type, colreg::OT_XTE_AREA) && p.key && strcmp(p.key, "STATISTIC_INFO") == 0;*/;
+            _props[i].prop_prop = std::make_unique< ValuePropertyHolder< prop_info, decltype(_props[i].value)>>
+               (p.key, p.key, readonly, VALUE_FORMAT_TYPE::VFT_NONE, &_props[i], &prop_info::value, &SelectedChartObject::OnSimSettingChanged, this);
+            _info_folder->AddChild(_props[i].prop_prop.get());
+            ++i;
+         }
+      }
+      //pObj->Release();
+   }
+   else
+   {
+      SelectedObjectManager::GetInstance().Unselect();
+   }
 
-   //}
+   _strType = colreg::chart_obj_type_to_str(_chart_object_type);
+   _prop_type = std::make_unique< ValuePropertyHolder< SelectedChartObject, decltype(_strType)>>
+      ("Type", "Chart object type", true, VALUE_FORMAT_TYPE::VFT_NONE, this, &SelectedChartObject::_strType, &SelectedChartObject::OnSimSettingChanged, this);
+   _info_folder->AddChild(_prop_type.get());
 
-
-
-   //_strType = colreg::chart_obj_type_to_str(_chart_object_type);
-   //_prop_type = std::make_unique< ValuePropertyHolder< SelectedChartObject, decltype(_strType)>>
-   //   ("Type", "Chart object type", true, VALUE_FORMAT_TYPE::VFT_NONE, this, &SelectedChartObject::_strType, &SelectedChartObject::OnSimSettingChanged, this);
-   //_info_folder->AddChild(_prop_type.get());
-
-   //AddChild(_info_folder.get());
+   AddChild(_info_folder.get());
 }
 
 void SelectedChartObject::OnSimSettingChanged()
@@ -105,19 +86,19 @@ void SelectedChartObject::OnSimSettingChanged()
 
 void SelectedChartObject::Render(render::iRender* renderer)
 {
-   //if (colreg::check_chart_obj_type(colreg::OT_AREAS, _chart_object_type) || colreg::check_chart_obj_type(colreg::OT_DYNAMIC_AREAS, _chart_object_type))
-   //{
-   //   renderer->AddObject({ _points,{ 2, render::LINE_STYLE::LL_NONE, render::FILL_TYPE::FT_SOLID, user_interface::selectedColor, "", 0, 0, user_interface::selectedAlpha } });
-   //   renderer->AddObject({ _points,{ 4, render::LINE_STYLE::LL_DASH, render::FILL_TYPE::FT_NONE, user_interface::selectedColor, "", 0, 0, 200} });
-   //}
-   //else if (colreg::check_chart_obj_type(colreg::OT_LINES, _chart_object_type))
-   //{
-   //   renderer->AddObject({ _points,{ 4, render::LINE_STYLE::LL_DASH, render::FILL_TYPE::FT_NONE, user_interface::selectedColor, "", 0, 0, 200 } });
-   //}
+   if (colreg::check_chart_obj_type(colreg::OBJECT_TYPE::OT_AREAS, _chart_object_type))
+   {
+      renderer->AddObject({ _points,{ 2, render::LINE_STYLE::LL_NONE, render::FILL_TYPE::FT_SOLID, user_interface::selectedColor, "", 0, 0, user_interface::selectedAlpha } });
+      renderer->AddObject({ _points,{ 4, render::LINE_STYLE::LL_DASH, render::FILL_TYPE::FT_NONE, user_interface::selectedColor, "", 0, 0, 200} });
+   }
+   else if (colreg::check_chart_obj_type(colreg::OT_LINES, _chart_object_type))
+   {
+      renderer->AddObject({ _points,{ 4, render::LINE_STYLE::LL_DASH, render::FILL_TYPE::FT_NONE, user_interface::selectedColor, "", 0, 0, 200 } });
+   }
 
-   //for (size_t i = 0; i < _points.size(); ++i)
-   //   renderer->AddObject({ { _points[i] },{ 5, render::LINE_STYLE::LL_SOLID, render::FILL_TYPE::FT_NONE, RGB(200, 0, 0), ""}
-   //                                                         ,{render::FIND_TYPE::FT_FIND_FAST, (colreg::id_type) i, render::FIND_OBJECT_TYPE::FOT_SELECTED, SELECT_TYPE::ST_POINT } });
+   for (size_t i = 0; i < _points.size(); ++i)
+      renderer->AddObject({ { _points[i] },{ 5, render::LINE_STYLE::LL_SOLID, render::FILL_TYPE::FT_NONE, RGB(200, 0, 0), ""}
+                                                            ,{render::FIND_TYPE::FT_FIND_FAST, (colreg::id_type) i, render::FIND_OBJECT_TYPE::FOT_SELECTED, SELECT_TYPE::ST_POINT } });
 
 }
 void SelectedChartObject::StartEdit(render::iRender* renderer, CPoint point, render::find_info info)
@@ -151,13 +132,15 @@ size_t SelectedChartObject::findObjectPointIndex(const colreg::geo_point& geopt)
 
 void SelectedChartObject::Edit(render::iRender* renderer, CPoint point)
 {
+   // NOTE: не надо, пока что...
+   return;
    if (_index == colreg::INVALID_INDEX)
    {
       return;
    }
    _geoEdit = renderer->PixelToGeo(math::point{ (double)point.y, (double)point.x });
 
-   if (/*!check_chart_obj_type(colreg::OBJECT_TYPE::OT_AREAS, _chart_object_type) ||*/ _points.size() < 3)
+   if (!check_chart_obj_type(colreg::OBJECT_TYPE::OT_AREAS, _chart_object_type) || _points.size() < 3)
    {
       if (_index > 0)
       {

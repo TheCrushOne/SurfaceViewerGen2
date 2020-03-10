@@ -148,6 +148,8 @@ namespace ColregSimulation
 
       virtual const colreg::chart_objects_ref& GetChartObjects() const = 0;
 
+      virtual const colreg::chart_object* GetChartObject(colreg::chart_object_id id) const = 0;
+
       //! Абсолютное время (UTC) среза симуляции
       virtual double GetTime() const = 0;
 

@@ -20,7 +20,7 @@ bool SelectedObjectManager::Select(const render::find_info& info)
    _selected_chart_id = {};
    switch (info.find_object_type)
    {
-   //case render::FIND_OBJECT_TYPE::FOT_SHIP:
+   //case render::FIND_OBJECT_TYPE::FOT_ROVER:
    //case render::FIND_OBJECT_TYPE::FOT_DOMAIN:
    //{
    //   _selected = std::make_unique <SelectedShip>(info.id);
@@ -37,20 +37,12 @@ bool SelectedObjectManager::Select(const render::find_info& info)
    //   _selected = std::make_unique <SelectedRouteSegment>(info.id, info.user_data);
    //   break;
    //}
-   //case render::FIND_OBJECT_TYPE::FOT_CHART_OBJECT:
-   //{
-   //   if (check_chart_obj_type(colreg::OBJECT_TYPE::OT_DYNAMIC_AREAS, info.chart_object_type))
-   //   {
-   //      _selected_chart_id.dynamic_id = info.id;
-   //   }
-   //   else
-   //   {
-   //      _selected_chart_id.static_id = info.id;
-   //   }
-
-   //   _selected = std::make_unique <SelectedChartObject>(info.id, info.chart_object_type);
-   //   break;
-   //}
+   case render::FIND_OBJECT_TYPE::FOT_CHART_OBJECT:
+   {
+      _selected_chart_id = info.id;
+      _selected = std::make_unique <SelectedChartObject>(info.id, info.chart_object_type);
+      break;
+   }
    default:
       _selected = std::make_unique <ScenarioProperties>();
    }

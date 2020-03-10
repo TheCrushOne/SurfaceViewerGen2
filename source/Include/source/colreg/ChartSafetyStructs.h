@@ -17,7 +17,9 @@ namespace colreg
       OT_NO_GO_AREA = _BIT_(2),
       OT_NO_FLY_AREA = _BIT_(3),
 
-      OT_NO_GO_AREAS = OT_NO_GO_AREA | OT_NO_FLY_AREA,
+      OT_FORBIDDEN_AREAS = OT_NO_GO_AREA | OT_NO_FLY_AREA,
+      OT_AREAS = OT_BORDER_AREA | OT_NO_GO_AREA | OT_NO_FLY_AREA,
+      OT_LINES = OT_ISOLINE,
 
       OT_ALL = 0xFFFFFFFFFFFFFFFF
    };
@@ -95,4 +97,22 @@ namespace colreg
 
    using chart_objects_ref = base_ref<chart_object>;
 #pragma pack (pop)
+
+   inline bool check_chart_obj_type(colreg::mask_type mask, OBJECT_TYPE type)
+   {
+      return (mask & type) != 0;
+   }
+
+   inline const char* chart_obj_type_to_str(OBJECT_TYPE type)
+   {
+      switch (type)
+      {
+      // SurfaceViewer Types
+      case OBJECT_TYPE::OT_BORDER_AREA:   return "B_AREA";
+      case OBJECT_TYPE::OT_ISOLINE:       return "ISOLINE";
+      case OBJECT_TYPE::OT_NO_GO_AREA:    return "NOGO";
+      case OBJECT_TYPE::OT_NO_FLY_AREA:   return "NOFLY";
+      }
+      return "UNKNOWN";
+   }
 } //namespace colreg

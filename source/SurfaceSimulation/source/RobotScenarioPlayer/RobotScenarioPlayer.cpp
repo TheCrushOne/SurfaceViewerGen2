@@ -36,8 +36,9 @@ void RobotScenarioPlayer::Start()
       lines.emplace_back(converter::data_line_ref{ elem.data(), elem.size() });
    ref = converter::raw_data_ref{ lines.data(), lines.size() };
    m_generator->GenerateStatic(ref);
-   m_engine->ProcessPathFind(m_data, m_coordGrid);
-   updateUnitsPath();
+   // NOTE: Отключено для отладки отрисовки изолиний
+   //m_engine->ProcessPathFind(m_data, m_coordGrid);
+   //updateUnitsPath();
 }
 
 void RobotScenarioPlayer::Stop()
@@ -125,6 +126,15 @@ double RobotScenarioPlayer::GetTime() const
 const colreg::chart_objects_ref& RobotScenarioPlayer::GetChartObjects() const
 {
    return m_generator->GetChartObjects();
+}
+
+const colreg::chart_object* RobotScenarioPlayer::GetChartObject(colreg::chart_object_id id) const
+{
+   for (auto& chartObject : GetChartObjects())
+   {
+      if (chartObject.id == id)
+         return &chartObject;
+   }
 }
 
 bool RobotScenarioPlayer::PrepareDataForSave(/*const ScenarioIO::scenario_data* pInputScenarioData, ScenarioIO::scenario_data* pScenarioData, */const bool focused, const colreg::geo_points_ref& ships, const colreg::base_ref<colreg::geo_points_ref>& chart_objects) const

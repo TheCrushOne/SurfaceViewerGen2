@@ -6,7 +6,7 @@ class SelectedChartObject : public iSelected
 {
 
 public:
-   SelectedChartObject(colreg::id_type id/*, colreg::OBJECT_TYPE chart_object_type*/);
+   SelectedChartObject(colreg::id_type id, colreg::OBJECT_TYPE chart_object_type);
 
    void Render(render::iRender* renderer)override;
 
@@ -20,7 +20,7 @@ private:
    size_t findObjectPointIndex(const colreg::geo_point& geopt) const;
 private:
    colreg::id_type _id;
-   //colreg::OBJECT_TYPE _chart_object_type;
+   colreg::OBJECT_TYPE _chart_object_type;
    std::string _strType;
    std::string  _propValue;
    math::geo_points _points;

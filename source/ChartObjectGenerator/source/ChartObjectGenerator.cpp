@@ -42,9 +42,10 @@ void ChartObjectGenerator::prepareLocalStorage()
 
 void ChartObjectGenerator::addChartObject(chart_storage& storage)
 {
+   static colreg::chart_object_id id = 0;
    colreg::object_props_ref propRef = colreg::object_props_ref(storage.prop_vct.data(), storage.prop_vct.size());
    colreg::object_geometry_ref geoRef = colreg::object_geometry_ref(storage.geom_contour_ref_vct.data(), storage.geom_contour_ref_vct.size());
-   m_chartObjVct.emplace_back(colreg::chart_object(0, storage.type, geoRef, propRef));
+   m_chartObjVct.emplace_back(colreg::chart_object(id++, storage.type, geoRef, propRef));
 }
 
 void ChartObjectGenerator::generateChartBorder(const converter::raw_data_ref& rawdata)
@@ -114,8 +115,8 @@ void ChartObjectGenerator::generateIsolines(const converter::raw_data_ref& rawda
       }
    }
 
-   auto pt1 = SVCG::RoutePointToPositionPoint({0, 0});
-   auto pt2 = SVCG::RoutePointToPositionPoint({2, 2});
+   auto pt1 = SVCG::RoutePointToPositionPoint({0, 0}, *m_settings);
+   auto pt2 = SVCG::RoutePointToPositionPoint({2, 2}, *m_settings);
    double maxRadius = math::distance(pt2, pt1);
    std::vector<std::vector<colreg::geo_point>> isoLineVct;
    for (size_t isoIdx = 0; isoIdx < isoPoints.size(); isoIdx++)
@@ -127,9 +128,10 @@ void ChartObjectGenerator::generateIsolines(const converter::raw_data_ref& rawda
          [&nearestMinDist, isoPoint](const std::vector<colreg::geo_point>& check, const std::vector<colreg::geo_point>& smallest) -> bool
          {
             auto isocheckmin = std::min_element(check.begin(), check.end(), [isoPoint](const colreg::geo_point& ptCheck, const colreg::geo_point& smallest) -> bool { return math::distance(ptCheck, isoPoint) < math::distance(smallest, isoPoint); });
-            double checkDist = isocheckmin == check.end() ? 0 : math::distance(*isocheckmin, isoPoint);
+            double checkDist = isocheckmin == check.end() ? 0. : math::distance(*isocheckmin, isoPoint);
             auto isosmallestmin = std::min_element(smallest.begin(), smallest.end(), [isoPoint](const colreg::geo_point& ptCheck, const colreg::geo_point& smallest) -> bool { return math::distance(ptCheck, isoPoint) < math::distance(smallest, isoPoint); });
-            double smallestDist = isosmallestmin == smallest.end() ? 0 : math::distance(*isosmallestmin, isoPoint);
+            double smallestDist = isosmallestmin == smallest.end() ? 0. : math::distance(*isosmallestmin, isoPoint);
+            ATLASSERT(checkDist != 0. && smallestDist != 0.);
             if (checkDist < smallestDist)
             {
                nearestMinDist = checkDist;
@@ -162,6 +164,7 @@ void ChartObjectGenerator::generateIsolines(const converter::raw_data_ref& rawda
 
    for (auto& isoLine : isoLineVct)
    {
+      isoSort(isoLine);
       chart_storage& isoLineStorageCell = generateNew();
       isoLineStorageCell.type = colreg::OBJECT_TYPE::OT_ISOLINE;
       isoLineStorageCell.geom_contour_vct.emplace_back();
@@ -172,6 +175,27 @@ void ChartObjectGenerator::generateIsolines(const converter::raw_data_ref& rawda
 
       addChartObject(isoLineStorageCell);
    }
+}
+
+void ChartObjectGenerator::isoSort(std::vector<colreg::geo_point>& isoline)
+{
+   if (isoline.empty())
+      return;
+   std::vector<colreg::geo_point> sorted;
+   sorted.emplace_back(isoline.back());
+   while (!isoline.empty())
+   {
+      auto& checker = sorted.back();
+      auto nearest = std::min_element(isoline.begin(), isoline.end(),
+         [checker](const colreg::geo_point& check, const colreg::geo_point& smallest)->bool
+         {
+            return math::distance(check, checker) < math::distance(smallest, checker);
+         }
+      );
+      sorted.emplace_back(*nearest);
+      isoline.erase(nearest);
+   }
+   isoline = sorted;
 }
 
 void ChartObjectGenerator::generateNoGoAreas(const converter::raw_data_ref& rawdata)

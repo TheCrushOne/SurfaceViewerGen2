@@ -36,6 +36,7 @@ public:
 #endif
 
    void SetOutputText(user_interface::OUTPUT_TYPE mode, const char* text, COLORREF color = 0, bool bold = false, bool italic = false);
+   void CMainFrame::SetPanelText(const wchar_t* text);
 
 protected:  // встроенные члены панели элементов управления
    CMFCMenuBar       m_wndMenuBar;

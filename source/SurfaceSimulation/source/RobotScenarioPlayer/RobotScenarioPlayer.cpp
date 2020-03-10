@@ -123,6 +123,11 @@ double RobotScenarioPlayer::GetTime() const
    return 1.;
 }
 
+const settings::map_settings& RobotScenarioPlayer::GetChartGridMeta() const
+{
+   return m_settings.map_stt;
+}
+
 const colreg::chart_objects_ref& RobotScenarioPlayer::GetChartObjects() const
 {
    return m_generator->GetChartObjects();

@@ -84,6 +84,12 @@ double RobotLogPlayer::GetTime() const
    return 0.;
 }
 
+const settings::map_settings& RobotLogPlayer::GetChartGridMeta() const
+{
+   static settings::map_settings meta;
+   return meta;
+}
+
 const colreg::chart_objects_ref& RobotLogPlayer::GetChartObjects() const
 {
    return m_chartObjects;

@@ -37,6 +37,7 @@ namespace ColregSimulation
       size_t GetUnitCount(UNIT_TYPE type) const;
       const iUnit& GetUnit(UNIT_TYPE type, size_t idx) const;
       double GetTime() const;
+      const settings::map_settings& GetChartGridMeta() const;
       const colreg::chart_objects_ref& GetChartObjects() const;
       const colreg::chart_object* GetChartObject(colreg::chart_object_id id) const;
       bool PrepareDataForSave(/*const ScenarioIO::scenario_data* pInputScenarioData, ScenarioIO::scenario_data* pScenarioData, */const bool focused, const colreg::geo_points_ref& ships, const colreg::base_ref<colreg::geo_points_ref>& chart_objects) const;
@@ -51,6 +52,7 @@ namespace ColregSimulation
       colreg::ModuleGuard<engine::iEngine> m_engine;
       colreg::ModuleGuard<chart_object::iGenerator> m_generator;
 
+      chart_grid_meta m_gridMeta;
       std::vector<SimulationShip> m_ships;
       std::vector<SimulationRover> m_rovers;
       std::vector<SimulationDrone> m_drones;

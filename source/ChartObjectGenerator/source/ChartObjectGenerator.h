@@ -42,6 +42,8 @@ namespace chart_object
    private:
       bool m_lock = false;
 
+      double m_maxRadius;
+
       settings::environment_settings* m_settings;
 
       std::vector<chart_storage> m_chartStorage;

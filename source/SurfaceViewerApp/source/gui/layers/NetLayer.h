@@ -14,11 +14,12 @@ public:
    void Render(render::iRender*renderer ) override
    {
       createNet(renderer);
+      createCells(renderer);
    }
 
 private:
-   void createNet(render::iRender*renderer);
-
+   void createNet(render::iRender* renderer);
+   void createCells(render::iRender* renderer);
 private:
    double _step;
 };

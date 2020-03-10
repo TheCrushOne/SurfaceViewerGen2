@@ -62,6 +62,12 @@ namespace ColregSimulation
       const colreg::track_full_info_ref* track = nullptr;
    };
 
+   struct chart_grid_meta
+   {
+      size_t row_count;
+      size_t col_count;
+   };
+
    struct iUnit
    {
       //! Информационные данные юнита
@@ -142,7 +148,7 @@ namespace ColregSimulation
       */
       //virtual bool SaveSettings(const char* scenarioPath) const = 0;
 
-      virtual size_t       GetUnitCount(UNIT_TYPE type)      const = 0;
+      virtual size_t GetUnitCount(UNIT_TYPE type)      const = 0;
 
       virtual const iUnit& GetUnit(UNIT_TYPE type, size_t idx) const = 0;
 
@@ -153,6 +159,7 @@ namespace ColregSimulation
       //! Абсолютное время (UTC) среза симуляции
       virtual double GetTime() const = 0;
 
+      virtual const settings::map_settings& GetChartGridMeta() const = 0;
       //! Текущая навигационная оценка с решениями
       //virtual const iSimulationEstimation* GetEstimation() const = 0;
 

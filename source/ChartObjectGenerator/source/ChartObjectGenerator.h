@@ -38,7 +38,6 @@ namespace chart_object
       void generateIsolines(const converter::raw_data_ref& rawdata);
       void generateNoGoAreas(const converter::raw_data_ref& rawdata);
       void generateNoFlyAreas(const converter::raw_data_ref& rawdata);
-      void isoSort(std::vector<colreg::geo_point>& isoline);
    private:
       bool m_lock = false;
 

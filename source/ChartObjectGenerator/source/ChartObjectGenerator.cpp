@@ -116,9 +116,10 @@ void ChartObjectGenerator::generateIsolines(const converter::raw_data_ref& rawda
       }
    }
 
+   // NOTE: Распределение точек по изолиниям
    // WARNING: костыль!!!
    auto pt1 = SVCG::RoutePointToPositionPoint({0, 0}, *m_settings);
-   auto pt2 = SVCG::RoutePointToPositionPoint({2, 2}, *m_settings);
+   auto pt2 = SVCG::RoutePointToPositionPoint({1, 1}, *m_settings);
    m_maxRadius = math::distance(pt2, pt1);
    std::vector<std::vector<colreg::geo_point>> isoLineVct;
    for (size_t isoIdx = 0; isoIdx < isoPoints.size(); isoIdx++)
@@ -152,21 +153,89 @@ void ChartObjectGenerator::generateIsolines(const converter::raw_data_ref& rawda
          nearestIsoLine = isoLineVct.end() - 1;
       }
       // NOTE: ближайшая точка к текущему изопоинту на изолинии
-      auto isoLineIter = std::min_element(nearestIsoLine->begin(), nearestIsoLine->end(),
-         [isoPoint](const colreg::geo_point& ptCheck, const colreg::geo_point& smallest) -> bool
-         { 
-            return math::distance(ptCheck, isoPoint) < math::distance(smallest, isoPoint);
+      //auto isoLineIter = std::min_element(nearestIsoLine->begin(), nearestIsoLine->end(),
+      //   [isoPoint](const colreg::geo_point& ptCheck, const colreg::geo_point& smallest) -> bool
+      //   { 
+      //      return math::distance(ptCheck, isoPoint) < math::distance(smallest, isoPoint);
+      //   }
+      //);
+      //if (isoLineIter == nearestIsoLine->end())
+         nearestIsoLine->emplace_back(isoPoint);
+      //else
+         //nearestIsoLine->insert(isoLineIter, isoPoint);
+   }
+
+   // NOTE: построение изолиний
+   for (auto& pointList : isoLineVct)
+   {
+      std::vector<std::pair<colreg::geo_point, colreg::geo_point>> vectorList;
+      for (auto& srcPoint : pointList)
+      {
+         for (auto& dstPoint : pointList)
+         {
+            if (math::distance(srcPoint, dstPoint) <= m_maxRadius
+               && srcPoint != dstPoint
+               && std::find_if(vectorList.begin(), vectorList.end(), 
+                  [srcPoint, dstPoint](const std::pair<colreg::geo_point, colreg::geo_point>& elem) -> bool
+                  {
+                     if ((srcPoint == elem.first && dstPoint == elem.second)
+                        || (srcPoint == elem.second && dstPoint == elem.first))
+                        return true;
+                  }
+               ) == vectorList.end())
+               vectorList.emplace_back(std::pair<colreg::geo_point, colreg::geo_point>{ srcPoint, dstPoint });
+         }
+      }
+
+      std::sort(vectorList.begin(), vectorList.end(),
+         [](std::pair<colreg::geo_point, colreg::geo_point>& check, std::pair<colreg::geo_point, colreg::geo_point>& smallest) -> bool
+         {
+            return math::distance(check.first, check.second) < math::distance(smallest.first, smallest.second);
          }
       );
-      if (isoLineIter == nearestIsoLine->end())
-         nearestIsoLine->emplace_back(isoPoint);
-      else
-         nearestIsoLine->insert(isoLineIter, isoPoint);
+
+      auto jointCounter = [vectorList](const colreg::geo_point& point) -> size_t
+      {
+         size_t count = 0;
+         for (auto& vector : vectorList)
+         {
+            if (vector.first == point || vector.second == point)
+               count++;
+         }
+         return count;
+      };
+      auto startPoint = std::min_element(pointList.begin(), pointList.end(),
+         [jointCounter](const colreg::geo_point& ptCheck, const colreg::geo_point& smallest) -> bool
+         {
+            return jointCounter(ptCheck) < jointCounter(smallest);
+         }
+      );
+      colreg::route_point sp = *startPoint;
+      pointList.clear();
+      pointList.emplace_back(sp);
+      bool inRadiusExists = true;
+      while (inRadiusExists)
+      {
+         auto& last = pointList.back();
+         // NOTE: по идее, в сортированном массиве будет найдено минимальное ребро
+         auto nearestJointVec = std::find_if(vectorList.begin(), vectorList.end(),
+            [last](const std::pair<math::geo_point, math::geo_point>& check) -> bool
+            {
+               return last == check.first || last == check.second;
+            }
+         );
+         if (nearestJointVec != vectorList.end())
+         {
+            pointList.emplace_back(last == nearestJointVec->first ? nearestJointVec->second : nearestJointVec->first);
+            vectorList.erase(nearestJointVec);
+         }
+         else
+            inRadiusExists = false;
+      }
    }
 
    for (auto& isoLine : isoLineVct)
    {
-      isoSort(isoLine);
       chart_storage& isoLineStorageCell = generateNew();
       isoLineStorageCell.type = colreg::OBJECT_TYPE::OT_ISOLINE;
       isoLineStorageCell.geom_contour_vct.emplace_back();
@@ -177,39 +246,6 @@ void ChartObjectGenerator::generateIsolines(const converter::raw_data_ref& rawda
 
       addChartObject(isoLineStorageCell);
    }
-}
-
-void ChartObjectGenerator::isoSort(std::vector<colreg::geo_point>& isoline)
-{
-   if (isoline.empty())
-      return;
-   std::vector<colreg::geo_point> sorted;
-   
-   std::vector<short> inRadiusCountVct;
-   inRadiusCountVct.resize(isoline.size());
-   for (size_t idx = 0; idx < isoline.size(); idx++)
-   {
-      for (auto& elem : isoline)
-      {
-         if (math::distance(elem, isoline.at(idx)) < m_maxRadius)
-            inRadiusCountVct[idx]++;
-      }
-   }
-   auto startPointIter = std::find_if(inRadiusCountVct.begin(), inRadiusCountVct.end(), [](short val) -> bool { return val < 2; });
-   sorted.emplace_back(startPointIter != inRadiusCountVct.end() ? isoline.at(std::distance(startPointIter, inRadiusCountVct.begin())) : isoline.back());
-   while (!isoline.empty())
-   {
-      auto& checker = sorted.back();
-      auto nearest = std::min_element(isoline.begin(), isoline.end(),
-         [checker](const colreg::geo_point& check, const colreg::geo_point& smallest)->bool
-         {
-            return math::distance(check, checker) < math::distance(smallest, checker);
-         }
-      );
-      sorted.emplace_back(*nearest);
-      isoline.erase(nearest);
-   }
-   isoline = sorted;
 }
 
 void ChartObjectGenerator::generateNoGoAreas(const converter::raw_data_ref& rawdata)

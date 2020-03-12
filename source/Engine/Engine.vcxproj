@@ -22,6 +22,7 @@
     <ClCompile Include="source\algorithm\pathfinder\CoverageBuilder.cpp" />
     <ClCompile Include="source\algorithm\pathfinder\pathfinder.cpp" />
     <ClCompile Include="source\algorithm\pathfinder\StrategyManager.cpp" />
+    <ClCompile Include="source\algorithm\pathfinder\TaskHolder\TaskHolder.cpp" />
     <ClCompile Include="source\algorithm\statistic.cpp" />
     <ClCompile Include="source\main\calibrator.cpp" />
     <ClCompile Include="source\main\dispatcher.cpp" />
@@ -32,6 +33,7 @@
     <ClInclude Include="source\algorithm\pathfinder\CoverageBuilder.h" />
     <ClInclude Include="source\algorithm\pathfinder\pathfinder.h" />
     <ClInclude Include="source\algorithm\pathfinder\StrategyManager.h" />
+    <ClInclude Include="source\algorithm\pathfinder\TaskHolder\TaskHolder.h" />
     <ClInclude Include="source\algorithm\statistic.h" />
     <ClInclude Include="source\main\calibrator.h" />
     <ClInclude Include="source\main\dispatcher.h" />

@@ -13,6 +13,7 @@
 #include <future>
 #include "CoverageBuilder.h"
 #include "StrategyManager.h"
+#include "TaskHolder/TaskHolder.h"
 
 namespace pathfinder
 {
@@ -41,9 +42,11 @@ namespace pathfinder
       //std::shared_ptr<Matrix<SVCG::route_point>> m_rawdata;
       //size_t m_rowCount, m_colCount;
       //std::shared_ptr<iMatrix> m_rawdata;
-      std::vector<std::future<route>> m_funAirVector;
-      std::vector<std::future<route>> m_funLandVector;
-      std::vector<std::future<route>> m_synchronizer;
+      //std::vector<std::future<route>> m_funAirVector;
+      //std::vector<std::future<route>> m_funLandVector;
+      //std::vector<std::future<route>> m_synchronizer;
+      std::vector<TaskHolder> m_holders;
+      std::vector<task_unit> m_taskPool;
 
       std::shared_ptr<settings::application_settings> m_appSettings;
       //XFM::Wrapper<LightPointData> m_data;

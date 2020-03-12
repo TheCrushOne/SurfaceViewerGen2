@@ -3,6 +3,7 @@
 #include <math.h>
 #include <limits.h>
 #include <future>
+#include <algorithm>
 //#include "framework/base/instance.h"
 //#include "common/matrix.h"
 //#include "main/engine.h"
@@ -40,6 +41,7 @@ PathFinder::~PathFinder()
 /*void fly(Route& route)
 {}*/
 
+// NOTE: желательно и лаунчер запускать в своем потоке
 // WARNING: распараллелено!!!
 void PathFinder::FindPath(strategy_settings settings, std::shared_ptr<route_data> routeData, const std::shared_ptr<Matrix<SVCG::route_point>> rawdata, const path_finder_settings pathFinderSettings, path_finder_statistic& statistic)
 {
@@ -55,15 +57,17 @@ void PathFinder::FindPath(strategy_settings settings, std::shared_ptr<route_data
    size_t iterations = 2;
    std::vector<route> resultAirRoutes;
    resultAirRoutes.resize(routeData->air_routes.size());
-   m_funLandVector.clear();
+   //m_funLandVector.clear();
    m_appSettings = std::make_shared<settings::application_settings>();//WFM::GetSharedInstance<Dispatcher>(DBG_DATA)->GetSettings();
    bool pathFound = false;
-   if (/*pathFinderSettings.multithread*/false)
-   {      
+   if (pathFinderSettings.multithread)
+   {   
+      // TODO: приколхозить ThreadJobManager из юнидаты...хотя...
       do
       {
          // test 4/8
          const int threadCount = 16;   // NOTE: По количеству логических ядер 8+HT
+         m_holders.resize(threadCount);   // TODO: чекнуть, вызывается ли конструктор
          //QThreadPool::globalInstance()->setMaxThreadCount(threadCount);
          //m_funAirVector.clear();
          resultAirRoutes.clear();
@@ -72,14 +76,18 @@ void PathFinder::FindPath(strategy_settings settings, std::shared_ptr<route_data
             m_strategyManager->PrepareControlPoint(settings, iterations, routeData->land_routes, resultAirRoutes, rawdata);
          else
             resultAirRoutes = routeData->air_routes;
+         m_taskPool.clear();
+         for (auto& airRoute : resultAirRoutes)
+            m_taskPool.emplace_back();
+
          bool finished = true;
          size_t idxDelta = 0;
          while (!finished)
          {
-            m_synchronizer.clear();
+            //m_synchronizer.clear();
             for (size_t idx = 0; idx < pathFinderSettings.packet_size == 0 ? resultAirRoutes.size() : std::min(pathFinderSettings.packet_size, resultAirRoutes.size() - idxDelta - pathFinderSettings.packet_size); idx++)
             {
-               //m_synchronizer.emplace_back(std::async(std::launch::async, &PathFinder::findAirPath, resultAirRoutes.at(idxDelta + idx), iterations, pathFinderSettings.multithread));
+               //m_synchronizer.emplace_back(std::async(std::launch::async, &PathFinder::findAirPath, this, std::ref(resultAirRoutes.at(idxDelta + idx)), rawdata, iterations, pathFinderSettings.multithread));
                //qDebug() << "added task" << idx;
             }
 
@@ -88,10 +96,17 @@ void PathFinder::FindPath(strategy_settings settings, std::shared_ptr<route_data
             //m_funAirVector.emplace_back(run(this, &PathFinder::findAirPath, resultAirRoutes.at(idx), iterations, multithread));
             //m_synchronizer.waitForFinished();
             //qDebug() << "task list finished";
-            for (size_t idx = 0; idx < m_synchronizer.size(); idx++)
+            bool threadsFinished = false;
+            while (!threadsFinished)
+            {
+               for (auto& task : m_synchronizer)
+                  if (task.valid())
+               threadsFinished = true;
+            }
+            /*for (size_t idx = 0; idx < m_synchronizer.size(); idx++)
             {
                resultAirRoutes.at(idxDelta + idx) = m_synchronizer.at(idx).get();
-            }
+            }*/
             idxDelta += pathFinderSettings.packet_size;
          }
 

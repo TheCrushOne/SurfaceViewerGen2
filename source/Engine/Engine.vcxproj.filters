@@ -10,6 +10,9 @@
     <Filter Include="algorithm\pathfinder">
       <UniqueIdentifier>{25cc6782-3c6a-4772-99a4-8227c99bf7c6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="algorithm\pathfinder\TaskHolder">
+      <UniqueIdentifier>{fbdd57c5-3270-4bf9-ab4c-204cfefb5d29}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\main\calibrator.cpp">
@@ -34,6 +37,9 @@
     <ClCompile Include="source\algorithm\pathfinder\StrategyManager.cpp">
       <Filter>algorithm\pathfinder</Filter>
     </ClCompile>
+    <ClCompile Include="source\algorithm\pathfinder\TaskHolder\TaskHolder.cpp">
+      <Filter>algorithm\pathfinder\TaskHolder</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\main\calibrator.h">
@@ -57,6 +63,9 @@
     </ClInclude>
     <ClInclude Include="source\algorithm\pathfinder\StrategyManager.h">
       <Filter>algorithm\pathfinder</Filter>
+    </ClInclude>
+    <ClInclude Include="source\algorithm\pathfinder\TaskHolder\TaskHolder.h">
+      <Filter>algorithm\pathfinder\TaskHolder</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

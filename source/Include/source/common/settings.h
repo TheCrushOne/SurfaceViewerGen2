@@ -10,13 +10,55 @@
 
 namespace settings
 {
-   struct unit_data_element
+   struct route
    {
-      std::string name;
       SVCG::route_point start;
       SVCG::route_point finish;
       std::vector<SVCG::route_point> control_point_list;
-      std::vector<SVCG::route_point> route_point_list;
+      std::vector<SVCG::route_point> route_list;
+      route() {}
+      route(SVCG::route_point& start, SVCG::route_point& finish)
+         : start(start)
+         , finish(finish)
+         , control_point_list()
+         , route_list()
+      {}
+      route(SVCG::route_point& start, SVCG::route_point& finish, std::vector<SVCG::route_point>& route, std::vector<SVCG::route_point>& controlPointList)
+         : start(start)
+         , finish(finish)
+         , control_point_list(controlPointList)
+         , route_list(route)
+      {}
+      route(SVCG::route_point& start, SVCG::route_point& finish, std::vector<SVCG::route_point>& controlPointList)
+         : start(start)
+         , finish(finish)
+         , control_point_list(controlPointList)
+         , route_list()
+      {}
+   };
+
+   struct unit_data_element : public route
+   {
+      std::string name;
+      unit_data_element()
+         : route()
+      {}
+      unit_data_element(std::string name)
+         : route()
+         , name(name)
+      {}
+      unit_data_element(std::string name, SVCG::route_point& start, SVCG::route_point& finish)
+         : route(start, finish)
+         , name(name)
+      {}
+      unit_data_element(std::string name, SVCG::route_point& start, SVCG::route_point& finish, std::vector<SVCG::route_point>& route, std::vector<SVCG::route_point>& controlPointList)
+         : route(start, finish, route, controlPointList)
+         , name(name)
+      {}
+      unit_data_element(std::string name, SVCG::route_point& start, SVCG::route_point& finish, std::vector<SVCG::route_point>& controlPointList)
+         : route(start, finish, controlPointList)
+         , name(name)
+      {}
    };
 
    struct unit_source_data

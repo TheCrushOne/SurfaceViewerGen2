@@ -63,14 +63,14 @@ namespace engine
       void LengthResearchGen2(/*const std::shared_ptr<SVM::iMatrix<SurfaceElement>>&, std::shared_ptr<ResearchResultGen2>&*/);
       void ThreadResearchGen3(/*const std::shared_ptr<SVM::iMatrix<SurfaceElement>>&, std::shared_ptr<ResearchResultGen3>&*/);
       //void SetCommunicator(ICommunicator* comm);
-      void ProcessPathFind(ColregSimulation::scenario_data& scenarioData, const std::vector<std::vector<double>>& rawData) override final;
+      void ProcessPathFind(const ColregSimulation::scenario_data& scenarioData, const std::vector<std::vector<double>>& rawData, std::function<void(void)> completeCallback) override final;
+      const pathfinder::route_data& GetLastProcessedPaths() const override final { return m_pathfinder->GetPaths(); }
       void Release() { delete this; }
    private:
+      void processPathFind(const ColregSimulation::scenario_data& scenarioData, const std::vector<std::vector<double>>& rawData, std::function<void(void)> completeCallback);
       void generateResMap(/*std::shared_ptr<SVM::iMatrix<SurfaceElement>>&, const STT::Gen1Settings&*/);
       pathfinder::check_fly_zone_result checkFlyZone(float);
       void convertMap(const std::vector<std::vector<double>>& rawdataSrc, std::shared_ptr<pathfinder::Matrix<SVCG::route_point>> rawdataDst);
-      void convertData(const settings::unit_source_data& rawdataSrc, std::shared_ptr<pathfinder::route_data> rawdataDst);
-      void pathDump(const std::shared_ptr<pathfinder::route_data> rawdataSrc, settings::unit_source_data& rawdataDst);
       //CheckGoZoneResult checkGoZone(const std::shared_ptr<QHeightMapSurfaceDataProxy>, int, int, int, int);
       //CheckGoZoneResult checkAngles(const QSurfaceDataItem*, const QSurfaceDataItem*, const QSurfaceDataItem*, const QSurfaceDataItem*, const QSurfaceDataItem*);
       //SurfaceElement recountElement(const std::shared_ptr<QHeightMapSurfaceDataProxy>, int, int, int, int);

@@ -28,10 +28,19 @@ namespace pathfinder
       /*virtual void initPowertrain() override;
       virtual void initMiscellaneous() override;*/
    public:
-      route_data FindPath(std::function<void(void)> callback, const std::shared_ptr<Matrix<SVCG::route_point>> rawdata, /*bool multithread = true, size_t countIdx = 0, size_t legnthIdx = 0, bool research = false, bool landPath = true, size_t packetSize = 0*/strategy_settings settings, const path_finder_settings pathFinderSettings/*, path_finder_statistic& statistic*/);
+      void FindPath(std::function<void(void)> callback, const std::shared_ptr<Matrix<SVCG::route_point>> rawdata, const path_finder_indata& indata/*bool multithread = true, size_t countIdx = 0, size_t legnthIdx = 0, bool research = false, bool landPath = true, size_t packetSize = 0*//*strategy_settings settings, const path_finder_settings pathFinderSettings*//*, path_finder_statistic& statistic*/);
+      const pathfinder::route_data& GetPaths() const { return m_paths; }
    private:
-      route findLandPath(route& route, const std::shared_ptr<Matrix<SVCG::route_point>> rawdata, std::shared_ptr<Matrix<size_t>> coverageMatrix, bool multithread, bool* pathFounded);
-      route findAirPath(route& route, const std::shared_ptr<Matrix<SVCG::route_point>> rawdata, size_t iterations, bool multithread);
+      void prepareSourcePoints(const path_finder_indata& indata);
+
+      void findPathMultiThread(const std::shared_ptr<Matrix<SVCG::route_point>> rawdata, const path_finder_indata& indata);
+      void findPathSingleThread(const std::shared_ptr<Matrix<SVCG::route_point>> rawdata, const path_finder_indata& indata);
+
+      void generateIterationStep();
+      void formatTaskPool();
+
+      void findLandPath(route& route, const std::shared_ptr<Matrix<SVCG::route_point>> rawdata, std::shared_ptr<Matrix<size_t>> coverageMatrix, bool multithread, bool* pathFounded);
+      void findAirPath(route& route, const std::shared_ptr<Matrix<SVCG::route_point>> rawdata, size_t iterations, bool multithread);
       std::vector<SVCG::route_point> findPath(const std::shared_ptr<Matrix<SVCG::route_point>> rawdata, SVCG::route_point& start, SVCG::route_point& finish, path_finder_logic& logic, std::shared_ptr<Matrix<size_t>> coverageMatrix, bool multithread, bool* pathFound);
       //inline void AddItem();
    //signals:
@@ -47,6 +56,8 @@ namespace pathfinder
       //std::vector<std::future<route>> m_synchronizer;
       std::vector<TaskHolder> m_holders;
       std::vector<task_unit> m_taskPool;
+
+      route_data m_paths;
 
       std::shared_ptr<settings::application_settings> m_appSettings;
       //XFM::Wrapper<LightPointData> m_data;

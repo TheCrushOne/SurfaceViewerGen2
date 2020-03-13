@@ -10,7 +10,7 @@
 
 using namespace pathfinder;
 
-bool StrategyManager::PrepareControlPoint(pathfinder::strategy_settings settings, size_t iterations, std::vector<route>& landRoutes, std::vector<pathfinder::route>& airRoutes, const std::shared_ptr<Matrix<SVCG::route_point>>& rawdata)
+bool StrategyManager::PrepareControlPoint(pathfinder::strategy_settings settings, size_t iterations, std::vector<settings::route>& landRoutes, std::vector<settings::route>& airRoutes, const std::shared_ptr<Matrix<SVCG::route_point>>& rawdata)
 {
    pathfinder::StrategyType type = settings.type;
    auto start = landRoutes.at(0).start, finish = landRoutes.at(0).finish;

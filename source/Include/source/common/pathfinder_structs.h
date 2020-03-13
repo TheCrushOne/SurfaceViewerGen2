@@ -5,6 +5,7 @@
 #include <memory>
 #include "pathfinder_types.h"
 #include "SVCG/route_point.h"
+#include "common/settings.h"
 
 namespace pathfinder
 {
@@ -87,41 +88,14 @@ namespace pathfinder
    {
       StrategyType type;
       double radius;
-   };
-
-   struct route
-   {
-      SVCG::route_point start;
-      SVCG::route_point finish;
-      std::vector<SVCG::route_point> control_point_list;
-      std::vector<SVCG::route_point> route_list;
-      route() {}
-      route(SVCG::route_point& start, SVCG::route_point& finish)
-         : start(start)
-         , finish(finish)
-         , control_point_list()
-         , route_list()
-      {}
-      route(SVCG::route_point& start, SVCG::route_point& finish, std::vector<SVCG::route_point>& route, std::vector<SVCG::route_point>& controlPointList)
-         : start(start)
-         , finish(finish)
-         , control_point_list(controlPointList)
-         , route_list(route)
-      {}
-      route(SVCG::route_point& start, SVCG::route_point& finish, std::vector<SVCG::route_point>& controlPointList)
-         : start(start)
-         , finish(finish)
-         , control_point_list(controlPointList)
-         , route_list()
-      {}
-   };
+   };   
 
    struct route_data
    {
-      std::vector<route> land_routes;
-      std::vector<route> air_routes;
+      std::vector<settings::route> land_routes;
+      std::vector<settings::route> air_routes;
       route_data() {}
-      route_data(std::vector<route>& landRoutes, std::vector<route>& airRoutes)
+      route_data(std::vector<settings::route>& landRoutes, std::vector<settings::route>& airRoutes)
          : land_routes(landRoutes)
          , air_routes(airRoutes)
       {}
@@ -148,9 +122,7 @@ namespace pathfinder
       // NOTE: Ёто дл€ статистики
       std::vector<size_t> stat_field_index;    // —татистическое поле - н-мерна€ матрица статистики
 
-      size_t air_drone_count;
-      size_t land_robot_count;
-
+      bool use_strategies;   // флаг использовани€ стратегий(дл€ исследований)
       bool research; // флаг исследовательского пробега
       bool land_path; // необходимость расчета наземного пути
       size_t packet_size;   // размер пакета путей дл€ многопоточного вызова(0 - все задачи в 1 пул)
@@ -168,5 +140,13 @@ namespace pathfinder
    struct path_finder_statistic
    {
       // ѕока что пусто
+   };
+
+   struct path_finder_indata
+   {
+      settings::unit_source_data unit_data;
+      path_finder_settings settings;
+      path_finder_statistic statistic;
+      strategy_settings strategy_settings;
    };
 }

@@ -43,7 +43,7 @@ PathFinder::~PathFinder()
 
 // NOTE: желательно и лаунчер запускать в своем потоке
 // WARNING: распараллелено!!!
-route_data PathFinder::FindPath(std::function<void(void)> callback, const std::shared_ptr<Matrix<SVCG::route_point>> rawdata, strategy_settings settings, const path_finder_settings pathFinderSettings/*, path_finder_statistic& statistic*/)
+void PathFinder::FindPath(std::function<void(void)> callback, const std::shared_ptr<Matrix<SVCG::route_point>> rawdata, const path_finder_indata& indata)
 {
    //m_statistic = &statistic;
    //m_vmeta = ExperimentMeta{
@@ -54,115 +54,13 @@ route_data PathFinder::FindPath(std::function<void(void)> callback, const std::s
    //qint64 startTime = CURTIME_MS();
    m_rowCount = rawdata->GetRowCount();
    m_colCount = rawdata->GetColCount();
-   size_t iterations = 2;
-   std::vector<route> resultAirRoutes;
-   resultAirRoutes.resize(/*routeData->air_routes.size()*/);
    //m_funLandVector.clear();
    m_appSettings = std::make_shared<settings::application_settings>();//WFM::GetSharedInstance<Dispatcher>(DBG_DATA)->GetSettings();
-   bool pathFound = false;
-   if (pathFinderSettings.multithread)
-   {   
-      // TODO: приколхозить ThreadJobManager из юнидаты...хотя...
-      do
-      {
-         // test 4/8
-         const int threadCount = 16;   // NOTE: По количеству логических ядер 8+HT
-         m_holders.resize(threadCount);   // TODO: чекнуть, вызывается ли конструктор
-         //QThreadPool::globalInstance()->setMaxThreadCount(threadCount);
-         //m_funAirVector.clear();
-         resultAirRoutes.clear();
-         resultAirRoutes.resize(routeData->air_routes.size());
-         if (!pathFinderSettings.research)
-            m_strategyManager->PrepareControlPoint(settings, iterations, routeData->land_routes, resultAirRoutes, rawdata);
-         else
-            resultAirRoutes = routeData->air_routes;
-         m_taskPool.clear();
-         for (auto& airRoute : resultAirRoutes)
-            m_taskPool.emplace_back();
-
-         bool finished = true;
-         size_t idxDelta = 0;
-         while (!finished)
-         {
-            //m_synchronizer.clear();
-            for (size_t idx = 0; idx < pathFinderSettings.packet_size == 0 ? resultAirRoutes.size() : std::min(pathFinderSettings.packet_size, resultAirRoutes.size() - idxDelta - pathFinderSettings.packet_size); idx++)
-            {
-               //m_synchronizer.emplace_back(std::async(std::launch::async, &PathFinder::findAirPath, this, std::ref(resultAirRoutes.at(idxDelta + idx)), rawdata, iterations, pathFinderSettings.multithread));
-               //qDebug() << "added task" << idx;
-            }
-
-            if (pathFinderSettings.packet_size == 0 || idxDelta >= resultAirRoutes.size())
-               finished = true;
-            //m_funAirVector.emplace_back(run(this, &PathFinder::findAirPath, resultAirRoutes.at(idx), iterations, multithread));
-            //m_synchronizer.waitForFinished();
-            //qDebug() << "task list finished";
-            bool threadsFinished = false;
-            while (!threadsFinished)
-            {
-               for (auto& task : m_synchronizer)
-                  if (task.valid())
-               threadsFinished = true;
-            }
-            /*for (size_t idx = 0; idx < m_synchronizer.size(); idx++)
-            {
-               resultAirRoutes.at(idxDelta + idx) = m_synchronizer.at(idx).get();
-            }*/
-            idxDelta += pathFinderSettings.packet_size;
-         }
-
-         if (pathFinderSettings.land_path)
-         {
-            auto matrix = m_coverageBuilder->BuildLandCoverage(m_rowCount, m_colCount, settings, resultAirRoutes);
-
-            m_funLandVector.clear();
-            for (size_t idx = 0; idx < routeData.get()->land_routes.size(); idx++)
-            {
-               //m_funLandVector.emplace_back(std::async(std::launch::async, &PathFinder::findLandPath, routeData.get()->land_routes.at(idx), matrix, pathFinderSettings.multithread, &pathFound));
-               pathFound = true;
-            }
-            for (size_t idx = 0; idx < m_funLandVector.size(); idx++)
-            {
-               //m_funLandVector.at(idx).waitForFinished();
-               routeData.get()->land_routes.at(idx) = m_funLandVector.at(idx).get();
-            }
-         }
-         else
-            pathFound = true;
-
-         //qDebug() << pathFound << iterations;
-         iterations++;
-      }
-      while(!pathFound);
-   }
+   
+   if (indata.settings.multithread)
+      findPathMultiThread();
    else
-   {      
-      do
-      {
-         resultAirRoutes.clear();
-         resultAirRoutes.resize(routeData->air_routes.size());
-         if (!pathFinderSettings.research)
-            m_strategyManager->PrepareControlPoint(settings, iterations, routeData->land_routes, resultAirRoutes, rawdata);
-         else
-            resultAirRoutes = routeData->air_routes;
-         for (size_t idx = 0; idx < resultAirRoutes.size(); idx++)
-            resultAirRoutes.at(idx) = findAirPath(resultAirRoutes.at(idx), rawdata, iterations, pathFinderSettings.multithread);
-
-         if (pathFinderSettings.land_path)
-         {
-            auto matrix = m_coverageBuilder->BuildLandCoverage(m_rowCount, m_colCount, settings, resultAirRoutes);
-
-            for (size_t idx = 0; idx < routeData.get()->land_routes.size(); idx++)
-               routeData.get()->land_routes.at(idx) = findLandPath(routeData.get()->land_routes.at(idx), rawdata, matrix, pathFinderSettings.multithread, &pathFound);
-         }
-         else
-            pathFound = true;
-
-         //qDebug() << pathFound << iterations;
-         iterations++;
-      }
-      while (!pathFound);
-   }
-   routeData->air_routes = std::move(resultAirRoutes);
+      findPathSingleThread();
    //qint64 finishTime = CURTIME_MS();
    //qint64 time = finishTime - startTime;
    //qDebug() << "path finding ended: mt: " << pathFinderSettings.multithread << " :" << time;
@@ -174,10 +72,136 @@ route_data PathFinder::FindPath(std::function<void(void)> callback, const std::s
        && m_appSettings->res_settings.type == STT::ResearchType::RT_GEN1)
       emit TaskDataUpdate(vdata);*/
    //clearSupportData();
-   statistic = *m_statistic;
+   callback();
+   //statistic = *m_statistic;
 }
 
-route PathFinder::findAirPath(route& route, const std::shared_ptr<Matrix<SVCG::route_point>> rawdata, size_t iterations, bool multithread)
+void PathFinder::prepareSourcePoints(const path_finder_indata& indata)
+{
+   m_paths.air_routes.clear();
+   m_paths.air_routes.resize(indata.unit_data.air_units.size());
+   m_paths.land_routes.clear();
+   m_paths.land_routes.resize(indata.unit_data.land_units.size());
+   for (size_t idx = 0; idx < indata.unit_data.air_units.size(); idx++)
+   {
+      // NOTE: тут не должно быть к-т, т.к. "литаки" на автораспределении точек по стратегиям
+      ATLASSERT(indata.unit_data.air_units.at(idx).control_point_list.empty());
+      m_paths.air_routes.at(idx) = indata.unit_data.air_units.at(idx);
+   }
+   for (size_t idx = 0; idx < indata.unit_data.land_units.size(); idx++)
+      m_paths.land_routes.at(idx) = indata.unit_data.land_units.at(idx);
+}
+
+void PathFinder::findPathMultiThread(const std::shared_ptr<Matrix<SVCG::route_point>> rawdata, const path_finder_indata& indata)
+{
+   bool pathFound = false;
+   // NOTE: итерация шага стратегий
+   size_t iterations = 2;
+   // TODO: приколхозить ThreadJobManager из юнидаты...хотя...
+   do
+   {
+      // test 4/8
+      const int threadCount = 16;   // NOTE: По количеству логических ядер 8+HT
+      m_holders.resize(threadCount);   // TODO: чекнуть, вызывается ли конструктор
+      //QThreadPool::globalInstance()->setMaxThreadCount(threadCount);      
+
+      
+
+      m_taskPool.clear();
+      for (auto& airRoute : m_paths.air_routes)
+         m_taskPool.emplace_back();
+
+      bool finished = true;
+      size_t idxDelta = 0;
+      while (!finished)
+      {
+         //m_synchronizer.clear();
+         for (size_t idx = 0; idx < pathFinderSettings.packet_size == 0 ? resultAirRoutes.size() : std::min(pathFinderSettings.packet_size, resultAirRoutes.size() - idxDelta - pathFinderSettings.packet_size); idx++)
+         {
+            //m_synchronizer.emplace_back(std::async(std::launch::async, &PathFinder::findAirPath, this, std::ref(resultAirRoutes.at(idxDelta + idx)), rawdata, iterations, pathFinderSettings.multithread));
+            //qDebug() << "added task" << idx;
+         }
+
+         if (pathFinderSettings.packet_size == 0 || idxDelta >= resultAirRoutes.size())
+            finished = true;
+         //m_funAirVector.emplace_back(run(this, &PathFinder::findAirPath, resultAirRoutes.at(idx), iterations, multithread));
+         //m_synchronizer.waitForFinished();
+         //qDebug() << "task list finished";
+         bool threadsFinished = false;
+         while (!threadsFinished)
+         {
+            for (auto& task : m_synchronizer)
+               if (task.valid())
+                  threadsFinished = true;
+         }
+         /*for (size_t idx = 0; idx < m_synchronizer.size(); idx++)
+         {
+            resultAirRoutes.at(idxDelta + idx) = m_synchronizer.at(idx).get();
+         }*/
+         idxDelta += pathFinderSettings.packet_size;
+      }
+
+      if (pathFinderSettings.land_path)
+      {
+         auto matrix = m_coverageBuilder->BuildLandCoverage(m_rowCount, m_colCount, settings, resultAirRoutes);
+
+         m_funLandVector.clear();
+         for (size_t idx = 0; idx < routeData.get()->land_routes.size(); idx++)
+         {
+            //m_funLandVector.emplace_back(std::async(std::launch::async, &PathFinder::findLandPath, routeData.get()->land_routes.at(idx), matrix, pathFinderSettings.multithread, &pathFound));
+            pathFound = true;
+         }
+         for (size_t idx = 0; idx < m_funLandVector.size(); idx++)
+         {
+            //m_funLandVector.at(idx).waitForFinished();
+            routeData.get()->land_routes.at(idx) = m_funLandVector.at(idx).get();
+         }
+      }
+      else
+         pathFound = true;
+
+      //qDebug() << pathFound << iterations;
+      iterations++;
+   } while (!pathFound);
+}
+
+void PathFinder::generateIterationStep()
+{
+   // NOTE: распределение точек в соответствии со стратегией
+   prepareSourcePoints(indata);
+   if (!indata.settings.use_strategies)
+      m_strategyManager->PrepareControlPoint(indata.strategy_settings, iterations, m_paths.land_routes, m_paths.air_routes, rawdata);
+}
+
+void PathFinder::findPathSingleThread(const std::shared_ptr<Matrix<SVCG::route_point>> rawdata, const path_finder_indata& indata)
+{
+   do
+   {
+      resultAirRoutes.clear();
+      resultAirRoutes.resize(indata.unit_data.air_units.size());
+      if (!pathFinderSettings.research)
+         m_strategyManager->PrepareControlPoint(settings, iterations, routeData->land_routes, resultAirRoutes, rawdata);
+      else
+         resultAirRoutes = routeData->air_routes;
+      for (size_t idx = 0; idx < resultAirRoutes.size(); idx++)
+         resultAirRoutes.at(idx) = findAirPath(resultAirRoutes.at(idx), rawdata, iterations, pathFinderSettings.multithread);
+
+      if (pathFinderSettings.land_path)
+      {
+         auto matrix = m_coverageBuilder->BuildLandCoverage(m_rowCount, m_colCount, settings, resultAirRoutes);
+
+         for (size_t idx = 0; idx < routeData.get()->land_routes.size(); idx++)
+            routeData.get()->land_routes.at(idx) = findLandPath(routeData.get()->land_routes.at(idx), rawdata, matrix, pathFinderSettings.multithread, &pathFound);
+      }
+      else
+         pathFound = true;
+
+      //qDebug() << pathFound << iterations;
+      iterations++;
+   } while (!pathFound);
+}
+
+void PathFinder::findAirPath(route& route, const std::shared_ptr<Matrix<SVCG::route_point>> rawdata, size_t iterations, bool multithread)
 {
    std::vector<SVCG::route_point> exp_route;
    std::vector<SVCG::route_point> waypointList;
@@ -231,7 +255,7 @@ route PathFinder::findAirPath(route& route, const std::shared_ptr<Matrix<SVCG::r
    return route;
 }
 
-route PathFinder::findLandPath(route& route, const std::shared_ptr<Matrix<SVCG::route_point>> rawdata, std::shared_ptr<Matrix<size_t>> coverageMatrix, bool multithread, bool* pathFounded)
+void PathFinder::findLandPath(route& route, const std::shared_ptr<Matrix<SVCG::route_point>> rawdata, std::shared_ptr<Matrix<size_t>> coverageMatrix, bool multithread, bool* pathFounded)
 {
    std::vector<SVCG::route_point> exp_route;
    std::vector<SVCG::route_point> waypointList;

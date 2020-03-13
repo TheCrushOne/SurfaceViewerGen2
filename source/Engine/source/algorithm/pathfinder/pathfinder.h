@@ -39,8 +39,10 @@ namespace pathfinder
       void generateIterationStep();
       void formatTaskPool();
 
-      void findLandPath(route& route, const std::shared_ptr<Matrix<SVCG::route_point>> rawdata, std::shared_ptr<Matrix<size_t>> coverageMatrix, bool multithread, bool* pathFounded);
-      void findAirPath(route& route, const std::shared_ptr<Matrix<SVCG::route_point>> rawdata, size_t iterations, bool multithread);
+      void onTaskHolderFinished();
+
+      void findLandPath(settings::route& route, const std::shared_ptr<Matrix<SVCG::route_point>> rawdata, std::shared_ptr<Matrix<size_t>> coverageMatrix, bool multithread, bool* pathFounded);
+      void findAirPath(settings::route& route, const std::shared_ptr<Matrix<SVCG::route_point>> rawdata, size_t iterations, bool multithread);
       std::vector<SVCG::route_point> findPath(const std::shared_ptr<Matrix<SVCG::route_point>> rawdata, SVCG::route_point& start, SVCG::route_point& finish, path_finder_logic& logic, std::shared_ptr<Matrix<size_t>> coverageMatrix, bool multithread, bool* pathFound);
       //inline void AddItem();
    //signals:
@@ -54,8 +56,10 @@ namespace pathfinder
       //std::vector<std::future<route>> m_funAirVector;
       //std::vector<std::future<route>> m_funLandVector;
       //std::vector<std::future<route>> m_synchronizer;
-      std::vector<TaskHolder> m_holders;
+      std::vector<std::pair<TaskHolder, TaskStatus>> m_holders;
+
       std::vector<task_unit> m_taskPool;
+      std::shared_ptr<std::vector<task_unit>> m_taskPacket;
 
       route_data m_paths;
 

@@ -88,7 +88,7 @@ namespace pathfinder
    {
       StrategyType type;
       double radius;
-   };   
+   };
 
    struct route_data
    {

@@ -28,7 +28,7 @@ namespace pathfinder
       /*virtual void initPowertrain() override;
       virtual void initMiscellaneous() override;*/
    public:
-      void FindPath(strategy_settings settings, std::shared_ptr<route_data> route, const std::shared_ptr<Matrix<SVCG::route_point>> rawdata, /*bool multithread = true, size_t countIdx = 0, size_t legnthIdx = 0, bool research = false, bool landPath = true, size_t packetSize = 0*/const path_finder_settings pathFinderSettings, path_finder_statistic& statistic);
+      route_data FindPath(std::function<void(void)> callback, const std::shared_ptr<Matrix<SVCG::route_point>> rawdata, /*bool multithread = true, size_t countIdx = 0, size_t legnthIdx = 0, bool research = false, bool landPath = true, size_t packetSize = 0*/strategy_settings settings, const path_finder_settings pathFinderSettings/*, path_finder_statistic& statistic*/);
    private:
       route findLandPath(route& route, const std::shared_ptr<Matrix<SVCG::route_point>> rawdata, std::shared_ptr<Matrix<size_t>> coverageMatrix, bool multithread, bool* pathFounded);
       route findAirPath(route& route, const std::shared_ptr<Matrix<SVCG::route_point>> rawdata, size_t iterations, bool multithread);

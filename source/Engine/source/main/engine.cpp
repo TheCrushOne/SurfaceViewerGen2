@@ -39,10 +39,12 @@ void Engine::ProcessPathFind(ColregSimulation::scenario_data& scenarioData, cons
    pathfinder::strategy_settings stratStt{ pathfinder::StrategyType::ST_RHOMBOID, 1. };
    pathfinder::path_finder_settings pathStt;
    pathfinder::path_finder_statistic stat;
-   
+   pathStt.air_drone_count = scenarioData.unit_data.air_units.size();
+   pathStt.land_robot_count = scenarioData.unit_data.land_units.size();
+
    convertMap(rawData, m_rawdata);
    convertData(scenarioData.unit_data, m_routedata);
-   m_pathfinder->FindPath(stratStt, m_routedata, m_rawdata, pathStt, stat);
+   m_pathfinder->FindPath([]() {  }, m_routedata, m_rawdata, stratStt, pathStt/*, stat*/);
    pathDump(m_routedata, scenarioData.unit_data);
 }
 

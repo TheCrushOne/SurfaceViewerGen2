@@ -148,6 +148,9 @@ namespace pathfinder
       // NOTE: Это для статистики
       std::vector<size_t> stat_field_index;    // Статистическое поле - н-мерная матрица статистики
 
+      size_t air_drone_count;
+      size_t land_robot_count;
+
       bool research; // флаг исследовательского пробега
       bool land_path; // необходимость расчета наземного пути
       size_t packet_size;   // размер пакета путей для многопоточного вызова(0 - все задачи в 1 пул)

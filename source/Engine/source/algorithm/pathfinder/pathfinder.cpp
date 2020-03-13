@@ -43,7 +43,7 @@ PathFinder::~PathFinder()
 
 // NOTE: желательно и лаунчер запускать в своем потоке
 // WARNING: распараллелено!!!
-void PathFinder::FindPath(strategy_settings settings, std::shared_ptr<route_data> routeData, const std::shared_ptr<Matrix<SVCG::route_point>> rawdata, const path_finder_settings pathFinderSettings, path_finder_statistic& statistic)
+route_data PathFinder::FindPath(std::function<void(void)> callback, const std::shared_ptr<Matrix<SVCG::route_point>> rawdata, strategy_settings settings, const path_finder_settings pathFinderSettings/*, path_finder_statistic& statistic*/)
 {
    //m_statistic = &statistic;
    //m_vmeta = ExperimentMeta{
@@ -56,7 +56,7 @@ void PathFinder::FindPath(strategy_settings settings, std::shared_ptr<route_data
    m_colCount = rawdata->GetColCount();
    size_t iterations = 2;
    std::vector<route> resultAirRoutes;
-   resultAirRoutes.resize(routeData->air_routes.size());
+   resultAirRoutes.resize(/*routeData->air_routes.size()*/);
    //m_funLandVector.clear();
    m_appSettings = std::make_shared<settings::application_settings>();//WFM::GetSharedInstance<Dispatcher>(DBG_DATA)->GetSettings();
    bool pathFound = false;

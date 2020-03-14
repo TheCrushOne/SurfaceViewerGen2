@@ -4,7 +4,7 @@
 #include "common\communicator.h"
 #include "common\pathfinder_structs.h"
 #include "crossdllinterface\EngineInterface.h"
-#include "algorithm\pathfinder\pathfinder.h"
+#include "algorithm\pathfinder\PathFinderPipeline.h"
 //#include "base/instance.h"
 #include "common/simulation_structs.h"
 #include <vector>
@@ -80,8 +80,9 @@ namespace engine
       void percent(int prcnt) {  }
       void drop() {  }*/
    private:
+      std::shared_ptr<pathfinder::path_finder_indata> m_indata;
       std::shared_ptr<settings::application_settings> m_appSettings;
-      std::unique_ptr<pathfinder::PathFinder> m_pathfinder;
+      std::unique_ptr<pathfinder::PathFinderPipeline> m_pathfinder;
 
       std::shared_ptr<pathfinder::Matrix<SVCG::route_point>> m_rawdata;
       std::shared_ptr<pathfinder::route_data> m_routedata;

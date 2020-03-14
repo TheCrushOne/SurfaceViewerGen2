@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "StrategyManager.h"
 #include "main/engine.h"
 
@@ -10,12 +11,13 @@
 
 using namespace pathfinder;
 
-bool StrategyManager::PrepareControlPoint(pathfinder::strategy_settings settings, size_t iterations, std::vector<settings::route>& landRoutes, std::vector<settings::route>& airRoutes, const std::shared_ptr<Matrix<SVCG::route_point>>& rawdata)
+bool StrategyManager::PrepareControlPoint(size_t iterations, std::vector<settings::route>& landRoutes, std::vector<settings::route>& airRoutes, const std::shared_ptr<Matrix<SVCG::route_point>>& rawdata, const std::shared_ptr<pathfinder::path_finder_indata> indata)
 {
-   pathfinder::StrategyType type = settings.type;
-   auto start = landRoutes.at(0).start, finish = landRoutes.at(0).finish;
+   ATLASSERT(indata->unit_data.land_units.size() > 0);
+   pathfinder::StrategyType type = indata->strategy_settings.type;
+   auto start = indata->unit_data.land_units.at(0).start, finish = indata->unit_data.land_units.at(0).finish;
    //bool finished = false;
-   int radius = static_cast<int>(settings.radius);
+   int radius = static_cast<int>(indata->strategy_settings.radius);
    int diameter = 2*radius;
    bool isPlusDirectionRow = start.row < finish.row;
    bool isPlusDirectionCol = start.col < finish.col;
@@ -33,8 +35,10 @@ bool StrategyManager::PrepareControlPoint(pathfinder::strategy_settings settings
       int currentColFnLine;
       bool first = true;
       // NOTE: количество ходок
-      size_t directionCount = static_cast<size_t>(abs(static_cast<int>(rowCount))/(diameter*static_cast<int>(airRoutes.size()))) + 2;   // WARNING: костыль
-      size_t droneCount = airRoutes.size();
+      size_t directionCount = static_cast<size_t>(abs(static_cast<int>(rowCount))/(diameter*static_cast<int>(indata->unit_data.air_units.size()))) + 2;   // WARNING: костыль
+      size_t droneCount = indata->unit_data.air_units.size();
+
+      airRoutes.resize(indata->unit_data.air_units.size());
       // NOTE: отступ от границ карты
       //int startBorderOffset = radius;
 

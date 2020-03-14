@@ -24,9 +24,9 @@ void TrackLayer::renderTracks(render::iRender* renderer)
 
    for (size_t idx = 0; idx < simulationState.GetUnitCount(ColregSimulation::UNIT_TYPE::UT_DRONE); ++idx)
    {
-      const auto& rover = simulationState.GetUnit(ColregSimulation::UNIT_TYPE::UT_DRONE, idx);
+      const auto& drone = simulationState.GetUnit(ColregSimulation::UNIT_TYPE::UT_DRONE, idx);
 
       if (_renderSourceRoute)
-         TrackLayerHelper::renderRoute(renderer, rover.GetInfo().id, rover.GetRoute(ColregSimulation::ROUTE_TYPE::RT_SOURSE)->route, { 1, render::LINE_STYLE::LL_DASH, render::FILL_TYPE::FT_NONE, RGB(255, 200, 30) }, ColregSimulation::ROUTE_TYPE::RT_SOURSE);
+         TrackLayerHelper::renderRoute(renderer, drone.GetInfo().id, drone.GetRoute(ColregSimulation::ROUTE_TYPE::RT_SOURSE)->route, { 1, render::LINE_STYLE::LL_DASH, render::FILL_TYPE::FT_NONE, RGB(255, 200, 30) }, ColregSimulation::ROUTE_TYPE::RT_SOURSE);
    }
 }

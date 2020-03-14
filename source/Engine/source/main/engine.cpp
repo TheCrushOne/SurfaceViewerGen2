@@ -6,7 +6,6 @@
 #include <math.h>
 #include <cmath>
 //#include "settings/common/settings.h"
-#include "algorithm/pathfinder/pathfinder.h"
 #include <windows.h>
 #include "algorithm/statistic.h"
 
@@ -16,7 +15,7 @@ Engine::Engine()
    : Communicable(nullptr)
    , m_rawdata(std::make_shared<pathfinder::Matrix<SVCG::route_point>>(SVCG::route_point{}))
    , m_routedata(std::make_shared<pathfinder::route_data>())
-   , m_pathfinder(std::make_unique<pathfinder::PathFinder>())
+   , m_pathfinder(std::make_unique<pathfinder::PathFinderPipeline>())
 {
    /*m_noGoLowLevel = 73.f;
    m_noGoHighLevel = 120.f;
@@ -42,13 +41,13 @@ void Engine::ProcessPathFind(const ColregSimulation::scenario_data& scenarioData
 void Engine::processPathFind(const ColregSimulation::scenario_data& scenarioData, const std::vector<std::vector<double>>& rawData, std::function<void(void)> completeCallback)
 {
    convertMap(rawData, m_rawdata);
-   pathfinder::path_finder_indata indata{ 
+   m_indata = std::make_shared<pathfinder::path_finder_indata>(pathfinder::path_finder_indata{
       scenarioData.unit_data,
       pathfinder::path_finder_settings(),
       pathfinder::path_finder_statistic(),
-      pathfinder::strategy_settings{ pathfinder::StrategyType::ST_RHOMBOID, 1. }
-   };
-   m_pathfinder->FindPath([completeCallback]() { completeCallback(); }, m_rawdata, indata);
+      pathfinder::strategy_settings{ pathfinder::StrategyType::ST_RHOMBOID, 5. }
+   });
+   m_pathfinder->FindPath([completeCallback]() { completeCallback(); }, m_rawdata, m_indata);
 }
 
 void Engine::convertMap(const std::vector<std::vector<double>>& rawdataSrc, std::shared_ptr<pathfinder::Matrix<SVCG::route_point>> rawdataDst)

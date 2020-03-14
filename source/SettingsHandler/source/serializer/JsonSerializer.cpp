@@ -68,8 +68,11 @@ namespace colreg
             pse.start.col = elem["start"]["col"].get<size_t>();
             pse.finish.row = elem["finish"]["row"].get<size_t>();
             pse.finish.col = elem["finish"]["col"].get<size_t>();
-            for (auto& cp : elem["control_points"])
-               pse.control_point_list.emplace_back(SVCG::route_point(cp["row"].get<size_t>(), cp["col"].get<size_t>(), 0.f));
+            if (elem.find("control_points") != elem.end())
+            {
+               for (auto& cp : elem["control_points"])
+                  pse.control_point_list.emplace_back(SVCG::route_point(cp["row"].get<size_t>(), cp["col"].get<size_t>(), 0.f));
+            }
             return true;
          };
          for (auto& elem : j["land_units"])

@@ -20,7 +20,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\algorithm\pathfinder\CoverageBuilder.cpp" />
-    <ClCompile Include="source\algorithm\pathfinder\pathfinder.cpp" />
+    <ClCompile Include="source\algorithm\pathfinder\PathFinder.cpp" />
+    <ClCompile Include="source\algorithm\pathfinder\PathFinderPipeline.cpp" />
     <ClCompile Include="source\algorithm\pathfinder\StrategyManager.cpp" />
     <ClCompile Include="source\algorithm\pathfinder\TaskHolder\TaskHolder.cpp" />
     <ClCompile Include="source\algorithm\statistic.cpp" />
@@ -31,7 +32,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\algorithm\pathfinder\CoverageBuilder.h" />
-    <ClInclude Include="source\algorithm\pathfinder\pathfinder.h" />
+    <ClInclude Include="source\algorithm\pathfinder\PathFinder.h" />
+    <ClInclude Include="source\algorithm\pathfinder\PathFinderPipeline.h" />
     <ClInclude Include="source\algorithm\pathfinder\StrategyManager.h" />
     <ClInclude Include="source\algorithm\pathfinder\TaskHolder\TaskHolder.h" />
     <ClInclude Include="source\algorithm\statistic.h" />

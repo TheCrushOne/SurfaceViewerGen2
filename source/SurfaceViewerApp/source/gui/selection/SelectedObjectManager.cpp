@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "gui/selection/SelectedObjectManager.h"
 //#include "selectedship.h"
-#include "selectedroute.h"
+#include "SelectedRoute.h"
 #include "SelectedChartObject.h"
 #include "ScenarioProperties.h"
 #include "gui/user_interface.h"
@@ -20,6 +20,7 @@ bool SelectedObjectManager::Select(const render::find_info& info)
    _selected_chart_id = {};
    switch (info.find_object_type)
    {
+   //case render::FIND_OBJECT_TYPE::FOT_TRACK:
    //case render::FIND_OBJECT_TYPE::FOT_ROVER:
    //case render::FIND_OBJECT_TYPE::FOT_DOMAIN:
    //{
@@ -27,16 +28,16 @@ bool SelectedObjectManager::Select(const render::find_info& info)
    //   _selected_ship_id = info.id;
    //   break;
    //}
-   //case render::FIND_OBJECT_TYPE::FOT_ROUTE_POINT:
-   //{
-   //   _selected = std::make_unique <SelectedRoutePoint>(info.id, info.user_data);
-   //   break;
-   //}
-   //case render::FIND_OBJECT_TYPE::FOT_ROUTE_SEGMENT:
-   //{
-   //   _selected = std::make_unique <SelectedRouteSegment>(info.id, info.user_data);
-   //   break;
-   //}
+   case render::FIND_OBJECT_TYPE::FOT_ROUTE_POINT:
+   {
+      _selected = std::make_unique <SelectedRoutePoint>(info.id, info.user_data);
+      break;
+   }
+   case render::FIND_OBJECT_TYPE::FOT_ROUTE_SEGMENT:
+   {
+      _selected = std::make_unique <SelectedRouteSegment>(info.id, info.user_data);
+      break;
+   }
    case render::FIND_OBJECT_TYPE::FOT_CHART_OBJECT:
    {
       _selected_chart_id = info.id;

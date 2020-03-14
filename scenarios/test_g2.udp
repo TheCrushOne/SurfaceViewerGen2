@@ -32,17 +32,29 @@
             "finish" : {
                 "row" : 255,
                 "col" : 255
+            }
+        },
+		{
+            "name" : "gyrocopter",
+            "start" : {
+                "row" : 1,
+                "col" : 1
             },
-            "control_points" : [
-                {
-                    "row" : 50,
-                    "col" : 150
-                },
-                {
-                    "row" : 150,
-                    "col" : 50
-                }
-            ]
+            "finish" : {
+                "row" : 255,
+                "col" : 255
+            }
+        },
+		{
+            "name" : "i-bird",
+            "start" : {
+                "row" : 1,
+                "col" : 1
+            },
+            "finish" : {
+                "row" : 255,
+                "col" : 255
+            }
         }
     ]
 }

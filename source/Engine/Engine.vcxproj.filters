@@ -28,9 +28,6 @@
       <Filter>algorithm</Filter>
     </ClCompile>
     <ClCompile Include="source\stdafx.cpp" />
-    <ClCompile Include="source\algorithm\pathfinder\pathfinder.cpp">
-      <Filter>algorithm\pathfinder</Filter>
-    </ClCompile>
     <ClCompile Include="source\algorithm\pathfinder\CoverageBuilder.cpp">
       <Filter>algorithm\pathfinder</Filter>
     </ClCompile>
@@ -39,6 +36,12 @@
     </ClCompile>
     <ClCompile Include="source\algorithm\pathfinder\TaskHolder\TaskHolder.cpp">
       <Filter>algorithm\pathfinder\TaskHolder</Filter>
+    </ClCompile>
+    <ClCompile Include="source\algorithm\pathfinder\PathFinder.cpp">
+      <Filter>algorithm\pathfinder</Filter>
+    </ClCompile>
+    <ClCompile Include="source\algorithm\pathfinder\PathFinderPipeline.cpp">
+      <Filter>algorithm\pathfinder</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -55,9 +58,6 @@
       <Filter>algorithm</Filter>
     </ClInclude>
     <ClInclude Include="source\stdafx.h" />
-    <ClInclude Include="source\algorithm\pathfinder\pathfinder.h">
-      <Filter>algorithm\pathfinder</Filter>
-    </ClInclude>
     <ClInclude Include="source\algorithm\pathfinder\CoverageBuilder.h">
       <Filter>algorithm\pathfinder</Filter>
     </ClInclude>
@@ -66,6 +66,12 @@
     </ClInclude>
     <ClInclude Include="source\algorithm\pathfinder\TaskHolder\TaskHolder.h">
       <Filter>algorithm\pathfinder\TaskHolder</Filter>
+    </ClInclude>
+    <ClInclude Include="source\algorithm\pathfinder\PathFinder.h">
+      <Filter>algorithm\pathfinder</Filter>
+    </ClInclude>
+    <ClInclude Include="source\algorithm\pathfinder\PathFinderPipeline.h">
+      <Filter>algorithm\pathfinder</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

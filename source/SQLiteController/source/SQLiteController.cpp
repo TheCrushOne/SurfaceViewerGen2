@@ -6,7 +6,7 @@
 // NOTE: запаска
 //  ##__VA_ARGS__
 
-#define NO_RES_PREP char buffer[512]; buffer[0] = '\0';
+#define NO_RES_PREP char buffer[65536]; buffer[0] = '\0';
 #define RES_PREP_INT int rvalbuf; NO_RES_PREP
 #define RES_PREP_STR std::string rvalbuf; NO_RES_PREP
 

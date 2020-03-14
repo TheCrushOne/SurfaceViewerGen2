@@ -127,7 +127,7 @@ namespace pathfinder
       bool land_path; // необходимость расчета наземного пути
       size_t packet_size;   // размер пакета путей для многопоточного вызова(0 - все задачи в 1 пул)
 
-      path_finder_settings(bool multithread = true, std::vector<size_t> statFieldIndex = {}, bool research = false, bool landPath = true, size_t packetSize = 0)
+      path_finder_settings(bool multithread = true, std::vector<size_t> statFieldIndex = {}, bool research = false, bool landPath = true, size_t packetSize = 2)
          : multithread(multithread)
          , stat_field_index(statFieldIndex)
          , research(research)

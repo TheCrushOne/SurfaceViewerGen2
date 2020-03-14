@@ -37,7 +37,7 @@ void RobotScenarioPlayer::Start()
    ref = converter::raw_data_ref{ lines.data(), lines.size() };
    m_generator->GenerateStatic(ref);
    // NOTE: Отключено для отладки отрисовки изолиний
-   //m_engine->ProcessPathFind(m_data, m_coordGrid);
+   m_engine->ProcessPathFind(m_data, m_coordGrid, [this]() { updateUnitsPath(); });
    //updateUnitsPath();
 }
 
@@ -217,6 +217,7 @@ void RobotScenarioPlayer::correctCoordinateGrid()
 
 void RobotScenarioPlayer::updateUnitsPath()
 {
+   auto& paths = m_engine->GetLastProcessedPaths();
    for (size_t idx = 0; idx < GetUnitCount(UNIT_TYPE::UT_ROVER); idx++)
    {
       auto& unit = getUnit(UNIT_TYPE::UT_ROVER, idx);
@@ -229,7 +230,7 @@ void RobotScenarioPlayer::updateUnitsPath()
          //_scenarioSettings.setting.timePrediction, _scenarioSettings.settings.timeStep);
 
       ColregRoutePoints route;
-      for (const auto& point : m_data.unit_data.land_units.at(idx).route_point_list)
+      for (const auto& point : paths.land_routes.at(idx).route_list)
          route.emplace_back(SVCG::RoutePointToPositionPoint(point, m_settings.env_stt));
       unit.SetSrcRoute(std::forward<ColregRoutePoints>(route));
       //for (a)
@@ -243,10 +244,11 @@ void RobotScenarioPlayer::updateUnitsPath()
       auto& unit = getUnit(UNIT_TYPE::UT_DRONE, idx);
 
       ColregRoutePoints route;
-      for (const auto& point : m_data.unit_data.air_units.at(idx).route_point_list)
+      for (const auto& point : paths.air_routes.at(idx).route_list)
          route.emplace_back(SVCG::RoutePointToPositionPoint(point, m_settings.env_stt));
       unit.SetSrcRoute(std::forward<ColregRoutePoints>(route));
    }
+   m_communicator->UpdateUI();
 }
 
 void RobotScenarioPlayer::addUnitsFromScenario()

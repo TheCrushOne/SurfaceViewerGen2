@@ -1,5 +1,6 @@
 #pragma once
 #include <functional>
+#include <thread>
 #include "common/pathfinder_structs.h"
 
 namespace pathfinder
@@ -28,34 +29,11 @@ namespace pathfinder
    class TaskHolder
    {
    public:
-      void Launch(std::shared_ptr<std::vector<task_unit>> taskPacket, std::function<void(void)> callback)
-      {
-         this->callback = callback;
-         packet = taskPacket;
-         onFinished();  // NOTE: принудительный старт
-      }
+      void Launch(std::shared_ptr<std::vector<task_unit>> taskPacket, std::function<void(void)> callback);
    protected:
-      void onFinished()
-      {
-         status = HolderStatus::HS_FINISHED;
-         for (auto& task : *packet.get())
-         {
-            if (task.status == TaskStatus::TS_QUEUED)
-            {
-               task.status = TaskStatus::TS_ONCOUNT;
-               status = HolderStatus::HS_RUNNING;
-               std::thread(&launchSingleTask, this, task).detach();
-               break;
-            }
-         }
-         if (status == HolderStatus::HS_FINISHED)
-            callback();
-      }
-      void launchSingleTask(task_unit& task)
-      {
-         task.runnable();
-         onFinished();
-      }
+      void onFinished();
+   public:
+      void launchSingleTask(task_unit& task);
    private:
       HolderStatus status;
       std::shared_ptr<std::vector<task_unit>> packet;

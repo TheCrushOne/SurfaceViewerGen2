@@ -9,7 +9,7 @@ class CoverageBuilder
 public:
    CoverageBuilder() {}
 
-   std::shared_ptr<pathfinder::Matrix<size_t>> BuildLandCoverage(size_t rowCount, size_t colCount, pathfinder::strategy_settings settings, std::vector<pathfinder::route>& airRoutes);
-   bool LandPathCoverage(size_t rowCount, size_t colCount, pathfinder::strategy_settings settings, std::vector<pathfinder::route>& landRoutes, std::vector<pathfinder::route>& airRoutes);
+   std::shared_ptr<pathfinder::Matrix<size_t>> BuildLandCoverage(size_t rowCount, size_t colCount, pathfinder::strategy_settings settings, std::vector<settings::route>& airRoutes);
+   bool LandPathCoverage(size_t rowCount, size_t colCount, pathfinder::strategy_settings settings, std::vector<settings::route>& landRoutes, std::vector<settings::route>& airRoutes);
 private:
 };

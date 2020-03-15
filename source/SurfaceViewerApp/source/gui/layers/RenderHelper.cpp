@@ -23,7 +23,7 @@ void	RenderUnitContour(render::iRender* renderer, ColregSimulation::UNIT_TYPE ty
 
       renderer->AddObject({ { p1, p2, p3, p4, p5, p1 }
                            , info
-                           ,{render::FIND_TYPE::FT_FIND_FAST, ship_info.id, render::FIND_OBJECT_TYPE::FOT_SHIP } });
+                           ,{render::FIND_TYPE::FT_FIND_FAST, ship_info.id, render::FIND_OBJECT_TYPE::FOT_ROVER } });
       break;
    }
    case ColregSimulation::UNIT_TYPE::UT_SHIP:

@@ -57,8 +57,9 @@ namespace engine
    public:
       Engine();
    public:
+      void Init(ICommunicator* pCommunicator) { m_communicator = pCommunicator; m_pathfinder->Init(m_communicator); }
       void SetSettings(std::shared_ptr<settings::application_settings> settings) { m_appSettings = settings; }
-      
+
       void TimeResearchGen1(/*const std::shared_ptr<SVM::iMatrix<SurfaceElement>>&, std::shared_ptr<ResearchResultGen1>&*/);
       void LengthResearchGen2(/*const std::shared_ptr<SVM::iMatrix<SurfaceElement>>&, std::shared_ptr<ResearchResultGen2>&*/);
       void ThreadResearchGen3(/*const std::shared_ptr<SVM::iMatrix<SurfaceElement>>&, std::shared_ptr<ResearchResultGen3>&*/);

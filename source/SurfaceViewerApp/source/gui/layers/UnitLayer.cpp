@@ -46,7 +46,7 @@ void UnitLayer::renderRovers(render::iRender* renderer)
          auto dist = rover.GetPos().point.speed / 6;
          auto course = rover.GetPos().point.course != colreg::NO_VALUE ? rover.GetPos().point.course : rover.GetPos().point.heading;
          auto pt = math::calc_point(rover.GetPos().point.pos, dist, course);
-         render::object_info  objectInfo = { 3, render::LINE_STYLE::LL_SOLID, render::FILL_TYPE::FT_NONE, RGB(163,73,164) };
+         render::object_info objectInfo = { 3, render::LINE_STYLE::LL_SOLID, render::FILL_TYPE::FT_NONE, RGB(163,73,164) };
          renderer->AddObject({ { rover.GetPos().point.pos, pt }, objectInfo });
          RenderArrow(renderer, pt, course, objectInfo, 0.5);
       }

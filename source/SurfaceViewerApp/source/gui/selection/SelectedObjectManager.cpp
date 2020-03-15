@@ -21,13 +21,13 @@ bool SelectedObjectManager::Select(const render::find_info& info)
    switch (info.find_object_type)
    {
    //case render::FIND_OBJECT_TYPE::FOT_TRACK:
-   //case render::FIND_OBJECT_TYPE::FOT_ROVER:
-   //case render::FIND_OBJECT_TYPE::FOT_DOMAIN:
-   //{
-   //   _selected = std::make_unique <SelectedShip>(info.id);
-   //   _selected_ship_id = info.id;
-   //   break;
-   //}
+   case render::FIND_OBJECT_TYPE::FOT_ROVER:
+   case render::FIND_OBJECT_TYPE::FOT_DOMAIN:
+   {
+      _selected = std::make_unique <SelectedRover>(info.id);
+      _selected_ship_id = info.id;
+      break;
+   }
    case render::FIND_OBJECT_TYPE::FOT_ROUTE_POINT:
    {
       _selected = std::make_unique <SelectedRoutePoint>(info.id, info.user_data);

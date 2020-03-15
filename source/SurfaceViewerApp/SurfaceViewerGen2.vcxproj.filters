@@ -284,6 +284,9 @@
     <ClInclude Include="source\gui\layers\ChartLayer.h">
       <Filter>gui\layers</Filter>
     </ClInclude>
+    <ClInclude Include="source\gui\selection\SelectedUnit.h">
+      <Filter>gui\selection</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\stdafx.cpp" />
@@ -424,6 +427,9 @@
     </ClCompile>
     <ClCompile Include="source\gui\layers\ChartLayer.cpp">
       <Filter>gui\layers</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gui\selection\SelectedUnit.cpp">
+      <Filter>gui\selection</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

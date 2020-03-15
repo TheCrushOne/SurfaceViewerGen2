@@ -15,6 +15,7 @@ PathFinderPipeline::PathFinderPipeline()
    , m_strategyManager(std::make_unique<StrategyManager>())
    , m_pathfinder(std::make_unique<PathFinder>())
    , m_taskPacket(std::make_shared<std::vector<pathfinder::task_unit>>())
+   , Communicable(nullptr)
 {}
 
 PathFinderPipeline::~PathFinderPipeline()
@@ -136,6 +137,7 @@ void PathFinderPipeline::onAirRouteTaskHolderFinished()
 
 void PathFinderPipeline::onAirRoutePacketFinished()
 {
+   m_communicator->Message(ICommunicator::MessageType::MS_Error, "air route packet finished");
    static const unsigned long long int threadCountSpec = std::thread::hardware_concurrency();
    if (m_taskPool.size() == 0)
    {
@@ -144,7 +146,6 @@ void PathFinderPipeline::onAirRoutePacketFinished()
    }
    formatTaskPacket();
 
-   
    // test 4/8
    const int threadCount = 16;   // NOTE: По количеству логических ядер 8+HT
    m_holders.resize(threadCount);   // TODO: чекнуть, вызывается ли конструктор
@@ -204,6 +205,7 @@ void PathFinderPipeline::findLandRoute()
    // NOTE: наземный пока что один, так что просто считаем его в потоке
    ATLASSERT(m_indata->unit_data.land_units.size() == 1);
    m_paths.land_routes.clear();
+   m_paths.land_routes.resize(1);
    m_pathfinder->FindLandPath(m_paths.land_routes.at(0), m_rawdata, m_currentCoverage, true, &m_pathFound);
    if (m_pathFound)
       pipelineFinalize();

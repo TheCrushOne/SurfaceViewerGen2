@@ -14,6 +14,7 @@ RobotScenarioPlayer::RobotScenarioPlayer(ICommunicator* pCommunicator, iProperty
       m_communicator->Message(ICommunicator::MS_Error, "Can't load 'Engine'");
       return;
    }
+   m_engine->Init(pCommunicator);
 
    m_generator.Create(SVGUtils::CurrentDllPath("ChartObjectGenerator").c_str(), "CreateGenerator");
    if (!m_generator.IsValid())

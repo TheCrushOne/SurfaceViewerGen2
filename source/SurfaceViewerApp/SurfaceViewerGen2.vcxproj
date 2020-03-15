@@ -40,7 +40,7 @@
     <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
-    <UseOfMfc>Dynamic</UseOfMfc>
+    <UseOfMfc>Static</UseOfMfc>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -278,6 +278,7 @@
     <ClInclude Include="source\gui\selection\SelectedChartObject.h" />
     <ClInclude Include="source\gui\selection\SelectedObjectManager.h" />
     <ClInclude Include="source\gui\selection\SelectedRoute.h" />
+    <ClInclude Include="source\gui\selection\SelectedUnit.h" />
     <ClInclude Include="source\gui\tools\CreateObjectTool.h" />
     <ClInclude Include="source\gui\tools\DragTool.h" />
     <ClInclude Include="source\gui\tools\MouseTool.h" />
@@ -334,6 +335,7 @@
     <ClCompile Include="source\gui\selection\SelectedChartObject.cpp" />
     <ClCompile Include="source\gui\selection\SelectedObjectManager.cpp" />
     <ClCompile Include="source\gui\selection\SelectedRoute.cpp" />
+    <ClCompile Include="source\gui\selection\SelectedUnit.cpp" />
     <ClCompile Include="source\gui\tools\CreateObjectTool.cpp" />
     <ClCompile Include="source\gui\tools\DragTool.cpp" />
     <ClCompile Include="source\gui\tools\MouseTool.cpp" />

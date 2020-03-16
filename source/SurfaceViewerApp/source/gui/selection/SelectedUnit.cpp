@@ -1,17 +1,81 @@
 #include "stdafx.h"
 #include "SelectedUnit.h"
+#include "simulator/simulator.h"
+#include "property_helper.h"
+#include "gui/layers/RenderHelper.h"
+
+#define CRSHIPINFO(iPropPtr, prStruct, obj, field, sifi) PROPHELPER_CREATEHOLDER_S(iPropPtr, prStruct, obj, field, SelectedShip::shipInfoMeta, sifi, &SelectedShip::OnShipInfoChanged)
 
 SelectedUnit::SelectedUnit(colreg::id_type id)
    : m_id{ id }
 {
-   auto selected = simulator::getShip(id);
-   if (selected)
+   const auto* sim = simulator::getSimulator();
+   if (!sim)
+      return;
+   const auto& simulationState = sim->GetState();
+   auto& unit = simulationState.GetUnit(ColregSimulation::UNIT_TYPE::UT_DRONE, id);
+   // TODO: сделать проверку на возврат пустого юнита
+   if (true)
    {
-      mountShipInfo(selected);
-      mountTrackPointInfo(selected);
-      mountSimSettings(selected);
-      mountColregSettings(selected);
-      mountSolution(selected);
-      mountModel(selected);
+      mountUnitInfo(unit);
+      mountTrackPointInfo(unit);
+      mountSimSettings(unit);
+      mountColregSettings(unit);
+      mountSolution(unit);
+      mountModel(unit);
    }
+}
+
+const ColregSimulation::iSimulationState& SelectedUnit::getState() const
+{
+   const auto* sim = simulator::getSimulator();
+   return sim->GetState();
+}
+
+void SelectedUnit::mountUnitInfo(const ColregSimulation::iUnit& selected)
+{
+   m_info = selected.GetInfo();
+   m_ship_info_folder = std::make_unique< FolderProperty>("Unit info");
+
+   // TODO: переделать шип инфо
+   //CRSHIPINFO(m_prop_id, colreg::ship_info, m_info, id, ShipInfoFieldIndex::SIFI_ID);
+   //CRSHIPINFO(m_prop_length, colreg::ship_info, m_info, length, ShipInfoFieldIndex::SIFI_LENGTH);
+   //CRSHIPINFO(m_prop_width, colreg::ship_info, m_info, width, ShipInfoFieldIndex::SIFI_WIDTH);
+   //CRSHIPINFO(m_prop_draft, colreg::ship_info, m_info, draft, ShipInfoFieldIndex::SIFI_DRAFT);
+   //CRSHIPINFO(m_prop_safety_contour, colreg::ship_info, m_info, safety_contour, ShipInfoFieldIndex::SIFI_SAFETY_CONTOUR);
+   //CRSHIPINFO(m_prop_deadweight, colreg::ship_info, m_info, deadweight, ShipInfoFieldIndex::SIFI_DEADWEIGHT);
+   //CRSHIPINFO(m_prop_ais, colreg::ship_info, m_info, AIS_status, ShipInfoFieldIndex::SIFI_AIS);
+   //CRSHIPINFO(m_prop_telegraph, colreg::ship_info, m_info, telegraph, ShipInfoFieldIndex::SIFI_TELEGRAPH);
+   AddChild(m_ship_info_folder.get());
+}
+
+void SelectedUnit::mountTrackPointInfo(const ColregSimulation::iUnit& selected)
+{
+   
+}
+
+void SelectedUnit::mountSimSettings(const ColregSimulation::iUnit& selected)
+{
+
+}
+
+void SelectedUnit::mountColregSettings(const ColregSimulation::iUnit& selected)
+{
+   
+}
+
+void SelectedUnit::mountSolution(const ColregSimulation::iUnit& selected)
+{
+
+}
+
+void SelectedUnit::mountModel(const ColregSimulation::iUnit& selected)
+{
+
+}
+
+void SelectedUnit::Render(render::iRender* renderer)
+{
+   const auto& selected = getSelectedUnit(m_id);
+   RenderDomain(renderer, selected, selected.GetPos().point, 0., { 3, render::LINE_STYLE::LL_SOLID, render::FILL_TYPE::FT_NULL, user_interface::selectedColor, "", 0, 0, user_interface::selectedAlpha });
 }

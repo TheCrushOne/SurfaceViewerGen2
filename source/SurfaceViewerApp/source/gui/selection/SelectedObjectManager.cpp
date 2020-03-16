@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "gui/selection/SelectedObjectManager.h"
-//#include "selectedship.h"
+#include "SelectedUnit.h"
 #include "SelectedRoute.h"
 #include "SelectedChartObject.h"
 #include "ScenarioProperties.h"

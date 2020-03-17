@@ -1,0 +1,82 @@
+{
+    "land_units" : [
+        {
+            "name" : "range rover",
+            "start" : {
+                "row" : 8,
+                "col" : 8
+            },
+            "finish" : {
+                "row" : 250,
+                "col" : 250
+            },
+            "control_points" : [
+                {
+                    "row" : 100,
+                    "col" : 100
+                },
+                {
+                    "row" : 200,
+                    "col" : 200
+                }
+            ]
+        }
+    ],
+    "air_units" : [
+        {
+            "name" : "helidrone(1)",
+            "start" : {
+                "row" : 8,
+                "col" : 8
+            },
+            "finish" : {
+                "row" : 250,
+                "col" : 250
+            }
+        },
+        {
+            "name" : "gyrocopter(2)",
+            "start" : {
+                "row" : 8,
+                "col" : 8
+            },
+            "finish" : {
+                "row" : 250,
+                "col" : 250
+            }
+        },
+        {
+            "name" : "i-bird(3)",
+            "start" : {
+                "row" : 8,
+                "col" : 8
+            },
+            "finish" : {
+                "row" : 250,
+                "col" : 250
+            }
+        },
+        {
+            "name" : "stuntplane(4)",
+            "start" : {
+                "row" : 8,
+                "col" : 8
+            },
+            "finish" : {
+                "row" : 250,
+                "col" : 250
+            }
+        },
+        {
+            "name" : "balloon(5)",
+            "start" : {
+                "row" : 8,
+                "col" : 8
+            },
+            "finish" : {
+                "row" : 250,
+                "col" : 250
+            }
+        }
+    ]
+}

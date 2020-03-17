@@ -152,6 +152,7 @@
 #define ID_SIM_TIME_SCALE_1X           10006
 #define ID_SIM_TIME_SCALE_10X          10007
 #define ID_SIM_TIME_SCALE_100X         10008
+#define ID_DEPTH_AREA                  10108
 #define ID_AUTOPAUSE                   10009
 #define ID_EDIT_SELECT                 10010
 #define ID_EDIT_RULER                  10011

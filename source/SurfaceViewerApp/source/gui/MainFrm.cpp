@@ -94,6 +94,8 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
       return -1;      // не удалось создать
    }
 
+   m_wndScenarioToolBar.SetWindowText(L"Simulation");
+
    CString strToolBarName;
    bNameValid = strToolBarName.LoadString(IDS_TOOLBAR_STANDARD);
    ASSERT(bNameValid);
@@ -120,7 +122,7 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
    m_wndToolBar.EnableDocking(CBRS_ALIGN_ANY);
    EnableDocking(CBRS_ALIGN_ANY);
    DockPane(&m_wndMenuBar);
-   DockPane(&m_wndScenarioToolBar);
+   DockPane(&m_wndScenarioToolBar, AFX_IDW_DOCKBAR_TOP);
    DockPane(&m_wndToolBar);
 
    // включить режим работы закрепляемых окон стилей Visual Studio 2005
@@ -437,5 +439,29 @@ void CMainFrame::OnSettingChange(UINT uFlags, LPCTSTR lpszSection)
 
 void CMainFrame::OnUpdateToolBar(CCmdUI* pCmdUI)
 {
+   pCmdUI->Enable(true);
    //m_CreateObjectPanel.OnUpdateToolBar(pCmdUI);
+}
+
+// NOTE: Линки откуда-то(app вроде)
+
+void CreateScenario()
+{
+   //pFrame->NewScenario();
+}
+void DeleteScenario()
+{
+   //pFrame->DeleteScenario();
+}
+void CreateFolder()
+{
+   //pFrame->CreateFolder();
+}
+void Rename()
+{
+   //pFrame->Rename();
+}
+void Simulate()
+{
+   //pFrame->Simulate();
 }

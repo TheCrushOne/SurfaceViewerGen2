@@ -134,6 +134,10 @@ void ScenarioManager::createTransceiver()
    return;
 }
 
+// TODO: сделать!!!
+void ScenarioManager::SetDebugMode(bool debug)
+{}
+
 void ScenarioManager::initTransceiver()
 {
    m_transceiver->Init(m_info);

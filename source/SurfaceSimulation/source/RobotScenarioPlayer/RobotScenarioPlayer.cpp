@@ -38,7 +38,7 @@ void RobotScenarioPlayer::Start()
    ref = converter::raw_data_ref{ lines.data(), lines.size() };
    m_generator->GenerateStatic(ref);
    // NOTE: Отключено для отладки отрисовки изолиний
-   m_engine->ProcessPathFind(m_data, m_coordGrid, [this]() { updateUnitsPath(); });
+   //m_engine->ProcessPathFind(m_data, m_coordGrid, [this]() { updateUnitsPath(); });
    //updateUnitsPath();
 }
 

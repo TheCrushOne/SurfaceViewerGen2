@@ -81,6 +81,12 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
    // предотвращение фокусировки строки меню на активации 
    CMFCPopupMenu::SetForceMenuFocus(FALSE);
 
+   if (!m_wndScenarioToolBar.CreateEx(this, TBSTYLE_FLAT, WS_CHILD | WS_VISIBLE | CBRS_TOP | CBRS_GRIPPER | CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_SIZE_DYNAMIC) ||
+      !m_wndScenarioToolBar.LoadToolBar(IDR_EDIT_TOOLBAR))
+   {
+      TRACE0("Failed to create toolbar\n");
+      return -1;      // fail to create
+   }
    if (!m_wndToolBar.CreateEx(this, TBSTYLE_FLAT, WS_CHILD | WS_VISIBLE | CBRS_TOP | CBRS_GRIPPER | CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_SIZE_DYNAMIC) ||
       !m_wndToolBar.LoadToolBar(theApp.m_bHiColorIcons ? IDR_MAINFRAME_256 : IDR_MAINFRAME))
    {
@@ -110,9 +116,11 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
    // TODO: удалите эти пять строк, если панель инструментов и строка меню не должны быть закрепляемыми
    m_wndMenuBar.EnableDocking(CBRS_ALIGN_ANY);
+   m_wndScenarioToolBar.EnableDocking(CBRS_ALIGN_ANY);
    m_wndToolBar.EnableDocking(CBRS_ALIGN_ANY);
    EnableDocking(CBRS_ALIGN_ANY);
    DockPane(&m_wndMenuBar);
+   DockPane(&m_wndScenarioToolBar);
    DockPane(&m_wndToolBar);
 
    // включить режим работы закрепляемых окон стилей Visual Studio 2005
@@ -160,32 +168,32 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
    // включить персонализацию меню (последние использованные команды)
    // TODO: определите свои основные команды так, чтобы каждое раскрывающееся меню содержало по крайней мере одну основную команду.
-   CList<UINT, UINT> lstBasicCommands;
+   //CList<UINT, UINT> lstBasicCommands;
 
-   lstBasicCommands.AddTail(ID_FILE_NEW);
-   lstBasicCommands.AddTail(ID_FILE_OPEN);
-   lstBasicCommands.AddTail(ID_FILE_SAVE);
-   lstBasicCommands.AddTail(ID_FILE_PRINT);
-   lstBasicCommands.AddTail(ID_APP_EXIT);
-   lstBasicCommands.AddTail(ID_EDIT_CUT);
-   lstBasicCommands.AddTail(ID_EDIT_PASTE);
-   lstBasicCommands.AddTail(ID_EDIT_UNDO);
-   lstBasicCommands.AddTail(ID_APP_ABOUT);
-   lstBasicCommands.AddTail(ID_VIEW_STATUS_BAR);
-   lstBasicCommands.AddTail(ID_VIEW_TOOLBAR);
-   lstBasicCommands.AddTail(ID_VIEW_APPLOOK_OFF_2003);
-   lstBasicCommands.AddTail(ID_VIEW_APPLOOK_VS_2005);
-   lstBasicCommands.AddTail(ID_VIEW_APPLOOK_OFF_2007_BLUE);
-   lstBasicCommands.AddTail(ID_VIEW_APPLOOK_OFF_2007_SILVER);
-   lstBasicCommands.AddTail(ID_VIEW_APPLOOK_OFF_2007_BLACK);
-   lstBasicCommands.AddTail(ID_VIEW_APPLOOK_OFF_2007_AQUA);
-   lstBasicCommands.AddTail(ID_VIEW_APPLOOK_WINDOWS_7);
-   lstBasicCommands.AddTail(ID_SORTING_SORTALPHABETIC);
-   lstBasicCommands.AddTail(ID_SORTING_SORTBYTYPE);
-   lstBasicCommands.AddTail(ID_SORTING_SORTBYACCESS);
-   lstBasicCommands.AddTail(ID_SORTING_GROUPBYTYPE);
+   //lstBasicCommands.AddTail(ID_FILE_NEW);
+   //lstBasicCommands.AddTail(ID_FILE_OPEN);
+   //lstBasicCommands.AddTail(ID_FILE_SAVE);
+   //lstBasicCommands.AddTail(ID_FILE_PRINT);
+   //lstBasicCommands.AddTail(ID_APP_EXIT);
+   //lstBasicCommands.AddTail(ID_EDIT_CUT);
+   //lstBasicCommands.AddTail(ID_EDIT_PASTE);
+   //lstBasicCommands.AddTail(ID_EDIT_UNDO);
+   //lstBasicCommands.AddTail(ID_APP_ABOUT);
+   //lstBasicCommands.AddTail(ID_VIEW_STATUS_BAR);
+   //lstBasicCommands.AddTail(ID_VIEW_TOOLBAR);
+   //lstBasicCommands.AddTail(ID_VIEW_APPLOOK_OFF_2003);
+   //lstBasicCommands.AddTail(ID_VIEW_APPLOOK_VS_2005);
+   //lstBasicCommands.AddTail(ID_VIEW_APPLOOK_OFF_2007_BLUE);
+   //lstBasicCommands.AddTail(ID_VIEW_APPLOOK_OFF_2007_SILVER);
+   //lstBasicCommands.AddTail(ID_VIEW_APPLOOK_OFF_2007_BLACK);
+   //lstBasicCommands.AddTail(ID_VIEW_APPLOOK_OFF_2007_AQUA);
+   //lstBasicCommands.AddTail(ID_VIEW_APPLOOK_WINDOWS_7);
+   //lstBasicCommands.AddTail(ID_SORTING_SORTALPHABETIC);
+   //lstBasicCommands.AddTail(ID_SORTING_SORTBYTYPE);
+   //lstBasicCommands.AddTail(ID_SORTING_SORTBYACCESS);
+   //lstBasicCommands.AddTail(ID_SORTING_GROUPBYTYPE);
 
-   CMFCToolBar::SetBasicCommands(lstBasicCommands);
+   //CMFCToolBar::SetBasicCommands(lstBasicCommands);
 
    return 0;
 }

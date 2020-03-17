@@ -40,20 +40,28 @@ void user_interface::HideToolTip()
 
 user_interface::objects_to_draw user_interface::GetObjectsInsideScreen()
 {
-   /*const auto* sim = simulator::getSimulator();
+   const auto* sim = simulator::getSimulator();
    if (!sim)
       return {};
    const auto& simulationState = sim->GetState();
 
-   std::vector<colreg::geo_point> ships;
-   for (size_t iShip = 0; iShip < simulationState.GetShipCount(); ++iShip)
+   std::vector<colreg::geo_point> unitCoords;
+   auto unitSummator = [&unitCoords](ColregSimulation::UNIT_TYPE type, const ColregSimulation::iSimulationState& state)
    {
-      const auto& ship = simulationState.GetShip(iShip);
-      const auto& center = ship.GetPos().point.pos;
-      if (pView->GetRenderer()->IsNeedRender({ center }))
-         ships.emplace_back(center);
-   }*/
-   return { /*ships, pView->GetRenderer()->GetObjectsInsideScreenPts()*/ };
+      for (size_t iShip = 0; iShip < state.GetUnitCount(type); ++iShip)
+      {
+         const auto& ship = state.GetUnit(type, iShip);
+         const auto& center = ship.GetPos().point.pos;
+         if (pView->GetRenderer()->IsNeedRender({ center }))
+            unitCoords.emplace_back(center);
+      }
+   };
+
+   unitSummator(ColregSimulation::UNIT_TYPE::UT_DRONE, simulationState);
+   unitSummator(ColregSimulation::UNIT_TYPE::UT_ROVER, simulationState);
+   //unitSummator(ColregSimulation::UNIT_TYPE::UT_SHIP);
+
+   return { unitCoords, pView->GetRenderer()->GetObjectsInsideScreenPts() };
 }
 
 void user_interface::SetEditMode(user_interface::EDIT_MODE mode, unsigned long long int userData)

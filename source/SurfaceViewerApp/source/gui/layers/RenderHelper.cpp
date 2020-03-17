@@ -3,11 +3,12 @@
 #include "colreg/domain_utils.h"
 
 
-void	RenderUnitContour(render::iRender* renderer, ColregSimulation::UNIT_TYPE type, const colreg::ship_info& ship_info, const colreg::track_point_info& center, const render::object_info& info)
+void RenderUnitContour(render::iRender* renderer, ColregSimulation::UNIT_TYPE type, const colreg::ship_info& ship_info, const colreg::track_point_info& center, const render::object_info& info)
 {
+   static double angle = 0.;
    switch (type)
    {
-   case ColregSimulation::UNIT_TYPE::UT_ROVER:
+   case ColregSimulation::UNIT_TYPE::UT_SHIP:
    {
       const auto heading = center.heading == colreg::NO_VALUE ? center.course : center.heading;
       const auto L = ship_info.length * METERS_TO_MILE;
@@ -26,7 +27,7 @@ void	RenderUnitContour(render::iRender* renderer, ColregSimulation::UNIT_TYPE ty
                            ,{render::FIND_TYPE::FT_FIND_FAST, ship_info.id, render::FIND_OBJECT_TYPE::FOT_ROVER } });
       break;
    }
-   case ColregSimulation::UNIT_TYPE::UT_SHIP:
+   case ColregSimulation::UNIT_TYPE::UT_ROVER:
    {
       //const auto heading = 0;
       //const auto L = 2 * METERS_TO_MILE;
@@ -44,7 +45,9 @@ void	RenderUnitContour(render::iRender* renderer, ColregSimulation::UNIT_TYPE ty
       COLORREF clrDanger = 255;
       renderer->AddObject({ { center.pos/*ship->GetPos().point.pos*/  }
                            , { 32, render::LINE_STYLE::LL_SOLID, render::FILL_TYPE::FT_NONE, clrDanger, "[string]", 0, 0, 255, imagePath.c_str()}
-                           , {} });
+                           , {}
+                           , .0
+                           , angle++ });
       //renderer->AddObject({ { p1, p2, p3, p4, p5, p1 }
       //                     , info
       //                     ,{render::FIND_TYPE::FT_FIND_FAST, ship_info.id, render::FIND_OBJECT_TYPE::FOT_SHIP } });

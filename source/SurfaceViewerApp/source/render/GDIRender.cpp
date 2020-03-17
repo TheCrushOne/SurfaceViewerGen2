@@ -296,7 +296,7 @@ void GDIRender::renderObjects(CDC* dc, pixelObjects& objects)
          textPix.y /= obj.pixels.size();
          const auto ptText = GeoToPixel(obj.points[(int)(obj.points.size() * .5)]);
          // TODO: вот тут странно отвалилось
-         //dc->TextOutA(textPix.x + obj.info.text_offset_x, textPix.y + obj.info.text_offset_y, obj.info.text.c_str(), obj.info.text.size());
+         dc->TextOutW(textPix.x + obj.info.text_offset_x, textPix.y + obj.info.text_offset_y, (_bstr_t)obj.info.text.c_str(), obj.info.text.size());
       }
    }
 
@@ -313,11 +313,17 @@ void GDIRender::renderAlphaObjects(CDC* dc, pixelObjects& objects)
       if (!obj.info.imageFile.empty())
       {
          const auto& center = obj.pixels[0];
+         /*PointF destPoints[3] = {
+         };*/
+         graphics.TranslateTransform(center.x, center.y);
+         graphics.RotateTransform(obj.angle);
+         graphics.TranslateTransform(-center.x, -center.y);
          graphics.DrawImage(getImage(obj.info.imageFile.c_str()),
             (int)(center.x + obj.info.text_offset_x * .5),
             (int)(center.y + obj.info.text_offset_y * .5),
             obj.info.width,
             obj.info.width);
+         graphics.ResetTransform();
 
          USES_CONVERSION;
          graphics.DrawString(A2W(obj.info.text.c_str()), -1, &font, Gdiplus::PointF(center.x + obj.info.text_offset_x, center.y + obj.info.text_offset_y), getAlphaBrush(obj.info));

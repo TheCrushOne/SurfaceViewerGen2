@@ -143,6 +143,37 @@
 #define ID_NO3                          1055
 #define ID_NO4                          1056
 
+#define IDR_EDIT_TOOLBAR               10001
+
+#define ID_EDIT_RUN                    10002
+#define ID_SIM_STEP                    10003
+#define ID_EDIT_PAUSE                  10004
+#define ID_EDIT_STOP                   10005
+#define ID_SIM_TIME_SCALE_1X           10006
+#define ID_SIM_TIME_SCALE_10X          10007
+#define ID_SIM_TIME_SCALE_100X         10008
+#define ID_AUTOPAUSE                   10009
+#define ID_EDIT_SELECT                 10010
+#define ID_EDIT_RULER                  10011
+#define ID_TOOL_CREATE                 10012
+#define ID_TOOL_EDIT                   10013
+#define ID_EDIT_DELETE                 10014
+#define ID_TRAFFIC_STATISTIC           10015
+#define ID_GEN2UT_RECORD               10016
+#define ID_SHOW_RELATIONS              10017
+#define ID_DEBUG                       10018
+#define ID_BUTTON_DNGRSTAT             10019
+
+#define ID_NEW                         10020
+#define ID_OPEN                        10021
+#define ID_SAVE                        10022
+#define ID_SAVE_AS                     10023
+#define ID_SAVE_FOCUSED_AS             10024
+#define ID_SCENARIO_DELETE             10025
+#define ID_SCENARIO_CREATE_FOLDER      10026
+#define ID_SCENARIO_EDIT               10027
+#define ID_SCENARIO_OPEN               10028
+
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED

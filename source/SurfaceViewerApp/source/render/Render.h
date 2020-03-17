@@ -37,8 +37,11 @@ namespace render
       FILL_TYPE fill = FILL_TYPE::FT_NONE;      ///< Заливка
       unsigned long color = 0;                  ///< Цвет RGB    
       std::string text;                         ///< Текст объекта
-      char text_offset_x = 10;                  ///< Смещение текста по Х
-      char text_offset_y = 10;                  ///< Смещение текста по Y
+      // NOTE: 10 было для якорей
+      //char text_offset_x = 10;                  ///< Смещение текста по Х
+      //char text_offset_y = 10;                  ///< Смещение текста по Y
+      char text_offset_x = 0;                  ///< Смещение текста по Х
+      char text_offset_y = 0;                  ///< Смещение текста по Y
       int alpha = 255;                          ///< Прозрачночть(0-255)
       std::string imageFile;
       double angle = 0;
@@ -98,6 +101,7 @@ namespace render
       object_info info;
       find_info find;
       float min_scale_2_draw = 0.0;
+      double angle = 0.0;
    };
 
    using objects = std::vector<object>;

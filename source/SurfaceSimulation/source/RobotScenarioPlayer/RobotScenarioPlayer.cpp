@@ -2,6 +2,7 @@
 #include "RobotScenarioPlayer.h"
 #include "colreg\ColregContainers.h"
 #include "SVCG/positioning.h"
+#include "math/math_utils.h"
 
 using namespace ColregSimulation;
 
@@ -93,6 +94,11 @@ void RobotScenarioPlayer::moveUnits()
       auto pos = m_drones.at(idx).GetPos();
       auto& rl = paths.air_routes.at(idx).route_list;
       pos.point.pos = SVCG::RoutePointToPositionPoint(rl.at(std::min(m_currentIdx, rl.size() - 1)), m_settings.env_stt);
+      if (rl.size() > m_currentIdx)
+      {
+         auto nextPoint = SVCG::RoutePointToPositionPoint(rl.at(m_currentIdx + 1), m_settings.env_stt);
+         pos.point.heading = math::direction(pos.point.pos, static_cast<colreg::geo_point>(nextPoint));
+      }
       m_drones.at(idx).SetPosInfo(pos);
    }
    for (size_t idx = 0; idx < m_rovers.size(); idx++)
@@ -100,6 +106,11 @@ void RobotScenarioPlayer::moveUnits()
       auto pos = m_rovers.at(idx).GetPos();
       auto& rl = paths.land_routes.at(idx).route_list;
       pos.point.pos = SVCG::RoutePointToPositionPoint(rl.at(std::min(m_currentIdx, rl.size() - 1)), m_settings.env_stt);
+      if (rl.size() > m_currentIdx)
+      {
+         auto nextPoint = SVCG::RoutePointToPositionPoint(rl.at(m_currentIdx + 1), m_settings.env_stt);
+         pos.point.heading = math::direction(pos.point.pos, static_cast<colreg::geo_point>(nextPoint));
+      }
       m_rovers.at(idx).SetPosInfo(pos);
    }
 }

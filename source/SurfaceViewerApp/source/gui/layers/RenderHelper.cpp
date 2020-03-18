@@ -53,6 +53,25 @@ void RenderUnitContour(render::iRender* renderer, ColregSimulation::UNIT_TYPE ty
       //                     ,{render::FIND_TYPE::FT_FIND_FAST, ship_info.id, render::FIND_OBJECT_TYPE::FOT_SHIP } });
       break;
    }
+   case ColregSimulation::UNIT_TYPE::UT_DRONE:
+   {
+      const auto heading = center.heading == colreg::NO_VALUE ? center.course : center.heading;
+      const auto L = ship_info.length * METERS_TO_MILE;
+      const auto W = ship_info.width * METERS_TO_MILE;
+      const auto N = W * sqrt(2 * .5);
+
+      auto p1 = math::calc_point(center.pos, L * .5, heading + 180.);
+      p1 = math::calc_point(p1, W * .5, heading - 90.);
+      auto p2 = math::calc_point(p1, L - W * .5, heading);
+      auto p3 = math::calc_point(p2, N, heading + 45.);
+      auto p4 = math::calc_point(p3, N, heading + 135.);
+      auto p5 = math::calc_point(p4, L - W * .5, heading + 180.);
+
+      renderer->AddObject({ { p1, p2, p3, p4, p5, p1 }
+                           , info
+                           ,{render::FIND_TYPE::FT_FIND_FAST, ship_info.id, render::FIND_OBJECT_TYPE::FOT_DRONE } });
+      break;
+   }
    default:
       break;
    }

@@ -6,10 +6,10 @@ class TrackLayer : public LayersContainer
 {
 public:
    TrackLayer()
-      : _step{ 1. }
+      : m_step{ 1. }
    {}
 
-   void SetStep(double step) { _step = step; }
+   void SetStep(double step) { m_step = step; }
 
    void Render(render::iRender* renderer) override
    {
@@ -20,8 +20,8 @@ private:
    void renderTracks(render::iRender* renderer);
 
 private:
-   double _step;
+   double m_step;
 
-   bool _renderSourceRoute = true;
-   iPropertyPtr   _prop_renderSourceRoute;
+   bool m_renderSourceRoute = true;
+   iPropertyPtr   m_prop_renderSourceRoute;
 };

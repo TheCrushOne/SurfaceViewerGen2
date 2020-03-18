@@ -38,8 +38,7 @@ void RobotScenarioPlayer::Start()
    ref = converter::raw_data_ref{ lines.data(), lines.size() };
    m_generator->GenerateStatic(ref);
    // NOTE: Отключено для отладки отрисовки изолиний
-   //m_engine->ProcessPathFind(m_data, m_coordGrid, [this]() { updateUnitsPath(); });
-   //updateUnitsPath();
+   m_engine->ProcessPathFind(m_data, m_coordGrid, [this]() { updateUnitsPath(); });
    m_currentIdx = 0;
 }
 
@@ -271,12 +270,12 @@ void RobotScenarioPlayer::updateUnitsPath()
 
    for (size_t idx = 0; idx < GetUnitCount(UNIT_TYPE::UT_DRONE); idx++)
    {
-      auto& unit = getUnit(UNIT_TYPE::UT_DRONE, idx);
+      //auto& unit = getUnit(UNIT_TYPE::UT_DRONE, idx);
 
-      ColregRoutePoints route;
-      for (const auto& point : paths.air_routes.at(idx).route_list)
-         route.emplace_back(SVCG::RoutePointToPositionPoint(point, m_settings.env_stt));
-      unit.SetSrcRoute(std::forward<ColregRoutePoints>(route));
+      //ColregRoutePoints route;
+      //for (const auto& point : paths.air_routes.at(idx).route_list)
+      //   route.emplace_back(SVCG::RoutePointToPositionPoint(point, m_settings.env_stt));
+      //unit.SetSrcRoute(std::forward<ColregRoutePoints>(route));
    }
    m_communicator->UpdateUI();
 }

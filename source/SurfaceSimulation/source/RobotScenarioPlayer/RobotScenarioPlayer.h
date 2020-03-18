@@ -47,6 +47,9 @@ namespace ColregSimulation
       void addUnit(const settings::unit_data_element&, UNIT_TYPE);
       void addUnitsFromScenario();
       void correctCoordinateGrid();
+
+      void step();
+      void moveUnits();
    private:
       std::vector<std::vector<double>> m_coordGrid;
       colreg::ModuleGuard<engine::iEngine> m_engine;
@@ -56,5 +59,6 @@ namespace ColregSimulation
       std::vector<SimulationShip> m_ships;
       std::vector<SimulationRover> m_rovers;
       std::vector<SimulationDrone> m_drones;
+      size_t m_currentIdx;
    };
 }

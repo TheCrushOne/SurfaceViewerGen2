@@ -16,7 +16,7 @@ ScenarioManager::ScenarioManager()
 
 void ScenarioManager::Open(const wchar_t* fileName)
 {
-   _scenarioFile = fileName;
+   m_scenarioFile = fileName;
    SelectedObjectManager::GetInstance().Unselect();
 
    if (!m_converter.IsValid())
@@ -54,11 +54,11 @@ void ScenarioManager::Open(const wchar_t* fileName)
 
 void ScenarioManager::setState(CSENARIO_STATUS state, bool force)
 {
-   //if (!force && _state == state || !simulator::getSimulator())
-   //   return;
+   if (!force && m_state == state || !simulator::getSimulator())
+      return;
 
-   //_state = state;
-   //ScenarioDispather::GetInstance().OnScenarioStatusChanged(_state);
+   m_state = state;
+   ScenarioDispather::GetInstance().OnScenarioStatusChanged(m_state);
 }
 
 void ScenarioManager::Run()
@@ -73,38 +73,40 @@ void ScenarioManager::Pause()
 
 void ScenarioManager::Restart()
 {
-   //dispatcher::getDispatcher()->Stop();
-   //dispatcher::getDispatcher()->Start();
-   //setState(CSENARIO_STATUS::SS_PAUSE, true);
-   //ScenarioDispather::GetInstance().OnScenarioTimeChanged(simulator::getSimulator()->GetState().GetTime());
-   //SetDebugMode(_debugMode);
+   if (!simulator::getSimulator())
+      return;
+   simulator::getSimulator()->Stop();
+   simulator::getSimulator()->Start();
+   setState(CSENARIO_STATUS::SS_PAUSE, true);
+   ScenarioDispather::GetInstance().OnScenarioTimeChanged(simulator::getSimulator()->GetState().GetTime());
+   SetDebugMode(m_debugMode);
 }
 
 void ScenarioManager::Stop()
 {
-   //if (!simulator::getSimulator())
-   //   return;
-   //simulator::getSimulator()->Reset();
-   //setState(CSENARIO_STATUS::SS_NOT_LOADED, true);
+   if (!simulator::getSimulator())
+      return;
+   simulator::getSimulator()->Reset();
+   setState(CSENARIO_STATUS::SS_NOT_LOADED, true);
 }
 
 void ScenarioManager::Step()
 {
-   //if (!simulator::getSimulator())
-   //   return;
-   //if (!simulator::simulatorStep())
-   //{
-   //   printEnentsAndSuggestions();
-   //   if (_autoPause)
-   //   {
-   //      Pause();
-   //   }
+   if (!simulator::getSimulator())
+      return;
+   if (!simulator::simulatorStep())
+   {
+      //printEnentsAndSuggestions();
+      if (m_autoPause)
+      {
+         Pause();
+      }
 
-   //   //printSolutuins();
-   //}
+      //printSolutuins();
+   }
    //else
-   //   printEnentsAndSuggestions();
-   //ScenarioDispather::GetInstance().OnScenarioTimeChanged(simulator::getSimulator()->GetState().GetTime());
+      //printEnentsAndSuggestions();
+   ScenarioDispather::GetInstance().OnScenarioTimeChanged(simulator::getSimulator()->GetState().GetTime());
 }
 
 void ScenarioManager::ReEstimate()

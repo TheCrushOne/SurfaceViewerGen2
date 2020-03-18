@@ -40,6 +40,7 @@ void RobotScenarioPlayer::Start()
    // NOTE: Отключено для отладки отрисовки изолиний
    //m_engine->ProcessPathFind(m_data, m_coordGrid, [this]() { updateUnitsPath(); });
    //updateUnitsPath();
+   m_currentIdx = 0;
 }
 
 void RobotScenarioPlayer::Stop()
@@ -73,12 +74,40 @@ bool RobotScenarioPlayer::PlayFrom(size_t controlPointIdx)
 
 bool RobotScenarioPlayer::NextControlPoint()
 {
+   step();
+   // NOTE: не нужен, перерасчета нет
+   //updateUnitsPath();
    return false;
+}
+
+void RobotScenarioPlayer::step()
+{
+   m_currentIdx++;
+   moveUnits();
+}
+
+void RobotScenarioPlayer::moveUnits()
+{
+   auto& paths = m_engine->GetLastProcessedPaths();
+   for (size_t idx = 0; idx < m_drones.size(); idx++)
+   {
+      auto pos = m_drones.at(idx).GetPos();
+      auto& rl = paths.air_routes.at(idx).route_list;
+      pos.point.pos = SVCG::RoutePointToPositionPoint(rl.at(std::min(m_currentIdx, rl.size() - 1)), m_settings.env_stt);
+      m_drones.at(idx).SetPosInfo(pos);
+   }
+   for (size_t idx = 0; idx < m_rovers.size(); idx++)
+   {
+      auto pos = m_rovers.at(idx).GetPos();
+      auto& rl = paths.land_routes.at(idx).route_list;
+      pos.point.pos = SVCG::RoutePointToPositionPoint(rl.at(std::min(m_currentIdx, rl.size() - 1)), m_settings.env_stt);
+      m_rovers.at(idx).SetPosInfo(pos);
+   }
 }
 
 size_t RobotScenarioPlayer::GetCurrentControlPointIdx() const
 {
-   return 0;
+   return m_currentIdx;
 }
 
 bool RobotScenarioPlayer::SaveLogPair(const char* filename) const

@@ -73,7 +73,7 @@ namespace simulator
       if (_simulator == nullptr)
          return false;
 
-      //_simulator->NextControlPoint();
+      _simulator->NextControlPoint();
 
       //auto est = _simulator->GetState().GetEstimation();
 

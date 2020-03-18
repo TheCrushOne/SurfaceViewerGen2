@@ -156,28 +156,28 @@ public:
 
    void SetTimeScale(int timeScale)
    {
-      _timeScale = timeScale;
-      if (_state == CSENARIO_STATUS::SS_RUN)
+      m_timeScale = timeScale;
+      if (m_state == CSENARIO_STATUS::SS_RUN)
          setState(CSENARIO_STATUS::SS_RUN, true);
    }
-   int GetTimeScale()const { return _timeScale; }
+   int GetTimeScale()const { return m_timeScale; }
 
-   CSENARIO_STATUS GetState()const { return _state; }
+   CSENARIO_STATUS GetState()const { return m_state; }
 
-   std::wstring GetScenarioName()const { return _scenarioFile; }
+   std::wstring GetScenarioName()const { return m_scenarioFile; }
 
    void ReEstimate();
-   bool GetAutoPause() const { return _autoPause; }
-   void SetAutoPause(bool autoPause) { _autoPause = autoPause; }
-   bool GetRecording() const { return _recording; }
+   bool GetAutoPause() const { return m_autoPause; }
+   void SetAutoPause(bool autoPause) { m_autoPause = autoPause; }
+   bool GetRecording() const { return m_recording; }
    void SetRecording(bool recording);
 
-   bool GetShowRelations() const { return _showRelations; }
-   void SetShowRelations(bool show) { _showRelations = show; }
+   bool GetShowRelations() const { return m_showRelations; }
+   void SetShowRelations(bool show) { m_showRelations = show; }
 
-   std::string GetDangerStatFileName() const { return _dangerStatFileName; }
-   void SetDangerStatFileName(std::string name) { _dangerStatFileName = name; }
-   bool IsDebugMode() const { return _debugMode; }
+   std::string GetDangerStatFileName() const { return m_dangerStatFileName; }
+   void SetDangerStatFileName(std::string name) { m_dangerStatFileName = name; }
+   bool IsDebugMode() const { return m_debugMode; }
    void SetDebugMode(bool debug);
 private:
    //ScenarioManager() = default;
@@ -195,14 +195,14 @@ private:
    void callback(const char*);
 private:
    colreg::ModuleGuard<converter::iConverter> m_converter;
-   bool _autoPause = true;
-   CSENARIO_STATUS _state = CSENARIO_STATUS::SS_NOT_LOADED;
-   bool _showRelations = false;
-   std::string _dangerStatFileName = "";
-   bool _debugMode = false;
-   int _timeScale = 10;
-   bool _recording = false;
-   std::wstring _scenarioFile;
+   bool m_autoPause = true;
+   CSENARIO_STATUS m_state = CSENARIO_STATUS::SS_NOT_LOADED;
+   bool m_showRelations = false;
+   std::string m_dangerStatFileName = "";
+   bool m_debugMode = false;
+   int m_timeScale = 10;
+   bool m_recording = false;
+   std::wstring m_scenarioFile;
    colreg::ModuleGuard<transceiver::iTransceiver> m_transceiver;
    transceiver::transceiver_info m_info;
 };

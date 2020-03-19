@@ -45,7 +45,7 @@ void Engine::processPathFind(const ColregSimulation::scenario_data& scenarioData
       scenarioData.unit_data,
       pathfinder::path_finder_settings(),
       pathfinder::path_finder_statistic(),
-      pathfinder::strategy_settings{ pathfinder::StrategyType::ST_RHOMBOID, 5. }
+      pathfinder::strategy_settings{ pathfinder::StrategyType::ST_RHOMBOID, 5. } // NOTE: радиус пока что тут настраивается
    });
    m_pathfinder->FindPath([completeCallback]() { completeCallback(); }, m_rawdata, m_indata);
 }
@@ -63,43 +63,6 @@ void Engine::convertMap(const std::vector<std::vector<double>>& rawdataSrc, std:
    }
 }
 
-//void Engine::ConvertMap(const std::shared_ptr<QHeightMapSurfaceDataProxy> mapProxy, std::shared_ptr<SVM::iMatrix<SurfaceElement>> &rawmap, std::shared_ptr<settings::application_settings> &settings)
-//{
-//   m_appSettings = settings;
-//   qDebug() << "max air height:" << m_appSettings->sim_settings.levelSettings.maxAirHeight;
-//   qDebug() << "max land angle" << m_appSettings->sim_settings.levelSettings.maxLandAngle;
-//   qDebug() << "max land height" << m_appSettings->sim_settings.levelSettings.maxLandHeight;
-//   qDebug() << "min land height" << m_appSettings->sim_settings.levelSettings.minLandHeight;
-//   qDebug() << "dan land angle" << m_appSettings->sim_settings.levelSettings.dangerousLandAngle;
-//   /*m_noGoLowLevel = settings.levelSettings.minLandHeight;
-//   m_noGoHighLevel = settings.levelSettings.maxLandHeight;
-//   m_noFlyLevel = settings.levelSettings.maxAirHeight;
-//   m_minDangerAngle = settings.levelSettings.dangerousLandAngle;
-//   m_maxDangerAngle = settings.levelSettings.maxLandAngle;*/
-//   auto rowCount = mapProxy->rowCount(), colCount = mapProxy->columnCount();
-//   //m_loadingdlg->SetRange(PT_CONVERT, 0, rowCount*colCount);
-//   rawmap->Prepare(static_cast<size_t>(rowCount), static_cast<size_t>(colCount));
-//   for (int rowIdx = 0; rowIdx < rowCount; rowIdx++)
-//   {
-//      std::vector<SurfaceElement> dataLine;
-//      for (int colIdx = 0; colIdx < colCount; colIdx++)
-//      {
-//         // WARNING: x, y пока что игнорим, считая, что они примерно совпадают с индексами
-//         dataLine.emplace_back(recountElement(mapProxy, rowIdx, colIdx, rowCount, colCount));
-//      }
-//      rawmap->AddRow(static_cast<size_t>(rowIdx), dataLine);
-//      //m_loadingdlg->SetPercent(PT_CONVERT, rowIdx*colCount);
-//   }
-//   emit converted();
-//}
-
-//SurfaceElement Engine::recountElement(const std::shared_ptr<QHeightMapSurfaceDataProxy> mapProxy, int rowIdx, int colIdx, int rowCount, int colCount)
-//{
-//   auto cur = mapProxy->itemAt(rowIdx, colIdx);
-//   return SurfaceElement(cur->x(), cur->y(), cur->z()
-//            , checkFlyZone(cur->y())
-//            , checkGoZone(mapProxy, rowIdx, colIdx, rowCount, colCount));
-//}
 
 pathfinder::check_fly_zone_result Engine::checkFlyZone(float y)
 {
@@ -157,7 +120,30 @@ pathfinder::check_fly_zone_result Engine::checkFlyZone(float y)
 //   return result;
 //}
 
-void Engine::TimeResearchGen1(/*const std::shared_ptr<SVM::iMatrix<SurfaceElement>>&, std::shared_ptr<ResearchResultGen1>& result*/)
+void Engine::LaunchResearch(const settings::research_settings& resStt)
+{
+   generateResMap(resStt.map_size);
+   switch (resStt.res_type)
+   {
+   case settings::ResearchType::RT_TIME:
+   {
+      timeResearchGen1(resStt);
+      break;
+   }
+   case settings::ResearchType::RT_LENGTH:
+   {
+      lengthResearchGen2(resStt);
+      break;
+   }
+   case settings::ResearchType::RT_THREAD:
+   {
+      threadResearchGen3(resStt);
+      break;
+   }
+   }
+}
+
+void Engine::timeResearchGen1(/*const std::shared_ptr<SVM::iMatrix<SurfaceElement>>&, std::shared_ptr<ResearchResultGen1>& result*/)
 {
    //const auto& pathfinder = WFM::GetSharedInstance<PathFinder>(DBG_DATA);
    //auto rawmap = WFM::CreateSharedObject<SVM::iMatrix<SurfaceElement>>();
@@ -256,9 +242,11 @@ void Engine::TimeResearchGen1(/*const std::shared_ptr<SVM::iMatrix<SurfaceElemen
    ////Q_ASSERT(resmap->GetRowCount() == cntIdx && resmap->GetColCount() == lnIdx);
 }
 
-void Engine::generateResMap(/*std::shared_ptr<SVM::iMatrix<SurfaceElement>>& map, const STT::Gen1Settings& stt*/)
+void Engine::generateResMap(size_t mapSize/*std::shared_ptr<SVM::iMatrix<SurfaceElement>>& map, const STT::Gen1Settings& stt*/)
 {
-   //map->Prepare(stt.mapSize, stt.mapSize);
+   // NOTE: тут всегда что-то квадратное
+   m_rawdata->SetRowCount(mapSize);
+   m_rawdata->SetColCount(mapSize);
    //for (size_t rowIdx = 0; rowIdx < stt.mapSize; rowIdx++)
    //{
    //   for (size_t colIdx = 0; colIdx < stt.mapSize; colIdx++)
@@ -270,7 +258,7 @@ void Engine::generateResMap(/*std::shared_ptr<SVM::iMatrix<SurfaceElement>>& map
    //}
 }
 
-void Engine::LengthResearchGen2(/*const std::shared_ptr<SVM::iMatrix<SurfaceElement>>& rawmap, std::shared_ptr<ResearchResultGen2>& result*/)
+void Engine::lengthResearchGen2(/*const std::shared_ptr<SVM::iMatrix<SurfaceElement>>& rawmap, std::shared_ptr<ResearchResultGen2>& result*/)
 {
    //Route landRoute;
    //auto routeConvert = [](Route& route, STT::PointSettingElement& setting)
@@ -357,67 +345,73 @@ void Engine::LengthResearchGen2(/*const std::shared_ptr<SVM::iMatrix<SurfaceElem
    //}
 }
 
-void Engine::ThreadResearchGen3(/*const std::shared_ptr<SVM::iMatrix<SurfaceElement>>& resmap, std::shared_ptr<ResearchResultGen3>& result*/)
+// NOTE: Исследование направлено на определение оптимального соотношения размера пула задач к расчету и количества потоков
+void Engine::threadResearchGen3(/*const std::shared_ptr<SVM::iMatrix<SurfaceElement>>& resmap, std::shared_ptr<ResearchResultGen3>& result*/)
 {
-   
-   //Route landRoute;
-   //const auto& resStt = m_appSettings->res_settings.g3s;
-   //const auto& pckRange = resStt.packetRange;
-   //const auto& pthshRange = resStt.pathShardRange;
-   //size_t flyCount = resStt.flyCount;
+   // Потоков 1, 2, 4, 8
+   // Пул задач 2, 4, 8
+   // Путей 2, 4, 8, 16, 32, 64, 128
+   Route landRoute;
+   const auto& resStt = m_appSettings->res_settings.g3s;
+   const auto& pckRange = resStt.packetRange;
+   const auto& pthshRange = resStt.pathShardRange;
+   size_t flyCount = resStt.flyCount;
 
-   //const auto& pathfinder = WFM::GetSharedInstance<PathFinder>(DBG_DATA);
+   auto resRunner = [&resmap, pathfinder, landRoute, resStt, flyCount](std::shared_ptr<RouteData> route, /*BaseGeometryElement& elem, */StrategyType type, size_t packetSize, size_t pathShardCount, PathFinderSettings settings)->void
+   {
+      route->landRoutes.clear();
+      route->airRoutes.clear();
+      route->landRoutes.emplace_back(landRoute);
+      route->airRoutes.resize(flyCount);
 
-   //auto resRunner = [&resmap, pathfinder, landRoute, resStt, flyCount](std::shared_ptr<RouteData> route, /*BaseGeometryElement& elem, */StrategyType type, size_t packetSize, size_t pathShardCount, PathFinderSettings settings)->void
-   //{
-   //   route->landRoutes.clear();
-   //   route->airRoutes.clear();
-   //   route->landRoutes.emplace_back(landRoute);
-   //   route->airRoutes.resize(flyCount);
+      auto countDist = [](const MatrixPoint& st, const MatrixPoint& fn)->double
+      {
+         return sqrt(pow(fn.row - st.row, 2.) + pow(fn.col - st.col, 2.));
+      };
+      double pathLength = countDist(route->landRoutes.at(0).start.mp, route->landRoutes.at(0).finish.mp);
+      double radius = pathLength / pathShardCount;
+      for (size_t idx = 0; idx < resStt.iterCount; idx++)
+      {
+         PathFinderStatistic statistic;
+         pathfinder->FindPath(StrategySettings{ type, static_cast<double>(radius) }, route, resmap, settings, statistic);
+      }
 
-   //   auto countDist = [](const MatrixPoint& st, const MatrixPoint& fn)->double
-   //   {
-   //       return sqrt(pow(fn.row - st.row, 2.) + pow(fn.col - st.col, 2.));
-   //   };
-   //   double pathLength = countDist(route->landRoutes.at(0).start.mp, route->landRoutes.at(0).finish.mp);
-   //   double radius = pathLength/pathShardCount;
-   //   for (size_t idx = 0; idx < resStt.iterCount; idx++)
-   //   {
-   //      PathFinderStatistic statistic;
-   //      pathfinder->FindPath(StrategySettings{type, static_cast<double>(radius)}, route, resmap, settings, statistic);
-   //   }
+      //double avgLength = .0;
+      int length = 0;
+      for (size_t idx = 0; idx < route->airRoutes.size(); idx++)
+         length += route->airRoutes.at(idx).route.size();
+      //avgLength = static_cast<double>(length)/static_cast<double>(route->airRoutes.size());
+      //elem = BaseGeometryElement{ static_cast<float>(packetSize), static_cast<float>(time), static_cast<float>(pathShardCount) };
+   };
 
-   //   //double avgLength = .0;
-   //   int length = 0;
-   //   for (size_t idx = 0; idx < route->airRoutes.size(); idx++)
-   //      length += route->airRoutes.at(idx).route.size();
-   //   //avgLength = static_cast<double>(length)/static_cast<double>(route->airRoutes.size());
-   //   //elem = BaseGeometryElement{ static_cast<float>(packetSize), static_cast<float>(time), static_cast<float>(pathShardCount) };
-   //};
-
-   //size_t packetIdx = 0;
-   //std::shared_ptr<RouteData> mroute = WFM::CreateSharedObject<RouteData>();
-   //size_t pckCnt = (pckRange.max - pckRange.min)/pckRange.step, pthshCnt = (pthshRange.max - pthshRange.min)/pthshRange.step;
-   //double pckStep = 100./pckCnt;
-   //double pthshStep = pckStep/pthshCnt;
-   //for (size_t packetSize = pckRange.min; packetSize < pckRange.max; packetSize += pckRange.step)
-   //{
-   //   size_t pathShardIdx = 0;
-   //   for (size_t pathShardCount = pthshRange.min; pathShardCount < pthshRange.max; pathShardCount += pthshRange.step)
-   //   {
-   //      PathFinderSettings settings{true, {packetIdx, pathShardIdx}, true};
-   //      __int64 startTime;
-   //      CURTIME_MS(startTime);
-   //      resRunner(mroute, ST_RHOMBOID, packetSize, pathShardCount, settings);
-   //      __int64 finishTime;
-   //      CURTIME_MS(finishTime);
-   //      //gStatistic.dataStorage->Set({finishTime - startTime, 0, 0}, packetIdx, pathShardIdx);
-   //      // Прогрессбар
-   //      //emit percent(static_cast<int>(pckStep*packetIdx + pthshStep*pathShardIdx));
-   //      pathShardIdx++;
-   //   }
-   //   packetIdx++;
-   //}
+   size_t packetIdx = 0;
+   std::shared_ptr<RouteData> mroute = WFM::CreateSharedObject<RouteData>();
+   size_t pckCnt = (pckRange.max - pckRange.min) / pckRange.step, pthshCnt = (pthshRange.max - pthshRange.min) / pthshRange.step;
+   double pckStep = 100. / pckCnt;
+   double pthshStep = pckStep / pthshCnt;
+   for (size_t threadPoolIdx = 0; threadPoolIdx < resStt.thread_pool_range.size(); threadPoolIdx++)
+   {
+      size_t threadCount = resStt.thread_pool_range.at(threadPoolIdx);
+      for (size_t taskPoolIdx = 0; taskPoolIdx < resStt.task_pool_range.size(); taskPoolIdx++)
+      {
+         size_t taskCount = resStt.thread_pool_range.at(taskPoolIdx);
+         for (size_t flyCountIdx = 0; flyCountIdx < resStt.fly_count_range.size(); flyCountIdx++)
+         { 
+            size_t flyCount = resStt.fly_count_range.at(flyCountIdx);
+            //PathFinderSettings settings{ true, {packetIdx, pathShardIdx}, true };
+            __int64 startTime;
+            CURTIME_MS(startTime);
+            resRunner(mroute, StrategyType::ST_RHOMBOID, packetSize, pathShardCount, settings);
+            __int64 finishTime;
+            CURTIME_MS(finishTime);
+            //gStatistic.dataStorage->Set({finishTime - startTime, 0, 0}, packetIdx, pathShardIdx);
+            // Прогрессбар
+            //emit percent(static_cast<int>(pckStep*packetIdx + pthshStep*pathShardIdx));
+            pathShardIdx++;
+         }
+         packetIdx++;
+      }
+   }
 }
 
 engine::iEngine* CreateEngine()

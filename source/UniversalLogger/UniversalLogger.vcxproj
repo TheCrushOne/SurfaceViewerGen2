@@ -18,113 +18,35 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="source\colreg\BaseRef.h" />
-    <ClInclude Include="source\colreg\BaseRefHolder.h" />
-    <ClInclude Include="source\colreg\ChartSafetyInterface.h" />
-    <ClInclude Include="source\colreg\ChartSafetyStructs.h" />
-    <ClInclude Include="source\colreg\ColregContainers.h" />
-    <ClInclude Include="source\colreg\ColregHelper.h" />
-    <ClInclude Include="source\colreg\ColregInterfaces.h" />
-    <ClInclude Include="source\colreg\ColregSettings.h" />
-    <ClInclude Include="source\colreg\ColregSimulation.h" />
-    <ClInclude Include="source\colreg\CommonRefs.h" />
-    <ClInclude Include="source\colreg\CommonStructs.h" />
-    <ClInclude Include="source\colreg\Communicator.h" />
-    <ClInclude Include="source\colreg\DebugStructs.h" />
-    <ClInclude Include="source\colreg\DomainInterface.h" />
-    <ClInclude Include="source\colreg\DomainStructs.h" />
-    <ClInclude Include="source\colreg\domain_utils.h" />
-    <ClInclude Include="source\colreg\FileSystemHelper.h" />
-    <ClInclude Include="source\colreg\GoodMarinePracticeSettings.h" />
-    <ClInclude Include="source\colreg\MathModelInterface.h" />
-    <ClInclude Include="source\colreg\MemoryBlock.h" />
-    <ClInclude Include="source\colreg\MemoryOverload.h" />
-    <ClInclude Include="source\colreg\ModelInterface.h" />
-    <ClInclude Include="source\colreg\ModelStructs.h" />
-    <ClInclude Include="source\colreg\ModuleGuard.h" />
-    <ClInclude Include="source\colreg\PropertyInterface.h" />
-    <ClInclude Include="source\colreg\ReleaseGuard.h" />
-    <ClInclude Include="source\colreg\RouteModelSettings.h" />
-    <ClInclude Include="source\colreg\SettingsSerializer.h" />
-    <ClInclude Include="source\colreg\StateFullColregInterface.h" />
-    <ClInclude Include="source\colreg\ThirdParty\dirent.h" />
-    <ClInclude Include="source\colreg\ThirdParty\tinyxml2\tinyxml2.h" />
-    <ClInclude Include="source\colreg\TinyFixedStack.h" />
-    <ClInclude Include="source\colreg\WeatherInterface.h" />
-    <ClInclude Include="source\colreg\XmlProperties\xml_property.h" />
-    <ClInclude Include="source\colreg\XmlProperties\xml_property_container.h" />
-    <ClInclude Include="source\colreg\XMLSettingsSerializer.h" />
-    <ClInclude Include="source\common\base_class.h" />
-    <ClInclude Include="source\common\communicator.h" />
-    <ClInclude Include="source\common\converter_structs.h" />
-    <ClInclude Include="source\common\coordinates.h" />
-    <ClInclude Include="source\common\database_misc.h" />
-    <ClInclude Include="source\common\file_storage.h" />
-    <ClInclude Include="source\common\observer.h" />
-    <ClInclude Include="source\common\pathfinder_structs.h" />
-    <ClInclude Include="source\common\pathfinder_types.h" />
-    <ClInclude Include="source\common\settings.h" />
-    <ClInclude Include="source\common\settings_meta.h" />
-    <ClInclude Include="source\common\settings_types.h" />
-    <ClInclude Include="source\common\simulation_structs.h" />
-    <ClInclude Include="source\common\transceiver_types.h" />
-    <ClInclude Include="source\common\utils.h" />
-    <ClInclude Include="source\crossdllinterface\ChartObjectGeneratorInterface.h" />
-    <ClInclude Include="source\crossdllinterface\ConverterInterface.h" />
-    <ClInclude Include="source\crossdllinterface\DataShareInterface.h" />
-    <ClInclude Include="source\crossdllinterface\EngineInterface.h" />
-    <ClInclude Include="source\crossdllinterface\RawDataInterface.h" />
-    <ClInclude Include="source\crossdllinterface\SettingsSerializerInterface.h" />
-    <ClInclude Include="source\crossdllinterface\SimulationInterface.h" />
-    <ClInclude Include="source\crossdllinterface\SurfaceInterfaces.h" />
-    <ClInclude Include="source\crossdllinterface\SVGMDatabaseInterface.h" />
-    <ClInclude Include="source\crossdllinterface\TransceiverInterface.h" />
-    <ClInclude Include="source\crossdllinterface\UnitDataSerializerInterface.h" />
-    <ClInclude Include="source\crossdllinterface\UniversalLoggerInterface.h" />
-    <ClInclude Include="source\database\sqlite3.h" />
-    <ClInclude Include="source\math\ellipse.h" />
-    <ClInclude Include="source\math\intersect.h" />
-    <ClInclude Include="source\math\math_utils.h" />
-    <ClInclude Include="source\math\point.h" />
-    <ClInclude Include="source\math\transform.h" />
-    <ClInclude Include="source\SVCG\position_point.h" />
-    <ClInclude Include="source\SVCG\math_base_types.h" />
-    <ClInclude Include="source\SVCG\positioning.h" />
-    <ClInclude Include="source\SVCG\route_point.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="source\colreg\ThirdParty\tinyxml2\tinyxml2.cpp" />
-  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
-    <ProjectGuid>{848A9034-432D-4644-8EEC-38E62430405A}</ProjectGuid>
+    <ProjectGuid>{16F85652-A79C-42B8-8338-B9115515CA97}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>Include</RootNamespace>
+    <RootNamespace>UniversalLogger</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>Utility</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>Utility</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>Utility</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>Utility</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -150,34 +72,24 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>$(SolutionDir)..\Bin\Intermediate\$(ProjectName)\</OutDir>
-    <IntDir>$(SolutionDir)..\Bin\Intermediate\$(ProjectName)\$(Configuration)\</IntDir>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);source;</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>$(SolutionDir)..\Bin\$(Platform)\$(Configuration)\</OutDir>
-    <IntDir>$(SolutionDir)..\Bin\$(Platform)\Intermediate\$(ProjectName)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>$(SolutionDir)..\Bin\Intermediate\$(ProjectName)\</OutDir>
-    <IntDir>$(SolutionDir)..\Bin\Intermediate\$(ProjectName)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>$(SolutionDir)..\Bin\$(Platform)\$(Configuration)\</OutDir>
-    <IntDir>$(SolutionDir)..\Bin\$(Platform)\Intermediate\$(ProjectName)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_DEBUG;INCLUDE_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;UNIVERSALLOGGER_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -190,10 +102,9 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;INCLUDE_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;UNIVERSALLOGGER_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -208,7 +119,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;NDEBUG;INCLUDE_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;UNIVERSALLOGGER_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
@@ -222,15 +133,14 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;INCLUDE_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;UNIVERSALLOGGER_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

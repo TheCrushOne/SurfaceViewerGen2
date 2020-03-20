@@ -24,34 +24,60 @@ namespace settings
 //template<class T>
 //struct GlobalExperimentStatistic;
 
-struct research_result
-{
-   //std::shared_ptr<SVM::iHyperCell<float>> dataStorage;
-};
-
-struct research_result_gen1 : public research_result
-{
-   /*BaseGeometryElement singleRhomboid, multiRhomboid;
-   BaseGeometryElement singleSnake, multiSnake;
-   BaseGeometryElement singleSector, multiSector;
-
-   ResearchResultElement(BaseGeometryElement sr, BaseGeometryElement mr, BaseGeometryElement ssn, BaseGeometryElement msn, BaseGeometryElement sse, BaseGeometryElement mse)
-      : singleRhomboid(sr), multiRhomboid(mr)
-      , singleSnake(ssn), multiSnake(msn)
-      , singleSector(sse), multiSector(mse)
-   {}
-   ResearchResultElement()
-   {}*/
-};
-
-struct research_result_gen2 : public research_result
-{};
-
-struct research_result_gen3 : public research_result
-{};
-
 namespace engine
 {
+   struct TimeData
+   {
+      __int64 start;
+      __int64 finish;
+      __int64 diff;
+
+      void diff() { diff = finish - start; }
+   };
+
+   struct TimeResearchComplexMeta
+   {
+      struct TimeResearchComplexIndex
+      {
+
+      } index;
+      struct TimeResearchComplexResult
+      {
+
+      } result;
+   };
+
+   struct LengthResearchComplexMeta
+   {
+      struct LengthResearchComplexIndex
+      {
+
+      } index;
+      struct LengthResearchComplexResult
+      {
+
+      } result;
+   };
+
+   struct ThreadResearchComplexMeta
+   {
+      struct ThreadResearchComplexIndex
+      {
+         size_t thread_pool_idx;
+         size_t task_pool_idx;
+         size_t fly_count_idx;
+
+         size_t thread_pool_value;
+         size_t task_pool_value;
+         size_t fly_count_value;
+      } index;
+
+      struct ThreadResearchComplexResult
+      {
+         TimeData time;
+      } result;
+   };
+
    class Engine : public iEngine, public Communicable
    {
    public:
@@ -61,15 +87,20 @@ namespace engine
       void SetSettings(std::shared_ptr<settings::application_settings> settings) { m_appSettings = settings; }
 
       void LaunchResearch(const settings::research_settings& resStt);
+      const std::vector<TimeResearchComplexMeta>& GetTimeResearchResult() { return m_timeTaskVct; }
+      const std::vector<LengthResearchComplexMeta>& GetLengthResearchResult() { return m_lengthTaskVct; }
+      const std::vector<ThreadResearchComplexMeta>& GetThreadResearchResult() { return m_threadTaskVct; }
 
-      //void SetCommunicator(ICommunicator* comm);
       void ProcessPathFind(const ColregSimulation::scenario_data& scenarioData, const std::vector<std::vector<double>>& rawData, std::function<void(void)> completeCallback) override final;
       const pathfinder::route_data& GetLastProcessedPaths() const override final { return m_pathfinder->GetPaths(); }
       void Release() { delete this; }
    private:
-      void timeResearchGen1(const settings::research_settings& resStt/*const std::shared_ptr<SVM::iMatrix<SurfaceElement>>&, std::shared_ptr<ResearchResultGen1>&*/);
-      void lengthResearchGen2(const settings::research_settings& resStt/*const std::shared_ptr<SVM::iMatrix<SurfaceElement>>&, std::shared_ptr<ResearchResultGen2>&*/);
-      void threadResearchGen3(const settings::research_settings& resStt/*const std::shared_ptr<SVM::iMatrix<SurfaceElement>>&, std::shared_ptr<ResearchResultGen3>&*/);
+      void timeResearch(const settings::research_settings& resStt/*const std::shared_ptr<SVM::iMatrix<SurfaceElement>>&, std::shared_ptr<ResearchResultGen1>&*/);
+      void lengthResearch(const settings::research_settings& resStt/*const std::shared_ptr<SVM::iMatrix<SurfaceElement>>&, std::shared_ptr<ResearchResultGen2>&*/);
+      void threadResearch(const settings::research_settings& resStt/*const std::shared_ptr<SVM::iMatrix<SurfaceElement>>&, std::shared_ptr<ResearchResultGen3>&*/);
+
+      void threadResNextStep();
+      void generateResScenarioData(ColregSimulation::scenario_data& data, const ThreadResearchComplexMeta::ThreadResearchComplexIndex& idx);
 
       void processPathFind(const ColregSimulation::scenario_data& scenarioData, const std::vector<std::vector<double>>& rawData, std::function<void(void)> completeCallback);
       void generateResMap(size_t mapSize/*std::shared_ptr<SVM::iMatrix<SurfaceElement>>&, const STT::Gen1Settings&*/);
@@ -91,5 +122,12 @@ namespace engine
       std::shared_ptr<pathfinder::Matrix<SVCG::route_point>> m_rawdata;
       std::shared_ptr<pathfinder::route_data> m_routedata;
       //std::shared_ptr<pathfinder::route_data> m_routedata;
+
+      // TODO: восстановить
+      std::vector<TimeResearchComplexMeta> m_timeTaskVct;
+      std::vector<LengthResearchComplexMeta> m_lengthTaskVct;
+
+      std::vector<ThreadResearchComplexMeta> m_threadTaskVct;
+      size_t m_threadTaskCurrentIdx;
    };
 }

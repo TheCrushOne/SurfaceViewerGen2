@@ -33,6 +33,20 @@ Engine::Engine()
             , Qt::QueuedConnection);*/
 }
 
+void Engine::Init(ICommunicator* pCommunicator)
+{
+   m_communicator = pCommunicator;
+   m_pathfinder->Init(m_communicator);
+
+   m_logger.Create(SVGUtils::CurrentDllPath("UniversalLogger").c_str(), "CreateUniversalLogger");
+   if (!m_logger.IsValid())
+   {
+      m_communicator->Message(ICommunicator::MS_Error, "Can't load 'Universal Logger'");
+      return;
+   }
+   m_logger->Init(pCommunicator);
+}
+
 void Engine::ProcessPathFind(const ColregSimulation::scenario_data& scenarioData, const std::vector<std::vector<double>>& rawData, std::function<void(void)> completeCallback)
 {
    std::thread(&Engine::processPathFind, this, scenarioData, rawData, completeCallback).detach();
@@ -127,17 +141,17 @@ void Engine::LaunchResearch(const settings::research_settings& resStt)
    {
    case settings::ResearchType::RT_TIME:
    {
-      timeResearchGen1(resStt);
+      timeResearch(resStt);
       break;
    }
    case settings::ResearchType::RT_LENGTH:
    {
-      lengthResearchGen2(resStt);
+      lengthResearch(resStt);
       break;
    }
    case settings::ResearchType::RT_THREAD:
    {
-      threadResearchGen3(resStt);
+      threadResearch(resStt);
       break;
    }
    }
@@ -397,7 +411,10 @@ void Engine::threadResNextStep()
       m_threadTaskVct.at(m_threadTaskCurrentIdx - 1).result.time.diff();
    }
    if (m_threadTaskCurrentIdx >= m_threadTaskVct.size())
+   {
+      m_logger->LogThreadResearchResult(m_appSettings, GetThreadResearchResult());
       return;
+   }
    m_threadTaskVct.at(m_threadTaskCurrentIdx).result.time.start = startTime;
    ColregSimulation::scenario_data data;
    generateResScenarioData(data, m_threadTaskVct.at(m_threadTaskCurrentIdx).index);
@@ -409,6 +426,11 @@ void Engine::generateResScenarioData(ColregSimulation::scenario_data& data, cons
 {
    data.unit_data.air_units.resize(idx.fly_count_value);
    data.unit_data.land_units.resize(1);
+}
+
+void Engine::logThreadResearchResult()
+{
+
 }
 
 engine::iEngine* CreateEngine()

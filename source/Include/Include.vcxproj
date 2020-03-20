@@ -64,6 +64,8 @@
     <ClInclude Include="source\common\observer.h" />
     <ClInclude Include="source\common\pathfinder_structs.h" />
     <ClInclude Include="source\common\pathfinder_types.h" />
+    <ClInclude Include="source\common\research_structs.h" />
+    <ClInclude Include="source\common\research_types.h" />
     <ClInclude Include="source\common\settings.h" />
     <ClInclude Include="source\common\settings_meta.h" />
     <ClInclude Include="source\common\settings_types.h" />

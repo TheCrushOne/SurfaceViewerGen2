@@ -5,4 +5,18 @@
       <UniqueIdentifier>{8975965b-c4f3-4168-b339-5e19a42bee23}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="source\stdafx.cpp" />
+    <ClCompile Include="source\UniversalLogger.cpp" />
+    <ClCompile Include="source\ResearchResultLogger\ResearchResultLogger.cpp">
+      <Filter>ResearchResultLogger</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="source\stdafx.h" />
+    <ClInclude Include="source\UniversalLogger.h" />
+    <ClInclude Include="source\ResearchResultLogger\ResearchResultLogger.h">
+      <Filter>ResearchResultLogger</Filter>
+    </ClInclude>
+  </ItemGroup>
 </Project>

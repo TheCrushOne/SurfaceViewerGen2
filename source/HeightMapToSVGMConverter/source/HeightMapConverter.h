@@ -17,7 +17,7 @@ namespace converter
 
       bool Init(ICommunicator* comm);
 
-      bool Convert(const file_utils::file_storage_base& src, const file_utils::file_storage_base& dst) override final;
+      bool Convert(const file_utils::global_path_storage& src, const file_utils::global_path_storage& dst) override final;
       void Release() override final { delete this; }
    private:
       void readDataFromPng(const char* srcPath);

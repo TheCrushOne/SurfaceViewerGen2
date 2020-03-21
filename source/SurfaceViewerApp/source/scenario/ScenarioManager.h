@@ -38,7 +38,7 @@ public:
    {
       std::weak_ptr<T> wptr{ pObj };
 
-      m_observable.Attach(pObj, [wptr](file_utils::sqlite_database_file_storage& fs)
+      m_observable.Attach(pObj, [wptr](file_utils::global_path_storage& fs)
          {
             auto ptr = wptr.lock();
             if (ptr)return ptr->OnScenarioLoad(fs);
@@ -73,7 +73,7 @@ public:
          });
    }
 
-   bool OnScenarioLoad(file_utils::sqlite_database_file_storage& name) { return m_observable.Notify(false, name); }
+   bool OnScenarioLoad(file_utils::global_path_storage& name) { return m_observable.Notify(false, name); }
    bool OnScenarioStatusChanged(CSENARIO_STATUS status) { return m_observable2.Notify(false, status); }
    bool OnScenarioTimeChanged(double time) { return m_observable3.Notify(false, time); }
    bool OnScenarioModified() { return m_observable4.Notify(false); }
@@ -83,7 +83,7 @@ private:
    ScenarioDispather() = default;
    ScenarioDispather(const ScenarioDispather&) = delete;
    ScenarioDispather& operator=(const ScenarioDispather&) = delete;
-   Observable< NoLock, bool, file_utils::sqlite_database_file_storage& > m_observable;
+   Observable< NoLock, bool, file_utils::global_path_storage& > m_observable;
    Observable< NoLock, bool, CSENARIO_STATUS  > m_observable2;
    Observable< NoLock, bool, double  > m_observable3;
    Observable< NoLock, bool > m_observable4;
@@ -104,7 +104,7 @@ public:
       ScenarioDispather::GetInstance().AddReciever(shared_from_this());
    }
 
-   bool OnScenarioLoad(file_utils::sqlite_database_file_storage& name) { return m_pHolder->OnScenarioLoad(name); }
+   bool OnScenarioLoad(file_utils::global_path_storage& name) { return m_pHolder->OnScenarioLoad(name); }
    bool OnScenarioStatusChanged(CSENARIO_STATUS status) { return m_pHolder->OnScenarioStatusChanged(status); }
    bool OnScenarioTimeChanged(double time) { return m_pHolder->OnScenarioTimeChanged(time); }
    bool OnScenarioModified() { return m_pHolder->OnScenarioModified(); }
@@ -127,7 +127,7 @@ protected:
       m_spObserver = ScenarioObserver< ScenarioObserverBase >::Create();
       m_spObserver->Init(this);
    }
-   virtual bool OnScenarioLoad(file_utils::sqlite_database_file_storage& name) { return false; }
+   virtual bool OnScenarioLoad(file_utils::global_path_storage& name) { return false; }
    virtual bool OnScenarioStatusChanged(CSENARIO_STATUS status) { return false; }
    virtual bool OnScenarioTimeChanged(double time) { return false; }
    virtual bool OnScenarioModified() { return false; }

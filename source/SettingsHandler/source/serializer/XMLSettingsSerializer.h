@@ -17,21 +17,21 @@ namespace colreg
 {
    struct iXMLSettingsSerializer : iSettingsSerializer
    {
-      virtual bool Serialize(const char* filename, const settings::pathfinding_settings& s, const settings::pathfinding_settings& ds) const = 0;
-      virtual bool Deserialize(const char* filename, settings::pathfinding_settings& s, bool mult) const = 0;
+      virtual bool Serialize(const char*, const settings::pathfinding_settings&, const settings::pathfinding_settings&) const = 0;
+      virtual bool Deserialize(const char*, settings::pathfinding_settings&, bool) const = 0;
 
-      virtual xml_properties::PropertyItem* DirectSerialize(const settings::pathfinding_settings& s, const settings::pathfinding_settings& ds) const = 0;
-      virtual void DirectDeserialize(const xml_properties::PropertyItem& root, settings::pathfinding_settings& s) const = 0;
+      virtual xml_properties::PropertyItem* DirectSerialize(const settings::pathfinding_settings&, const settings::pathfinding_settings&) const = 0;
+      virtual void DirectDeserialize(const xml_properties::PropertyItem&, settings::pathfinding_settings&) const = 0;
 
-      virtual const char* ToString(const settings::pathfinding_settings& srcStt, const settings::pathfinding_settings& defSrcStt) const = 0;
+      virtual const char* ToString(const settings::pathfinding_settings&, const settings::pathfinding_settings&) const = 0;
 
-      virtual bool Serialize(const char* filename, const settings::research_settings& s, const settings::research_settings& ds) const = 0;
-      virtual bool Deserialize(const char* filename, settings::research_settings& s, bool mult) const = 0;
+      virtual bool Serialize(const char*, const settings::research_settings&, const settings::research_settings&) const = 0;
+      virtual bool Deserialize(const char*, settings::research_settings&, bool) const = 0;
 
-      virtual xml_properties::PropertyItem* DirectSerialize(const settings::research_settings& s, const settings::research_settings& ds) const = 0;
-      virtual void DirectDeserialize(const xml_properties::PropertyItem& root, settings::research_settings& s) const = 0;
+      virtual xml_properties::PropertyItem* DirectSerialize(const settings::research_settings&, const settings::research_settings&) const = 0;
+      virtual void DirectDeserialize(const xml_properties::PropertyItem&, settings::research_settings&) const = 0;
 
-      virtual const char* ToString(const settings::research_settings& srcStt, const settings::research_settings& defSrcStt) const = 0;
+      virtual const char* ToString(const settings::research_settings&, const settings::research_settings&) const = 0;
 
       virtual void ReleaseTree(xml_properties::PropertyItem*) const = 0;
    };

@@ -375,8 +375,8 @@ void Engine::threadResearch(const settings::research_settings& resStt/*const std
          for (size_t flyCountIdx = 0; flyCountIdx < resStt.fly_count_range.values.size(); flyCountIdx++)
          {
             size_t flyCount = resStt.fly_count_range.values.at(flyCountIdx);
-            m_threadTaskVct.emplace_back(ThreadResearchComplexMeta{
-               ThreadResearchComplexMeta::ThreadResearchComplexIndex{
+            m_threadResStorage.data.emplace_back(ThreadResearchComplexStorage::SuperCell{
+               ThreadResearchComplexStorage::SuperCell::Index{
                   threadPoolIdx,
                   taskPoolIdx,
                   flyCountIdx,
@@ -384,7 +384,7 @@ void Engine::threadResearch(const settings::research_settings& resStt/*const std
                   taskCount,
                   flyCount
                },
-               ThreadResearchComplexMeta::ThreadResearchComplexResult{
+               ThreadResearchComplexStorage::SuperCell::Result{
                   0
                }
             });
@@ -407,22 +407,22 @@ void Engine::threadResNextStep()
    CURTIME_MS(startTime);
    if (m_threadTaskCurrentIdx > 0)
    {
-      m_threadTaskVct.at(m_threadTaskCurrentIdx - 1).result.time.finish = startTime;
-      m_threadTaskVct.at(m_threadTaskCurrentIdx - 1).result.time.diff();
+      m_threadResStorage.data.at(m_threadTaskCurrentIdx - 1).result.time.finish = startTime;
+      m_threadResStorage.data.at(m_threadTaskCurrentIdx - 1).result.time.apply();
    }
-   if (m_threadTaskCurrentIdx >= m_threadTaskVct.size())
+   if (m_threadTaskCurrentIdx >= m_threadResStorage.data.size())
    {
-      m_logger->LogThreadResearchResult(m_appSettings, GetThreadResearchResult());
+      m_logger->LogThreadResearchResult(L"", GetThreadResearchResult());
       return;
    }
-   m_threadTaskVct.at(m_threadTaskCurrentIdx).result.time.start = startTime;
+   m_threadResStorage.data.at(m_threadTaskCurrentIdx).result.time.start = startTime;
    ColregSimulation::scenario_data data;
-   generateResScenarioData(data, m_threadTaskVct.at(m_threadTaskCurrentIdx).index);
+   generateResScenarioData(data, m_threadResStorage.data.at(m_threadTaskCurrentIdx).index);
    std::thread(&Engine::processPathFind, this, data, m_rawdata, [this]() { threadResNextStep();  }).detach();
    m_threadTaskCurrentIdx++;
 }
 
-void Engine::generateResScenarioData(ColregSimulation::scenario_data& data, const ThreadResearchComplexMeta::ThreadResearchComplexIndex& idx)
+void Engine::generateResScenarioData(ColregSimulation::scenario_data& data, const ThreadResearchComplexStorage::SuperCell::Index& idx)
 {
    data.unit_data.air_units.resize(idx.fly_count_value);
    data.unit_data.land_units.resize(1);

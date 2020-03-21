@@ -12,7 +12,7 @@ void SimulatorManager::Init(ICommunicator* pCommunicator, iPropertyInterface* pr
    m_prop = prop;
 }
 
-ColregSimulation::iSimulator* SimulatorManager::Get(const file_utils::sqlite_database_file_storage& paths)
+ColregSimulation::iSimulator* SimulatorManager::Get(const file_utils::global_path_storage& paths)
 {
    m_paths = paths;
    // TODO: реализовать проверку через базу по настройкам

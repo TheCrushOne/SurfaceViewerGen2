@@ -20,7 +20,7 @@ namespace ColregSimulation
 
       void Release() override final { delete this; }
 
-      virtual bool Init(const file_utils::sqlite_database_file_storage& paths);
+      virtual bool Init(const file_utils::global_path_storage& paths);
 
       inline void SetSimulationType(const ColregSimulation::SIMULATION_PLAYER_TYPE type) { m_simulationType = type; }
    protected:

@@ -10,8 +10,8 @@ namespace chart_object
 {
    struct iGenerator : colreg::iReleasable
    {
-      virtual bool Init(ICommunicator* comm, settings::environment_settings* envStt) = 0;
-      virtual bool GenerateStatic(const converter::raw_data_ref& rawdata) = 0;
+      virtual bool Init(ICommunicator*, settings::environment_settings*) = 0;
+      virtual bool GenerateStatic(const converter::raw_data_ref&) = 0;
       virtual const colreg::chart_objects_ref& GetChartObjects() const = 0;
    };
 }

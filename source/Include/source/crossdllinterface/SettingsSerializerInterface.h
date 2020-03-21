@@ -6,17 +6,37 @@ namespace colreg
 {
    struct iSettingsSerializer : iReleasable
    {
-      virtual bool Serialize(const char* filename, const settings::pathfinding_settings& s) const = 0;
-      virtual bool Deserialize(const char* filename, settings::pathfinding_settings& s) const = 0;
+      virtual bool Serialize(const char*, const settings::pathfinding_settings&) const = 0;
+      virtual bool Deserialize(const char*, settings::pathfinding_settings&) const = 0;
 
-      virtual bool Serialize(const char* filename, const settings::research_settings& s) const = 0;
-      virtual bool Deserialize(const char* filename, settings::research_settings& s) const = 0;
+      virtual bool Serialize(const char*, const settings::research_settings&) const = 0;
+      virtual bool Deserialize(const char*, settings::research_settings&) const = 0;
 
-      virtual const char* ToString(const settings::pathfinding_settings& srcStt) const = 0;
-      virtual bool FromString(const char* src, settings::pathfinding_settings& dstStt) const = 0;
+      virtual bool Serialize(const char*, const settings::environment_settings&) const = 0;
+      virtual bool Deserialize(const char*, settings::environment_settings&) const = 0;
 
-      virtual const char* ToString(const settings::research_settings& srcStt) const = 0;
-      virtual bool FromString(const char* src, settings::research_settings& dstStt) const = 0;
+      virtual bool Serialize(const char*, const settings::simulation_settings&) const = 0;
+      virtual bool Deserialize(const char*, settings::simulation_settings&) const = 0;
+
+      virtual bool Serialize(const char*, const settings::map_settings&) const = 0;
+      virtual bool Deserialize(const char*, settings::map_settings&) const = 0;
+
+
+
+      virtual const char* ToString(const settings::pathfinding_settings&) const = 0;
+      virtual bool FromString(const char*, settings::pathfinding_settings&) const = 0;
+
+      virtual const char* ToString(const settings::research_settings&) const = 0;
+      virtual bool FromString(const char*, settings::research_settings&) const = 0;
+
+      virtual const char* ToString(const settings::environment_settings&) const = 0;
+      virtual bool FromString(const char*, settings::environment_settings&) const = 0;
+
+      virtual const char* ToString(const settings::simulation_settings&) const = 0;
+      virtual bool FromString(const char*, settings::simulation_settings&) const = 0;
+
+      virtual const char* ToString(const settings::map_settings&) const = 0;
+      virtual bool FromString(const char*, settings::map_settings&) const = 0;
    };
 }
 
@@ -26,4 +46,5 @@ namespace colreg
 #define SETSEREXPRTIMPRT __declspec(dllimport) // import DLL information
 #endif
 
-extern "C" SETSEREXPRTIMPRT colreg::iSettingsSerializer* CreateSettingsSerializer();
+extern "C" SETSEREXPRTIMPRT colreg::iSettingsSerializer * CreateXMLSettingsSerializer();
+extern "C" SETSEREXPRTIMPRT colreg::iSettingsSerializer * CreateJsonSettingsSerializer();

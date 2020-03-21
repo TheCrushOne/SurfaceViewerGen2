@@ -7,10 +7,10 @@ namespace ColregSimulation
    struct iSimulatorManager : colreg::iReleasable
    {
       //! Подготовка менеджера симуляторов
-      virtual void Init(ICommunicator* pCommunicator, iPropertyInterface* prop) = 0;
+      virtual void Init(ICommunicator*, iPropertyInterface*) = 0;
 
       //! Получение симулятора в зависимости от расширения сценария и загрузка сценария
-      virtual iSimulator* Get(const file_utils::sqlite_database_file_storage& paths) = 0;
+      virtual iSimulator* Get(const file_utils::global_path_storage&) = 0;
    };
 }
 

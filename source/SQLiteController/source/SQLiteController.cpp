@@ -44,12 +44,15 @@
 #define RES_INSUPD_STT_NORES_RL(paramtoken, val) INSUPD_STT_NORES_RL(RT_SETRESSTT, settings::researchSettingsMeta.at(settings::ResearchSettingsUID::paramtoken).c_str(), std::to_string(val).c_str())
 #define MAP_INSUPD_STT_NORES_RL(paramtoken, val) INSUPD_STT_NORES_RL(RT_SETMAPSTT, settings::mapSettingsMeta.at(settings::MapSettingsUID::paramtoken).c_str(), std::to_string(val).c_str())
 #define UNT_INSUPD_NORES_RL(json) NORES_RL(request_storage::insupdReqList.at(request_storage::RequestToken::RT_SETUNTDAT), json)
+#define STT_INS_NORES_RL(token, json) NORES_RL(request_storage::insReqList.at(request_storage::RequestToken::RT_SETSCNSTT), request_storage::settingsTokenList.at(token), json)
 
 #define SEL_STT_RES_INT_RL(reqtoken, param, val) STT_RES_INT_RL(request_storage::selectReqList.at(request_storage::RequestToken::reqtoken), param, val)
 #define MAP_SEL_STT_RES_INT_RL(paramtoken, val) SEL_STT_RES_INT_RL(RT_SELMAPSTT, settings::mapSettingsMeta.at(settings::MapSettingsUID::paramtoken).c_str(), val)
 
 // HACK: пока настройки json-овые, там лежит всего одна запись; её и берем
 #define UNT_SEL_DAT_RES_STR_RL(val) DAT_RES_STR_RL(request_storage::selectReqList.at(request_storage::RequestToken::RT_SELUNTDAT), "1", val)
+
+#define STT_SEL_DAT_RES_STR_RL(token, val) DAT_RES_STR_RL(request_storage::selectReqList.at(request_storage::RequestToken::RT_SETSCNSTT), request_storage::settingsTokenList.at(token), val)
 using namespace database;
 
 SQLiteController::SQLiteController()
@@ -70,10 +73,10 @@ SQLiteController::SQLiteController()
    }
 }
 
-void SQLiteController::Init(ICommunicator* comm, const file_utils::file_storage_base& dst)
+void SQLiteController::Init(ICommunicator* comm, const file_utils::global_path_storage& dst)
 {
    m_connector = std::make_unique<Connector>(comm);
-   m_filestorage = reinterpret_cast<file_utils::sqlite_database_file_storage&>(const_cast<file_utils::file_storage_base&>(dst));
+   m_filestorage = const_cast<file_utils::global_path_storage&>(dst);
    m_connector->Connect(SVGUtils::wstringToString(m_filestorage.database_path).c_str());
    baseCheckCreate();
 }
@@ -115,24 +118,41 @@ void SQLiteController::baseCheckCreate()
 void SQLiteController::savePathfindingSettings(const settings::pathfinding_settings& settings)
 {
    NO_RES_PREP;
+   std::string jsonSettings = m_settingsSerializer->ToString(settings);
 
-   PTH_INSUPD_STT_NORES_RL(PSU_MAXAIRHEIGHT, settings.level_settings.max_air_height);
-   PTH_INSUPD_STT_NORES_RL(PSU_MAXLANDANGLE, settings.level_settings.max_land_angle);
-   PTH_INSUPD_STT_NORES_RL(PSU_DANGEROUSLANDANGLE, settings.level_settings.dangerous_land_angle);
-   PTH_INSUPD_STT_NORES_RL(PSU_MAXLANDHEIGHT, settings.level_settings.max_land_height);
-   PTH_INSUPD_STT_NORES_RL(PSU_MINLANDHEIGHT, settings.level_settings.min_land_height);
+   STT_INS_NORES_RL(request_storage::SettingsType::ST_PATHFINDING, jsonSettings.c_str());
 }
 
 void SQLiteController::saveResearchSettings(const settings::research_settings& settings)
 {
    NO_RES_PREP;
+   std::string jsonSettings = m_settingsSerializer->ToString(settings);
 
-   RES_INSUPD_STT_NORES_RL(RSU_COUNTRANGEMIN, settings.count_range.min);
-   RES_INSUPD_STT_NORES_RL(RSU_COUNTRANGESTEP, settings.count_range.step);
-   RES_INSUPD_STT_NORES_RL(RSU_COUNTRANGEMAX, settings.count_range.max);
-   RES_INSUPD_STT_NORES_RL(RSU_LENGTHRANGEMIN, settings.length_range.min);
-   RES_INSUPD_STT_NORES_RL(RSU_LENGTHRANGESTEP, settings.length_range.step);
-   RES_INSUPD_STT_NORES_RL(RSU_LENGTHRANGEMAX, settings.length_range.max);
+   STT_INS_NORES_RL(request_storage::SettingsType::ST_RESEARCH, jsonSettings.c_str());
+}
+
+void SQLiteController::saveEnvironmentSettings(const settings::environment_settings& settings)
+{
+   NO_RES_PREP;
+   std::string jsonSettings = m_settingsSerializer->ToString(settings);
+
+   STT_INS_NORES_RL(request_storage::SettingsType::ST_ENVIRONMENT, jsonSettings.c_str());
+}
+
+void SQLiteController::saveSimulationSettings(const settings::simulation_settings& settings)
+{
+   NO_RES_PREP;
+   std::string jsonSettings = m_settingsSerializer->ToString(settings);
+
+   STT_INS_NORES_RL(request_storage::SettingsType::ST_SIMULATION, jsonSettings.c_str());
+}
+
+void SQLiteController::saveMapSettings(const settings::map_settings& settings)
+{
+   NO_RES_PREP;
+   std::string jsonSettings = m_settingsSerializer->ToString(settings);
+
+   STT_INS_NORES_RL(request_storage::SettingsType::ST_MAP, jsonSettings.c_str());
 }
 
 void SQLiteController::saveUnitData(const settings::unit_source_data& settings)
@@ -144,22 +164,54 @@ void SQLiteController::saveUnitData(const settings::unit_source_data& settings)
    UNT_INSUPD_NORES_RL(jsonSettings.c_str());
 }
 
-void SQLiteController::saveMapSettings(const settings::map_settings& settings)
-{
-   NO_RES_PREP;
-
-   MAP_INSUPD_STT_NORES_RL(MSU_ROWCOUNT, settings.row_count);
-   MAP_INSUPD_STT_NORES_RL(MSU_COLCOUNT, settings.col_count);
-}
-
 void SQLiteController::loadPathfindingSettings(settings::pathfinding_settings& settings)
 {
+   RES_PREP_STR;
+   std::string dat;
 
+   STT_SEL_DAT_RES_STR_RL(request_storage::SettingsType::ST_PATHFINDING, dat);
+
+   m_settingsSerializer->FromString(dat.c_str(), settings);
 }
 
 void SQLiteController::loadResearchSettings(settings::research_settings& settings)
 {
+   RES_PREP_STR;
+   std::string dat;
 
+   STT_SEL_DAT_RES_STR_RL(request_storage::SettingsType::ST_RESEARCH, dat);
+
+   m_settingsSerializer->FromString(dat.c_str(), settings);
+}
+
+void SQLiteController::loadEnvironmentSettings(settings::environment_settings& settings)
+{
+   RES_PREP_STR;
+   std::string dat;
+
+   STT_SEL_DAT_RES_STR_RL(request_storage::SettingsType::ST_ENVIRONMENT, dat);
+
+   m_settingsSerializer->FromString(dat.c_str(), settings);
+}
+
+void SQLiteController::loadSimulationSettings(settings::simulation_settings& settings)
+{
+   RES_PREP_STR;
+   std::string dat;
+
+   STT_SEL_DAT_RES_STR_RL(request_storage::SettingsType::ST_SIMULATION, dat);
+
+   m_settingsSerializer->FromString(dat.c_str(), settings);
+}
+
+void SQLiteController::loadMapSettings(settings::map_settings& settings)
+{
+   RES_PREP_STR;
+   std::string dat;
+
+   STT_SEL_DAT_RES_STR_RL(request_storage::SettingsType::ST_MAP, dat);
+
+   m_settingsSerializer->FromString(dat.c_str(), settings);
 }
 
 void SQLiteController::loadUnitData(settings::unit_source_data& settings)
@@ -170,14 +222,6 @@ void SQLiteController::loadUnitData(settings::unit_source_data& settings)
    UNT_SEL_DAT_RES_STR_RL(dat);
 
    m_unitDataSerializer->FromString(dat.c_str(), settings);
-}
-
-void SQLiteController::loadMapSettings(settings::map_settings& settings)
-{
-   RES_PREP_INT
-
-   MAP_SEL_STT_RES_INT_RL(MSU_ROWCOUNT, settings.row_count);
-   MAP_SEL_STT_RES_INT_RL(MSU_COLCOUNT, settings.col_count);
 }
 
 database::iSVGMDatabaseController* CreateSQLiteDatabaseController()

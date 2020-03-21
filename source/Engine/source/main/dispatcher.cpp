@@ -76,8 +76,8 @@ const std::shared_ptr<settings::application_settings> Dispatcher::GetSettings()
 
 void Dispatcher::LoadScenario(const wchar_t* name)
 {
-   m_fileStorage = std::make_shared<file_utils::heightmap_file_storage>(name);
-   
+   m_fileStorage = std::make_shared<file_utils::global_path_storage>(name);
+
    loadHeightMap(SVGUtils::wstringToString(m_fileStorage->map_path).c_str());
 }
 

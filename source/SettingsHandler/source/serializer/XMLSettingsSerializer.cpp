@@ -10,6 +10,7 @@
 
 #define _PSN(x) colreg::pathfindingMeta.at(x)
 #define _RSN(x) colreg::researchMeta.at(x)
+#define _ESN(x) colreg::environmentMeta.at(x)
 
 #define VALCHECKER(type, obj, defobj, value, defValue, offset) [objptr = obj, defobjptr = defobj, va = value, da = defValue, offset_m = offset]() mutable -> bool \
 { \
@@ -22,9 +23,11 @@
 #define VALELEM(type, dattype, signature, obj, defobj, field, diff) new TypedSettingsTree<type, dattype>(signature.first, signature.second, &obj.field, &defobj.field, diff, VALCHECKER(type, (char*)&obj, (char*)&defobj, (char*)&obj.field, (char*)&defobj.field, offset += sizeof(type))())
 #define PSTVALELEM(type, signature, field) VALELEM(type, settings::pathfinding_settings, signature, data, defdata, field, diff)
 #define RSTVALELEM(type, signature, field) VALELEM(type, settings::research_settings, signature, data, defdata, field, diff)
+#define ENVVALELEM(type, signature, field) VALELEM(type, settings::environment_settings, signature, data, defdata, field, diff)
 
 #define PSTCOLLECTINGELEM(signature) new TypedSettingsTree<void*, settings::pathfinding_settings>(signature.first, "",
 #define RSTCOLLECTINGELEM(signature) new TypedSettingsTree<void*, settings::research_settings>(signature.first, "",
+#define ENVCOLLECTINGELEM(signature) new TypedSettingsTree<void*, settings::environment_settings>(signature.first, "",
 
 namespace colreg
 {
@@ -32,9 +35,12 @@ namespace colreg
    constexpr const char* PATHFINDING_SETTINGS_VERSION = "1.0";
    constexpr const char* RESEARCH_SETTINGS_HEADER = "ResearchSettings";
    constexpr const char* RESEARCH_SETTINGS_VERSION = "1.0";
+   constexpr const char* ENVIRONMENT_SETTINGS_HEADER = "EnvironmentSettings";
+   constexpr const char* ENVIRONMENT_SETTINGS_VERSION = "1.0";
 
    constexpr const char* PATHFINDING_SETTINGS_TAG = "pathfinding";
    constexpr const char* RESEARCH_SETTINGS_TAG = "research";
+   constexpr const char* ENVIRONMENT_SETTINGS_TAG = "environment";
 
    class XMLSettingsSerializer : public iXMLSettingsSerializer
    {
@@ -65,20 +71,52 @@ namespace colreg
          size_t offset = 0;
          std::unique_ptr < TypedSettingsTree<void*, settings::research_settings> > tree(new TypedSettingsTree<void*, settings::research_settings>(RESEARCH_SETTINGS_TAG, "", {
               RSTCOLLECTINGELEM(_RSN(ResearchSettingsFieldIndex::RSFI_COUNTRANGE_ST)) {
-                   RSTVALELEM(size_t, _RSN(ResearchSettingsFieldIndex::RSFI_MIN), count_range.min)
-                 , RSTVALELEM(size_t, _RSN(ResearchSettingsFieldIndex::RSFI_MAX), count_range.max)
-                 , RSTVALELEM(size_t, _RSN(ResearchSettingsFieldIndex::RSFI_STEP), count_range.step)
+                   RSTVALELEM(size_t, _RSN(ResearchSettingsFieldIndex::RSFI_MIN), fly_count_range.min)
+                 , RSTVALELEM(size_t, _RSN(ResearchSettingsFieldIndex::RSFI_MAX), fly_count_range.max)
+                 , RSTVALELEM(size_t, _RSN(ResearchSettingsFieldIndex::RSFI_STEP), fly_count_range.step)
               })
             , RSTCOLLECTINGELEM(_RSN(ResearchSettingsFieldIndex::RSFI_LENGTHRANGE_ST)) {
                    RSTVALELEM(double, _RSN(ResearchSettingsFieldIndex::RSFI_MIN), length_range.min)
                  , RSTVALELEM(double, _RSN(ResearchSettingsFieldIndex::RSFI_MAX), length_range.max)
                  , RSTVALELEM(double, _RSN(ResearchSettingsFieldIndex::RSFI_STEP), length_range.step)
               })
+            , RSTCOLLECTINGELEM(_RSN(ResearchSettingsFieldIndex::RSFI_THREADRANGE_ST)) {
+                   RSTVALELEM(size_t, _RSN(ResearchSettingsFieldIndex::RSFI_MIN), thread_pool_range.min)
+                 , RSTVALELEM(size_t, _RSN(ResearchSettingsFieldIndex::RSFI_MAX), thread_pool_range.max)
+                 , RSTVALELEM(size_t, _RSN(ResearchSettingsFieldIndex::RSFI_STEP), thread_pool_range.step)
+              })
+            , RSTCOLLECTINGELEM(_RSN(ResearchSettingsFieldIndex::RSFI_TASKRANGE_ST)) {
+                   RSTVALELEM(size_t, _RSN(ResearchSettingsFieldIndex::RSFI_MIN), task_pool_range.min)
+                 , RSTVALELEM(size_t, _RSN(ResearchSettingsFieldIndex::RSFI_MAX), task_pool_range.max)
+                 , RSTVALELEM(size_t, _RSN(ResearchSettingsFieldIndex::RSFI_STEP), task_pool_range.step)
+              })
             , RSTVALELEM(size_t, _RSN(ResearchSettingsFieldIndex::RSFI_ITERCOUNT), iter_count)
             , RSTVALELEM(size_t, _RSN(ResearchSettingsFieldIndex::RSFI_MAPSIZE), map_size)
             , RSTVALELEM(bool, _RSN(ResearchSettingsFieldIndex::RSFI_MULTITHREADTEST), multi_thread_test)
             , RSTVALELEM(bool, _RSN(ResearchSettingsFieldIndex::RSFI_SINGLETHREADTEST), single_thread_test)
             , RSTVALELEM(size_t, _RSN(ResearchSettingsFieldIndex::RSFI_DEBUGLEVEL), debug_level)
+         }) );
+         // NOTE: тут не сходилось, пришлось отключить
+         //ATLASSERT(offset == sizeof(settings::research_settings));
+         return tree;
+      }
+      template<>
+      static std::unique_ptr < TypedSettingsTree<void*, settings::environment_settings> > buildDataTree(settings::environment_settings& data, const settings::environment_settings& defdata, bool diff)
+      {
+         size_t offset = 0;
+         std::unique_ptr < TypedSettingsTree<void*, settings::environment_settings> > tree(new TypedSettingsTree<void*, settings::environment_settings>(ENVIRONMENT_SETTINGS_TAG, "", {
+              ENVCOLLECTINGELEM(_ESN(EnvironmentSettingsFieldIndex::ESFI_GSC)) {
+                   ENVVALELEM(double, _ESN(EnvironmentSettingsFieldIndex::ESFI_ANGLE), gcs_info.angle)
+                 , ENVVALELEM(double, _ESN(EnvironmentSettingsFieldIndex::ESFI_SCALE), gcs_info.scale)
+                 , ENVVALELEM(double, _ESN(EnvironmentSettingsFieldIndex::ESFI_ORDBIAS), gcs_info.ordinate_bias)
+                 , ENVVALELEM(double, _ESN(EnvironmentSettingsFieldIndex::ESFI_ABSBIAS), gcs_info.abscissa_bias)
+              })
+            , ENVCOLLECTINGELEM(_RSN(EnvironmentSettingsFieldIndex::ESFI_MTX)) {
+                   ENVVALELEM(double, _ESN(EnvironmentSettingsFieldIndex::ESFI_ANGLE), mtx_info.angle)
+                 , ENVVALELEM(double, _ESN(EnvironmentSettingsFieldIndex::ESFI_SCALE), mtx_info.scale)
+                 , ENVVALELEM(double, _ESN(EnvironmentSettingsFieldIndex::ESFI_ORDBIAS), mtx_info.ordinate_bias)
+                 , ENVVALELEM(double, _ESN(EnvironmentSettingsFieldIndex::ESFI_ABSBIAS), mtx_info.abscissa_bias)
+              })
          }) );
          // NOTE: тут не сходилось, пришлось отключить
          //ATLASSERT(offset == sizeof(settings::research_settings));
@@ -94,6 +132,8 @@ namespace colreg
       static inline const char* getXMLDataHeader<settings::pathfinding_settings>() { return PATHFINDING_SETTINGS_HEADER; }
       template<>
       static inline const char* getXMLDataHeader<settings::research_settings>() { return RESEARCH_SETTINGS_HEADER; }
+      template<>
+      static inline const char* getXMLDataHeader<settings::environment_settings>() { return ENVIRONMENT_SETTINGS_HEADER; }
       
       template<typename DataType>
       static inline const char* getXMLDataVersion() { return nullptr; }
@@ -101,16 +141,24 @@ namespace colreg
       static inline const char* getXMLDataVersion<settings::pathfinding_settings>() { return PATHFINDING_SETTINGS_VERSION; }
       template<>
       static inline const char* getXMLDataVersion<settings::research_settings>() { return RESEARCH_SETTINGS_VERSION; }
-         
+      template<>
+      static inline const char* getXMLDataVersion<settings::environment_settings>() { return ENVIRONMENT_SETTINGS_VERSION; }
+
       bool Serialize(const char* filename, const settings::pathfinding_settings& settings, const settings::pathfinding_settings& defsettings) const final { return serialize(filename, settings, defsettings); }
       bool Serialize(const char* filename, const settings::pathfinding_settings& settings) const final { return serialize(filename, settings); }
       bool Serialize(const char* filename, const settings::research_settings& settings, const settings::research_settings& defsettings) const final { return serialize(filename, settings, defsettings); }
       bool Serialize(const char* filename, const settings::research_settings& settings) const final { return serialize(filename, settings); }
+      bool Serialize(const char* filename, const settings::environment_settings& settings) const final { return serialize(filename, settings); }
+      bool Serialize(const char* filename, const settings::simulation_settings& settings) const final { return true; }
+      bool Serialize(const char* filename, const settings::map_settings& settings) const final { return true; }
 
       bool Deserialize(const char* filename, settings::pathfinding_settings& environment) const final { return deserialize(filename, environment); }
       bool Deserialize(const char* filename, settings::pathfinding_settings& environment, bool mult) const final { return deserialize(filename, environment, mult); }
       bool Deserialize(const char* filename, settings::research_settings& environment) const final { return deserialize(filename, environment); }
       bool Deserialize(const char* filename, settings::research_settings& environment, bool mult) const final { return deserialize(filename, environment, mult); }
+      bool Deserialize(const char* filename, settings::environment_settings& environment) const final { return deserialize(filename, environment); }
+      bool Deserialize(const char* filename, settings::simulation_settings& environment) const final { return true; }
+      bool Deserialize(const char* filename, settings::map_settings& environment) const final { return true; }
 
       xml_properties::PropertyItem* DirectSerialize(const settings::pathfinding_settings& data, const settings::pathfinding_settings& defdata) const final { return serialize(data, defdata); }
       xml_properties::PropertyItem* DirectSerialize(const settings::research_settings& data, const settings::research_settings& defdata) const final { return serialize(data, defdata); }
@@ -122,9 +170,15 @@ namespace colreg
       virtual const char* ToString(const settings::pathfinding_settings& settings, const settings::pathfinding_settings& defsettings) const final { return toString(settings, defsettings); }
       virtual const char* ToString(const settings::research_settings& environment) const final { return toString(environment); }
       virtual const char* ToString(const settings::research_settings& environment, const settings::research_settings& defenvironment) const final { return toString(environment, defenvironment); }
+      virtual const char* ToString(const settings::environment_settings& environment) const final { return toString(environment); }
+      virtual const char* ToString(const settings::simulation_settings& environment) const final { return nullptr; }
+      virtual const char* ToString(const settings::map_settings& environment) const final { return nullptr; }
 
       virtual bool FromString(const char* src, settings::pathfinding_settings& settings) const final { return fromString(src, settings); }
       virtual bool FromString(const char* src, settings::research_settings& environment) const final { return fromString(src, environment); }
+      virtual bool FromString(const char* src, settings::environment_settings& environment) const final { return fromString(src, environment); }
+      virtual bool FromString(const char* src, settings::simulation_settings& environment) const final { return true; }
+      virtual bool FromString(const char* src, settings::map_settings& environment) const final { return true; }
    private:
       template<typename DataType>
       static bool serialize(const char* filename, const DataType& data, const DataType& defdata)
@@ -364,7 +418,7 @@ namespace colreg
    };
 }
 
-/*extern "C" */colreg::iSettingsSerializer * CreateSettingsSerializer()
+colreg::iSettingsSerializer * CreateXMLSettingsSerializer()
 {
    return new colreg::XMLSettingsSerializer();
 }

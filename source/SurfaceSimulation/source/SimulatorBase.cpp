@@ -3,7 +3,7 @@
 
 using namespace ColregSimulation;
 
-bool SimulatorBase::Init(const file_utils::sqlite_database_file_storage& paths)
+bool SimulatorBase::Init(const file_utils::global_path_storage& paths)
 {
    m_databaseController.Create(SVGUtils::CurrentDllPath("SQLiteController").c_str(), "CreateSQLiteDatabaseController");
    if (!m_databaseController.IsValid())

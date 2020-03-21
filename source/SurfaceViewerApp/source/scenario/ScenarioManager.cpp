@@ -31,8 +31,8 @@ void ScenarioManager::Open(const wchar_t* fileName)
    }
    
 
-   auto hmFS = file_utils::heightmap_file_storage(fileName);
-   auto sdFS = file_utils::sqlite_database_file_storage(fileName);
+   auto hmFS = file_utils::global_path_storage(fileName);
+   auto sdFS = file_utils::global_path_storage(fileName);
 
    m_converter->Init(simulator::GetCommunicator());
    m_converter->Convert(hmFS, sdFS);

@@ -8,7 +8,7 @@ namespace logger
 {
    struct iUniversalLogger : colreg::iReleasable
    {
-      virtual void Init(ICommunicator* comm) = 0;
+      virtual void Init(ICommunicator*) = 0;
       virtual bool LogThreadResearchResult(const wchar_t*, const ThreadResearchComplexStorage&) = 0;
    };
 }

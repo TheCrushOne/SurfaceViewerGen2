@@ -8,7 +8,7 @@ struct TimeData
    __int64 finish;
    __int64 diff;
 
-   void diff() { diff = finish - start; }
+   void apply() { diff = finish - start; }
 };
 
 struct TimeResearchComplexStorage

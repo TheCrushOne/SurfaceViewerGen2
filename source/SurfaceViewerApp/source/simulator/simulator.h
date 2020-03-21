@@ -8,7 +8,7 @@ namespace simulator
    ColregSimulation::iSimulator* getSimulator();
 
    bool simulatorStep();
-   bool simulatorStart(const file_utils::sqlite_database_file_storage& fs);
+   bool simulatorStart(const file_utils::global_path_storage& fs);
    void simulatorStop(bool simulatorReset = false);
 
    ICommunicator* GetCommunicator();

@@ -21,7 +21,7 @@ public:
 
    void Init(ICommunicator* pCommunicator, iPropertyInterface* prop) final;
 
-   ColregSimulation::iSimulator* Get(const file_utils::sqlite_database_file_storage& paths) final;
+   ColregSimulation::iSimulator* Get(const file_utils::global_path_storage& paths) final;
 
 private:
    ColregSimulation::SIMULATION_PLAYER_TYPE getTypeFromExt(const char* ext) const;
@@ -31,7 +31,7 @@ private:
 
 private:
    iPropertyInterface* m_prop = nullptr;
-   file_utils::sqlite_database_file_storage m_paths;
+   file_utils::global_path_storage m_paths;
 
    std::array<iSimulatorPtr, static_cast<size_t>(ColregSimulation::SIMULATION_PLAYER_TYPE::SPT_SIZE)> m_sims;
 };

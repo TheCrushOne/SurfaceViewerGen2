@@ -9,8 +9,8 @@ namespace engine
 {
    struct iEngine : colreg::iReleasable
    {
-      virtual void Init(ICommunicator* pCommunicator) = 0;
-      virtual void ProcessPathFind(const ColregSimulation::scenario_data& scenarioData, const std::vector<std::vector<double>>& rawData, std::function<void(void)> completeCallback) = 0;
+      virtual void Init(ICommunicator*) = 0;
+      virtual void ProcessPathFind(const ColregSimulation::scenario_data&, const std::vector<std::vector<double>>&, std::function<void(void)>) = 0;
       virtual const pathfinder::route_data& GetLastProcessedPaths() const = 0;
    };
 }

@@ -97,6 +97,19 @@ namespace settings
       T max;
       T step;
       std::vector<T> values;
+
+      // TODO: сделать безопасность!!!
+      void apply()
+      {
+         if (!values.empty())
+            return;
+         T cur = min;
+         while (cur < max)
+         {
+            values.emplace_back(cur);
+            cur += step;
+         }
+      }
    };
 
    struct research_settings

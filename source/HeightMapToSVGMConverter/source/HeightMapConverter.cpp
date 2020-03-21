@@ -42,15 +42,15 @@ bool HeightMapConverter::Init(ICommunicator* comm)
    return true;
 }
 
-bool HeightMapConverter::Convert(const file_utils::file_storage_base& src, const file_utils::file_storage_base& dst)
+bool HeightMapConverter::Convert(const file_utils::global_path_storage& src, const file_utils::global_path_storage& dst)
 {
    if (m_lock)
       return false;
-   std::string srcPngPath = SVGUtils::wstringToString((reinterpret_cast<file_utils::heightmap_file_storage&>(const_cast<file_utils::file_storage_base&>(src))).map_path);
+   std::string srcPngPath = SVGUtils::wstringToString((const_cast<file_utils::global_path_storage&>(src)).map_path);
    readDataFromPng(srcPngPath.c_str());
    convertToDatabaseFormat();
    
-   auto& srcFs = reinterpret_cast<const file_utils::heightmap_file_storage&>(src);
+   auto& srcFs = reinterpret_cast<const file_utils::global_path_storage&>(src);
    m_settingsSerializer->Deserialize(SVGUtils::wstringToString(srcFs.pathfinder_settings_path).c_str(), m_settings.pth_stt);
    m_settingsSerializer->Deserialize(SVGUtils::wstringToString(srcFs.research_settings_path).c_str(), m_settings.res_stt);
    m_unitDataSerializer->Deserialize(SVGUtils::wstringToString(srcFs.unit_data_path).c_str(), m_unitData);

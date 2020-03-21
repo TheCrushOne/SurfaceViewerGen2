@@ -9,7 +9,7 @@
 
 namespace database
 {
-   class SQLiteController : public iSVGMDatabaseController
+   class SQLiteController : public iSVGMDatabaseController, public Communicable
    {
    public:
       SQLiteController();

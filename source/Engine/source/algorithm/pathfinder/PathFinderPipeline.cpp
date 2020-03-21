@@ -127,7 +127,7 @@ void PathFinderPipeline::formatTaskPacket()
 
 void PathFinderPipeline::onAirRouteTaskHolderFinished()
 {
-   for (auto& task : *m_taskPacket.get())
+   for (const auto& task : *m_taskPacket.get())
    {
       if (task.status != TaskStatus::TS_FINISHED)
          return;
@@ -148,9 +148,10 @@ void PathFinderPipeline::onAirRoutePacketFinished()
 
    // test 4/8
    const int threadCount = 16;   // NOTE: По количеству логических ядер 8+HT
+   m_holders.clear();
    m_holders.resize(threadCount);   // TODO: чекнуть, вызывается ли конструктор
    //QThreadPool::globalInstance()->setMaxThreadCount(threadCount);
-
+   m_communicator->Message(ICommunicator::MS_Debug, "ar task packet finished %i", m_taskPool.size());
    for (auto& holder : m_holders)
    {
       holder.first.Launch(m_taskPacket,

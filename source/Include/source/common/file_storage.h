@@ -55,9 +55,9 @@ namespace file_utils
          , database_path(metaFileName)
          , logger_folder_path(L"")
       {
-         replaceExtension(pathfinder_settings_path, L".meta", L".psxml");
-         replaceExtension(research_settings_path, L".meta", L".rsxml");
-         replaceExtension(environment_settings_path, L".meta", L".esxml");
+         replaceExtension(pathfinder_settings_path, L".meta", L".ps");
+         replaceExtension(research_settings_path, L".meta", L".rs");
+         replaceExtension(environment_settings_path, L".meta", L".es");
          replaceExtension(map_path, L".meta", L".png");
          replaceExtension(unit_data_path, L".meta", L".udp");
 

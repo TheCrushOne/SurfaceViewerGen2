@@ -19,7 +19,7 @@ HeightMapConverter::HeightMapConverter()
       //MessageString(ICommunicator::MS_Error, "Can't load settings serializer!");
       return;
    }
-   m_settingsSerializer.Create(SVGUtils::CurrentDllPath("SettingsHandler").c_str(), "CreateSettingsSerializer");
+   m_settingsSerializer.Create(SVGUtils::CurrentDllPath("SettingsHandler").c_str(), "CreateJsonSettingsSerializer");
    if (!m_settingsSerializer.IsValid())
    {
       m_lock = true;
@@ -53,6 +53,7 @@ bool HeightMapConverter::Convert(const file_utils::global_path_storage& src, con
    auto& srcFs = reinterpret_cast<const file_utils::global_path_storage&>(src);
    m_settingsSerializer->Deserialize(SVGUtils::wstringToString(srcFs.pathfinder_settings_path).c_str(), m_settings.pth_stt);
    m_settingsSerializer->Deserialize(SVGUtils::wstringToString(srcFs.research_settings_path).c_str(), m_settings.res_stt);
+   m_settingsSerializer->Deserialize(SVGUtils::wstringToString(srcFs.environment_settings_path).c_str(), m_settings.env_stt);
    m_unitDataSerializer->Deserialize(SVGUtils::wstringToString(srcFs.unit_data_path).c_str(), m_unitData);
 
    // NOTE: share provider вызываетcя из базы

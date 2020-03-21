@@ -111,7 +111,7 @@ namespace colreg
                  , ENVVALELEM(double, _ESN(EnvironmentSettingsFieldIndex::ESFI_ORDBIAS), gcs_info.ordinate_bias)
                  , ENVVALELEM(double, _ESN(EnvironmentSettingsFieldIndex::ESFI_ABSBIAS), gcs_info.abscissa_bias)
               })
-            , ENVCOLLECTINGELEM(_RSN(EnvironmentSettingsFieldIndex::ESFI_MTX)) {
+            , ENVCOLLECTINGELEM(_ESN(EnvironmentSettingsFieldIndex::ESFI_MTX)) {
                    ENVVALELEM(double, _ESN(EnvironmentSettingsFieldIndex::ESFI_ANGLE), mtx_info.angle)
                  , ENVVALELEM(double, _ESN(EnvironmentSettingsFieldIndex::ESFI_SCALE), mtx_info.scale)
                  , ENVVALELEM(double, _ESN(EnvironmentSettingsFieldIndex::ESFI_ORDBIAS), mtx_info.ordinate_bias)

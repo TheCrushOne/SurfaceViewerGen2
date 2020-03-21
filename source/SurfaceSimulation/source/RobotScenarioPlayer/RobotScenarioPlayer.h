@@ -32,6 +32,8 @@ namespace ColregSimulation
       void SetAppSettings(const settings::application_settings& s) override;
       void ReloadSettings() override;
       const settings::application_settings& GetAppSettings() const override;
+      void RecountRoutes() override;
+      void RecountResearch() override;
 
       // iSimulationState impl
       size_t GetUnitCount(UNIT_TYPE type) const;

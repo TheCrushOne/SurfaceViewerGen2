@@ -28,7 +28,7 @@ RobotScenarioPlayer::RobotScenarioPlayer(ICommunicator* pCommunicator, iProperty
 void RobotScenarioPlayer::Start()
 {
    m_databaseController->LoadScenarioData(m_settings, m_data.unit_data, m_coordGrid);
-   m_settings.env_stt.gcs_info.scale = 0.001;
+   //m_settings.env_stt.gcs_info.scale = 0.001; // вроде как это вынесено в настройки...теперь
    m_generator->Init(m_communicator, &(m_settings.env_stt));
    addUnitsFromScenario();
    correctCoordinateGrid();
@@ -38,9 +38,6 @@ void RobotScenarioPlayer::Start()
       lines.emplace_back(converter::data_line_ref{ elem.data(), elem.size() });
    ref = converter::raw_data_ref{ lines.data(), lines.size() };
    m_generator->GenerateStatic(ref);
-   // NOTE: Отключено для отладки отрисовки изолиний
-   m_engine->ProcessPathFind(m_data, m_coordGrid, [this]() { updateUnitsPath(); });
-   m_currentIdx = 0;
 }
 
 void RobotScenarioPlayer::Stop()
@@ -139,6 +136,18 @@ void RobotScenarioPlayer::ReloadSettings()
 const settings::application_settings& RobotScenarioPlayer::GetAppSettings() const
 {
    return m_settings;
+}
+
+void RobotScenarioPlayer::RecountRoutes()
+{
+   // NOTE: Отключено для отладки отрисовки изолиний
+   m_engine->ProcessPathFind(m_data, m_coordGrid, [this]() { updateUnitsPath(); });
+   m_currentIdx = 0;
+}
+
+void RobotScenarioPlayer::RecountResearch()
+{
+   m_engine->LaunchResearch(m_settings.res_stt);
 }
 
 size_t RobotScenarioPlayer::GetUnitCount(UNIT_TYPE type) const

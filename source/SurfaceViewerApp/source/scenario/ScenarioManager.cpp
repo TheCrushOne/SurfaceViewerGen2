@@ -111,6 +111,10 @@ void ScenarioManager::Step()
 
 void ScenarioManager::ReEstimate()
 {
+   auto sim = simulator::getSimulator();
+   if (!sim)
+      return;
+   sim->RecountRoutes();
    //const auto& simulationState = sim->GetState();
    //const auto navEstimation = simulationState.GetEstimation();
    //if (!navEstimation->GetResult())
@@ -121,6 +125,14 @@ void ScenarioManager::ReEstimate()
    //   pClusters->arr[i]->SetSettings(simulationState.GetSettings());
 
    //navEstimation->Solve(simulator::getSimulator()->GetState().GetSettings().cooperativeMode);
+}
+
+void ScenarioManager::ReSearch()
+{
+   auto sim = simulator::getSimulator();
+   if (!sim)
+      return;
+   sim->RecountResearch();
 }
 
 void ScenarioManager::createTransceiver()

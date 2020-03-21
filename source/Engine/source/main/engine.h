@@ -37,7 +37,7 @@ namespace engine
       void Init(ICommunicator* pCommunicator);
       void SetSettings(std::shared_ptr<settings::application_settings> settings) { m_appSettings = settings; }
 
-      void LaunchResearch(const settings::research_settings& resStt);
+      void LaunchResearch(const settings::research_settings& resStt) override final;
       const TimeResearchComplexStorage& GetTimeResearchResult() { return m_timeResStorage; }
       const LengthResearchComplexStorage& GetLengthResearchResult() { return m_lengthResStorage; }
       const ThreadResearchComplexStorage& GetThreadResearchResult() { return m_threadResStorage; }
@@ -56,6 +56,7 @@ namespace engine
       void generateResScenarioData(ColregSimulation::scenario_data& data, const ThreadResearchComplexStorage::SuperCell::Index& idx);
 
       void processPathFind(const ColregSimulation::scenario_data& scenarioData, const std::vector<std::vector<double>>& rawData, std::function<void(void)> completeCallback);
+      void processPathFindInternal(const ColregSimulation::scenario_data& scenarioData, std::function<void(void)> completeCallback);
       void generateResMap(size_t mapSize/*std::shared_ptr<SVM::iMatrix<SurfaceElement>>&, const STT::Gen1Settings&*/);
       pathfinder::check_fly_zone_result checkFlyZone(float);
       void convertMap(const std::vector<std::vector<double>>& rawdataSrc, std::shared_ptr<pathfinder::Matrix<SVCG::route_point>> rawdataDst);

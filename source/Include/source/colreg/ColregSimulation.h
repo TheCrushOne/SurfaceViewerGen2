@@ -235,6 +235,12 @@ namespace ColregSimulation
       //! Взять настройки
       virtual const settings::application_settings& GetAppSettings() const = 0;
       
+      //! Перерасчет путей
+      virtual void RecountRoutes() = 0;
+
+      //! Перерасчет исследования
+      virtual void RecountResearch() = 0;
+
       /*!
       \brief Добавить динамические объекты карты в симуляцию
       ID назначаются при запросе из GetState (id в objects игнорятся)

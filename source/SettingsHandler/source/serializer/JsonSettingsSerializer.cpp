@@ -2,6 +2,7 @@
 #include "JsonSettingsSerializer.h"
 #include "common/settings.h"
 #include <nlohmann/json.hpp>
+#include <fstream>
 
 using namespace nlohmann;
 
@@ -10,27 +11,53 @@ namespace colreg
    class JsonSettingsSerializer : public iJsonSettingsSerializer
    {
    public:
-      bool Serialize(const char*, const settings::pathfinding_settings&) const final { return true; }
-      bool Deserialize(const char*, settings::pathfinding_settings&) const final { return true; }
-      bool Serialize(const char*, const settings::research_settings&) const final { return true; }
-      bool Deserialize(const char*, settings::research_settings&) const final { return true; }
-      bool Serialize(const char*, const settings::environment_settings&) const final { return true; }
-      bool Deserialize(const char*, settings::environment_settings&) const final { return true; }
-      bool Serialize(const char*, const settings::simulation_settings&) const final { return true; }
-      bool Deserialize(const char*, settings::simulation_settings&) const final { return true; }
-      bool Serialize(const char*, const settings::map_settings&) const final { return true; }
-      bool Deserialize(const char*, settings::map_settings&) const final { return true; }
+      void Release() override { delete this; }
+
+      bool Serialize(const char* filename, const settings::pathfinding_settings& stt) const final { return serialize(filename, stt); }
+      bool Deserialize(const char* filename, settings::pathfinding_settings& stt) const final { return deserialize(filename, stt); }
+      bool Serialize(const char* filename, const settings::research_settings& stt) const final { return serialize(filename, stt); }
+      bool Deserialize(const char* filename, settings::research_settings& stt) const final { return deserialize(filename, stt); }
+      bool Serialize(const char* filename, const settings::environment_settings& stt) const final { return serialize(filename, stt); }
+      bool Deserialize(const char* filename, settings::environment_settings& stt) const final { return deserialize(filename, stt); }
+      bool Serialize(const char* filename, const settings::simulation_settings& stt) const final { return serialize(filename, stt); }
+      bool Deserialize(const char* filename, settings::simulation_settings& stt) const final { return deserialize(filename, stt); }
+      bool Serialize(const char* filename, const settings::map_settings& stt) const final { return serialize(filename, stt); }
+      bool Deserialize(const char* filename, settings::map_settings& stt) const final { return deserialize(filename, stt); }
 
       const char* ToString(const settings::pathfinding_settings& stt) const final { return toString(stt); }
-      bool FromString(const char* json, settings::pathfinding_settings& stt) const final { fromString(json, stt); }
+      bool FromString(const char* json, settings::pathfinding_settings& stt) const final { return fromString(json, stt); }
       const char* ToString(const settings::research_settings& stt) const final { return toString(stt); }
-      bool FromString(const char* json, settings::research_settings& stt) const final { fromString(json, stt); }
+      bool FromString(const char* json, settings::research_settings& stt) const final { return fromString(json, stt); }
       const char* ToString(const settings::environment_settings& stt) const final { return toString(stt); }
-      bool FromString(const char* json, settings::environment_settings& stt) const final { fromString(json, stt); }
+      bool FromString(const char* json, settings::environment_settings& stt) const final { return fromString(json, stt); }
       const char* ToString(const settings::simulation_settings& stt) const final { return toString(stt); }
-      bool FromString(const char* json, settings::simulation_settings& stt) const final { fromString(json, stt); }
+      bool FromString(const char* json, settings::simulation_settings& stt) const final { return fromString(json, stt); }
       const char* ToString(const settings::map_settings& stt) const final { return toString(stt); }
-      bool FromString(const char* json, settings::map_settings& stt) const final { fromString(json, stt); }
+      bool FromString(const char* json, settings::map_settings& stt) const final { return fromString(json, stt); }
+
+      template<class settings>
+      static bool serialize(const char* filename, const settings& data)
+      {
+         std::ofstream o(filename);
+         json j;
+         settingsToJson(j, data);
+         o << j;
+
+         return true;
+      }
+
+      template<class settings>
+      static bool deserialize(const char* filename, settings& data)
+      {
+         std::ifstream i(filename, std::ios_base::in | std::ios::binary);
+         if (!i.is_open())
+            return false;
+         json j;
+         i >> j;
+         jsonToSettings(j, data);
+
+         return true;
+      }
 
       template<class settings>
       static const char* toString(const settings& data)
@@ -72,6 +99,7 @@ namespace colreg
             val["value"] = elem;
             j["values"].emplace_back(val);
          }
+         return j;
       }
 
       template<>
@@ -116,7 +144,7 @@ namespace colreg
             ij["abscissa_bias"] = info.abscissa_bias;
             return ij;
          };
-         j["gsc_info"] = infoWriter(data.gcs_info);
+         j["gcs_info"] = infoWriter(data.gcs_info);
          j["mtx_info"] = infoWriter(data.mtx_info);
          return true;
       }
@@ -151,6 +179,7 @@ namespace colreg
          for (auto& elem : j["values"])
             range.values.emplace_back(elem["value"].get<T>());
          range.apply();
+         return range;
       }
 
       template<>
@@ -193,7 +222,7 @@ namespace colreg
             info.abscissa_bias = j["abscissa_bias"].get<double>();
             return info;
          };
-         data.gcs_info = infoReader(j["gsc_info"]);
+         data.gcs_info = infoReader(j["gcs_info"]);
          data.mtx_info = infoReader(j["mtx_info"]);
          return true;
       }
@@ -212,4 +241,9 @@ namespace colreg
          return true;
       }
    };
+}
+
+colreg::iSettingsSerializer* CreateJsonSettingsSerializer()
+{
+   return new colreg::JsonSettingsSerializer();
 }

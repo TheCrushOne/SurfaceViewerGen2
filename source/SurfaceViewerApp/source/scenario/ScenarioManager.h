@@ -166,6 +166,7 @@ public:
 
    std::wstring GetScenarioName()const { return m_scenarioFile; }
 
+   void ReSearch();
    void ReEstimate();
    bool GetAutoPause() const { return m_autoPause; }
    void SetAutoPause(bool autoPause) { m_autoPause = autoPause; }

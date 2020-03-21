@@ -68,6 +68,12 @@ const settings::application_settings& RobotLogPlayer::GetAppSettings() const
    return m_settings;
 }
 
+void RobotLogPlayer::RecountRoutes()
+{}
+
+void RobotLogPlayer::RecountResearch()
+{}
+
 size_t RobotLogPlayer::GetUnitCount(UNIT_TYPE type) const
 {
    return 0;

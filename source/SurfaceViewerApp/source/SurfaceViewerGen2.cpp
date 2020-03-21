@@ -54,20 +54,20 @@ BEGIN_MESSAGE_MAP(CSurfaceViewerGen2App, CWinAppEx)
    ON_COMMAND(ID_SIM_STEP, &CSurfaceViewerGen2App::OnRunStep)
    ON_COMMAND(ID_EDIT_PAUSE, &CSurfaceViewerGen2App::OnPause)
    ON_COMMAND(ID_EDIT_STOP, &CSurfaceViewerGen2App::OnStop)
-   ON_COMMAND(ID_EDIT_RULER, &CSurfaceViewerGen2App::OnRuler)
-   ON_COMMAND(ID_EDIT_SELECT, &CSurfaceViewerGen2App::OnSelect)
-   ON_COMMAND(ID_TOOL_CREATE, &CSurfaceViewerGen2App::OnCreate)
-   ON_COMMAND(ID_TOOL_EDIT, &CSurfaceViewerGen2App::OnEdit)
+   //ON_COMMAND(ID_EDIT_RULER, &CSurfaceViewerGen2App::OnRuler)
+   //ON_COMMAND(ID_EDIT_SELECT, &CSurfaceViewerGen2App::OnSelect)
+   //ON_COMMAND(ID_TOOL_CREATE, &CSurfaceViewerGen2App::OnCreate)
+   //ON_COMMAND(ID_TOOL_EDIT, &CSurfaceViewerGen2App::OnEdit)
    ON_COMMAND(ID_SIM_TIME_SCALE_1X, &CSurfaceViewerGen2App::OnTimeScale1X)
    ON_COMMAND(ID_SIM_TIME_SCALE_10X, &CSurfaceViewerGen2App::OnTimeScale10X)
    ON_COMMAND(ID_SIM_TIME_SCALE_100X, &CSurfaceViewerGen2App::OnTimeScale100X)
-   ON_COMMAND(ID_TRAFFIC_STATISTIC, &CSurfaceViewerGen2App::OnEnableTrafficStatistic)
+   //ON_COMMAND(ID_TRAFFIC_STATISTIC, &CSurfaceViewerGen2App::OnEnableTrafficStatistic)
    ON_COMMAND(ID_AUTOPAUSE, &CSurfaceViewerGen2App::OnAutoPause)
    ON_COMMAND(ID_EDIT_DELETE, &CSurfaceViewerGen2App::OnDelete)
-   ON_COMMAND(ID_GEN2UT_RECORD, &CSurfaceViewerGen2App::OnRecord)
+   //ON_COMMAND(ID_GEN2UT_RECORD, &CSurfaceViewerGen2App::OnRecord)
    ON_COMMAND(ID_SHOW_RELATIONS, &CSurfaceViewerGen2App::OnShowRelations)
    ON_COMMAND(ID_BUTTON_DNGRSTAT, &CSurfaceViewerGen2App::OnUploadDangerStatistic)
-   ON_COMMAND(ID_DEBUG, &CSurfaceViewerGen2App::OnDebug)
+   //ON_COMMAND(ID_DEBUG, &CSurfaceViewerGen2App::OnDebug)
    ON_COMMAND(ID_DEPTH_AREA + 100, &CSurfaceViewerGen2App::OnFalse)
 END_MESSAGE_MAP()
 
@@ -347,15 +347,16 @@ void CSurfaceViewerGen2App::OnRecord()
 
 void CSurfaceViewerGen2App::OnShowRelations()
 {
-   ScenarioManager::GetInstance().SetShowRelations(!ScenarioManager::GetInstance().GetShowRelations());
+   // NOTE: временно отсюда запускается расчет путей
+   ScenarioManager::GetInstance().ReEstimate();
+   //ScenarioManager::GetInstance().SetShowRelations(!ScenarioManager::GetInstance().GetShowRelations());
    user_interface::InvalidateView();
 }
 
 void CSurfaceViewerGen2App::OnUploadDangerStatistic()
 {
-   //CFileDialog fileDialog(TRUE, NULL, "*.csv;");
-   //if (fileDialog.DoModal() == IDOK)
-   //   ScenarioManager::GetInstance().SetDangerStatFileName(std::string(fileDialog.GetPathName()));
+   // NOTE: временно отсюда запускаются исследования
+   ScenarioManager::GetInstance().ReSearch();
    user_interface::InvalidateView();
 }
 

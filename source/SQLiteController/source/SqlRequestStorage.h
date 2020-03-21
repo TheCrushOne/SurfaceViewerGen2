@@ -27,7 +27,7 @@ namespace request_storage
       RT_CRSCNSTT = 0,
       //RT_CRRESSTT,
       //RT_CRUNITLIST,
-      //RT_CRUNITDATA,
+      RT_CRUNITDATA,
       //RT_CRMAPOBJ,
       //RT_CRMAPSTT,
 
@@ -67,12 +67,12 @@ namespace request_storage
          "data_col INTEGER, "
          "data_type INTEGER NOT NULL, "
          "FOREIGN KEY(data_unitId) REFERENCES unit_list(unit_id) ON DELETE CASCADE)" }*,*/
-      /*{ RequestToken::RT_CRUNITDATA,
+      { RequestToken::RT_CRUNITDATA,
          "CREATE TABLE IF NOT EXISTS unit_data("
          "unit_id INTEGER PRIMARY KEY, "
          "unit_uniqId INTEGER UNIQUE, "
          "unit_json TEXT)" },
-      { RequestToken::RT_CRMAPOBJ,
+      /*{ RequestToken::RT_CRMAPOBJ,
          "CREATE TABLE IF NOT EXISTS map_object("
          "object_id INTEGER PRIMARY KEY, "
          "object_type INTEGER NOT NULL, "

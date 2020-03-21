@@ -55,6 +55,11 @@ void Engine::ProcessPathFind(const ColregSimulation::scenario_data& scenarioData
 void Engine::processPathFind(const ColregSimulation::scenario_data& scenarioData, const std::vector<std::vector<double>>& rawData, std::function<void(void)> completeCallback)
 {
    convertMap(rawData, m_rawdata);
+   processPathFindInternal(scenarioData, completeCallback);
+}
+
+void Engine::processPathFindInternal(const ColregSimulation::scenario_data& scenarioData, std::function<void(void)> completeCallback)
+{
    m_indata = std::make_shared<pathfinder::path_finder_indata>(pathfinder::path_finder_indata{
       scenarioData.unit_data,
       pathfinder::path_finder_settings(),
@@ -261,6 +266,13 @@ void Engine::generateResMap(size_t mapSize/*std::shared_ptr<SVM::iMatrix<Surface
    // NOTE: тут всегда что-то квадратное
    m_rawdata->SetRowCount(mapSize);
    m_rawdata->SetColCount(mapSize);
+   for (size_t rowIdx = 0; rowIdx < mapSize; rowIdx++)
+   {
+      for (size_t colIdx = 0; colIdx < mapSize; colIdx++)
+      {
+         m_rawdata->Set(rowIdx, colIdx, { static_cast<int>(rowIdx), static_cast<int>(colIdx), 0. });
+      }
+   }
    //for (size_t rowIdx = 0; rowIdx < stt.mapSize; rowIdx++)
    //{
    //   for (size_t colIdx = 0; colIdx < stt.mapSize; colIdx++)
@@ -418,7 +430,8 @@ void Engine::threadResNextStep()
    m_threadResStorage.data.at(m_threadTaskCurrentIdx).result.time.start = startTime;
    ColregSimulation::scenario_data data;
    generateResScenarioData(data, m_threadResStorage.data.at(m_threadTaskCurrentIdx).index);
-   std::thread(&Engine::processPathFind, this, data, m_rawdata, [this]() { threadResNextStep();  }).detach();
+   std::thread(&Engine::processPathFindInternal, this, data, [this]() { threadResNextStep();  }).detach();
+   //m_communicator->Message(ICommunicator::MS_Debug, "Thread task idx %i", m_threadTaskCurrentIdx);
    m_threadTaskCurrentIdx++;
 }
 
@@ -426,6 +439,16 @@ void Engine::generateResScenarioData(ColregSimulation::scenario_data& data, cons
 {
    data.unit_data.air_units.resize(idx.fly_count_value);
    data.unit_data.land_units.resize(1);
+   for (auto& elem : data.unit_data.air_units)
+   {
+      elem.start = SVCG::route_point{ 6, 6 };
+      elem.finish = SVCG::route_point{ 250, 250 };
+   }
+   for (auto& elem : data.unit_data.land_units)
+   {
+      elem.start = SVCG::route_point{ 6, 6 };
+      elem.finish = SVCG::route_point{ 250, 250 };
+   }
 }
 
 void Engine::logThreadResearchResult()

@@ -3,13 +3,14 @@
 #include "SurfaceInterfaces.h"
 #include "common/file_storage.h"
 #include "common/communicator.h"
+#include "common/central_class.h"
 
 namespace converter
 {
    struct iConverter : colreg::iReleasable
    {
       virtual bool Init(ICommunicator*) = 0;
-      virtual bool Convert(const file_utils::global_path_storage&, const file_utils::global_path_storage&) = 0;
+      virtual bool Convert() = 0;
    };
 }
 

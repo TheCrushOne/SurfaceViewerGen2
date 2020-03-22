@@ -5,11 +5,11 @@
 #include "common\communicator.h"
 #include "common\pathfinder_structs.h"
 #include "crossdllinterface\EngineInterface.h"
-#include "crossdllinterface\UniversalLoggerInterface.h"
 #include "algorithm\pathfinder\PathFinderPipeline.h"
 //#include "base/instance.h"
 #include "common/simulation_structs.h"
 #include "common/research_structs.h"
+#include "common/central_class.h"
 #include <vector>
 
 //#define CURTIME_MS() QDateTime::currentDateTime().toMSecsSinceEpoch()
@@ -29,7 +29,7 @@ namespace settings
 
 namespace engine
 {
-   class Engine : public iEngine, public Communicable
+   class Engine : public iEngine, public Central
    {
    public:
       Engine();
@@ -38,9 +38,9 @@ namespace engine
       void SetSettings(std::shared_ptr<settings::application_settings> settings) { m_appSettings = settings; }
 
       void LaunchResearch(const settings::research_settings& resStt) override final;
-      const TimeResearchComplexStorage& GetTimeResearchResult() { return m_timeResStorage; }
-      const LengthResearchComplexStorage& GetLengthResearchResult() { return m_lengthResStorage; }
-      const ThreadResearchComplexStorage& GetThreadResearchResult() { return m_threadResStorage; }
+      const TimeResearchComplexStorage& GetTimeResearchResult() const override final { return m_timeResStorage; }
+      const LengthResearchComplexStorage& GetLengthResearchResult() const override final { return m_lengthResStorage; }
+      const ThreadResearchComplexStorage& GetThreadResearchResult() const override final { return m_threadResStorage; }
 
       void ProcessPathFind(const ColregSimulation::scenario_data& scenarioData, const std::vector<std::vector<double>>& rawData, std::function<void(void)> completeCallback) override final;
       const pathfinder::route_data& GetLastProcessedPaths() const override final { return m_pathfinder->GetPaths(); }
@@ -69,7 +69,6 @@ namespace engine
       void percent(int prcnt) {  }
       void drop() {  }*/
    private:
-      colreg::ModuleGuard<logger::iUniversalLogger> m_logger;
       std::shared_ptr<pathfinder::path_finder_indata> m_indata;
       std::shared_ptr<settings::application_settings> m_appSettings;
       std::unique_ptr<pathfinder::PathFinderPipeline> m_pathfinder;

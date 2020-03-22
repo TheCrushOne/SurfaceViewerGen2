@@ -3,8 +3,9 @@
 #include "crossdllinterface\TransceiverInterface.h"
 #include "Client.h"
 #include "Server.h"
+#include "common/central_class.h"
 
-class TransceiverImpl : public transceiver::iTransceiver
+class TransceiverImpl : public transceiver::iTransceiver, public Central
 {
 public:
    TransceiverImpl();

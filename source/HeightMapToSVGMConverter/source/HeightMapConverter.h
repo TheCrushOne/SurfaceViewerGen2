@@ -10,14 +10,14 @@
 
 namespace converter
 {
-   class HeightMapConverter : public iConverter, public Communicable
+   class HeightMapConverter : public iConverter, public Central
    {
    public:
       HeightMapConverter();
 
       bool Init(ICommunicator* comm);
 
-      bool Convert(const file_utils::global_path_storage& src, const file_utils::global_path_storage& dst) override final;
+      bool Convert() override final;
       void Release() override final { delete this; }
    private:
       void readDataFromPng(const char* srcPath);

@@ -74,6 +74,9 @@ void RobotLogPlayer::RecountRoutes()
 void RobotLogPlayer::RecountResearch()
 {}
 
+void RobotLogPlayer::LogResearchResult()
+{}
+
 size_t RobotLogPlayer::GetUnitCount(UNIT_TYPE type) const
 {
    return 0;

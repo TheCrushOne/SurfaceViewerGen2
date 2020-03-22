@@ -12,6 +12,20 @@ ScenarioManager::ScenarioManager()
 {
    m_info.data_callback_map[transceiver::JsonCommand::JC_NEWSURFACE] = [this](const char* txt) {};
    createTransceiver();
+
+   m_fsm.Create(SVGUtils::CurrentDllPath("FileStorageManager").c_str(), "CreateConverter");
+   if (!m_fsm.IsValid())
+   {
+      user_interface::SetOutputText(user_interface::OT_ERROR, "Can't load 'HeightMapToSVGMConverter'!");
+      return;
+   }
+
+   m_converter.Create(SVGUtils::CurrentDllPath("HeightMapToSVGMConverter").c_str(), "CreateConverter");
+   if (!m_converter.IsValid())
+   {
+      user_interface::SetOutputText(user_interface::OT_ERROR, "Can't load 'HeightMapToSVGMConverter'!");
+      return;
+   }
 }
 
 void ScenarioManager::Open(const wchar_t* fileName)
@@ -19,33 +33,21 @@ void ScenarioManager::Open(const wchar_t* fileName)
    m_scenarioFile = fileName;
    SelectedObjectManager::GetInstance().Unselect();
 
-   if (!m_converter.IsValid())
-   {
-      m_converter.Create(SVGUtils::CurrentDllPath("HeightMapToSVGMConverter").c_str(), "CreateConverter");
-      if (!m_converter.IsValid())
-      {
-         user_interface::SetOutputText(user_interface::OT_ERROR, "Can't load 'HeightMapToSVGMConverter'!");
-         return;
-      }
-      //return;
-   }
-   
-
-   auto hmFS = file_utils::global_path_storage(fileName);
-   auto sdFS = file_utils::global_path_storage(fileName);
+   m_fsm->Init(simulator::GetCommunicator());
+   m_fsm->PrepareStorage(fileName);
 
    m_converter->Init(simulator::GetCommunicator());
-   m_converter->Convert(hmFS, sdFS);
+   m_converter->Convert();
    
    //data_share::share_meta meta{L"file.bin"};
 
    //m_shareProvider->Share(meta, m_rawdata);
    //m_transceiver->Send(SVGUtils::wstringToString(meta.shared_filename).c_str());
 
-   simulator::simulatorStart(sdFS);
+   simulator::simulatorStart(m_fsm->GetPathStorage());
    //Dispatcher::GetInstance().LoadScenario(fileName);
 
-   if (ScenarioDispather::GetInstance().OnScenarioLoad(sdFS))
+   if (ScenarioDispather::GetInstance().OnScenarioLoad(m_fsm->GetPathStorage()))
    {
       setState(CSENARIO_STATUS::SS_PAUSE);
       //SetDebugMode(_debugMode);
@@ -73,20 +75,22 @@ void ScenarioManager::Pause()
 
 void ScenarioManager::Restart()
 {
-   if (!simulator::getSimulator())
+   auto sim = simulator::getSimulator();
+   if (!sim)
       return;
-   simulator::getSimulator()->Stop();
-   simulator::getSimulator()->Start();
+   sim->Stop();
+   sim->Start();
    setState(CSENARIO_STATUS::SS_PAUSE, true);
-   ScenarioDispather::GetInstance().OnScenarioTimeChanged(simulator::getSimulator()->GetState().GetTime());
+   ScenarioDispather::GetInstance().OnScenarioTimeChanged(sim->GetState().GetTime());
    SetDebugMode(m_debugMode);
 }
 
 void ScenarioManager::Stop()
 {
-   if (!simulator::getSimulator())
+   auto sim = simulator::getSimulator();
+   if (!sim)
       return;
-   simulator::getSimulator()->Reset();
+   sim->Reset();
    setState(CSENARIO_STATUS::SS_NOT_LOADED, true);
 }
 
@@ -133,6 +137,13 @@ void ScenarioManager::ReSearch()
    if (!sim)
       return;
    sim->RecountResearch();
+}
+
+void ScenarioManager::LogResearchResult()
+{
+   auto sim = simulator::getSimulator();
+   if (!sim)
+      return;
 }
 
 void ScenarioManager::createTransceiver()

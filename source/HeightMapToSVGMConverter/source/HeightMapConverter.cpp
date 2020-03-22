@@ -10,7 +10,7 @@ using namespace converter;
 
 HeightMapConverter::HeightMapConverter()
    : m_row_pointers(nullptr)
-   , Communicable(nullptr)
+   , Central(nullptr)
 {
    m_databaseController.Create(SVGUtils::CurrentDllPath("SQLiteController").c_str(), "CreateSQLiteDatabaseController");
    if (!m_databaseController.IsValid())
@@ -42,23 +42,23 @@ bool HeightMapConverter::Init(ICommunicator* comm)
    return true;
 }
 
-bool HeightMapConverter::Convert(const file_utils::global_path_storage& src, const file_utils::global_path_storage& dst)
+bool HeightMapConverter::Convert()
 {
    if (m_lock)
       return false;
-   std::string srcPngPath = SVGUtils::wstringToString((const_cast<file_utils::global_path_storage&>(src)).map_path);
+   auto& ps = GetPathStorage();
+   std::string srcPngPath = SVGUtils::wstringToString(ps.map_path);
    readDataFromPng(srcPngPath.c_str());
    convertToDatabaseFormat();
-   
-   auto& srcFs = reinterpret_cast<const file_utils::global_path_storage&>(src);
-   m_settingsSerializer->Deserialize(SVGUtils::wstringToString(srcFs.pathfinder_settings_path).c_str(), m_settings.pth_stt);
-   m_settingsSerializer->Deserialize(SVGUtils::wstringToString(srcFs.research_settings_path).c_str(), m_settings.res_stt);
-   m_settingsSerializer->Deserialize(SVGUtils::wstringToString(srcFs.environment_settings_path).c_str(), m_settings.env_stt);
-   m_unitDataSerializer->Deserialize(SVGUtils::wstringToString(srcFs.unit_data_path).c_str(), m_unitData);
+  
+   m_settingsSerializer->Deserialize(SVGUtils::wstringToString(ps.pathfinder_settings_path).c_str(), m_settings.pth_stt);
+   m_settingsSerializer->Deserialize(SVGUtils::wstringToString(ps.research_settings_path).c_str(), m_settings.res_stt);
+   m_settingsSerializer->Deserialize(SVGUtils::wstringToString(ps.environment_settings_path).c_str(), m_settings.env_stt);
+   m_unitDataSerializer->Deserialize(SVGUtils::wstringToString(ps.unit_data_path).c_str(), m_unitData);
 
    // NOTE: share provider вызываетcя из базы
-   m_databaseController->Init(m_communicator, dst);
-   m_databaseController->SaveScenarioData(m_settings, m_unitData, m_rawData);
+   m_databaseController->Init(m_communicator);
+   m_databaseController->SaveScenarioData(m_unitData, m_rawData);
 
    safeReleaseData();
    return true;

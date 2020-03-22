@@ -10,7 +10,7 @@ namespace ColregSimulation
       virtual void Init(ICommunicator*, iPropertyInterface*) = 0;
 
       //! Получение симулятора в зависимости от расширения сценария и загрузка сценария
-      virtual iSimulator* Get(const file_utils::global_path_storage&) = 0;
+      virtual iSimulator* Get(const std::shared_ptr<file_utils::global_path_storage>) = 0;
    };
 }
 

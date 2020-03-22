@@ -56,12 +56,12 @@
 using namespace database;
 
 SQLiteController::SQLiteController()
-   : Communicable(nullptr)
+   : Central(nullptr)
 {}
 
-void SQLiteController::Init(ICommunicator* comm, const file_utils::global_path_storage& dst)
+void SQLiteController::Init(ICommunicator* comm)
 {
-   m_communicator = comm;
+   SetCommunicator(comm);
    m_connector = std::make_unique<Connector>(comm);
    m_shareProvider.Create(SVGUtils::CurrentDllPath("DataShareProvider").c_str(), "CreateDataShareProvider");
    if (!m_shareProvider.IsValid())
@@ -84,41 +84,40 @@ void SQLiteController::Init(ICommunicator* comm, const file_utils::global_path_s
       m_communicator->Message(ICommunicator::MS_Error, "Can't load 'SettingsHandler'!");
       return;
    }
-   m_filestorage = const_cast<file_utils::global_path_storage&>(dst);
-   m_connector->Connect(SVGUtils::wstringToString(m_filestorage.database_path).c_str());
+   m_connector->Connect(SVGUtils::wstringToString(GetPathStorage().database_path).c_str());
    baseCheckCreate();
 }
 
-void SQLiteController::SaveScenarioData(const settings::application_settings& settings, const settings::unit_source_data& unitData, const std::vector<std::vector<double>>& coordGrid)
+void SQLiteController::SaveScenarioData(const settings::unit_source_data& unitData, const std::vector<std::vector<double>>& coordGrid)
 {
-   m_shareProvider->Share(m_filestorage.coordinate_map_path.c_str(), settings.map_stt, coordGrid);
-   SaveAppSettings(settings);
+   m_shareProvider->Share(m_filestorage.coordinate_map_path.c_str(), coordGrid);
+   SaveAppSettings();
    saveUnitData(unitData);
 }
 
-void SQLiteController::SaveAppSettings(const settings::application_settings& settings)
+void SQLiteController::SaveAppSettings()
 {
-   savePathfindingSettings(settings.pth_stt);
-   saveResearchSettings(settings.res_stt);
-   saveEnvironmentSettings(settings.env_stt);
-   saveSimulationSettings(settings.sim_stt);
-   saveMapSettings(settings.map_stt);
+   savePathfindingSettings();
+   saveResearchSettings();
+   saveEnvironmentSettings();
+   saveSimulationSettings();
+   saveMapSettings();
 }
 
-void SQLiteController::LoadScenarioData(settings::application_settings& settings, settings::unit_source_data& unitData, std::vector<std::vector<double>>& coordGrid)
+void SQLiteController::LoadScenarioData(settings::unit_source_data& unitData, std::vector<std::vector<double>>& coordGrid)
 {
-   LoadAppSettings(settings);
+   LoadAppSettings();
    loadUnitData(unitData);
-   m_shareProvider->GetShared(m_filestorage.coordinate_map_path.c_str(), settings.map_stt, coordGrid);
+   m_shareProvider->GetShared(m_filestorage.coordinate_map_path.c_str(), coordGrid);
 }
 
-void SQLiteController::LoadAppSettings(settings::application_settings& settings)
+void SQLiteController::LoadAppSettings()
 {
-   loadMapSettings(settings.map_stt);
-   loadSimulationSettings(settings.sim_stt);
-   loadEnvironmentSettings(settings.env_stt);
-   loadResearchSettings(settings.res_stt);
-   loadPathfindingSettings(settings.pth_stt);
+   loadMapSettings();
+   loadSimulationSettings();
+   loadEnvironmentSettings();
+   loadResearchSettings();
+   loadPathfindingSettings();
 }
 
 void SQLiteController::baseCheckCreate()
@@ -127,44 +126,42 @@ void SQLiteController::baseCheckCreate()
       m_connector->SQLNoResRequest(req.second.c_str());
 }
 
-void SQLiteController::savePathfindingSettings(const settings::pathfinding_settings& settings)
+void SQLiteController::savePathfindingSettings()
 {
    NO_RES_PREP;
-   std::string jsonSettings = m_settingsSerializer->ToString(settings);
+   std::string jsonSettings = m_settingsSerializer->ToString(GetSettings().pth_stt);
 
-   STT_INS_NORES_RL(request_storage::SettingsType::ST_PATHFINDING, jsonSettings.c_str()); 
-   //sprintf_s(buffer, request_storage::insReqList.at(request_storage::RequestToken::RT_SETSCNSTT).c_str(), request_storage::settingsTokenList.at(request_storage::SettingsType::ST_PATHFINDING).c_str(), jsonSettings.c_str());
-   //m_connector->SQLNoResRequest(buffer);
+   STT_INS_NORES_RL(request_storage::SettingsType::ST_PATHFINDING, jsonSettings.c_str());
 }
 
-void SQLiteController::saveResearchSettings(const settings::research_settings& settings)
+void SQLiteController::saveResearchSettings()
 {
    NO_RES_PREP;
-   std::string jsonSettings = m_settingsSerializer->ToString(settings);
+   std::string jsonSettings = m_settingsSerializer->ToString(GetSettings().res_stt);
 
    STT_INS_NORES_RL(request_storage::SettingsType::ST_RESEARCH, jsonSettings.c_str());
 }
 
-void SQLiteController::saveEnvironmentSettings(const settings::environment_settings& settings)
+void SQLiteController::saveEnvironmentSettings()
 {
    NO_RES_PREP;
-   std::string jsonSettings = m_settingsSerializer->ToString(settings);
+   std::string jsonSettings = m_settingsSerializer->ToString(GetSettings().env_stt);
 
    STT_INS_NORES_RL(request_storage::SettingsType::ST_ENVIRONMENT, jsonSettings.c_str());
 }
 
-void SQLiteController::saveSimulationSettings(const settings::simulation_settings& settings)
+void SQLiteController::saveSimulationSettings()
 {
    NO_RES_PREP;
-   std::string jsonSettings = m_settingsSerializer->ToString(settings);
+   std::string jsonSettings = m_settingsSerializer->ToString(GetSettings().sim_stt);
 
    STT_INS_NORES_RL(request_storage::SettingsType::ST_SIMULATION, jsonSettings.c_str());
 }
 
-void SQLiteController::saveMapSettings(const settings::map_settings& settings)
+void SQLiteController::saveMapSettings()
 {
    NO_RES_PREP;
-   std::string jsonSettings = m_settingsSerializer->ToString(settings);
+   std::string jsonSettings = m_settingsSerializer->ToString(GetSettings().map_stt);
 
    STT_INS_NORES_RL(request_storage::SettingsType::ST_MAP, jsonSettings.c_str());
 }
@@ -174,58 +171,57 @@ void SQLiteController::saveUnitData(const settings::unit_source_data& settings)
    NO_RES_PREP;
    std::string jsonSettings = m_unitDataSerializer->ToString(settings);
 
-   //sprintf_s(buffer, request_storage::insupdReqList.at(request_storage::RequestToken::RT_SETUNTDAT).c_str(), jsonSettings.c_str()); m_connector->SQLNoResRequest(buffer);
    UNT_INSUPD_NORES_RL(jsonSettings.c_str());
 }
 
-void SQLiteController::loadPathfindingSettings(settings::pathfinding_settings& settings)
+void SQLiteController::loadPathfindingSettings()
 {
    RES_PREP_STR;
    std::string dat;
 
    STT_SEL_DAT_RES_STR_RL(request_storage::SettingsType::ST_PATHFINDING, dat);
 
-   m_settingsSerializer->FromString(dat.c_str(), settings);
+   m_settingsSerializer->FromString(dat.c_str(), GetSettingsModify().pth_stt);
 }
 
-void SQLiteController::loadResearchSettings(settings::research_settings& settings)
+void SQLiteController::loadResearchSettings()
 {
    RES_PREP_STR;
    std::string dat;
 
    STT_SEL_DAT_RES_STR_RL(request_storage::SettingsType::ST_RESEARCH, dat);
 
-   m_settingsSerializer->FromString(dat.c_str(), settings);
+   m_settingsSerializer->FromString(dat.c_str(), GetSettingsModify().res_stt);
 }
 
-void SQLiteController::loadEnvironmentSettings(settings::environment_settings& settings)
+void SQLiteController::loadEnvironmentSettings()
 {
    RES_PREP_STR;
    std::string dat;
 
    STT_SEL_DAT_RES_STR_RL(request_storage::SettingsType::ST_ENVIRONMENT, dat);
 
-   m_settingsSerializer->FromString(dat.c_str(), settings);
+   m_settingsSerializer->FromString(dat.c_str(), GetSettingsModify().env_stt);
 }
 
-void SQLiteController::loadSimulationSettings(settings::simulation_settings& settings)
+void SQLiteController::loadSimulationSettings()
 {
    RES_PREP_STR;
    std::string dat;
 
    STT_SEL_DAT_RES_STR_RL(request_storage::SettingsType::ST_SIMULATION, dat);
 
-   m_settingsSerializer->FromString(dat.c_str(), settings);
+   m_settingsSerializer->FromString(dat.c_str(), GetSettingsModify().sim_stt);
 }
 
-void SQLiteController::loadMapSettings(settings::map_settings& settings)
+void SQLiteController::loadMapSettings()
 {
    RES_PREP_STR;
    std::string dat;
 
    STT_SEL_DAT_RES_STR_RL(request_storage::SettingsType::ST_MAP, dat);
 
-   m_settingsSerializer->FromString(dat.c_str(), settings);
+   m_settingsSerializer->FromString(dat.c_str(), GetSettingsModify().map_stt);
 }
 
 void SQLiteController::loadUnitData(settings::unit_source_data& settings)

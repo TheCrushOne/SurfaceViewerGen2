@@ -255,6 +255,15 @@
     <ClInclude Include="source\common\research_types.h">
       <Filter>common</Filter>
     </ClInclude>
+    <ClInclude Include="source\crossdllinterface\FileStorageInterface.h">
+      <Filter>crossdllinterface</Filter>
+    </ClInclude>
+    <ClInclude Include="source\common\global_structs.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="source\common\central_class.h">
+      <Filter>common</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\colreg\ThirdParty\tinyxml2\tinyxml2.cpp">

@@ -3,13 +3,14 @@
 #include "common/communicator.h"
 #include "SurfaceInterfaces.h"
 #include "common/research_structs.h"
+#include "common/central_class.h"
 
 namespace logger
 {
    struct iUniversalLogger : colreg::iReleasable
    {
       virtual void Init(ICommunicator*) = 0;
-      virtual bool LogThreadResearchResult(const wchar_t*, const ThreadResearchComplexStorage&) = 0;
+      virtual bool LogThreadResearchResult(const ThreadResearchComplexStorage&) = 0;
    };
 }
 

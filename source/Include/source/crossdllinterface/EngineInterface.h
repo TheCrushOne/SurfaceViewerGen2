@@ -4,6 +4,7 @@
 #include "colreg/BaseRef.h"
 #include "common/pathfinder_structs.h"
 #include "common/simulation_structs.h"
+#include "common/research_structs.h"
 #include "common/settings.h"
 
 namespace engine
@@ -14,6 +15,9 @@ namespace engine
       virtual void ProcessPathFind(const ColregSimulation::scenario_data&, const std::vector<std::vector<double>>&, std::function<void(void)>) = 0;
       virtual const pathfinder::route_data& GetLastProcessedPaths() const = 0;
       virtual void LaunchResearch(const settings::research_settings&) = 0;
+      virtual const TimeResearchComplexStorage& GetTimeResearchResult() const = 0;
+      virtual const LengthResearchComplexStorage& GetLengthResearchResult() const = 0;
+      virtual const ThreadResearchComplexStorage& GetThreadResearchResult() const = 0;
    };
 }
 

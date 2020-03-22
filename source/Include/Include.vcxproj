@@ -56,11 +56,13 @@
     <ClInclude Include="source\colreg\XmlProperties\xml_property_container.h" />
     <ClInclude Include="source\colreg\XMLSettingsSerializer.h" />
     <ClInclude Include="source\common\base_class.h" />
+    <ClInclude Include="source\common\central_class.h" />
     <ClInclude Include="source\common\communicator.h" />
     <ClInclude Include="source\common\converter_structs.h" />
     <ClInclude Include="source\common\coordinates.h" />
     <ClInclude Include="source\common\database_misc.h" />
     <ClInclude Include="source\common\file_storage.h" />
+    <ClInclude Include="source\common\global_structs.h" />
     <ClInclude Include="source\common\observer.h" />
     <ClInclude Include="source\common\pathfinder_structs.h" />
     <ClInclude Include="source\common\pathfinder_types.h" />
@@ -76,6 +78,7 @@
     <ClInclude Include="source\crossdllinterface\ConverterInterface.h" />
     <ClInclude Include="source\crossdllinterface\DataShareInterface.h" />
     <ClInclude Include="source\crossdllinterface\EngineInterface.h" />
+    <ClInclude Include="source\crossdllinterface\FileStorageInterface.h" />
     <ClInclude Include="source\crossdllinterface\RawDataInterface.h" />
     <ClInclude Include="source\crossdllinterface\SettingsSerializerInterface.h" />
     <ClInclude Include="source\crossdllinterface\SimulationInterface.h" />

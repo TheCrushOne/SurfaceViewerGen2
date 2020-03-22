@@ -12,7 +12,7 @@
 using namespace engine;
 
 Engine::Engine()
-   : Communicable(nullptr)
+   : Central(nullptr)
    , m_rawdata(std::make_shared<pathfinder::Matrix<SVCG::route_point>>(SVCG::route_point{}))
    , m_routedata(std::make_shared<pathfinder::route_data>())
    , m_pathfinder(std::make_unique<pathfinder::PathFinderPipeline>())
@@ -37,14 +37,6 @@ void Engine::Init(ICommunicator* pCommunicator)
 {
    m_communicator = pCommunicator;
    m_pathfinder->Init(m_communicator);
-
-   m_logger.Create(SVGUtils::CurrentDllPath("UniversalLogger").c_str(), "CreateUniversalLogger");
-   if (!m_logger.IsValid())
-   {
-      m_communicator->Message(ICommunicator::MS_Error, "Can't load 'Universal Logger'");
-      return;
-   }
-   m_logger->Init(pCommunicator);
 }
 
 void Engine::ProcessPathFind(const ColregSimulation::scenario_data& scenarioData, const std::vector<std::vector<double>>& rawData, std::function<void(void)> completeCallback)
@@ -424,7 +416,7 @@ void Engine::threadResNextStep()
    }
    if (m_threadTaskCurrentIdx >= m_threadResStorage.data.size())
    {
-      m_logger->LogThreadResearchResult(L"", GetThreadResearchResult());
+      //m_logger->LogThreadResearchResult(L"", GetThreadResearchResult());
       return;
    }
    m_threadResStorage.data.at(m_threadTaskCurrentIdx).result.time.start = startTime;

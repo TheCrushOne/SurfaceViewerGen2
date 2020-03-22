@@ -9,17 +9,17 @@ namespace file_utils
       data.replace(data.find(base), sizeof(data) - 1, nw);
    }
 
-   inline void replaceTailFolder(std::wstring& data, const wchar_t* nw)
+   inline void replaceTailFile(std::wstring& data)
    {
       data.replace(data.find_last_of(L"//"), sizeof(data) - 1, L"");
-      data.replace(data.find_last_of(L"//"), sizeof(data) - 1, nw);
+      //data.replace(data.find_last_of(L"//"), sizeof(data) - 1, nw);
    }
 
    struct global_path_storage
    {
       // base
-      std::wstring log_folder_path;
       std::wstring meta_path;
+      std::wstring scenario_path;
 
       // heightmap
       std::wstring pathfinder_settings_path;
@@ -44,7 +44,7 @@ namespace file_utils
 
       global_path_storage(std::wstring metaFileName)
          : meta_path(metaFileName)
-         , log_folder_path(metaFileName)
+         , scenario_path(metaFileName)
          , pathfinder_settings_path(metaFileName)
          , research_settings_path(metaFileName)
          , environment_settings_path(metaFileName)
@@ -65,11 +65,8 @@ namespace file_utils
          replaceExtension(map_object_path, L".meta", L".xml");
 
          replaceExtension(database_path, L".meta", L".db3");
-      }
 
-      void ApplyFolderSettings(const wchar_t* logPath)
-      {
-         logger_folder_path = logPath;
+         replaceTailFile(meta_path);
       }
    };
 }

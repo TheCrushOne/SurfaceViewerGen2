@@ -23,6 +23,14 @@ RobotScenarioPlayer::RobotScenarioPlayer(ICommunicator* pCommunicator, iProperty
       m_communicator->Message(ICommunicator::MS_Error, "Can't load 'ChartObjectGenerator'");
       return;
    }
+
+   m_logger.Create(SVGUtils::CurrentDllPath("UniversalLogger").c_str(), "CreateUniversalLogger");
+   if (!m_logger.IsValid())
+   {
+      m_communicator->Message(ICommunicator::MS_Error, "Can't load 'Universal Logger'");
+      return;
+   }
+   m_logger->Init(pCommunicator);
 }
 
 void RobotScenarioPlayer::Start()
@@ -148,6 +156,26 @@ void RobotScenarioPlayer::RecountRoutes()
 void RobotScenarioPlayer::RecountResearch()
 {
    m_engine->LaunchResearch(m_settings.res_stt);
+}
+
+void RobotScenarioPlayer::LogResearchResult()
+{
+   switch (m_settings.res_stt.res_type)
+   {
+   case settings::ResearchType::RT_TIME:
+   {
+      break;
+   }
+   case settings::ResearchType::RT_LENGTH:
+   {
+      break;
+   }
+   case settings::ResearchType::RT_THREAD:
+   {
+      m_logger->LogThreadResearchResult(m_engine->GetThreadResearchResult());
+      break;
+   }
+   }
 }
 
 size_t RobotScenarioPlayer::GetUnitCount(UNIT_TYPE type) const

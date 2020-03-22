@@ -5,6 +5,7 @@
 #include "common\pathfinder_structs.h"
 #include "SimulationModel/ColregSimulationImpl.h"
 #include "crossdllinterface\ChartObjectGeneratorInterface.h"
+#include "crossdllinterface\UniversalLoggerInterface.h"
 
 namespace ColregSimulation
 {
@@ -34,6 +35,7 @@ namespace ColregSimulation
       const settings::application_settings& GetAppSettings() const override;
       void RecountRoutes() override;
       void RecountResearch() override;
+      void LogResearchResult() override;
 
       // iSimulationState impl
       size_t GetUnitCount(UNIT_TYPE type) const;
@@ -56,6 +58,7 @@ namespace ColregSimulation
       std::vector<std::vector<double>> m_coordGrid;
       colreg::ModuleGuard<engine::iEngine> m_engine;
       colreg::ModuleGuard<chart_object::iGenerator> m_generator;
+      colreg::ModuleGuard<logger::iUniversalLogger> m_logger;
 
       chart_grid_meta m_gridMeta;
       std::vector<SimulationShip> m_ships;

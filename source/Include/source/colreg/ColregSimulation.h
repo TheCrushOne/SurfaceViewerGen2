@@ -241,6 +241,9 @@ namespace ColregSimulation
       //! Перерасчет исследования
       virtual void RecountResearch() = 0;
 
+      //! Логгирование результатов исследования
+      virtual void LogResearchResult() = 0;
+
       /*!
       \brief Добавить динамические объекты карты в симуляцию
       ID назначаются при запросе из GetState (id в objects игнорятся)

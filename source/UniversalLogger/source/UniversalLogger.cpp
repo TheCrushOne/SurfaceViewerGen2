@@ -11,7 +11,7 @@ namespace fs = std::filesystem;
 using namespace logger;
 
 UniversalLogger::UniversalLogger()
-   : Communicable(nullptr)
+   : Central(nullptr)
 {}
 
 void UniversalLogger::Init(ICommunicator* comm)
@@ -19,7 +19,7 @@ void UniversalLogger::Init(ICommunicator* comm)
    m_communicator = comm;
 }
 
-bool UniversalLogger::LogThreadResearchResult(const wchar_t* logPath, const ThreadResearchComplexStorage& meta)
+bool UniversalLogger::LogThreadResearchResult(const ThreadResearchComplexStorage& meta)
 {
    time_t rawtime;
    struct tm* timeinfo;

@@ -4,6 +4,7 @@
 #include "crossdllinterface/ConverterInterface.h"
 #include "crossdllinterface\TransceiverInterface.h"
 #include "crossdllinterface/DataShareInterface.h"
+#include "crossdllinterface\FileStorageInterface.h"
 #include "common/file_storage.h"
 
 namespace ColregSimulation
@@ -73,7 +74,7 @@ public:
          });
    }
 
-   bool OnScenarioLoad(file_utils::global_path_storage& name) { return m_observable.Notify(false, name); }
+   bool OnScenarioLoad(const file_utils::global_path_storage& name) { return m_observable.Notify(false, name); }
    bool OnScenarioStatusChanged(CSENARIO_STATUS status) { return m_observable2.Notify(false, status); }
    bool OnScenarioTimeChanged(double time) { return m_observable3.Notify(false, time); }
    bool OnScenarioModified() { return m_observable4.Notify(false); }
@@ -168,6 +169,8 @@ public:
 
    void ReSearch();
    void ReEstimate();
+   void LogResearchResult();
+
    bool GetAutoPause() const { return m_autoPause; }
    void SetAutoPause(bool autoPause) { m_autoPause = autoPause; }
    bool GetRecording() const { return m_recording; }
@@ -190,6 +193,7 @@ private:
 
    void printSolutuins();
    void printEnentsAndSuggestions();
+   
 
    void createTransceiver();
    void initTransceiver();
@@ -205,5 +209,6 @@ private:
    bool m_recording = false;
    std::wstring m_scenarioFile;
    colreg::ModuleGuard<transceiver::iTransceiver> m_transceiver;
+   colreg::ModuleGuard<file_storage::iFileStorageManager> m_fsm;
    transceiver::transceiver_info m_info;
 };

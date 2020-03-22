@@ -4,13 +4,13 @@
 
 namespace logger
 {
-   class UniversalLogger : public iUniversalLogger, public Communicable
+   class UniversalLogger : public iUniversalLogger
    {
    public:
       UniversalLogger();
 
       void Init(ICommunicator* comm) override final;
-      bool LogThreadResearchResult(const wchar_t*, const ThreadResearchComplexStorage&) override final;
+      bool LogThreadResearchResult(const ThreadResearchComplexStorage&) override final;
       void Release() override final { delete this; }
    };
 }

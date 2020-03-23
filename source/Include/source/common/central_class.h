@@ -13,11 +13,14 @@ public:
    {
       SetCommunicator(comm);
    }
-   static const file_utils::global_path_storage& GetPathStorage() { return Central::m_paths; }
-   static file_utils::global_path_storage& GetPathStorageModify() { return Central::m_paths; }
-   static const settings::application_settings& GetSettings() { return Central::m_settings; }
-   static settings::application_settings& GetSettingsModify() { return Central::m_settings; }
+   const std::shared_ptr<file_utils::global_path_storage>& GetPathStorage() { checkPaths(); return m_paths; }
+   std::shared_ptr<file_utils::global_path_storage>& GetPathStorageModify() { checkPaths(); return m_paths; }
+   const std::shared_ptr<settings::application_settings>& GetSettings() { checkSettings();  return m_settings; }
+   std::shared_ptr<settings::application_settings>& GetSettingsModify() { checkSettings();  return m_settings; }
+protected:
+   void checkPaths() { _ASSERT(m_paths); }
+   void checkSettings() { _ASSERT(m_settings); }
 private:
-   static file_utils::global_path_storage m_paths;
-   static settings::application_settings m_settings;
+   std::shared_ptr<file_utils::global_path_storage> m_paths;
+   std::shared_ptr<settings::application_settings> m_settings;
 };

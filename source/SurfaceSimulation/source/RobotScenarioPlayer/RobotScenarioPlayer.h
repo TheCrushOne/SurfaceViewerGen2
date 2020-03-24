@@ -14,7 +14,7 @@ namespace ColregSimulation
       , public SimulatorBase
    {
    public:
-      RobotScenarioPlayer(ICommunicator* pCommunicator, iPropertyInterface* prop);
+      RobotScenarioPlayer(iPropertyInterface* prop);
       ~RobotScenarioPlayer() = default;
 
       // iSimulator impl

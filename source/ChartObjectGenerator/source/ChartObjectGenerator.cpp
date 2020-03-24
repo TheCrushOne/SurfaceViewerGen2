@@ -8,14 +8,11 @@
 using namespace chart_object;
 
 ChartObjectGenerator::ChartObjectGenerator()
-   : Communicable(nullptr)
-   , m_settings(nullptr)
 {}
 
-bool ChartObjectGenerator::Init(ICommunicator* comm, settings::environment_settings* envStt)
+bool ChartObjectGenerator::Init(std::shared_ptr<central_pack> pack)
 {
-   m_settings = envStt;
-   SetCommunicator(comm);
+   Central::Init(pack);
    return true;
 }
 
@@ -50,17 +47,18 @@ void ChartObjectGenerator::addChartObject(chart_storage& storage)
 
 void ChartObjectGenerator::generateChartBorder(const converter::raw_data_ref& rawdata)
 {
+   const auto& envstt = GetPack()->settings->env_stt;
    chart_storage& border = generateNew();
    border.type = colreg::OBJECT_TYPE::OT_BORDER_AREA;
    int rowCount = rawdata.size, colCount = rawdata.size ? rawdata.arr[0].size : 0;
    border.geom_contour_vct.emplace_back();
    auto& borderCnt = border.geom_contour_vct.back();
-   borderCnt.emplace_back(SVCG::RoutePointToPositionPoint(SVCG::route_point{ 0, 0 }, *m_settings));
-   borderCnt.emplace_back(SVCG::RoutePointToPositionPoint(SVCG::route_point{ rowCount - 1, 0 }, *m_settings));
-   borderCnt.emplace_back(SVCG::RoutePointToPositionPoint(SVCG::route_point{ rowCount - 1, colCount - 1 }, *m_settings));
-   borderCnt.emplace_back(SVCG::RoutePointToPositionPoint(SVCG::route_point{ 0, colCount - 1 }, *m_settings));
+   borderCnt.emplace_back(SVCG::RoutePointToPositionPoint(SVCG::route_point{ 0, 0 }, envstt));
+   borderCnt.emplace_back(SVCG::RoutePointToPositionPoint(SVCG::route_point{ rowCount - 1, 0 }, envstt));
+   borderCnt.emplace_back(SVCG::RoutePointToPositionPoint(SVCG::route_point{ rowCount - 1, colCount - 1 }, envstt));
+   borderCnt.emplace_back(SVCG::RoutePointToPositionPoint(SVCG::route_point{ 0, colCount - 1 }, envstt));
    // NOTE: Первая точка повторяется для закольцованности контура
-   borderCnt.emplace_back(SVCG::RoutePointToPositionPoint(SVCG::route_point{ 0, 0 }, *m_settings));
+   borderCnt.emplace_back(SVCG::RoutePointToPositionPoint(SVCG::route_point{ 0, 0 }, envstt));
    border.Commit();
 
    addChartObject(border);
@@ -68,6 +66,7 @@ void ChartObjectGenerator::generateChartBorder(const converter::raw_data_ref& ra
 
 void ChartObjectGenerator::generateIsolines(const converter::raw_data_ref& rawdata)
 {
+   const auto& envstt = GetPack()->settings->env_stt;
    std::vector<colreg::geo_point> isoPoints;
    //double height = 27.;
    double height = 50.;
@@ -77,13 +76,13 @@ void ChartObjectGenerator::generateIsolines(const converter::raw_data_ref& rawda
       auto& rowLow = rawdata.arr[rIdx + 1];
       for (size_t cIdx = 0; cIdx < rowHigh.size - 1; cIdx++)
       {
-         colreg::geo_point gplu = SVCG::RoutePointToPositionPoint(SVCG::route_point{ static_cast<int>(rIdx), static_cast<int>(cIdx) }, *m_settings);
-         colreg::geo_point gpll = SVCG::RoutePointToPositionPoint(SVCG::route_point{ static_cast<int>(rIdx + 1), static_cast<int>(cIdx) }, *m_settings);
-         colreg::geo_point gpru = SVCG::RoutePointToPositionPoint(SVCG::route_point{ static_cast<int>(rIdx), static_cast<int>(cIdx + 1) }, *m_settings);
-         colreg::geo_point gprl = SVCG::RoutePointToPositionPoint(SVCG::route_point{ static_cast<int>(rIdx + 1) , static_cast<int>(cIdx + 1) }, *m_settings);
+         colreg::geo_point gplu = SVCG::RoutePointToPositionPoint(SVCG::route_point{ static_cast<int>(rIdx), static_cast<int>(cIdx) }, envstt);
+         colreg::geo_point gpll = SVCG::RoutePointToPositionPoint(SVCG::route_point{ static_cast<int>(rIdx + 1), static_cast<int>(cIdx) }, envstt);
+         colreg::geo_point gpru = SVCG::RoutePointToPositionPoint(SVCG::route_point{ static_cast<int>(rIdx), static_cast<int>(cIdx + 1) }, envstt);
+         colreg::geo_point gprl = SVCG::RoutePointToPositionPoint(SVCG::route_point{ static_cast<int>(rIdx + 1) , static_cast<int>(cIdx + 1) }, envstt);
          if ((height - rowHigh.arr[cIdx]) * (height - rowHigh.arr[cIdx + 1]) < 0)
          {
-            colreg::geo_point gp = SVCG::RoutePointToPositionPoint(SVCG::route_point{ static_cast<int>(rIdx), 0 }, *m_settings);
+            colreg::geo_point gp = SVCG::RoutePointToPositionPoint(SVCG::route_point{ static_cast<int>(rIdx), 0 }, envstt);
             double heightPerLat = (rowHigh.arr[cIdx + 1] - rowHigh.arr[cIdx]) / (gpru.lat - gplu.lat);
             gp.lat = (rowHigh.arr[cIdx + 1] - height) / heightPerLat + gplu.lat;
             if (std::find(isoPoints.begin(), isoPoints.end(), gp) == isoPoints.end())
@@ -91,7 +90,7 @@ void ChartObjectGenerator::generateIsolines(const converter::raw_data_ref& rawda
          }
          if ((height - rowHigh.arr[cIdx]) * (height - rowLow.arr[cIdx]) < 0)
          {
-            colreg::geo_point gp = SVCG::RoutePointToPositionPoint(SVCG::route_point{ 0, static_cast<int>(cIdx) }, *m_settings);
+            colreg::geo_point gp = SVCG::RoutePointToPositionPoint(SVCG::route_point{ 0, static_cast<int>(cIdx) }, envstt);
             double heightPerLon = (rowLow.arr[cIdx] - rowHigh.arr[cIdx]) / (gpll.lon - gplu.lon);
             gp.lon = (rowLow.arr[cIdx] - height) / heightPerLon + gplu.lon;
             if (std::find(isoPoints.begin(), isoPoints.end(), gp) == isoPoints.end())
@@ -99,7 +98,7 @@ void ChartObjectGenerator::generateIsolines(const converter::raw_data_ref& rawda
          }
          if ((height - rowHigh.arr[cIdx + 1]) * (height - rowLow.arr[cIdx + 1]) < 0)
          {
-            colreg::geo_point gp = SVCG::RoutePointToPositionPoint(SVCG::route_point{ 0, static_cast<int>(cIdx + 1) }, *m_settings);
+            colreg::geo_point gp = SVCG::RoutePointToPositionPoint(SVCG::route_point{ 0, static_cast<int>(cIdx + 1) }, envstt);
             double heightPerLon = (rowLow.arr[cIdx + 1] - rowHigh.arr[cIdx + 1]) / (gprl.lon - gpru.lon);
             gp.lon = (rowLow.arr[cIdx + 1] - height) / heightPerLon + gpru.lon;
             if (std::find(isoPoints.begin(), isoPoints.end(), gp) == isoPoints.end())
@@ -107,7 +106,7 @@ void ChartObjectGenerator::generateIsolines(const converter::raw_data_ref& rawda
          }
          if ((height - rowLow.arr[cIdx]) * (height - rowLow.arr[cIdx + 1]) < 0)
          {
-            colreg::geo_point gp = SVCG::RoutePointToPositionPoint(SVCG::route_point{ static_cast<int>(rIdx + 1), 0 }, *m_settings);
+            colreg::geo_point gp = SVCG::RoutePointToPositionPoint(SVCG::route_point{ static_cast<int>(rIdx + 1), 0 }, envstt);
             double heightPerLat = (rowLow.arr[cIdx + 1] - rowLow.arr[cIdx]) / (gprl.lat - gpll.lat);
             gp.lat = (rowLow.arr[cIdx + 1] - height) / heightPerLat + gpll.lat;
             if (std::find(isoPoints.begin(), isoPoints.end(), gp) == isoPoints.end())
@@ -118,8 +117,8 @@ void ChartObjectGenerator::generateIsolines(const converter::raw_data_ref& rawda
 
    // NOTE: Распределение точек по изолиниям
    // WARNING: костыль!!!
-   auto pt1 = SVCG::RoutePointToPositionPoint({0, 0}, *m_settings);
-   auto pt2 = SVCG::RoutePointToPositionPoint({1, 1}, *m_settings);
+   auto pt1 = SVCG::RoutePointToPositionPoint({0, 0}, envstt);
+   auto pt2 = SVCG::RoutePointToPositionPoint({1, 1}, envstt);
    m_maxRadius = math::distance(pt2, pt1);
    std::vector<std::vector<colreg::geo_point>> isoLineVct;
    for (size_t isoIdx = 0; isoIdx < isoPoints.size(); isoIdx++)

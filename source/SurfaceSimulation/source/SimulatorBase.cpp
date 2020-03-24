@@ -3,16 +3,18 @@
 
 using namespace ColregSimulation;
 
-bool SimulatorBase::Init(const std::shared_ptr<file_utils::global_path_storage> paths)
+bool SimulatorBase::Init(std::shared_ptr<central_pack> pack)
 {
+   Central::Init(pack);
+
    m_databaseController.Create(SVGUtils::CurrentDllPath("SQLiteController").c_str(), "CreateSQLiteDatabaseController");
    if (!m_databaseController.IsValid())
    {
       //m_lock = true;
-      //MessageString(ICommunicator::MS_Error, "Can't load settings serializer!");
+      Message(ICommunicator::MS_Error, "Can't load 'SQLiteController'!");
       return false;
    }
-   m_databaseController->Init(m_communicator, paths);
+   m_databaseController->Init(pack);
    return true;
 }
 

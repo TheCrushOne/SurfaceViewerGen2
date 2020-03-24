@@ -9,7 +9,7 @@ namespace converter
 {
    struct iConverter : colreg::iReleasable
    {
-      virtual bool Init(ICommunicator*) = 0;
+      virtual void Init(std::shared_ptr<central_pack>) = 0;
       virtual bool Convert() = 0;
    };
 }

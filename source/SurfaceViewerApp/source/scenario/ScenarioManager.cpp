@@ -13,10 +13,10 @@ ScenarioManager::ScenarioManager()
    m_info.data_callback_map[transceiver::JsonCommand::JC_NEWSURFACE] = [this](const char* txt) {};
    createTransceiver();
 
-   m_fsm.Create(SVGUtils::CurrentDllPath("FileStorageManager").c_str(), "CreateConverter");
+   m_fsm.Create(SVGUtils::CurrentDllPath("FileStorageManager").c_str(), "CreateFileStorageManager");
    if (!m_fsm.IsValid())
    {
-      user_interface::SetOutputText(user_interface::OT_ERROR, "Can't load 'HeightMapToSVGMConverter'!");
+      user_interface::SetOutputText(user_interface::OT_ERROR, "Can't load 'FileStorageManager'!");
       return;
    }
 
@@ -33,10 +33,10 @@ void ScenarioManager::Open(const wchar_t* fileName)
    m_scenarioFile = fileName;
    SelectedObjectManager::GetInstance().Unselect();
 
-   m_fsm->Init(simulator::GetCommunicator());
+   m_fsm->Init(simulator::GetPack());
    m_fsm->PrepareStorage(fileName);
 
-   m_converter->Init(simulator::GetCommunicator());
+   m_converter->Init(simulator::GetPack());
    m_converter->Convert();
    
    //data_share::share_meta meta{L"file.bin"};
@@ -44,10 +44,10 @@ void ScenarioManager::Open(const wchar_t* fileName)
    //m_shareProvider->Share(meta, m_rawdata);
    //m_transceiver->Send(SVGUtils::wstringToString(meta.shared_filename).c_str());
 
-   simulator::simulatorStart(m_fsm->GetPathStorage());
+   simulator::simulatorStart();
    //Dispatcher::GetInstance().LoadScenario(fileName);
 
-   if (ScenarioDispather::GetInstance().OnScenarioLoad(m_fsm->GetPathStorage()))
+   if (ScenarioDispather::GetInstance().OnScenarioLoad())
    {
       setState(CSENARIO_STATUS::SS_PAUSE);
       //SetDebugMode(_debugMode);

@@ -59,7 +59,6 @@ private:
    //std::unique_ptr<SystemWnd> m_systemWnd;
 
    //std::unique_ptr<DomSettings> m_dom;
-   std::shared_ptr<settings::application_settings> m_appSettings;
    std::shared_ptr<file_utils::global_path_storage> m_fileStorage;
 
    std::unique_ptr<engine::Engine> m_engine;

@@ -3,24 +3,34 @@
 #include "common/communicator.h"
 #include "common/file_storage.h"
 
+struct central_pack
+{
+   central_pack(ICommunicator* comm, file_utils::global_path_storage paths, settings::application_settings stt)
+      : comm(comm)
+      , paths(std::make_shared<file_utils::global_path_storage>(paths))
+      , settings(std::make_shared<settings::application_settings>(stt))
+   {}
+   std::shared_ptr<ICommunicator> comm = nullptr;
+   std::shared_ptr<file_utils::global_path_storage> paths = nullptr;
+   std::shared_ptr<settings::application_settings> settings = nullptr;
+};
+
 class Central : public Communicable 
 {
 public:
-   Central(ICommunicator* comm)
-      : Communicable(comm)
-   {}
-   void Init(ICommunicator* comm)
-   {
-      SetCommunicator(comm);
-   }
-   const std::shared_ptr<file_utils::global_path_storage>& GetPathStorage() { checkPaths(); return m_paths; }
-   std::shared_ptr<file_utils::global_path_storage>& GetPathStorageModify() { checkPaths(); return m_paths; }
-   const std::shared_ptr<settings::application_settings>& GetSettings() { checkSettings();  return m_settings; }
-   std::shared_ptr<settings::application_settings>& GetSettingsModify() { checkSettings();  return m_settings; }
+   void Init(std::shared_ptr<central_pack> pack) { m_pack = pack; }
+
+   const std::shared_ptr<file_utils::global_path_storage>& GetPathStorage() { checkPack(); return m_pack->paths; }
+   std::shared_ptr<file_utils::global_path_storage>& GetPathStorageModify() { checkPack(); return m_pack->paths; }
+   const std::shared_ptr<settings::application_settings>& GetSettings() { checkPack();  return m_pack->settings; }
+   std::shared_ptr<settings::application_settings>& GetSettingsModify() { checkPack();  return m_pack->settings; }
+
+   void SetCommunicator(ICommunicator* comm) override final { checkPack(); m_pack->comm.reset(comm); }
+   std::shared_ptr<ICommunicator> GetCommunicator() override final { checkPack(); return m_pack->comm; }
+
+   const std::shared_ptr<central_pack> GetPack() const { return m_pack; };
 protected:
-   void checkPaths() { _ASSERT(m_paths); }
-   void checkSettings() { _ASSERT(m_settings); }
+   void checkPack() { _ASSERT(m_pack); }
 private:
-   std::shared_ptr<file_utils::global_path_storage> m_paths;
-   std::shared_ptr<settings::application_settings> m_settings;
+   std::shared_ptr<central_pack> m_pack;
 };

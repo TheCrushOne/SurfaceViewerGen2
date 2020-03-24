@@ -12,8 +12,7 @@
 using namespace engine;
 
 Engine::Engine()
-   : Central(nullptr)
-   , m_rawdata(std::make_shared<pathfinder::Matrix<SVCG::route_point>>(SVCG::route_point{}))
+   : m_rawdata(std::make_shared<pathfinder::Matrix<SVCG::route_point>>(SVCG::route_point{}))
    , m_routedata(std::make_shared<pathfinder::route_data>())
    , m_pathfinder(std::make_unique<pathfinder::PathFinderPipeline>())
 {
@@ -31,12 +30,6 @@ Engine::Engine()
    /*connect(this, SIGNAL(percent(int))
             , WFM::GetSharedInstance<LoadingDlg>(DBG_DATA).get(), SLOT(SetPercent(int))
             , Qt::QueuedConnection);*/
-}
-
-void Engine::Init(ICommunicator* pCommunicator)
-{
-   m_communicator = pCommunicator;
-   m_pathfinder->Init(m_communicator);
 }
 
 void Engine::ProcessPathFind(const ColregSimulation::scenario_data& scenarioData, const std::vector<std::vector<double>>& rawData, std::function<void(void)> completeCallback)
@@ -131,30 +124,31 @@ pathfinder::check_fly_zone_result Engine::checkFlyZone(float y)
 //   return result;
 //}
 
-void Engine::LaunchResearch(const settings::research_settings& resStt)
+void Engine::LaunchResearch()
 {
-   generateResMap(resStt.map_size);
-   switch (resStt.res_type)
+   auto resstt = GetSettings()->res_stt;
+   generateResMap(resstt.map_size);
+   switch (resstt.res_type)
    {
    case settings::ResearchType::RT_TIME:
    {
-      timeResearch(resStt);
+      timeResearch();
       break;
    }
    case settings::ResearchType::RT_LENGTH:
    {
-      lengthResearch(resStt);
+      lengthResearch();
       break;
    }
    case settings::ResearchType::RT_THREAD:
    {
-      threadResearch(resStt);
+      threadResearch();
       break;
    }
    }
 }
 
-void Engine::timeResearch(const settings::research_settings& resStt/*const std::shared_ptr<SVM::iMatrix<SurfaceElement>>&, std::shared_ptr<ResearchResultGen1>& result*/)
+void Engine::timeResearch(/*const std::shared_ptr<SVM::iMatrix<SurfaceElement>>&, std::shared_ptr<ResearchResultGen1>& result*/)
 {
    //const auto& pathfinder = WFM::GetSharedInstance<PathFinder>(DBG_DATA);
    //auto rawmap = WFM::CreateSharedObject<SVM::iMatrix<SurfaceElement>>();
@@ -276,7 +270,7 @@ void Engine::generateResMap(size_t mapSize/*std::shared_ptr<SVM::iMatrix<Surface
    //}
 }
 
-void Engine::lengthResearch(const settings::research_settings& resStt/*const std::shared_ptr<SVM::iMatrix<SurfaceElement>>& rawmap, std::shared_ptr<ResearchResultGen2>& result*/)
+void Engine::lengthResearch(/*const std::shared_ptr<SVM::iMatrix<SurfaceElement>>& rawmap, std::shared_ptr<ResearchResultGen2>& result*/)
 {
    //Route landRoute;
    //auto routeConvert = [](Route& route, STT::PointSettingElement& setting)
@@ -364,21 +358,22 @@ void Engine::lengthResearch(const settings::research_settings& resStt/*const std
 }
 
 // NOTE: Исследование направлено на определение оптимального соотношения размера пула задач к расчету и количества потоков
-void Engine::threadResearch(const settings::research_settings& resStt/*const std::shared_ptr<SVM::iMatrix<SurfaceElement>>& resmap, std::shared_ptr<ResearchResultGen3>& result*/)
+void Engine::threadResearch(/*const std::shared_ptr<SVM::iMatrix<SurfaceElement>>& resmap, std::shared_ptr<ResearchResultGen3>& result*/)
 {
+   auto& resstt = GetSettings()->res_stt;
    // Потоков 1, 2, 4, 8
    // Пул задач 2, 4, 8
    // Путей 2, 4, 8, 16, 32, 64, 128
 
-   for (size_t threadPoolIdx = 0; threadPoolIdx < resStt.thread_pool_range.values.size(); threadPoolIdx++)
+   for (size_t threadPoolIdx = 0; threadPoolIdx < resstt.thread_pool_range.values.size(); threadPoolIdx++)
    {
-      size_t threadCount = resStt.thread_pool_range.values.at(threadPoolIdx);
-      for (size_t taskPoolIdx = 0; taskPoolIdx < resStt.task_pool_range.values.size(); taskPoolIdx++)
+      size_t threadCount = resstt.thread_pool_range.values.at(threadPoolIdx);
+      for (size_t taskPoolIdx = 0; taskPoolIdx < resstt.task_pool_range.values.size(); taskPoolIdx++)
       {
-         size_t taskCount = resStt.thread_pool_range.values.at(taskPoolIdx);
-         for (size_t flyCountIdx = 0; flyCountIdx < resStt.fly_count_range.values.size(); flyCountIdx++)
+         size_t taskCount = resstt.thread_pool_range.values.at(taskPoolIdx);
+         for (size_t flyCountIdx = 0; flyCountIdx < resstt.fly_count_range.values.size(); flyCountIdx++)
          {
-            size_t flyCount = resStt.fly_count_range.values.at(flyCountIdx);
+            size_t flyCount = resstt.fly_count_range.values.at(flyCountIdx);
             m_threadResStorage.data.emplace_back(ThreadResearchComplexStorage::SuperCell{
                ThreadResearchComplexStorage::SuperCell::Index{
                   threadPoolIdx,

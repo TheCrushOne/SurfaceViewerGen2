@@ -19,12 +19,12 @@ namespace chart_object
       }
    };
 
-   class ChartObjectGenerator : public iGenerator, public Communicable
+   class ChartObjectGenerator : public iGenerator, public Central
    {
    public:
       ChartObjectGenerator();
 
-      bool Init(ICommunicator* comm, settings::environment_settings* envStt) override final;
+      bool Init(std::shared_ptr<central_pack> pack) override final;
       bool GenerateStatic(const converter::raw_data_ref& rawdata) override final;
       const colreg::chart_objects_ref& GetChartObjects() const override final { prepareRef(); return m_chartObjectRef; }
 
@@ -42,8 +42,6 @@ namespace chart_object
       bool m_lock = false;
 
       double m_maxRadius;
-
-      settings::environment_settings* m_settings;
 
       std::vector<chart_storage> m_chartStorage;
 

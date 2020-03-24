@@ -10,7 +10,6 @@ using namespace converter;
 
 HeightMapConverter::HeightMapConverter()
    : m_row_pointers(nullptr)
-   , Central(nullptr)
 {
    m_databaseController.Create(SVGUtils::CurrentDllPath("SQLiteController").c_str(), "CreateSQLiteDatabaseController");
    if (!m_databaseController.IsValid())
@@ -36,28 +35,22 @@ HeightMapConverter::HeightMapConverter()
    return;
 }
 
-bool HeightMapConverter::Init(ICommunicator* comm)
-{
-   SetCommunicator(comm);
-   return true;
-}
-
 bool HeightMapConverter::Convert()
 {
    if (m_lock)
       return false;
    auto& ps = GetPathStorage();
-   std::string srcPngPath = SVGUtils::wstringToString(ps.map_path);
+   std::string srcPngPath = SVGUtils::wstringToString(ps->map_path);
    readDataFromPng(srcPngPath.c_str());
    convertToDatabaseFormat();
   
-   m_settingsSerializer->Deserialize(SVGUtils::wstringToString(ps.pathfinder_settings_path).c_str(), m_settings.pth_stt);
-   m_settingsSerializer->Deserialize(SVGUtils::wstringToString(ps.research_settings_path).c_str(), m_settings.res_stt);
-   m_settingsSerializer->Deserialize(SVGUtils::wstringToString(ps.environment_settings_path).c_str(), m_settings.env_stt);
-   m_unitDataSerializer->Deserialize(SVGUtils::wstringToString(ps.unit_data_path).c_str(), m_unitData);
+   m_settingsSerializer->Deserialize(SVGUtils::wstringToString(ps->pathfinder_settings_path).c_str(), m_settings.pth_stt);
+   m_settingsSerializer->Deserialize(SVGUtils::wstringToString(ps->research_settings_path).c_str(), m_settings.res_stt);
+   m_settingsSerializer->Deserialize(SVGUtils::wstringToString(ps->environment_settings_path).c_str(), m_settings.env_stt);
+   m_unitDataSerializer->Deserialize(SVGUtils::wstringToString(ps->unit_data_path).c_str(), m_unitData);
 
    // NOTE: share provider вызываетcя из базы
-   m_databaseController->Init(m_communicator);
+   m_databaseController->Init(GetPack());
    m_databaseController->SaveScenarioData(m_unitData, m_rawData);
 
    safeReleaseData();

@@ -26,7 +26,10 @@
     <ClCompile Include="source\algorithm\pathfinder\TaskHolder\TaskHolder.cpp" />
     <ClCompile Include="source\algorithm\statistic.cpp" />
     <ClCompile Include="source\main\calibrator.cpp" />
-    <ClCompile Include="source\main\dispatcher.cpp" />
+    <ClCompile Include="source\main\dispatcher.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="source\main\engine.cpp" />
     <ClCompile Include="source\stdafx.cpp" />
   </ItemGroup>
@@ -38,7 +41,10 @@
     <ClInclude Include="source\algorithm\pathfinder\TaskHolder\TaskHolder.h" />
     <ClInclude Include="source\algorithm\statistic.h" />
     <ClInclude Include="source\main\calibrator.h" />
-    <ClInclude Include="source\main\dispatcher.h" />
+    <ClInclude Include="source\main\dispatcher.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="source\main\engine.h" />
     <ClInclude Include="source\stdafx.h" />
   </ItemGroup>

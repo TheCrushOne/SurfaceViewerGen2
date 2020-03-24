@@ -6,38 +6,38 @@
 
 using namespace ColregSimulation;
 
-RobotScenarioPlayer::RobotScenarioPlayer(ICommunicator* pCommunicator, iPropertyInterface* prop)
-   : SimulatorBase(pCommunicator, prop)
+RobotScenarioPlayer::RobotScenarioPlayer(iPropertyInterface* prop)
+   : SimulatorBase(prop)
 {
    m_engine.Create(SVGUtils::CurrentDllPath("Engine").c_str(), "CreateEngine");
    if (!m_engine.IsValid())
    {
-      m_communicator->Message(ICommunicator::MS_Error, "Can't load 'Engine'");
+      Message(ICommunicator::MS_Error, "Can't load 'Engine'");
       return;
    }
-   m_engine->Init(pCommunicator);
+   m_engine->Init(GetPack());
 
    m_generator.Create(SVGUtils::CurrentDllPath("ChartObjectGenerator").c_str(), "CreateGenerator");
    if (!m_generator.IsValid())
    {
-      m_communicator->Message(ICommunicator::MS_Error, "Can't load 'ChartObjectGenerator'");
+      Message(ICommunicator::MS_Error, "Can't load 'ChartObjectGenerator'");
       return;
    }
 
    m_logger.Create(SVGUtils::CurrentDllPath("UniversalLogger").c_str(), "CreateUniversalLogger");
    if (!m_logger.IsValid())
    {
-      m_communicator->Message(ICommunicator::MS_Error, "Can't load 'Universal Logger'");
+      Message(ICommunicator::MS_Error, "Can't load 'Universal Logger'");
       return;
    }
-   m_logger->Init(pCommunicator);
+   m_logger->Init(GetPack());
 }
 
 void RobotScenarioPlayer::Start()
 {
-   m_databaseController->LoadScenarioData(m_settings, m_data.unit_data, m_coordGrid);
+   m_databaseController->LoadScenarioData(m_data.unit_data, m_coordGrid);
    //m_settings.env_stt.gcs_info.scale = 0.001; // вроде как это вынесено в настройки...теперь
-   m_generator->Init(m_communicator, &(m_settings.env_stt));
+   m_generator->Init(GetPack());
    addUnitsFromScenario();
    correctCoordinateGrid();
    converter::raw_data_ref ref;
@@ -155,7 +155,7 @@ void RobotScenarioPlayer::RecountRoutes()
 
 void RobotScenarioPlayer::RecountResearch()
 {
-   m_engine->LaunchResearch(m_settings.res_stt);
+   m_engine->LaunchResearch();
 }
 
 void RobotScenarioPlayer::LogResearchResult()
@@ -325,7 +325,7 @@ void RobotScenarioPlayer::updateUnitsPath()
          route.emplace_back(SVCG::RoutePointToPositionPoint(point, m_settings.env_stt));
       unit.SetSrcRoute(std::forward<ColregRoutePoints>(route));
    }
-   m_communicator->UpdateUI();
+   GetPack()->comm->UpdateUI();
 }
 
 void RobotScenarioPlayer::addUnitsFromScenario()

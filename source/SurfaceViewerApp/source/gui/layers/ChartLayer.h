@@ -11,7 +11,7 @@ public:
    ChartLayer() { initObjInfo(); }
 
    void Render(render::iRender* renderer) override;
-   bool OnScenarioLoad(file_utils::global_path_storage& name) override { m_chartUSN = colreg::INVALID_ID; return true; }
+   bool OnScenarioLoad() override { m_chartUSN = colreg::INVALID_ID; return true; }
    bool OnScenarioModified() { m_chartUSN = colreg::INVALID_ID; return true; }
 
    iProperty* GetProperties() override;

@@ -3,8 +3,8 @@
 
 using namespace ColregSimulation;
 
-RobotLogPlayer::RobotLogPlayer(ICommunicator* pCommunicator, iPropertyInterface* prop)
-   : SimulatorBase(pCommunicator, prop)
+RobotLogPlayer::RobotLogPlayer(iPropertyInterface* prop)
+   : SimulatorBase(prop)
 {}
 
 void RobotLogPlayer::Start()

@@ -1,16 +1,17 @@
 #pragma once
 
 #include "colreg/ColregSimulation.h"
+#include "common/central_class.h"
 
 namespace ColregSimulation
 {
    struct iSimulatorManager : colreg::iReleasable
    {
       //! Подготовка менеджера симуляторов
-      virtual void Init(ICommunicator*, iPropertyInterface*) = 0;
+      virtual void Init(std::shared_ptr<central_pack>, iPropertyInterface*) = 0;
 
       //! Получение симулятора в зависимости от расширения сценария и загрузка сценария
-      virtual iSimulator* Get(const std::shared_ptr<file_utils::global_path_storage>) = 0;
+      virtual iSimulator* Get() = 0;
    };
 }
 

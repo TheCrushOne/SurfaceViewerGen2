@@ -34,10 +34,9 @@ namespace engine
    public:
       Engine();
    public:
-      void Init(ICommunicator* pCommunicator);
-      void SetSettings(std::shared_ptr<settings::application_settings> settings) { m_appSettings = settings; }
+      void Init(std::shared_ptr<central_pack> pack) { Central::Init(pack); m_pathfinder->Init(pack); }
 
-      void LaunchResearch(const settings::research_settings& resStt) override final;
+      void LaunchResearch() override final;
       const TimeResearchComplexStorage& GetTimeResearchResult() const override final { return m_timeResStorage; }
       const LengthResearchComplexStorage& GetLengthResearchResult() const override final { return m_lengthResStorage; }
       const ThreadResearchComplexStorage& GetThreadResearchResult() const override final { return m_threadResStorage; }
@@ -46,9 +45,9 @@ namespace engine
       const pathfinder::route_data& GetLastProcessedPaths() const override final { return m_pathfinder->GetPaths(); }
       void Release() { delete this; }
    private:
-      void timeResearch(const settings::research_settings& resStt/*const std::shared_ptr<SVM::iMatrix<SurfaceElement>>&, std::shared_ptr<ResearchResultGen1>&*/);
-      void lengthResearch(const settings::research_settings& resStt/*const std::shared_ptr<SVM::iMatrix<SurfaceElement>>&, std::shared_ptr<ResearchResultGen2>&*/);
-      void threadResearch(const settings::research_settings& resStt/*const std::shared_ptr<SVM::iMatrix<SurfaceElement>>&, std::shared_ptr<ResearchResultGen3>&*/);
+      void timeResearch(/*const std::shared_ptr<SVM::iMatrix<SurfaceElement>>&, std::shared_ptr<ResearchResultGen1>&*/);
+      void lengthResearch(/*const std::shared_ptr<SVM::iMatrix<SurfaceElement>>&, std::shared_ptr<ResearchResultGen2>&*/);
+      void threadResearch(/*const std::shared_ptr<SVM::iMatrix<SurfaceElement>>&, std::shared_ptr<ResearchResultGen3>&*/);
 
       void logThreadResearchResult();
 
@@ -70,7 +69,6 @@ namespace engine
       void drop() {  }*/
    private:
       std::shared_ptr<pathfinder::path_finder_indata> m_indata;
-      std::shared_ptr<settings::application_settings> m_appSettings;
       std::unique_ptr<pathfinder::PathFinderPipeline> m_pathfinder;
 
       std::shared_ptr<pathfinder::Matrix<SVCG::route_point>> m_rawdata;

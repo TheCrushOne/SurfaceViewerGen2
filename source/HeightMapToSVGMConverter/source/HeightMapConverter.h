@@ -15,7 +15,7 @@ namespace converter
    public:
       HeightMapConverter();
 
-      bool Init(ICommunicator* comm);
+      void Init(std::shared_ptr<central_pack> pack) override final { Central::Init(pack); }
 
       bool Convert() override final;
       void Release() override final { delete this; }

@@ -8,19 +8,18 @@
 
 namespace ColregSimulation
 {
-   class SimulatorBase : public Communicable, public iSimulator
+   class SimulatorBase : public iSimulator, public Central
    {
    public:
-      SimulatorBase(ICommunicator* pCommunicator, iPropertyInterface* prop)
+      SimulatorBase(iPropertyInterface* prop)
          : m_prop(prop)
-         , Communicable(pCommunicator)
       {}
 
       virtual ~SimulatorBase() {}
 
       void Release() override final { delete this; }
 
-      virtual bool Init(const std::shared_ptr<file_utils::global_path_storage> paths);
+      virtual bool Init(std::shared_ptr<central_pack>);
 
       inline void SetSimulationType(const ColregSimulation::SIMULATION_PLAYER_TYPE type) { m_simulationType = type; }
    protected:

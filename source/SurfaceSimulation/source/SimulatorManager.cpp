@@ -6,20 +6,19 @@
 
 using namespace ColregSimulation;
 
-void SimulatorManager::Init(ICommunicator* pCommunicator, iPropertyInterface* prop)
+void SimulatorManager::Init(std::shared_ptr<central_pack> pack, iPropertyInterface* prop)
 {
-   m_communicator = pCommunicator;
+   Central::Init(pack);
    m_prop = prop;
 }
 
-ColregSimulation::iSimulator* SimulatorManager::Get(const file_utils::global_path_storage& paths)
+ColregSimulation::iSimulator* SimulatorManager::Get()
 {
-   m_paths = paths;
    // TODO: реализовать проверку через базу по настройкам
    auto type = SIMULATION_PLAYER_TYPE::SPT_SCENARIO;
    size_t stType = static_cast<size_t>(type);
    m_sims[stType] = createSimulationPlayer(type);
-   if (!m_sims[stType]->Init(paths))
+   if (!m_sims[stType]->Init(GetPack()))
       return nullptr;
    return m_sims[stType].get();
 }
@@ -31,14 +30,15 @@ iSimulatorPtr SimulatorManager::createSimulationPlayer(SIMULATION_PLAYER_TYPE ty
    switch (type)
    {
    case SIMULATION_PLAYER_TYPE::SPT_SCENARIO:
-      sim = new ColregSimulation::RobotScenarioPlayer(m_communicator, m_prop);
+      sim = new ColregSimulation::RobotScenarioPlayer(m_prop);
       break;
    case SIMULATION_PLAYER_TYPE::SPT_LOG:
-      sim = new ColregSimulation::RobotLogPlayer(m_communicator, m_prop);
+      sim = new ColregSimulation::RobotLogPlayer(m_prop);
       break;
    default:
       ATLASSERT(false);
    }
+   sim->Init(GetPack());
    sim->SetSimulationType(type);
    ATLASSERT(sim && "ColregSimulation type isn't implemented");
    return iSimulatorPtr(sim ? sim : nullptr, deleterFun);

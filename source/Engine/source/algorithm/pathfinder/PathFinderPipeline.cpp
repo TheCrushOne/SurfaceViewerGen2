@@ -15,7 +15,6 @@ PathFinderPipeline::PathFinderPipeline()
    , m_strategyManager(std::make_unique<StrategyManager>())
    , m_pathfinder(std::make_unique<PathFinder>())
    , m_taskPacket(std::make_shared<std::vector<pathfinder::task_unit>>())
-   , Communicable(nullptr)
 {}
 
 PathFinderPipeline::~PathFinderPipeline()
@@ -151,7 +150,7 @@ void PathFinderPipeline::onAirRoutePacketFinished()
    m_holders.clear();
    m_holders.resize(threadCount);   // TODO: чекнуть, вызывается ли конструктор
    //QThreadPool::globalInstance()->setMaxThreadCount(threadCount);
-   m_communicator->Message(ICommunicator::MS_Debug, "ar task packet finished %i", m_taskPool.size());
+   Message(ICommunicator::MS_Debug, "ar task packet finished %i", m_taskPool.size());
    for (auto& holder : m_holders)
    {
       holder.first.Launch(m_taskPacket,

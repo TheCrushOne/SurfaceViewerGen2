@@ -6,7 +6,7 @@
 class CommunicatorWnd : public ICommunicator
 {
 public:
-   bool stdCallConv Message(MessageType t, const char* msg, ...)
+   bool stdCallConv Message(ICommunicator::MessageType t, const char* msg, ...)
    {
       va_list list;
       va_start(list, msg);

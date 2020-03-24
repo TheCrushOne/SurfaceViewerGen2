@@ -3,13 +3,14 @@
 #include "database/sqlite3.h"
 #include <functional>
 #include "common/communicator.h"
+#include "common/central_class.h"
 
 namespace database
 {
-   class Connector : public Communicable
+   class Connector : public Central
    {
    public:
-      Connector(ICommunicator* comm);
+      void Init(std::shared_ptr<central_pack> pack) { Central::Init(pack); }
 
       void Connect(const char* baseFileName);
       void Disconnect();

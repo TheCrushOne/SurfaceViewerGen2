@@ -10,12 +10,12 @@ using namespace data_share;
 
 void ShareProviderImpl::Share(const wchar_t* fileName, const std::vector<std::vector<double>>& data)
 {
-   auto mapstt = GetSettings()
+   auto mapstt = GetSettings()->map_stt;
    std::ofstream fil;
    fil.open(fileName, std::ios::out | std::ios::binary);
-   for (size_t i = 0; i < settings.row_count; i++)
+   for (size_t i = 0; i < mapstt.row_count; i++)
    {
-      for (size_t j = 0; j < settings.col_count; j++)
+      for (size_t j = 0; j < mapstt.col_count; j++)
          fil << data.at(i).at(j) << " ";
       fil << "\n";
    }
@@ -24,13 +24,14 @@ void ShareProviderImpl::Share(const wchar_t* fileName, const std::vector<std::ve
 
 void ShareProviderImpl::GetShared(const wchar_t* fileName, std::vector<std::vector<double>>& data)
 {
+   auto mapstt = GetSettings()->map_stt;
    std::ifstream fil;
    fil.open(fileName, std::ios::out | std::ios::binary);
-   data.resize(settings.row_count);
-   for (size_t i = 0; i < settings.row_count; i++)
+   data.resize(mapstt.row_count);
+   for (size_t i = 0; i < mapstt.row_count; i++)
    {
-      data[i].resize(settings.col_count);
-      for (size_t j = 0; j < settings.col_count; j++)
+      data[i].resize(mapstt.col_count);
+      for (size_t j = 0; j < mapstt.col_count; j++)
          fil >> data[i][j];
    }
    fil.close();

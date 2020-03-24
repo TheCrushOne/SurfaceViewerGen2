@@ -10,7 +10,7 @@ namespace database
 {
    struct iSVGMDatabaseController : colreg::iReleasable
    {
-      virtual void Init(ICommunicator*) = 0;
+      virtual void Init(std::shared_ptr<central_pack>) = 0;
       virtual void SaveScenarioData(const settings::unit_source_data&, const std::vector<std::vector<double>>&) = 0;
       virtual void SaveAppSettings() = 0;
       virtual void LoadScenarioData(settings::unit_source_data&, std::vector<std::vector<double>>&) = 0;

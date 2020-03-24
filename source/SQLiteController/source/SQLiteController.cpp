@@ -56,17 +56,17 @@
 using namespace database;
 
 SQLiteController::SQLiteController()
-   : Central(nullptr)
 {}
 
-void SQLiteController::Init(ICommunicator* comm)
+void SQLiteController::Init(std::shared_ptr<central_pack> pack)
 {
-   SetCommunicator(comm);
-   m_connector = std::make_unique<Connector>(comm);
+   Central::Init(pack);
+   m_connector = std::make_unique<Connector>();
+   m_connector->Init(GetPack());
    m_shareProvider.Create(SVGUtils::CurrentDllPath("DataShareProvider").c_str(), "CreateDataShareProvider");
    if (!m_shareProvider.IsValid())
    {
-      m_communicator->Message(ICommunicator::MS_Error, "Can't load 'DataShareProvider'!");
+      Message(ICommunicator::MS_Error, "Can't load 'DataShareProvider'!");
       return;
    }
    //return;
@@ -74,17 +74,17 @@ void SQLiteController::Init(ICommunicator* comm)
    m_unitDataSerializer.Create(SVGUtils::CurrentDllPath("SettingsHandler").c_str(), "CreateUnitDataSerializer");
    if (!m_unitDataSerializer.IsValid())
    {
-      m_communicator->Message(ICommunicator::MS_Error, "Can't load 'SettingsHandler'!");
+      Message(ICommunicator::MS_Error, "Can't load 'SettingsHandler'!");
       return;
    }
 
    m_settingsSerializer.Create(SVGUtils::CurrentDllPath("SettingsHandler").c_str(), "CreateJsonSettingsSerializer");
    if (!m_settingsSerializer.IsValid())
    {
-      m_communicator->Message(ICommunicator::MS_Error, "Can't load 'SettingsHandler'!");
+      Message(ICommunicator::MS_Error, "Can't load 'SettingsHandler'!");
       return;
    }
-   m_connector->Connect(SVGUtils::wstringToString(GetPathStorage().database_path).c_str());
+   m_connector->Connect(SVGUtils::wstringToString(GetPathStorage()->database_path).c_str());
    baseCheckCreate();
 }
 
@@ -129,7 +129,7 @@ void SQLiteController::baseCheckCreate()
 void SQLiteController::savePathfindingSettings()
 {
    NO_RES_PREP;
-   std::string jsonSettings = m_settingsSerializer->ToString(GetSettings().pth_stt);
+   std::string jsonSettings = m_settingsSerializer->ToString(GetSettings()->pth_stt);
 
    STT_INS_NORES_RL(request_storage::SettingsType::ST_PATHFINDING, jsonSettings.c_str());
 }
@@ -137,7 +137,7 @@ void SQLiteController::savePathfindingSettings()
 void SQLiteController::saveResearchSettings()
 {
    NO_RES_PREP;
-   std::string jsonSettings = m_settingsSerializer->ToString(GetSettings().res_stt);
+   std::string jsonSettings = m_settingsSerializer->ToString(GetSettings()->res_stt);
 
    STT_INS_NORES_RL(request_storage::SettingsType::ST_RESEARCH, jsonSettings.c_str());
 }
@@ -145,7 +145,7 @@ void SQLiteController::saveResearchSettings()
 void SQLiteController::saveEnvironmentSettings()
 {
    NO_RES_PREP;
-   std::string jsonSettings = m_settingsSerializer->ToString(GetSettings().env_stt);
+   std::string jsonSettings = m_settingsSerializer->ToString(GetSettings()->env_stt);
 
    STT_INS_NORES_RL(request_storage::SettingsType::ST_ENVIRONMENT, jsonSettings.c_str());
 }
@@ -153,7 +153,7 @@ void SQLiteController::saveEnvironmentSettings()
 void SQLiteController::saveSimulationSettings()
 {
    NO_RES_PREP;
-   std::string jsonSettings = m_settingsSerializer->ToString(GetSettings().sim_stt);
+   std::string jsonSettings = m_settingsSerializer->ToString(GetSettings()->sim_stt);
 
    STT_INS_NORES_RL(request_storage::SettingsType::ST_SIMULATION, jsonSettings.c_str());
 }
@@ -161,7 +161,7 @@ void SQLiteController::saveSimulationSettings()
 void SQLiteController::saveMapSettings()
 {
    NO_RES_PREP;
-   std::string jsonSettings = m_settingsSerializer->ToString(GetSettings().map_stt);
+   std::string jsonSettings = m_settingsSerializer->ToString(GetSettings()->map_stt);
 
    STT_INS_NORES_RL(request_storage::SettingsType::ST_MAP, jsonSettings.c_str());
 }
@@ -181,7 +181,7 @@ void SQLiteController::loadPathfindingSettings()
 
    STT_SEL_DAT_RES_STR_RL(request_storage::SettingsType::ST_PATHFINDING, dat);
 
-   m_settingsSerializer->FromString(dat.c_str(), GetSettingsModify().pth_stt);
+   m_settingsSerializer->FromString(dat.c_str(), GetSettingsModify()->pth_stt);
 }
 
 void SQLiteController::loadResearchSettings()
@@ -191,7 +191,7 @@ void SQLiteController::loadResearchSettings()
 
    STT_SEL_DAT_RES_STR_RL(request_storage::SettingsType::ST_RESEARCH, dat);
 
-   m_settingsSerializer->FromString(dat.c_str(), GetSettingsModify().res_stt);
+   m_settingsSerializer->FromString(dat.c_str(), GetSettingsModify()->res_stt);
 }
 
 void SQLiteController::loadEnvironmentSettings()
@@ -201,7 +201,7 @@ void SQLiteController::loadEnvironmentSettings()
 
    STT_SEL_DAT_RES_STR_RL(request_storage::SettingsType::ST_ENVIRONMENT, dat);
 
-   m_settingsSerializer->FromString(dat.c_str(), GetSettingsModify().env_stt);
+   m_settingsSerializer->FromString(dat.c_str(), GetSettingsModify()->env_stt);
 }
 
 void SQLiteController::loadSimulationSettings()
@@ -211,7 +211,7 @@ void SQLiteController::loadSimulationSettings()
 
    STT_SEL_DAT_RES_STR_RL(request_storage::SettingsType::ST_SIMULATION, dat);
 
-   m_settingsSerializer->FromString(dat.c_str(), GetSettingsModify().sim_stt);
+   m_settingsSerializer->FromString(dat.c_str(), GetSettingsModify()->sim_stt);
 }
 
 void SQLiteController::loadMapSettings()
@@ -221,7 +221,7 @@ void SQLiteController::loadMapSettings()
 
    STT_SEL_DAT_RES_STR_RL(request_storage::SettingsType::ST_MAP, dat);
 
-   m_settingsSerializer->FromString(dat.c_str(), GetSettingsModify().map_stt);
+   m_settingsSerializer->FromString(dat.c_str(), GetSettingsModify()->map_stt);
 }
 
 void SQLiteController::loadUnitData(settings::unit_source_data& settings)

@@ -10,7 +10,7 @@ namespace ColregSimulation
       , public SimulatorBase
    {
    public:
-      RobotLogPlayer(ICommunicator* pCommunicator, iPropertyInterface* prop);
+      RobotLogPlayer(iPropertyInterface* prop);
       ~RobotLogPlayer() = default;
 
       // iSimulator impl

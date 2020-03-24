@@ -49,7 +49,7 @@ public:
    virtual ~ScenarioView();
 
 protected:
-   bool OnScenarioLoad(file_utils::global_path_storage& name) override;
+   bool OnScenarioLoad() override;
    bool OnScenarioModified() override;
    bool OnScenarioStatusChanged(CSENARIO_STATUS status) override;
    bool OnScenarioTimeChanged(double time) override { InvalidateView(); return true; }

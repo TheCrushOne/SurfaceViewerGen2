@@ -8,11 +8,7 @@ namespace file_storage
    class FileStorageManager : public iFileStorageManager, public Central
    {
    public:
-      FileStorageManager()
-         : Central(nullptr)
-      {}
-
-      void Init(ICommunicator* comm) override final { Central::Init(comm); }
+      void Init(std::shared_ptr<central_pack> pack) override final { Central::Init(pack); }
       void Release() override final { delete this; }
       void PrepareStorage(const wchar_t* metaFileName);
    };

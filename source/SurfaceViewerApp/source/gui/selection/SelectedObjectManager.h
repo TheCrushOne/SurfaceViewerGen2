@@ -50,7 +50,7 @@ public:
    colreg::chart_object_id GetSelectedChartObj()const { return _selected_chart_id; }
    render::FIND_OBJECT_TYPE GetSelectedObjectType() const { return _info.find_object_type; }
 
-   bool OnScenarioLoad(file_utils::global_path_storage& name) override { Unselect(); return true; }
+   bool OnScenarioLoad() override { Unselect(); return true; }
    bool OnScenarioTimeChanged(double time) { Update();  return true; }
    bool OnScenarioModified() { Update();  return true; }
 private:

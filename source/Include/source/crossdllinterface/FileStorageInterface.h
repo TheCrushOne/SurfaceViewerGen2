@@ -8,7 +8,7 @@ namespace file_storage
 {
    struct iFileStorageManager : colreg::iReleasable
    {
-      virtual void Init(ICommunicator*) = 0;
+      virtual void Init(std::shared_ptr<central_pack>) = 0;
       virtual void PrepareStorage(const wchar_t*) = 0;
    };
 }

@@ -9,7 +9,7 @@ namespace logger
 {
    struct iUniversalLogger : colreg::iReleasable
    {
-      virtual void Init(ICommunicator*) = 0;
+      virtual void Init(std::shared_ptr<central_pack>) = 0;
       virtual bool LogThreadResearchResult(const ThreadResearchComplexStorage&) = 0;
    };
 }

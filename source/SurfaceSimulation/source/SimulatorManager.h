@@ -8,20 +8,14 @@
 
 using iSimulatorPtr = std::unique_ptr<ColregSimulation::SimulatorBase, std::function<void(ColregSimulation::SimulatorBase*)>>;
 
-class SimulatorManager : public ColregSimulation::iSimulatorManager, public Communicable
+class SimulatorManager : public ColregSimulation::iSimulatorManager, public Central
 {
 public:
-   SimulatorManager()
-      : Communicable(nullptr)
-   {}
-   void Release() final
-   {
-      delete this;
-   }
+   void Release() override final { delete this; }
 
-   void Init(ICommunicator* pCommunicator, iPropertyInterface* prop) final;
+   void Init(std::shared_ptr<central_pack> pack, iPropertyInterface* prop) final;
 
-   ColregSimulation::iSimulator* Get(const file_utils::global_path_storage& paths) final;
+   ColregSimulation::iSimulator* Get() final;
 
 private:
    ColregSimulation::SIMULATION_PLAYER_TYPE getTypeFromExt(const char* ext) const;

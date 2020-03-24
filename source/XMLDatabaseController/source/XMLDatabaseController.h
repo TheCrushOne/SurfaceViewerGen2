@@ -8,7 +8,7 @@ namespace database
    {
    public:
       XMLDatabaseController();
-      void Init(std::shared_ptr<central_pack> pack) override final { Central::Init(pack); }
+      void Init(central_pack* pack) override final { Central::Init(pack); }
       void SaveScenarioData(const settings::unit_source_data& unitData, const std::vector<std::vector<double>>& coordGrid) override final;
       void SaveAppSettings() override final;
       void LoadScenarioData(settings::unit_source_data& unitData, std::vector<std::vector<double>>& coordGrid) override final;

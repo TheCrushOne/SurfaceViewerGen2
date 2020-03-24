@@ -23,7 +23,7 @@ namespace pathfinder
    public:
       ~PathFinderPipeline();
    public:
-      void Init(std::shared_ptr<central_pack> pack) { Central::Init(pack); }
+      void Init(central_pack* pack) { Central::Init(pack); }
       void FindPath(std::function<void(void)> callback, const std::shared_ptr<Matrix<SVCG::route_point>> rawdata, std::shared_ptr<path_finder_indata>/*bool multithread = true, size_t countIdx = 0, size_t legnthIdx = 0, bool research = false, bool landPath = true, size_t packetSize = 0*//*strategy_settings settings, const path_finder_settings pathFinderSettings*//*, path_finder_statistic& statistic*/);
       const pathfinder::route_data& GetPaths() const { return m_paths; }
    private:

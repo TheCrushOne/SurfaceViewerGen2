@@ -176,8 +176,11 @@ namespace colreg
          range.max = j["max"].get<T>();
          range.min = j["min"].get<T>();
          range.step = j["step"].get<T>();
-         for (auto& elem : j["values"])
-            range.values.emplace_back(elem["value"].get<T>());
+         if (j.find("values") != j.end())
+         {
+            for (auto& elem : j["values"])
+               range.values.emplace_back(elem["value"].get<T>());
+         }
          range.apply();
          return range;
       }

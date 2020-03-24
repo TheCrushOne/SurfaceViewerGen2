@@ -18,7 +18,7 @@ struct central_pack
 class Central : public Communicable 
 {
 public:
-   void Init(std::shared_ptr<central_pack> pack) { m_pack = pack; }
+   void Init(central_pack* pack) { m_pack = pack; }
 
    const std::shared_ptr<file_utils::global_path_storage>& GetPathStorage() { checkPack(); return m_pack->paths; }
    std::shared_ptr<file_utils::global_path_storage>& GetPathStorageModify() { checkPack(); return m_pack->paths; }
@@ -26,11 +26,11 @@ public:
    std::shared_ptr<settings::application_settings>& GetSettingsModify() { checkPack();  return m_pack->settings; }
 
    void SetCommunicator(ICommunicator* comm) override final { checkPack(); m_pack->comm.reset(comm); }
-   std::shared_ptr<ICommunicator> GetCommunicator() override final { checkPack(); return m_pack->comm; }
+   ICommunicator* GetCommunicator() override final { checkPack(); return m_pack->comm.get(); }
 
-   const std::shared_ptr<central_pack> GetPack() const { return m_pack; };
+   central_pack* GetPack() const { return m_pack; };
 protected:
    void checkPack() { _ASSERT(m_pack); }
 private:
-   std::shared_ptr<central_pack> m_pack;
+   central_pack* m_pack;
 };

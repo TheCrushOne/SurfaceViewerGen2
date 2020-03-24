@@ -34,7 +34,7 @@ namespace engine
    public:
       Engine();
    public:
-      void Init(std::shared_ptr<central_pack> pack) { Central::Init(pack); m_pathfinder->Init(pack); }
+      void Init(central_pack* pack) { Central::Init(pack); m_pathfinder->Init(pack); }
 
       void LaunchResearch() override final;
       const TimeResearchComplexStorage& GetTimeResearchResult() const override final { return m_timeResStorage; }

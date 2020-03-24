@@ -20,7 +20,7 @@ namespace
       }
       //const fpath simulatorPath = fpath::get_module_folder().append("ColregSimulation.dll");
       auto simmgr = _simMgr.Create(SVGUtils::CurrentDllPath("SurfaceSimulation").c_str(), "CreateSimulationManager");
-      _simMgr->Init(pack, LayersContainer::GetLayerProperties());
+      _simMgr->Init(pack.get(), LayersContainer::GetLayerProperties());
       return simmgr;
    }
 }
@@ -37,9 +37,9 @@ namespace simulator
       return _simulator;
    }
 
-   std::shared_ptr<central_pack> GetPack()
+   central_pack* GetPack()
    {
-      return pack;
+      return pack.get();
    }
 
    void simulatorStop(bool simulatorReset)

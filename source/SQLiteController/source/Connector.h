@@ -10,7 +10,7 @@ namespace database
    class Connector : public Central
    {
    public:
-      void Init(std::shared_ptr<central_pack> pack) { Central::Init(pack); }
+      void Init(central_pack* pack) { Central::Init(pack); }
 
       void Connect(const char* baseFileName);
       void Disconnect();

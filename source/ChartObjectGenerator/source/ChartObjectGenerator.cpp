@@ -10,7 +10,7 @@ using namespace chart_object;
 ChartObjectGenerator::ChartObjectGenerator()
 {}
 
-bool ChartObjectGenerator::Init(std::shared_ptr<central_pack> pack)
+bool ChartObjectGenerator::Init(central_pack* pack)
 {
    Central::Init(pack);
    return true;

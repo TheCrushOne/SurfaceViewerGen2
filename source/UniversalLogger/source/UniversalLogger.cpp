@@ -13,7 +13,7 @@ using namespace logger;
 UniversalLogger::UniversalLogger()
 {}
 
-void UniversalLogger::Init(std::shared_ptr<central_pack> pack)
+void UniversalLogger::Init(central_pack* pack)
 {
    Central::Init(pack);
 }

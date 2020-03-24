@@ -9,7 +9,7 @@ namespace logger
    public:
       UniversalLogger();
 
-      void Init(std::shared_ptr<central_pack> pack) override final;
+      void Init(central_pack* pack) override final;
       bool LogThreadResearchResult(const ThreadResearchComplexStorage&) override final;
       void Release() override final { delete this; }
    };

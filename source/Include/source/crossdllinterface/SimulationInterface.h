@@ -8,7 +8,7 @@ namespace ColregSimulation
    struct iSimulatorManager : colreg::iReleasable
    {
       //! Подготовка менеджера симуляторов
-      virtual void Init(std::shared_ptr<central_pack>, iPropertyInterface*) = 0;
+      virtual void Init(central_pack*, iPropertyInterface*) = 0;
 
       //! Получение симулятора в зависимости от расширения сценария и загрузка сценария
       virtual iSimulator* Get() = 0;

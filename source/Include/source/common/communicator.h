@@ -49,7 +49,7 @@ public:
       return GetCommunicator()->Message(t, str);
    }
    virtual void SetCommunicator(ICommunicator* comm) = 0;
-   virtual std::shared_ptr<ICommunicator> GetCommunicator() = 0;
+   virtual ICommunicator* GetCommunicator() = 0;
 //protected:
    //ICommunicator* m_communicator;
 };

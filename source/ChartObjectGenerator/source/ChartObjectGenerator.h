@@ -24,7 +24,7 @@ namespace chart_object
    public:
       ChartObjectGenerator();
 
-      bool Init(std::shared_ptr<central_pack> pack) override final;
+      bool Init(central_pack* pack) override final;
       bool GenerateStatic(const converter::raw_data_ref& rawdata) override final;
       const colreg::chart_objects_ref& GetChartObjects() const override final { prepareRef(); return m_chartObjectRef; }
 

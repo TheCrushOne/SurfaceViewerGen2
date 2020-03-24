@@ -11,7 +11,7 @@ namespace chart_object
 {
    struct iGenerator : colreg::iReleasable
    {
-      virtual bool Init(std::shared_ptr<central_pack>) = 0;
+      virtual bool Init(central_pack*) = 0;
       virtual bool GenerateStatic(const converter::raw_data_ref&) = 0;
       virtual const colreg::chart_objects_ref& GetChartObjects() const = 0;
    };

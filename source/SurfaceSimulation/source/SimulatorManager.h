@@ -13,7 +13,7 @@ class SimulatorManager : public ColregSimulation::iSimulatorManager, public Cent
 public:
    void Release() override final { delete this; }
 
-   void Init(std::shared_ptr<central_pack> pack, iPropertyInterface* prop) final;
+   void Init(central_pack* pack, iPropertyInterface* prop) final;
 
    ColregSimulation::iSimulator* Get() final;
 

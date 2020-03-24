@@ -6,7 +6,7 @@
 
 using namespace ColregSimulation;
 
-void SimulatorManager::Init(std::shared_ptr<central_pack> pack, iPropertyInterface* prop)
+void SimulatorManager::Init(central_pack* pack, iPropertyInterface* prop)
 {
    Central::Init(pack);
    m_prop = prop;

@@ -3,7 +3,7 @@
 
 using namespace ColregSimulation;
 
-bool SimulatorBase::Init(std::shared_ptr<central_pack> pack)
+bool SimulatorBase::Init(central_pack* pack)
 {
    Central::Init(pack);
 

@@ -19,7 +19,7 @@ namespace ColregSimulation
 
       void Release() override final { delete this; }
 
-      virtual bool Init(std::shared_ptr<central_pack>);
+      virtual bool Init(central_pack*);
 
       inline void SetSimulationType(const ColregSimulation::SIMULATION_PLAYER_TYPE type) { m_simulationType = type; }
    protected:

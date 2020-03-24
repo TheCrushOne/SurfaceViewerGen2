@@ -11,7 +11,7 @@ namespace simulator
    bool simulatorStep();
    bool simulatorStart();
    void simulatorStop(bool simulatorReset = false);
-   std::shared_ptr<central_pack> GetPack();
+   central_pack* GetPack();
 
    ICommunicator* GetCommunicator();
 

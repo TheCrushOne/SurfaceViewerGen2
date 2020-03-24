@@ -58,7 +58,7 @@ using namespace database;
 SQLiteController::SQLiteController()
 {}
 
-void SQLiteController::Init(std::shared_ptr<central_pack> pack)
+void SQLiteController::Init(central_pack* pack)
 {
    Central::Init(pack);
    m_connector = std::make_unique<Connector>();

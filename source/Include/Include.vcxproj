@@ -79,6 +79,7 @@
     <ClInclude Include="source\crossdllinterface\DataShareInterface.h" />
     <ClInclude Include="source\crossdllinterface\EngineInterface.h" />
     <ClInclude Include="source\crossdllinterface\FileStorageInterface.h" />
+    <ClInclude Include="source\crossdllinterface\PackHoundInterface.h" />
     <ClInclude Include="source\crossdllinterface\RawDataInterface.h" />
     <ClInclude Include="source\crossdllinterface\SettingsSerializerInterface.h" />
     <ClInclude Include="source\crossdllinterface\SimulationInterface.h" />

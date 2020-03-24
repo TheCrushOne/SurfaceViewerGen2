@@ -6,12 +6,12 @@ namespace file_utils
 {
    inline void replaceExtension(std::wstring& data, const wchar_t* base, const wchar_t* nw)
    {
-      data.replace(data.find(base), sizeof(data) - 1, nw);
+      data.replace(data.find(base), data.length(), nw);
    }
 
    inline void replaceTailFile(std::wstring& data)
    {
-      data.replace(data.find_last_of(L"//"), sizeof(data) - 1, L"");
+      data.replace(data.find_last_of(L"\\\\"), data.length(), L"");
       //data.replace(data.find_last_of(L"//"), sizeof(data) - 1, nw);
    }
 
@@ -43,18 +43,24 @@ namespace file_utils
       global_path_storage() {}
 
       global_path_storage(std::wstring metaFileName)
-         : meta_path(metaFileName)
-         , scenario_path(metaFileName)
-         , pathfinder_settings_path(metaFileName)
-         , research_settings_path(metaFileName)
-         , environment_settings_path(metaFileName)
-         , map_path(metaFileName)
-         , unit_data_path(metaFileName)
-         , coordinate_map_path(metaFileName)
-         , map_object_path(metaFileName)
-         , database_path(metaFileName)
-         , logger_folder_path(L"")
       {
+         SetRouteElement(metaFileName);
+      }
+
+      void SetRouteElement(std::wstring metaFileName)
+      {
+         meta_path = metaFileName;
+         scenario_path = metaFileName;
+         pathfinder_settings_path = metaFileName;
+         research_settings_path = metaFileName;
+         environment_settings_path = metaFileName;
+         map_path = metaFileName;
+         unit_data_path = metaFileName;
+         coordinate_map_path = metaFileName;
+         map_object_path = metaFileName;
+         database_path = metaFileName;
+         logger_folder_path = L"";
+
          replaceExtension(pathfinder_settings_path, L".meta", L".ps");
          replaceExtension(research_settings_path, L".meta", L".rs");
          replaceExtension(environment_settings_path, L".meta", L".es");
@@ -66,7 +72,7 @@ namespace file_utils
 
          replaceExtension(database_path, L".meta", L".db3");
 
-         replaceTailFile(meta_path);
+         replaceTailFile(scenario_path);
       }
    };
 }

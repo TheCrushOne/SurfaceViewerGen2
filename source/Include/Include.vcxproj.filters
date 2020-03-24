@@ -264,6 +264,9 @@
     <ClInclude Include="source\common\central_class.h">
       <Filter>common</Filter>
     </ClInclude>
+    <ClInclude Include="source\crossdllinterface\PackHoundInterface.h">
+      <Filter>crossdllinterface</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\colreg\ThirdParty\tinyxml2\tinyxml2.cpp">

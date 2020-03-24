@@ -69,6 +69,7 @@ void SQLiteController::Init(std::shared_ptr<central_pack> pack)
       Message(ICommunicator::MS_Error, "Can't load 'DataShareProvider'!");
       return;
    }
+   m_shareProvider->Init(GetPack());
    //return;
 
    m_unitDataSerializer.Create(SVGUtils::CurrentDllPath("SettingsHandler").c_str(), "CreateUnitDataSerializer");

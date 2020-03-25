@@ -33,7 +33,6 @@ namespace converter
       std::vector<std::vector<double>> m_rawData;
       raw_data_ref m_rawDataRef;
 
-      settings::application_settings m_settings;
       settings::unit_source_data m_unitData;
    };
 }

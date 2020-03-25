@@ -35,8 +35,9 @@ RobotScenarioPlayer::RobotScenarioPlayer(iPropertyInterface* prop)
 
 void RobotScenarioPlayer::Start()
 {
-   m_databaseController->LoadScenarioData(m_data.unit_data, m_coordGrid);
    //m_settings.env_stt.gcs_info.scale = 0.001; // вроде как это вынесено в настройки...теперь
+
+   m_databaseController->LoadScenarioData(m_data.unit_data, m_coordGrid);   
    m_generator->Init(GetPack());
    addUnitsFromScenario();
    correctCoordinateGrid();
@@ -45,7 +46,7 @@ void RobotScenarioPlayer::Start()
    for (auto& elem : m_coordGrid)
       lines.emplace_back(converter::data_line_ref{ elem.data(), elem.size() });
    ref = converter::raw_data_ref{ lines.data(), lines.size() };
-   //m_generator->GenerateStatic(ref);
+   m_generator->GenerateStatic(ref);
 }
 
 void RobotScenarioPlayer::Stop()

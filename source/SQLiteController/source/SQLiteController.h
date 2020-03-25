@@ -37,7 +37,6 @@ namespace database
       void loadUnitData(settings::unit_source_data& settings);
    private:
       std::unique_ptr<Connector> m_connector;
-      file_utils::global_path_storage m_filestorage;
       colreg::ModuleGuard<data_share::iDataShareProvider> m_shareProvider;
       colreg::ModuleGuard<colreg::iUnitDataSerializer> m_unitDataSerializer;
       colreg::ModuleGuard<colreg::iSettingsSerializer> m_settingsSerializer;

@@ -91,7 +91,7 @@ void SQLiteController::Init(central_pack* pack)
 
 void SQLiteController::SaveScenarioData(const settings::unit_source_data& unitData, const std::vector<std::vector<double>>& coordGrid)
 {
-   m_shareProvider->Share(m_filestorage.coordinate_map_path.c_str(), coordGrid);
+   m_shareProvider->Share(GetPack()->paths->coordinate_map_path.c_str(), coordGrid);
    SaveAppSettings();
    saveUnitData(unitData);
 }
@@ -109,7 +109,7 @@ void SQLiteController::LoadScenarioData(settings::unit_source_data& unitData, st
 {
    LoadAppSettings();
    loadUnitData(unitData);
-   m_shareProvider->GetShared(m_filestorage.coordinate_map_path.c_str(), coordGrid);
+   m_shareProvider->GetShared(GetPack()->paths->coordinate_map_path.c_str(), coordGrid);
 }
 
 void SQLiteController::LoadAppSettings()

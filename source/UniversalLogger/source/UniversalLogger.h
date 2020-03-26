@@ -12,5 +12,8 @@ namespace logger
       void Init(central_pack* pack) override final;
       bool LogThreadResearchResult(const ThreadResearchComplexStorage&) override final;
       void Release() override final { delete this; }
+   protected:
+      void logThreadResearchResult(const ThreadResearchComplexStorage&, const std::wstring);
+      void logThreadResearchMeta(const ThreadResearchComplexStorage&, const std::wstring);
    };
 }

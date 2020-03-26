@@ -15,6 +15,30 @@ bool SimulatorBase::Init(central_pack* pack)
       return false;
    }
    m_databaseController->Init(pack);
+
+   m_engine.Create(SVGUtils::CurrentDllPath("Engine").c_str(), "CreateEngine");
+   if (!m_engine.IsValid())
+   {
+      Message(ICommunicator::MS_Error, "Can't load 'Engine'");
+      return;
+   }
+   m_engine->Init(GetPack());
+
+   m_generator.Create(SVGUtils::CurrentDllPath("ChartObjectGenerator").c_str(), "CreateGenerator");
+   if (!m_generator.IsValid())
+   {
+      Message(ICommunicator::MS_Error, "Can't load 'ChartObjectGenerator'");
+      return;
+   }
+
+   m_logger.Create(SVGUtils::CurrentDllPath("UniversalLogger").c_str(), "CreateUniversalLogger");
+   if (!m_logger.IsValid())
+   {
+      Message(ICommunicator::MS_Error, "Can't load 'Universal Logger'");
+      return;
+   }
+   m_logger->Init(GetPack());
+
    return true;
 }
 

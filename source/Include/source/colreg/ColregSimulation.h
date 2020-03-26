@@ -227,13 +227,13 @@ namespace ColregSimulation
       virtual const ColregSimulation::SIMULATION_PLAYER_TYPE GetSimulationType() = 0;
 
       //! Установить настройки
-      virtual void SetAppSettings(const settings::application_settings& s) = 0;
+      //virtual void SetAppSettings(const settings::application_settings& s) = 0;
       
       //! Перезагрузить настройки с xml
       virtual void ReloadSettings() = 0;
 
       //! Взять настройки
-      virtual const settings::application_settings& GetAppSettings() const = 0;
+      virtual const std::shared_ptr<settings::application_settings>& GetAppSettings() const = 0;
       
       //! Перерасчет путей
       virtual void RecountRoutes() = 0;

@@ -4,8 +4,6 @@
 #include "crossdllinterface\EngineInterface.h"
 #include "common\pathfinder_structs.h"
 #include "SimulationModel/ColregSimulationImpl.h"
-#include "crossdllinterface\ChartObjectGeneratorInterface.h"
-#include "crossdllinterface\UniversalLoggerInterface.h"
 
 namespace ColregSimulation
 {
@@ -30,9 +28,7 @@ namespace ColregSimulation
       const iSimulationState& GetState() const override { return *this; }
       bool SaveLogPair(const char* filename) const override;
       const ColregSimulation::SIMULATION_PLAYER_TYPE GetSimulationType() override;
-      void SetAppSettings(const settings::application_settings& s) override;
       void ReloadSettings() override;
-      const settings::application_settings& GetAppSettings() const override;
       void RecountRoutes() override;
       void RecountResearch() override;
       void LogResearchResult() override;
@@ -56,9 +52,6 @@ namespace ColregSimulation
       void moveUnits();
    private:
       std::vector<std::vector<double>> m_coordGrid;
-      colreg::ModuleGuard<engine::iEngine> m_engine;
-      colreg::ModuleGuard<chart_object::iGenerator> m_generator;
-      colreg::ModuleGuard<logger::iUniversalLogger> m_logger;
 
       chart_grid_meta m_gridMeta;
       std::vector<SimulationShip> m_ships;

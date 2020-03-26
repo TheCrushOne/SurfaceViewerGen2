@@ -5,6 +5,8 @@
 #include "colreg/ModuleGuard.h"
 #include "crossdllinterface/SVGMDatabaseInterface.h"
 #include "common/simulation_structs.h"
+#include "crossdllinterface\ChartObjectGeneratorInterface.h"
+#include "crossdllinterface\UniversalLoggerInterface.h"
 
 namespace ColregSimulation
 {
@@ -21,13 +23,17 @@ namespace ColregSimulation
 
       virtual bool Init(central_pack*);
 
+      virtual const std::shared_ptr<settings::application_settings>& GetAppSettings() const { return GetSettings(); }
+
       inline void SetSimulationType(const ColregSimulation::SIMULATION_PLAYER_TYPE type) { m_simulationType = type; }
    protected:
       std::shared_ptr<file_utils::global_path_storage> m_paths;
       iPropertyInterface* m_prop;
       ColregSimulation::SIMULATION_PLAYER_TYPE m_simulationType = ColregSimulation::SIMULATION_PLAYER_TYPE::SPT_SIZE;
-      settings::application_settings m_settings;
       scenario_data m_data;
       colreg::ModuleGuard<database::iSVGMDatabaseController> m_databaseController;
+      colreg::ModuleGuard<engine::iEngine> m_engine;
+      colreg::ModuleGuard<chart_object::iGenerator> m_generator;
+      colreg::ModuleGuard<logger::iUniversalLogger> m_logger;
    };
 }

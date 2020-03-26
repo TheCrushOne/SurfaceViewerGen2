@@ -66,5 +66,13 @@ struct ThreadResearchComplexStorage
       } result;
    };
 
+   struct Info
+   {
+      size_t thread_pool_summary;
+      size_t task_pool_summary;
+      size_t fly_count_summary;
+   };
+
    std::vector<SuperCell> data;
+   Info info;
 };

@@ -396,6 +396,11 @@ void Engine::threadResearch(/*const std::shared_ptr<SVM::iMatrix<SurfaceElement>
          }
       }
    }
+   m_threadResStorage.info = { 
+      resstt.thread_pool_range.values.size(),
+      resstt.task_pool_range.values.size(),
+      resstt.fly_count_range.values.size()
+   };
    m_threadTaskCurrentIdx = 0;
    threadResNextStep();
 }

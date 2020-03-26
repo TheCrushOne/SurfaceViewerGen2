@@ -57,16 +57,8 @@ const ColregSimulation::SIMULATION_PLAYER_TYPE RobotLogPlayer::GetSimulationType
    return ColregSimulation::SIMULATION_PLAYER_TYPE::SPT_LOG;
 }
 
-void RobotLogPlayer::SetAppSettings(const settings::application_settings& s)
-{}
-
 void RobotLogPlayer::ReloadSettings()
 {}
-
-const settings::application_settings& RobotLogPlayer::GetAppSettings() const
-{
-   return m_settings;
-}
 
 void RobotLogPlayer::RecountRoutes()
 {}

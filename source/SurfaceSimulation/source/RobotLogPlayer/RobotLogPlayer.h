@@ -26,9 +26,7 @@ namespace ColregSimulation
       const iSimulationState& GetState() const override { return *this; }
       bool SaveLogPair(const char* filename) const override;
       const ColregSimulation::SIMULATION_PLAYER_TYPE GetSimulationType() override;
-      void SetAppSettings(const settings::application_settings& s) override;
       void ReloadSettings() override;
-      const settings::application_settings& GetAppSettings() const override;
       void RecountRoutes() override;
       void RecountResearch() override;
       void LogResearchResult() override;

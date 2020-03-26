@@ -14,7 +14,7 @@ public:
    void Render(render::iRender*renderer ) override
    {
       createNet(renderer);
-      //createCells(renderer);
+      createCells(renderer);
    }
 
 private:

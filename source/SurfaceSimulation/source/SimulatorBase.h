@@ -7,6 +7,7 @@
 #include "common/simulation_structs.h"
 #include "crossdllinterface\ChartObjectGeneratorInterface.h"
 #include "crossdllinterface\UniversalLoggerInterface.h"
+#include "crossdllinterface\EngineInterface.h"
 
 namespace ColregSimulation
 {

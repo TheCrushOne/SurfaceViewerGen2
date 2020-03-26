@@ -36,7 +36,7 @@ namespace engine
    public:
       void Init(central_pack* pack) { Central::Init(pack); m_pathfinder->Init(pack); }
 
-      void LaunchResearch() override final;
+      void LaunchResearch(std::function<void(void)>) override final;
       const TimeResearchComplexStorage& GetTimeResearchResult() const override final { return m_timeResStorage; }
       const LengthResearchComplexStorage& GetLengthResearchResult() const override final { return m_lengthResStorage; }
       const ThreadResearchComplexStorage& GetThreadResearchResult() const override final { return m_threadResStorage; }
@@ -74,6 +74,7 @@ namespace engine
       std::shared_ptr<pathfinder::Matrix<SVCG::route_point>> m_rawdata;
       std::shared_ptr<pathfinder::route_data> m_routedata;
       //std::shared_ptr<pathfinder::route_data> m_routedata;
+      std::function<void(void)> m_endRoundCallback;
 
       // TODO: восстановить
       TimeResearchComplexStorage m_timeResStorage;

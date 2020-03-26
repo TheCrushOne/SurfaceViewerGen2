@@ -32,7 +32,8 @@ bool UniversalLogger::LogThreadResearchResult(const ThreadResearchComplexStorage
    //strftime(buffer, sizeof(buffer), "%d%m%Y_%H%M%S_TRR", timeinfo);
    wcsftime(buffer, sizeof(buffer), L"%d%m%Y_%H%M%S_TRR", timeinfo);
    std::wstring str(buffer);
-
+   logThreadResearchMeta(meta, str);
+   logThreadResearchResult(meta, str);
    
    //fs::create_directories(std::wstring(logPath) + L"//" + str);
    //std::vector
@@ -46,7 +47,10 @@ void UniversalLogger::logThreadResearchResult(const ThreadResearchComplexStorage
    fil.open(filePath, std::ios::out | std::ios::binary);
    for (auto metaElement : meta.data)
    {
-      fil << metaElement.index.thread_pool_idx << metaElement.index.task_pool_idx << metaElement.index.fly_count_idx << metaElement.result.time.diff;
+      fil << metaElement.index.thread_pool_idx << " "
+          << metaElement.index.task_pool_idx << " "
+          << metaElement.index.fly_count_idx << " "
+          << metaElement.result.time.diff;
       fil << "\n";
    }
    fil.close();

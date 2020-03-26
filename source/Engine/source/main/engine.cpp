@@ -45,13 +45,16 @@ void Engine::processPathFind(const ColregSimulation::scenario_data& scenarioData
 
 void Engine::processPathFindInternal(const ColregSimulation::scenario_data& scenarioData, std::function<void(void)> completeCallback)
 {
-   m_indata = std::make_shared<pathfinder::path_finder_indata>(pathfinder::path_finder_indata{
+   /*m_indata = std::make_shared<pathfinder::path_finder_indata>(pathfinder::path_finder_indata{
       scenarioData.unit_data,
       pathfinder::path_finder_settings(),
       pathfinder::path_finder_statistic(),
       pathfinder::strategy_settings{ pathfinder::StrategyType::ST_RHOMBOID, 5. } // NOTE: радиус пока что тут настраивается
    });
-   m_pathfinder->FindPath([completeCallback]() { completeCallback(); }, m_rawdata, m_indata);
+   m_pathfinder->FindPath([completeCallback]() { completeCallback(); }, m_rawdata, m_indata);*/
+   using namespace std::chrono_literals;
+   std::this_thread::sleep_for(3ms);
+   completeCallback();
 }
 
 void Engine::convertMap(const std::vector<std::vector<double>>& rawdataSrc, std::shared_ptr<pathfinder::Matrix<SVCG::route_point>> rawdataDst)
@@ -124,8 +127,9 @@ pathfinder::check_fly_zone_result Engine::checkFlyZone(float y)
 //   return result;
 //}
 
-void Engine::LaunchResearch()
+void Engine::LaunchResearch(std::function<void(void)> callback)
 {
+   m_endRoundCallback = callback;
    auto resstt = GetSettings()->res_stt;
    generateResMap(resstt.map_size);
    switch (resstt.res_type)
@@ -416,13 +420,14 @@ void Engine::threadResNextStep()
    }
    if (m_threadTaskCurrentIdx >= m_threadResStorage.data.size())
    {
+      m_endRoundCallback();
       //m_logger->LogThreadResearchResult(L"", GetThreadResearchResult());
       return;
    }
    m_threadResStorage.data.at(m_threadTaskCurrentIdx).result.time.start = startTime;
    ColregSimulation::scenario_data data;
    generateResScenarioData(data, m_threadResStorage.data.at(m_threadTaskCurrentIdx).index);
-   std::thread(&Engine::processPathFindInternal, this, data, [this]() { threadResNextStep();  }).detach();
+   std::thread(&Engine::processPathFindInternal, this, data, [this]() { threadResNextStep(); }).detach();
    //m_communicator->Message(ICommunicator::MS_Debug, "Thread task idx %i", m_threadTaskCurrentIdx);
    m_threadTaskCurrentIdx++;
 }

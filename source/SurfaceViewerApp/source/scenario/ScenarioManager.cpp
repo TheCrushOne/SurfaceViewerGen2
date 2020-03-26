@@ -11,7 +11,8 @@ ScenarioManager::ScenarioManager()
    : m_info({ "127.0.0.1", "8080", "27015", [this](const char* txt) { this->callback(txt); }})
 {
    m_info.data_callback_map[transceiver::JsonCommand::JC_NEWSURFACE] = [this](const char* txt) {};
-   createTransceiver();
+   // TODO: включить, когда будет более ясная картина по протоколу обмена данными
+   //createTransceiver();
 
    m_fsm.Create(SVGUtils::CurrentDllPath("FileStorageManager").c_str(), "CreateFileStorageManager");
    if (!m_fsm.IsValid())

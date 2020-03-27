@@ -2,6 +2,7 @@
 #include "TaskHolder.h"
 
 using namespace pathfinder;
+std::recursive_mutex g_mutex;
 
 void TaskHolder::Launch(std::shared_ptr<std::vector<task_unit>> taskPacket, std::function<void(void)> callback)
 {
@@ -12,6 +13,7 @@ void TaskHolder::Launch(std::shared_ptr<std::vector<task_unit>> taskPacket, std:
 
 void TaskHolder::onFinished()
 {
+   std::lock_guard<std::recursive_mutex> guard(g_mutex);
    status = HolderStatus::HS_FINISHED;
    for (task_unit& task : *packet.get())
    {

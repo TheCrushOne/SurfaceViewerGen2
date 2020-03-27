@@ -13,9 +13,8 @@
 #include <vector>
 
 //#define CURTIME_MS() QDateTime::currentDateTime().toMSecsSinceEpoch()
-#define CURTIME_MS(time_ms) SYSTEMTIME time; \
-                            GetSystemTime(&time); \
-                            time_ms = (time.wSecond * 1000) + time.wMilliseconds;
+
+#define CURTIME_MS(time_ms) time_ms = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count()
 
 namespace settings
 {

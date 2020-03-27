@@ -55,6 +55,7 @@ namespace pathfinder
 
       std::vector<task_unit> m_taskPool;
       std::shared_ptr<std::vector<task_unit>> m_taskPacket;
+      //std::mutex m_packetMutex;
 
       route_data m_paths;
 

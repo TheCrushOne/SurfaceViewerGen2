@@ -104,7 +104,7 @@ namespace settings
          if (!values.empty())
             return;
          T cur = min;
-         while (cur < max)
+         while (cur <= max)
          {
             values.emplace_back(cur);
             cur += step;

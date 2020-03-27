@@ -1,8 +1,8 @@
 {
 	"fly_count_range" : {
-		"min" : 1,
-		"step" : 2,
-		"max" : 6,
+		"min" : 5,
+		"step" : 5,
+		"max" : 50,
 		"values" : [
 		]
 	},
@@ -14,16 +14,16 @@
 		]
 	},
 	"thread_pool_range" : {
-		"min" : 1,
-		"step" : 1,
-		"max" : 5,
+		"min" : 2,
+		"step" : 2,
+		"max" : 20,
 		"values" : [
 		]
 	},
 	"task_pool_range" : {
 		"min" : 2,
 		"step" : 2,
-		"max" : 4,
+		"max" : 20,
 		"values" : [
 		]
 	},

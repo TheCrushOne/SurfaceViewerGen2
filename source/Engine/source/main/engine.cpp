@@ -45,16 +45,16 @@ void Engine::processPathFind(const ColregSimulation::scenario_data& scenarioData
 
 void Engine::processPathFindInternal(const ColregSimulation::scenario_data& scenarioData, std::function<void(void)> completeCallback)
 {
-   /*m_indata = std::make_shared<pathfinder::path_finder_indata>(pathfinder::path_finder_indata{
+   m_indata = std::make_shared<pathfinder::path_finder_indata>(pathfinder::path_finder_indata{
       scenarioData.unit_data,
       pathfinder::path_finder_settings(),
       pathfinder::path_finder_statistic(),
       pathfinder::strategy_settings{ pathfinder::StrategyType::ST_RHOMBOID, 5. } // NOTE: радиус пока что тут настраивается
    });
-   m_pathfinder->FindPath([completeCallback]() { completeCallback(); }, m_rawdata, m_indata);*/
-   using namespace std::chrono_literals;
-   std::this_thread::sleep_for(3ms);
-   completeCallback();
+   m_pathfinder->FindPath([completeCallback]() { completeCallback(); }, m_rawdata, m_indata);
+   //using namespace std::chrono_literals;
+   //std::this_thread::sleep_for(3ms);
+   //completeCallback();
 }
 
 void Engine::convertMap(const std::vector<std::vector<double>>& rawdataSrc, std::shared_ptr<pathfinder::Matrix<SVCG::route_point>> rawdataDst)

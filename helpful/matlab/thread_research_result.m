@@ -1,4 +1,4 @@
-basePath = '../../logs/test_g2/28032020_004928_TRR';
+basePath = '../../logs/test_g2/28032020_021955_TRR';
 dataPath = strcat(basePath, '.dat');
 metaPath = strcat(basePath, '.meta');
 [data, delimiterOut] = importdata(dataPath);
@@ -23,6 +23,7 @@ for threadIdx=1:1:jsonDee.thread_pool_summary
     end
     mesh(1:jsonDee.task_pool_summary, 1:jsonDee.fly_count_summary, mtxs, 'LineWidth', 1);
 end
+alpha 0.1;
 grid on;
 xlabel('task pool summary');
 ylabel('fly count summary');

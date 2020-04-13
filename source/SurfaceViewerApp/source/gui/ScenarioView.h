@@ -51,7 +51,7 @@ public:
 protected:
    bool OnScenarioLoad() override;
    bool OnScenarioModified() override;
-   bool OnScenarioStatusChanged(CSENARIO_STATUS status) override;
+   bool OnScenarioStatusChanged(ColregSimulation::SCENARIO_STATUS status) override;
    bool OnScenarioTimeChanged(double time) override { InvalidateView(); return true; }
 
    // Generated message map functions

@@ -46,13 +46,16 @@ class GDIRender : public render::iRender
          points = other.points;
          find = other.find;
          min_scale_2_draw = other.min_scale_2_draw;
+         angle = other.angle;
       }
 
       renderObject& operator = (const render::object& other)
       {
          info = other.info;
          points = other.points;
+         find = other.find;   // NOTE: этого тут не было
          min_scale_2_draw = other.min_scale_2_draw;
+         angle = other.angle;
       }
 
       operator colreg::id_type()const

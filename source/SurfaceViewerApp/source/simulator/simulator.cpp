@@ -20,6 +20,13 @@ namespace
       }
       //const fpath simulatorPath = fpath::get_module_folder().append("ColregSimulation.dll");
       auto simmgr = _simMgr.Create(SVGUtils::CurrentDllPath("SurfaceSimulation").c_str(), "CreateSimulationManager");
+      if (!_simMgr.IsValid())
+      {
+         user_interface::RaiseError();
+         std::string errMsg = std::string("Can't load '") + "SurfaceSimulation" + "'!";
+         user_interface::SetOutputText(user_interface::OT_ERROR, errMsg.c_str());
+         return false;
+      }
       _simMgr->Init(pack.get(), LayersContainer::GetLayerProperties());
       return simmgr;
    }

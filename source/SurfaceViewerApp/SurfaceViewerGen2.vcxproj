@@ -217,6 +217,18 @@
     <Image Include="res\fileview_hc.bmp" />
     <Image Include="res\file_view.ico" />
     <Image Include="res\file_view_hc.ico" />
+    <CopyFileToFolders Include="res\glyphicon\citroen.png">
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)res/glyphicon</DestinationFolders>
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)res/glyphicon</DestinationFolders>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="res\glyphicon\flag.png">
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)res/glyphicon</DestinationFolders>
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)res/glyphicon</DestinationFolders>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="res\glyphicon\helicopter.png">
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)res/glyphicon</DestinationFolders>
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)res/glyphicon</DestinationFolders>
+    </CopyFileToFolders>
     <Image Include="res\menuimages.bmp" />
     <Image Include="res\menuimages_hc.bmp" />
     <Image Include="res\output_wnd.ico" />
@@ -231,6 +243,7 @@
     <Image Include="res\SurfaceViewerGen2Doc.ico" />
     <Image Include="res\Toolbar.bmp" />
     <Image Include="res\Toolbar256.bmp" />
+    <Image Include="res\toolbar_service.bmp" />
     <Image Include="res\userimages.bmp" />
   </ItemGroup>
   <ItemGroup>
@@ -238,7 +251,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\framework.h" />
-    <ClInclude Include="source\gui\ClassView.h" />
+    <ClInclude Include="source\gui\AppStatusView.h" />
+    <ClInclude Include="source\gui\DebugFiltersView.h" />
     <ClInclude Include="source\gui\CModalDirectX.h" />
     <ClInclude Include="source\gui\FileView.h" />
     <ClInclude Include="source\gui\graph2d\coords.h">
@@ -297,6 +311,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClInclude>
+    <ClInclude Include="source\gui\helpers\DebugFiltersManager.h" />
     <ClInclude Include="source\gui\layers\ChartLayer.h" />
     <ClInclude Include="source\gui\layers\NetLayer.h" />
     <ClInclude Include="source\gui\layers\RenderHelper.h" />
@@ -309,6 +324,7 @@
     <ClInclude Include="source\gui\modal\TestFrame.h" />
     <ClInclude Include="source\gui\modal\TestView.h" />
     <ClInclude Include="source\gui\OutputWnd.h" />
+    <ClInclude Include="source\gui\ProgressView.h" />
     <ClInclude Include="source\gui\properties\PropComboBox.h" />
     <ClInclude Include="source\gui\properties\PropertiesCtrl.h" />
     <ClInclude Include="source\gui\properties\PropertiesWnd.h" />
@@ -321,6 +337,7 @@
     <ClInclude Include="source\gui\selection\SelectedObjectManager.h" />
     <ClInclude Include="source\gui\selection\SelectedRoute.h" />
     <ClInclude Include="source\gui\selection\SelectedUnit.h" />
+    <ClInclude Include="source\gui\TaskStatusView.h" />
     <ClInclude Include="source\gui\tools\CreateObjectTool.h" />
     <ClInclude Include="source\gui\tools\DragTool.h" />
     <ClInclude Include="source\gui\tools\MouseTool.h" />
@@ -338,9 +355,18 @@
     <ClInclude Include="source\SurfaceViewerGen2Doc.h" />
     <ClInclude Include="source\SurfaceViewerGen2View.h" />
     <ClInclude Include="source\targetver.h" />
+    <ClInclude Include="source\thirdparty\CMemDC.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="source\thirdparty\TextProgressCtrl.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="source\gui\ClassView.cpp" />
+    <ClCompile Include="source\gui\AppStatusView.cpp" />
+    <ClCompile Include="source\gui\DebugFiltersView.cpp" />
     <ClCompile Include="source\gui\CModalDirectX.cpp" />
     <ClCompile Include="source\gui\FileView.cpp" />
     <ClCompile Include="source\gui\graph2d\coords.cpp">
@@ -399,6 +425,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="source\gui\helpers\DebugFiltersManager.cpp" />
     <ClCompile Include="source\gui\layers\ChartLayer.cpp" />
     <ClCompile Include="source\gui\layers\NetLayer.cpp" />
     <ClCompile Include="source\gui\layers\RenderHelper.cpp" />
@@ -410,6 +437,7 @@
     <ClCompile Include="source\gui\modal\TestFrame.cpp" />
     <ClCompile Include="source\gui\modal\TestView.cpp" />
     <ClCompile Include="source\gui\OutputWnd.cpp" />
+    <ClCompile Include="source\gui\ProgressView.cpp" />
     <ClCompile Include="source\gui\properties\PropComboBox.cpp" />
     <ClCompile Include="source\gui\properties\PropertiesCtrl.cpp" />
     <ClCompile Include="source\gui\properties\PropertiesWnd.cpp" />
@@ -420,6 +448,7 @@
     <ClCompile Include="source\gui\selection\SelectedObjectManager.cpp" />
     <ClCompile Include="source\gui\selection\SelectedRoute.cpp" />
     <ClCompile Include="source\gui\selection\SelectedUnit.cpp" />
+    <ClCompile Include="source\gui\TaskStatusView.cpp" />
     <ClCompile Include="source\gui\tools\CreateObjectTool.cpp" />
     <ClCompile Include="source\gui\tools\DragTool.cpp" />
     <ClCompile Include="source\gui\tools\MouseTool.cpp" />
@@ -432,6 +461,10 @@
     <ClCompile Include="source\SurfaceViewerGen2.cpp" />
     <ClCompile Include="source\SurfaceViewerGen2Doc.cpp" />
     <ClCompile Include="source\SurfaceViewerGen2View.cpp" />
+    <ClCompile Include="source\thirdparty\TextProgressCtrl.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
 </Project>

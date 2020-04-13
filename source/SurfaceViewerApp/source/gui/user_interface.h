@@ -30,9 +30,11 @@ namespace user_interface
 
    void InvalidateView();
    void SetStatusBarText(const wchar_t* text);
+   void SetProgress(unsigned int progress);
    void ShowToolTip(const wchar_t* title, const wchar_t* description);
    void HideToolTip();
    void SetCenter(double lt, double ln);
+   void RaiseError();
 
    void SetOutputText(OUTPUT_TYPE type, const char* text, COLORREF color = 0, bool bold = false, bool italic = false);
 

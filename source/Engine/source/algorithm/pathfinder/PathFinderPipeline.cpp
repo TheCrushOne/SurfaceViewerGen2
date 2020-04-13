@@ -2,6 +2,7 @@
 #include "PathFinderPipeline.h"
 #include <math.h>
 #include <limits.h>
+#include "Helpers\CoordinateCorrectionHelper.h"
 
 using namespace pathfinder;
 
@@ -147,9 +148,9 @@ void PathFinderPipeline::onAirRoutePacketFinished()
    formatTaskPacket();
 
    // test 4/8
-   const int threadCount = 16;   // NOTE: По количеству логических ядер 8+HT
+   //const int threadCount = 16;   // NOTE: По количеству логических ядер 8+HT
    m_holders.clear();
-   m_holders.resize(threadCount);   // TODO: чекнуть, вызывается ли конструктор
+   m_holders.resize(m_indata->settings.thread_count);   // TODO: чекнуть, вызывается ли конструктор
    //QThreadPool::globalInstance()->setMaxThreadCount(threadCount);
    //Message(ICommunicator::MS_Debug, "ar task packet finished %i", m_taskPool.size());
    for (auto& holder : m_holders)
@@ -170,6 +171,7 @@ void PathFinderPipeline::buildLandCoverage()
       if (!m_currentCoverage.get() || checkLandCoverage(newCoverage))
       {
          m_currentCoverage = std::move(newCoverage);
+         correctControlPoints();
          findLandRoute();
       }
       else
@@ -259,4 +261,23 @@ void PathFinderPipeline::findPathSingleThread()
       //qDebug() << pathFound << iterations;
       m_iterations++;
    } while (!m_pathFound);
+}
+
+void PathFinderPipeline::correctControlPoints()
+{
+   affilationCheckerMtd affilationChecker = [this](const std::shared_ptr<pathfinder::Matrix<SVCG::route_point>>& rawdata, size_t row, size_t col)->bool
+   {
+      return this->GetCurrentCoverage()->Get(row, col) == 1 && rawdata->Get(row, col).go != pathfinder::GoZoneAffilation::GZA_FORBIDDEN;
+   };
+   auto corrector = [this, affilationChecker](SVCG::route_point& src)
+   {
+      SVCG::route_point corrected;
+      corrected = CoordinateCorrectionHelper::CorrectPoint(m_rawdata, src.row, src.col, affilationChecker, GetCommunicator());
+      src = corrected;
+   };
+   auto& landUnitData = m_indata->unit_data.land_units.at(0);
+   corrector(landUnitData.start);
+   corrector(landUnitData.finish);
+   for (auto& elem : landUnitData.control_point_list)
+      corrector(elem);
 }

@@ -10,6 +10,9 @@
     <Filter Include="SimulationModel">
       <UniqueIdentifier>{d02a06cd-77c1-4f61-adf4-a6edbe67a053}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Debug">
+      <UniqueIdentifier>{b950733c-d050-494f-9440-669daed16978}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\RobotScenarioPlayer\RobotScenarioPlayer.cpp">
@@ -24,6 +27,9 @@
     <ClCompile Include="source\SimulationModel\ColregSimulationImpl.cpp">
       <Filter>SimulationModel</Filter>
     </ClCompile>
+    <ClCompile Include="source\Debug\DebugInfoImpl.cpp">
+      <Filter>Debug</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\RobotScenarioPlayer\RobotScenarioPlayer.h">
@@ -37,6 +43,9 @@
     <ClInclude Include="source\SimulatorManager.h" />
     <ClInclude Include="source\SimulationModel\ColregSimulationImpl.h">
       <Filter>SimulationModel</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Debug\DebugInfoImpl.h">
+      <Filter>Debug</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

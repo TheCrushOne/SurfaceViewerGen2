@@ -5,20 +5,22 @@
 class SelectedUnit : public iSelected
 {
 public:
-   SelectedUnit(colreg::id_type id);
+   SelectedUnit(colreg::id_type id, ColregSimulation::UNIT_TYPE type);
    void Render(render::iRender* renderer) override;
 protected:
-   void mountUnitInfo(const ColregSimulation::iUnit& selected);
-   void mountTrackPointInfo(const ColregSimulation::iUnit& selected);
-   void mountSimSettings(const ColregSimulation::iUnit& selected);
-   void mountColregSettings(const ColregSimulation::iUnit& selected);
-   void mountSolution(const ColregSimulation::iUnit& selected);
-   void mountModel(const ColregSimulation::iUnit& selected);
+   void mountUnitInfo(const ColregSimulation::iUnit* selected);
+   void mountTrackPointInfo(const ColregSimulation::iUnit* selected);
+   void mountSimSettings(const ColregSimulation::iUnit* selected);
+   void mountColregSettings(const ColregSimulation::iUnit* selected);
+   void mountSolution(const ColregSimulation::iUnit* selected);
+   void mountModel(const ColregSimulation::iUnit* selected);
 
    const ColregSimulation::iSimulationState& getState() const;
 
-   virtual const ColregSimulation::iUnit& getSelectedUnit(colreg::id_type id) const = 0;
-private:
+   virtual const ColregSimulation::iUnit* getSelectedUnit() const { return getState().GetUnitById(m_id); }
+   virtual void renderDomain(render::iRender*) const = 0;
+   virtual void renderTrack(render::iRender*) const = 0;
+protected:
    colreg::id_type m_id;
    colreg::ship_info m_info;
 
@@ -37,28 +39,31 @@ class SelectedDrone : public SelectedUnit
 {
 public:
    SelectedDrone(colreg::id_type id)
-      : SelectedUnit(id)
+      : SelectedUnit(id, ColregSimulation::UNIT_TYPE::UT_DRONE)
    {}
 protected:
-   const ColregSimulation::iUnit& getSelectedUnit(colreg::id_type id) const override final { return getState().GetUnit(ColregSimulation::UNIT_TYPE::UT_DRONE, id); }
+   void renderDomain(render::iRender*) const override final;
+   void renderTrack(render::iRender*) const override final;
 };
 
 class SelectedRover : public SelectedUnit
 {
 public:
    SelectedRover(colreg::id_type id)
-      : SelectedUnit(id)
+      : SelectedUnit(id, ColregSimulation::UNIT_TYPE::UT_ROVER)
    {}
 protected:
-   const ColregSimulation::iUnit& getSelectedUnit(colreg::id_type id) const override final { return getState().GetUnit(ColregSimulation::UNIT_TYPE::UT_ROVER, id); }
+   void renderDomain(render::iRender*) const override final;
+   void renderTrack(render::iRender*) const override final;
 };
 
 class SelectedShip : public SelectedUnit
 {
 public:
    SelectedShip(colreg::id_type id)
-      : SelectedUnit(id)
+      : SelectedUnit(id, ColregSimulation::UNIT_TYPE::UT_SHIP)
    {}
 protected:
-   const ColregSimulation::iUnit& getSelectedUnit(colreg::id_type id) const override final { return getState().GetUnit(ColregSimulation::UNIT_TYPE::UT_SHIP, id); }
+   void renderDomain(render::iRender*) const override final;
+   void renderTrack(render::iRender*) const override final;
 };

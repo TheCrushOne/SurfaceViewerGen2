@@ -3,41 +3,26 @@
 
 using namespace ColregSimulation;
 
+#define VALID_CHECK_DLL_LOAD(dllName, funcName, guard) \
+   guard.Create(SVGUtils::CurrentDllPath(dllName).c_str(), funcName); \
+   if (!guard.IsValid()) \
+   { \
+      GetCommunicator()->RaiseError(); \
+      std::string errMsg = std::string("Can't load '") + dllName + "'!"; \
+      Message(ICommunicator::MS_Error, errMsg.c_str()); \
+      return false; \
+   } \
+   guard->Init(GetPack());
+
+
 bool SimulatorBase::Init(central_pack* pack)
 {
    Central::Init(pack);
 
-   m_databaseController.Create(SVGUtils::CurrentDllPath("SQLiteController").c_str(), "CreateSQLiteDatabaseController");
-   if (!m_databaseController.IsValid())
-   {
-      //m_lock = true;
-      Message(ICommunicator::MS_Error, "Can't load 'SQLiteController'!");
-      return false;
-   }
-   m_databaseController->Init(pack);
-
-   m_engine.Create(SVGUtils::CurrentDllPath("Engine").c_str(), "CreateEngine");
-   if (!m_engine.IsValid())
-   {
-      Message(ICommunicator::MS_Error, "Can't load 'Engine'");
-      return false;
-   }
-   m_engine->Init(GetPack());
-
-   m_generator.Create(SVGUtils::CurrentDllPath("ChartObjectGenerator").c_str(), "CreateGenerator");
-   if (!m_generator.IsValid())
-   {
-      Message(ICommunicator::MS_Error, "Can't load 'ChartObjectGenerator'");
-      return false;
-   }
-
-   m_logger.Create(SVGUtils::CurrentDllPath("UniversalLogger").c_str(), "CreateUniversalLogger");
-   if (!m_logger.IsValid())
-   {
-      Message(ICommunicator::MS_Error, "Can't load 'UniversalLogger'");
-      return false;
-   }
-   m_logger->Init(GetPack());
+   VALID_CHECK_DLL_LOAD("SQLiteController", "CreateSQLiteDatabaseController", m_databaseController);
+   VALID_CHECK_DLL_LOAD("Engine", "CreateEngine", m_engine);
+   VALID_CHECK_DLL_LOAD("ChartObjectGenerator", "CreateGenerator", m_generator);
+   VALID_CHECK_DLL_LOAD("UniversalLogger", "CreateUniversalLogger", m_logger);
 
    return true;
 }

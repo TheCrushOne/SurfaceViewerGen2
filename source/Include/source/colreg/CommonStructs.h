@@ -14,6 +14,7 @@ namespace colreg
    constexpr size_t  MAX_SHIP_NAME_LENGHT = 128;
    constexpr size_t  INVALID_INDEX = std::numeric_limits<size_t>::max();
    constexpr id_type INVALID_ID = std::numeric_limits<id_type>::max();
+   constexpr int INVALID_INT_ID = std::numeric_limits<int>::max();
 
    //! Степень опасности
    enum class DANGER_LEVEL : int
@@ -104,6 +105,7 @@ namespace colreg
       double    right_XTE; ///< Максимальное боковое смещение справа от линии маршрута, мили
    };
 
+   // TODO: переделать на три типа
    //! Информация по кораблю
    struct ship_info
    {

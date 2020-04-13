@@ -27,7 +27,7 @@ SelectedChartObject::SelectedChartObject(colreg::id_type id, colreg::OBJECT_TYPE
       _points = math::geo_points{ pObj->geom.arr->begin(), pObj->geom.arr->end() };
 
       if ((pObj->props.arr)
-         && _stricmp(pObj->props.arr[0].key, "depth") == 0)
+         /*&& _stricmp(pObj->props.arr[0].key, "depth") == 0*/)
       {
          size_t i = 0;
          for (const auto& p : pObj->props)
@@ -118,7 +118,7 @@ size_t SelectedChartObject::findObjectPointIndex(const colreg::geo_point& geopt)
    }
 
    double minDist = colreg::NO_VALUE;
-   size_t bestIndex = colreg::NO_VALUE;
+   size_t bestIndex = colreg::INVALID_INDEX;
    for (size_t i = 0; i < distances.size(); ++i)
    {
       if (distances[i] < minDist)

@@ -52,6 +52,19 @@ namespace colreg
       const char* val;
    };
 
+   struct simple_prop_holder
+   {
+      simple_prop_holder() = default;
+
+      simple_prop_holder(std::string k, std::string v)
+         : key{ k }
+         , val{ v }
+      {}
+
+      std::string key;
+      std::string val;
+   };
+
    using object_props_ref = base_ref<simple_prop>;
 
    using chart_object_id = unsigned long long;

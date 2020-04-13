@@ -12,6 +12,8 @@ protected:
 private:
    //void renderSuggestions(render::iRender* renderer, const colreg::statefull::suggestions_ref* suggestions);
 
-   bool _renderVector = true;
-   iPropertyPtr   _prop_renderVector;
+   bool m_renderVector = true;
+   iPropertyPtr m_prop_renderVector;
+
+   double m_arrowDist = 0.5;
 };

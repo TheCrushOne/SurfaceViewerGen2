@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\algorithm\pathfinder\CoverageBuilder.cpp" />
+    <ClCompile Include="source\algorithm\pathfinder\Helpers\CoordinateCorrectionHelper.cpp" />
     <ClCompile Include="source\algorithm\pathfinder\PathFinder.cpp" />
     <ClCompile Include="source\algorithm\pathfinder\PathFinderPipeline.cpp" />
     <ClCompile Include="source\algorithm\pathfinder\StrategyManager.cpp" />
@@ -35,6 +36,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\algorithm\pathfinder\CoverageBuilder.h" />
+    <ClInclude Include="source\algorithm\pathfinder\Helpers\CoordinateCorrectionHelper.h" />
     <ClInclude Include="source\algorithm\pathfinder\PathFinder.h" />
     <ClInclude Include="source\algorithm\pathfinder\PathFinderPipeline.h" />
     <ClInclude Include="source\algorithm\pathfinder\StrategyManager.h" />
@@ -127,7 +129,6 @@
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;ENGINE_EXPORTS;_WINDOWS;_USRDLL;ENGINE_DLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>source;$(SolutionDir)Include\source\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
@@ -164,7 +165,6 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;ENGINE_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>source;$(SolutionDir)Include\source\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>

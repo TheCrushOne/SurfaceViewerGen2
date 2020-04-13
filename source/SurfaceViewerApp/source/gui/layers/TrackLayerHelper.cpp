@@ -42,12 +42,10 @@ void TrackLayerHelper::RenderShiptrack(render::iRender* renderer, const colreg::
 
          newInfo.alpha = 100;
          newInfo.color = RGB(34, 177, 76);
-
          newInfo.width = 2;
 
          renderer->AddObject({ { track->domain_border[i - 1].left, track->domain_border[i].left }, newInfo });
          renderer->AddObject({ { track->domain_border[i - 1].right, track->domain_border[i].right }, newInfo });
-
       }
 
       if (trackLinesIntervalSeconds > 0 && i && (track->points[i].time - lastTrackLineTime + 1) >= trackLinesIntervalSeconds)
@@ -83,29 +81,48 @@ void TrackLayerHelper::renderRoute(render::iRender* renderer, colreg::id_type id
    user_interface::user_info ui;
    ui.data = 0;
 
-
-   for (size_t i = 0; i < route->size - 1; i++)
+   for (size_t i = 0; i < route->size; i++)
    {
       const route_point& rp = route->arr[i];
-      const route_point& rpNext = route->arr[i + 1];
+      if (i < route->size - 1)
+      {
+         const route_point& rpNext = route->arr[i + 1];
 
-      ui.type = (char)type;
-      ui.index = (short)i;
+         ui.type = (char)type;
+         ui.index = (short)i;
 
-      renderRouteSegment(renderer, id, ui.value, rp, rpNext, info, type);
+         renderRouteSegment(renderer, id, ui.value, rp, rpNext, info, type);
+      }
 
-      std::stringstream s;  s << i;
-      renderer->AddObject({ {rp.pos}
-                              , { 5, render::LINE_STYLE::LL_SOLID, render::FILL_TYPE::FT_NONE, info.color, s.str().c_str()}
-                                 , {ft, id, render::FIND_OBJECT_TYPE::FOT_ROUTE_POINT, ui.value } });
+      std::stringstream s;  s << id << " - " << i;
+      if (type == ColregSimulation::ROUTE_TYPE::RT_CONTROL)
+      {
+         std::string imagePath = SVGUtils::CurrentCurrentPath() + "\\res\\glyphicon\\flag.png";
+         COLORREF clrDanger = 255;
+         renderer->AddObject({
+              { rp.pos }
+            , { 32, render::LINE_STYLE::LL_SOLID, render::FILL_TYPE::FT_NONE, clrDanger, s.str().c_str(), 0, 0, 255, imagePath.c_str(), render::ANCHOR_TYPE::AT_BOTTOMLEFT }
+            , {}
+            , .0
+            , .0 
+         });
+      }
+      else
+      {
+         renderer->AddObject({
+              {rp.pos}
+            , { 5, render::LINE_STYLE::LL_SOLID, render::FILL_TYPE::FT_NONE, info.color, /*s.str().c_str()*/""}
+            , { ft, id, render::FIND_OBJECT_TYPE::FOT_ROUTE_POINT, ui.value }
+         });
+      }
 
    }
    ui.type = (char)type;
    ui.index = (short)(route->size - 1);
    std::stringstream s;  s << route->size - 1;
    renderer->AddObject({ { route->arr[route->size - 1].pos }
-                           , { 5, render::LINE_STYLE::LL_SOLID, render::FILL_TYPE::FT_NONE, info.color,  s.str().c_str()}
-                              ,{ft, id, render::FIND_OBJECT_TYPE::FOT_ROUTE_POINT, ui.value } });
+                        , { 5, render::LINE_STYLE::LL_SOLID, render::FILL_TYPE::FT_NONE, info.color, /*s.str().c_str()*/""}
+                        , { ft, id, render::FIND_OBJECT_TYPE::FOT_ROUTE_POINT, ui.value } });
 }
 
 void TrackLayerHelper::renderRouteSegment(render::iRender* renderer, colreg::id_type id, size_t index, const colreg::route_point& rp1, const colreg::route_point& rp2, const render::object_info& info, ColregSimulation::ROUTE_TYPE type)
@@ -127,16 +144,14 @@ void TrackLayerHelper::renderRouteSegment(render::iRender* renderer, colreg::id_
    }
    renderer->AddObject({ { rp1.pos, rp2.pos }
                            , info
-                             , {ft, id, render::FIND_OBJECT_TYPE::FOT_ROUTE_SEGMENT, index } });
+                           , { ft, id, render::FIND_OBJECT_TYPE::FOT_ROUTE_SEGMENT, index } });
 }
-
 
 void TrackLayerHelper::renderRouteZone(render::iRender* renderer, const std::function<RouteZoneWidthGetFunc>& func, const colreg::route_ref* route, COLORREF color)
 {
    using namespace colreg;
    if (!route || route->size < 2)
       return;
-
 
    //const ROUTE_ZONE_TYPE zones[] = { ROUTE_ZONE_TYPE::RZT_IN_ROUTE, ROUTE_ZONE_TYPE::RZT_CLOSE_TO_ROUTE, ROUTE_ZONE_TYPE::RZT_NEAR_TO_ROUTE };
 

@@ -8,31 +8,24 @@
 
 using namespace converter;
 
+#define VALID_CHECK_DLL_LOAD(dllName, funcName, guard) \
+   guard.Create(SVGUtils::CurrentDllPath(dllName).c_str(), funcName); \
+   if (!guard.IsValid()) \
+   { \
+      GetCommunicator()->RaiseError(); \
+      m_lock = true; \
+      std::string errMsg = std::string("Can't load '") + dllName + "'!"; \
+      Message(ICommunicator::MS_Error, errMsg.c_str()); \
+      return; \
+   }// \
+   //guard->Init(GetPack());
+
 HeightMapConverter::HeightMapConverter()
    : m_row_pointers(nullptr)
 {
-   m_databaseController.Create(SVGUtils::CurrentDllPath("SQLiteController").c_str(), "CreateSQLiteDatabaseController");
-   if (!m_databaseController.IsValid())
-   {
-      m_lock = true;
-      Message(ICommunicator::MS_Error, "Can't load 'SQLiteController'!");
-      return;
-   }
-   m_settingsSerializer.Create(SVGUtils::CurrentDllPath("SettingsHandler").c_str(), "CreateJsonSettingsSerializer");
-   if (!m_settingsSerializer.IsValid())
-   {
-      m_lock = true;
-      Message(ICommunicator::MS_Error, "Can't load 'SettingsHandler'!");
-      return;
-   }
-   m_unitDataSerializer.Create(SVGUtils::CurrentDllPath("SettingsHandler").c_str(), "CreateUnitDataSerializer");
-   if (!m_unitDataSerializer.IsValid())
-   {
-      m_lock = true;
-      Message(ICommunicator::MS_Error, "Can't load 'SettingsHandler'!");
-      return;
-   }
-   return;
+   VALID_CHECK_DLL_LOAD("SQLiteController", "CreateSQLiteDatabaseController", m_databaseController);
+   VALID_CHECK_DLL_LOAD("SettingsHandler", "CreateJsonSettingsSerializer", m_settingsSerializer);
+   VALID_CHECK_DLL_LOAD("SettingsHandler", "CreateUnitDataSerializer", m_unitDataSerializer);
 }
 
 bool HeightMapConverter::Convert()

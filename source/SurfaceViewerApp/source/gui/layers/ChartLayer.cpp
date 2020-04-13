@@ -18,14 +18,14 @@ void ChartLayer::Render(render::iRender* renderer)
       return;
    }
    const auto* sim = simulator::getSimulator();
-   if (!sim)
+   if (!sim || sim->GetSimulatorScenarioState() == ColregSimulation::SCENARIO_STATUS::SS_NOT_LOADED)
       return;
    const auto& simulationState = sim->GetState();
 
    
    //colreg::ReleaseGuard<colreg::iChartObjects> chartObjs(safetyChecker->GetChartObjects());
 
-   /*bool changed = chartObjs ? */synchronize_map(/*safetyChecker, */renderer, simulationState.GetChartObjects())/* : false*/;
+   synchronize_map(renderer, simulationState.GetChartObjects());
 
    //size_t statAreaCount = sim->GetStatisticsAreaObjectsCount();
 
@@ -72,18 +72,30 @@ void ChartLayer::addChartObject(render::iRender* renderer, const colreg::chart_o
       info = (*itf).second;
 
    float minScale = 0.0;
-   if (obj.props.arr && _stricmp(obj.props.arr[0].key, "depth") == 0)
-   {
-      if (!_showDepthChartObjects)
-      {
-         return;
-      }
-      std::stringstream s;
-      s << std::setprecision(2) << atof(obj.props.arr[0].val) << "m";
-      info.text = s.str();
-      minScale = _minScale2ShowDepthObjects;
-   }
+   //if (obj.props.arr/* && _stricmp(obj.props.arr[0].key, "depth") == 0*/)
+   //{
+   //   /*if (!_showDepthChartObjects)
+   //   {
+   //      return;
+   //   }*/
+   //   std::stringstream s;
+   //   s << std::setprecision(2) << atof(obj.props.arr[0].val) << "m";
+   //   info.text = s.str();
+   //   //minScale = _minScale2ShowDepthObjects;
+   //}
 
+   int r = 0, g = 0, b = 0;
+   bool colorOverride = false;
+   for (auto& prop : obj.props)
+   {
+      if (strcmp(prop.key, "Color") == 0)
+      {
+         colorOverride = true;
+         sscanf(prop.val, "%i %i %i", &r, &g, &b);
+      }
+   }
+   if (colorOverride)
+      info.color = RGB(r, g, b);
    //if (colreg::check_chart_obj_type(colreg::OT_POINTS, obj.type))
       //info.width = 3;
 

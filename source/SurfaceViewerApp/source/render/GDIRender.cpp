@@ -313,16 +313,32 @@ void GDIRender::renderAlphaObjects(CDC* dc, pixelObjects& objects)
       if (!obj.info.imageFile.empty())
       {
          const auto& center = obj.pixels[0];
-         /*PointF destPoints[3] = {
-         };*/
+         int xpos = center.x;
+         if ((obj.info.anchor_type & ANCHOR_TYPE::AT_LEFTSIDE) != 0)
+            xpos += 0;
+         else if ((obj.info.anchor_type & ANCHOR_TYPE::AT_RIGHTSIDE) != 0)
+            xpos -= obj.info.width;
+         else
+            xpos -= obj.info.width * .5;
+
+         int ypos = center.y;
+         if ((obj.info.anchor_type & ANCHOR_TYPE::AT_TOPSIDE) != 0)
+            ypos += 0;
+         else if ((obj.info.anchor_type & ANCHOR_TYPE::AT_BOTTOMSIDE) != 0)
+            ypos -= obj.info.width;
+         else
+            ypos -= obj.info.width * .5;
+
          graphics.TranslateTransform(center.x, center.y);
          graphics.RotateTransform(obj.angle);
          graphics.TranslateTransform(-center.x, -center.y);
-         graphics.DrawImage(getImage(obj.info.imageFile.c_str()),
-            (int)(center.x + obj.info.text_offset_x * .5),
-            (int)(center.y + obj.info.text_offset_y * .5),
+         graphics.DrawImage(
+            getImage(obj.info.imageFile.c_str()),
+            xpos,
+            ypos,
             obj.info.width,
-            obj.info.width);
+            obj.info.width
+         );
          graphics.ResetTransform();
 
          USES_CONVERSION;

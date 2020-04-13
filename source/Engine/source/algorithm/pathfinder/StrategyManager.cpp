@@ -1,13 +1,11 @@
 #include "stdafx.h"
 #include "StrategyManager.h"
 #include "main/engine.h"
+#include "Helpers\CoordinateCorrectionHelper.h"
+
+#define PI 3.14159265
 
 #define FLYCRCHCKPOINT(row, col, data) checkRetranslateFlyPointAffilation(static_cast<int>(row), static_cast<int>(col), data)
-
-
-#define DMPCORR(oldrow, oldcol, nwp) if (nwp.row != oldrow || nwp.col != oldcol) \
-   Message(ICommunicator::MS_Info, "Corr: [ %i, %i ] -> [ %i, %i ]", oldrow, oldcol, nwp.row, nwp.col);
-
 
 using namespace pathfinder;
 
@@ -23,6 +21,21 @@ bool StrategyManager::PrepareControlPoint(size_t iterations, std::vector<setting
    bool isPlusDirectionCol = start.col < finish.col;
    size_t rowCount = rawdata->GetRowCount(), colCount = rawdata->GetColCount();
    size_t directionControllerPointCount = 20;
+   auto controlPointInserter = [](settings::route& route, const SVCG::route_point point)
+   {
+      /*if (route.start == SVCG::route_point())
+      {
+         route.start = point;
+         return;
+      }
+      if (route.finish == SVCG::route_point())
+      {
+         route.finish = point;
+         return;
+      }*/
+      route.control_point_list.emplace_back(/*route.finish*/point);
+      //route.finish = point;
+   };
 
    if (type == pathfinder::StrategyType::ST_SNAKE)
    {
@@ -77,8 +90,6 @@ bool StrategyManager::PrepareControlPoint(size_t iterations, std::vector<setting
             }
             auto correctedStart = FLYCRCHCKPOINT(currentRowStLine, currentColStLine, rawdata);
             auto correctedFinish = FLYCRCHCKPOINT(currentRowFnLine, currentColFnLine, rawdata);
-            DMPCORR(currentRowStLine, currentColStLine, correctedStart);
-            DMPCORR(currentRowFnLine, currentColFnLine, correctedFinish);
             airRoutes.at(airIdx).control_point_list.emplace_back(correctedStart);
 
             double rowStep = (static_cast<double>(correctedFinish.row) - static_cast<double>(correctedStart.row))/static_cast<double>(directionControllerPointCount);
@@ -89,16 +100,12 @@ bool StrategyManager::PrepareControlPoint(size_t iterations, std::vector<setting
                                                   , floor(static_cast<double>(correctedStart.col) + colStep*idx)
                                                   , rawdata);
                airRoutes.at(airIdx).control_point_list.emplace_back(correctedPoint);
-               DMPCORR(floor(static_cast<double>(correctedStart.row) + rowStep*idx)
-                     , floor(static_cast<double>(correctedStart.col) + colStep*idx)
-                     , correctedPoint);
             }
 
             airRoutes.at(airIdx).control_point_list.emplace_back(correctedFinish);
          }
 
          airRoutes.at(airIdx).finish = FLYCRCHCKPOINT(finish.row, finish.col, rawdata);
-         DMPCORR(finish.row, finish.col, airRoutes.at(airIdx).finish);
       }
 
       first = false;
@@ -149,51 +156,84 @@ bool StrategyManager::PrepareControlPoint(size_t iterations, std::vector<setting
    }
    else if (type == ST_RHOMBOID)
    {
-      //airRoutes.at(0).controlPointList.clear();
-      airRoutes.at(0).start = FLYCRCHCKPOINT(start.row, start.col, rawdata);
-      double rowStep = (static_cast<double>(finish.row) - static_cast<double>(start.row))/static_cast<double>(directionControllerPointCount);
-      double colStep = (static_cast<double>(finish.col) - static_cast<double>(start.col))/static_cast<double>(directionControllerPointCount);
-      for (size_t idx = 1; idx < directionControllerPointCount; idx++)
-      {
-         airRoutes.at(0).control_point_list.emplace_back(FLYCRCHCKPOINT(floor(static_cast<double>(start.row) + rowStep*idx),
-                                                                        floor(static_cast<double>(start.col) + colStep*idx),
-                                                                        rawdata));
-      }
-      airRoutes.at(0).finish = FLYCRCHCKPOINT(finish.row, finish.col, rawdata);
+      double dSRow = static_cast<double>(start.row);
+      double dSCol = static_cast<double>(start.col);
+      double dFRow = static_cast<double>(finish.row);
+      double dFCol = static_cast<double>(finish.col);
 
-      for (size_t lineIdx = 1; lineIdx < airRoutes.size()*iterations; lineIdx++)
+      std::vector<std::pair<SVCG::route_point, SVCG::route_point>> cpPairVector;
+      double k = (dSCol - dFCol) / (dSRow - dFRow);
+      double b = dSCol - k * dSRow;
+      double dDiameter = static_cast<double>(diameter);
+
+      for (size_t lineIdx = 0; lineIdx < airRoutes.size() * iterations; lineIdx++)
+      {
+         double theta = atan(k);
+         double theta_mod = lineIdx % 2 ? theta : -theta;
+         // NOTE : при разлете в 45 грд.
+         // NOTE : для смены угла разлета заменить на двойной синус
+         double distantValue = sqrt(2)*(dDiameter * static_cast<double>((lineIdx + 1)/2));
+         colreg::geo_point startNonRotated{ dSRow + cos(theta)*distantValue, dSCol + sin(theta)*distantValue };
+         // NOTE: разворот на 180, т.е. на Пи
+         colreg::geo_point finishNonRotated{ dFRow + cos(theta + PI) * distantValue, dFCol + sin(theta + PI) * distantValue };
+
+         // NOTE: заюзана формула поворота относительно произвольной точки
+         GeoMatrix rtResStart =
+              GeoMatrix({ { startNonRotated.lat, startNonRotated.lon, 1. } })
+            * GeoMatrix({ { 1., 0., 0. }
+                        , { 0., 1., 0. }
+                        , { -dSRow, -dSCol, 1. } })
+            * GeoMatrix({ { cos(theta_mod), sin(theta_mod), 0. }
+                        , { -sin(theta_mod), cos(theta_mod), 0. }
+                        , { 0., 0., 1. } })
+            * GeoMatrix({ { 1., 0., 0. }
+                        , { 0., 1., 0. }
+                        , { dSRow, dSCol, 1. } });
+         GeoMatrix rtResFinish =
+              GeoMatrix({ { finishNonRotated.lat, finishNonRotated.lon, 1. } })
+            * GeoMatrix({ { 1., 0., 0. }
+                        , { 0., 1., 0. }
+                        , { -dFRow, -dFCol, 1. } })
+            * GeoMatrix({ { cos(-theta_mod), sin(-theta_mod), 0. }
+                        , { -sin(-theta_mod), cos(-theta_mod), 0. }
+                        , { 0., 0., 1. } })
+            * GeoMatrix({ { 1., 0., 0. }
+                        , { 0., 1., 0. }
+                        , { dFRow, dFCol, 1. } });
+         cpPairVector.emplace_back(std::pair<SVCG::route_point, SVCG::route_point>{
+              { static_cast<int>(rtResStart.Get(0, 0)), static_cast<int>(rtResStart.Get(0, 1)) }
+            , { static_cast<int>(rtResFinish.Get(0, 0)), static_cast<int>(rtResFinish.Get(0, 1)) }
+         });
+      }
+
+      // NOTE: если точки выходят за границу карты, система смещает их обратно, и при использовании облета не меняется покрытие, т.е. пути нет
+      // TODO: переписать проходы, а то криво работает
+      for (size_t lineIdx = 0; lineIdx < airRoutes.size()*iterations; lineIdx++)
       {
          size_t airIdx = lineIdx % airRoutes.size();
          //airRoutes.at(airIdx).controlPointList.clear();
-         airRoutes.at(airIdx).start = FLYCRCHCKPOINT(start.row, start.col, rawdata);
+         //controlPointInserter(airRoutes.at(airIdx), FLYCRCHCKPOINT(start.row, start.col, rawdata));
          int finishRow, finishCol, startRow, startCol;
-         if (lineIdx % 2 == 0)
+         if (!(lineIdx / airRoutes.size()) % 2)
          {
-            startRow = static_cast<int>(start.row) + (static_cast<int>(lineIdx) / 2)*(isPlusDirectionRow ? 1 : -1)*diameter;
-            startCol = static_cast<int>(start.col);
-            finishRow = static_cast<int>(finish.row);
-            finishCol = static_cast<int>(finish.col) - (static_cast<int>(lineIdx) / 2)*(isPlusDirectionCol ? 1 : -1)*diameter;
+            startRow = cpPairVector.at(lineIdx).first.row;
+            startCol = cpPairVector.at(lineIdx).first.col;
+            finishRow = cpPairVector.at(lineIdx).second.row;
+            finishCol = cpPairVector.at(lineIdx).second.col;
          }
          else
          {
-            startRow = static_cast<int>(start.row);
-            startCol = static_cast<int>(start.col) + (static_cast<int>(lineIdx) / 2 + 1)*(isPlusDirectionCol ? 1 : -1)*diameter;
-            finishRow = static_cast<int>(finish.row) - (static_cast<int>(lineIdx) / 2 + 1)*(isPlusDirectionRow ? 1 : -1)*diameter;
-            finishCol = static_cast<int>(finish.col);
+            startRow = cpPairVector.at(lineIdx).second.row;
+            startCol = cpPairVector.at(lineIdx).second.col;
+            finishRow = cpPairVector.at(lineIdx).first.row;
+            finishCol = cpPairVector.at(lineIdx).first.col;
          }
-         auto correctedStart = FLYCRCHCKPOINT(startRow, startCol, rawdata);
-         auto correctedFinish = FLYCRCHCKPOINT(finishRow, finishCol, rawdata);
-         airRoutes.at(airIdx).control_point_list.emplace_back(correctedStart);
-         double rowStep = (static_cast<double>(correctedFinish.row) - static_cast<double>(correctedStart.row))/static_cast<double>(directionControllerPointCount);
-         double colStep = (static_cast<double>(correctedFinish.col) - static_cast<double>(correctedStart.col))/static_cast<double>(directionControllerPointCount);
-         for (size_t idx = 1; idx < directionControllerPointCount; idx++)
-         {
-            airRoutes.at(airIdx).control_point_list.emplace_back(FLYCRCHCKPOINT(floor(static_cast<double>(correctedStart.row) + rowStep*idx),
-                                                                               floor(static_cast<double>(correctedStart.col) + colStep*idx),
-                                                                               rawdata));
-         }
-         airRoutes.at(airIdx).control_point_list.emplace_back(correctedFinish);
-         airRoutes.at(airIdx).finish = FLYCRCHCKPOINT(finish.row, finish.col, rawdata);
+
+         // NOTE: старт и финиш шагов итерации
+         auto correctedStepStart = FLYCRCHCKPOINT(startRow, startCol, rawdata);
+         auto correctedStepFinish = FLYCRCHCKPOINT(finishRow, finishCol, rawdata);
+         controlPointInserter(airRoutes.at(airIdx), correctedStepStart);
+         controlPointInserter(airRoutes.at(airIdx), correctedStepFinish);
       }
    }
    else
@@ -203,49 +243,11 @@ bool StrategyManager::PrepareControlPoint(size_t iterations, std::vector<setting
    return true;
 }
 
-
 SVCG::route_point StrategyManager::checkRetranslateFlyPointAffilation(int row, int col, const std::shared_ptr<Matrix<SVCG::route_point>>& rawdata)
 {
-   auto rowCount = rawdata->GetRowCount();
-   auto colCount = rawdata->GetColCount();
-   auto checkPointBorderCollision = [&rowCount, &colCount](int row, int col)->bool
+   affilationCheckerMtd affilationChecker = [](const std::shared_ptr<pathfinder::Matrix<SVCG::route_point>>& rawdata, size_t row, size_t col)->bool
    {
-      return !(row >= 0 && row < static_cast<int>(rowCount) && col >= 0 && col < static_cast<int>(colCount));
+      return rawdata->Get(row, col).fly != pathfinder::FlyZoneAffilation::FZA_FORBIDDEN;
    };
-   bool /*found = false,*/ stuck = false;
-   int step = 1;
-   if (checkPointBorderCollision(row, col) || rawdata->Get(static_cast<size_t>(row), static_cast<size_t>(col)).fly == FlyZoneAffilation::FZA_FORBIDDEN)
-   {
-      while (!stuck)
-      {
-         if ((row - step < 0)
-            && (row + step >= static_cast<int>(rowCount))
-            && (col - step < 0)
-            && (col + step >= static_cast<int>(colCount)))
-         {
-            stuck = true;
-            //qDebug() << "stucked: " << row << col;
-            return SVCG::route_point(0, 0);
-         }
-
-         if (!checkPointBorderCollision(row - step, col)
-            && (rawdata->Get(static_cast<size_t>(row - step), static_cast<size_t>(col)).fly != FlyZoneAffilation::FZA_FORBIDDEN))
-            return SVCG::route_point(row - step, col);
-
-         if (!checkPointBorderCollision(row + step, col)
-            && (rawdata->Get(static_cast<size_t>(row + step), static_cast<size_t>(col)).fly != FlyZoneAffilation::FZA_FORBIDDEN))
-            return SVCG::route_point(row + step, col);
-
-         if (!checkPointBorderCollision(row, col - step)
-            && (rawdata->Get(static_cast<size_t>(row), static_cast<size_t>(col - step)).fly != FlyZoneAffilation::FZA_FORBIDDEN))
-            return SVCG::route_point(row, col - step);
-
-         if (!checkPointBorderCollision(row, col + step)
-            && (rawdata->Get(static_cast<size_t>(row), static_cast<size_t>(col + step)).fly != FlyZoneAffilation::FZA_FORBIDDEN))
-            return SVCG::route_point(row, col + step);
-         step++;
-         //qDebug() << "corrector step:" << step << row << col;//row << static_cast<int>(rowCount) << (row - step < 0) << (row + step >= static_cast<int>(rowCount)) << (col - step < 0) << (col + step >= static_cast<int>(colCount));
-      }
-   }
-   return SVCG::route_point(row, col, 0.f);
+   return CoordinateCorrectionHelper::CorrectPoint(rawdata, row, col, affilationChecker, GetCommunicator());
 }

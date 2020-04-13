@@ -4,10 +4,12 @@
 
 #pragma once
 #include "FileView.h"
-#include "ClassView.h"
+#include "DebugFiltersView.h"
 #include "OutputWnd.h"
+#include "AppStatusView.h"
 #include "properties/PropertiesWnd.h"
 #include "user_interface.h"
+#include "ProgressView.h"
 
 class CMainFrame : public CFrameWndEx
 {
@@ -42,12 +44,15 @@ protected:  // встроенные члены панели элементов �
    CMFCMenuBar       m_wndMenuBar;
    CMFCToolBar       m_wndScenarioToolBar;
    CMFCToolBar       m_wndToolBar;
+   CMFCToolBar       m_wndAppStatusToolBar;
    CMFCStatusBar     m_wndStatusBar;
    CMFCToolBarImages m_UserImages;
    CFileView         m_wndFileView;
-   CClassView        m_wndClassView;
+   DebugFiltersView  m_wndClassView;
    COutputWnd        m_wndOutput;
    CPropertiesWnd    m_wndProperties;
+   CAppStatusView    m_wndAppStatusView;
+   CProgressViewWnd  m_wndProgressView;
 
 // Созданные функции схемы сообщений
 protected:

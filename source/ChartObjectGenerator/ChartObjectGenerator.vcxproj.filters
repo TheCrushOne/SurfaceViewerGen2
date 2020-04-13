@@ -3,9 +3,40 @@
   <ItemGroup>
     <ClCompile Include="source\ChartObjectGenerator.cpp" />
     <ClCompile Include="source\stdafx.cpp" />
+    <ClCompile Include="source\Modules\IsolineGenerator.cpp">
+      <Filter>Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Modules\CoverageGenerator.cpp">
+      <Filter>Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Modules\ZoneGenerator.cpp">
+      <Filter>Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Modules\ModuleBase.cpp">
+      <Filter>Modules</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\ChartObjectGenerator.h" />
     <ClInclude Include="source\stdafx.h" />
+    <ClInclude Include="source\Modules\IsolineGenerator.h">
+      <Filter>Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="source\chart_storage.h" />
+    <ClInclude Include="source\GeneratorModuleInterface.h" />
+    <ClInclude Include="source\Modules\CoverageGenerator.h">
+      <Filter>Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Modules\ZoneGenerator.h">
+      <Filter>Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Modules\ModuleBase.h">
+      <Filter>Modules</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Modules">
+      <UniqueIdentifier>{f66ccf47-218f-4cae-ba3e-29bed3e72959}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>

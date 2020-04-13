@@ -40,14 +40,14 @@ void Engine::ProcessPathFind(const ColregSimulation::scenario_data& scenarioData
 void Engine::processPathFind(const ColregSimulation::scenario_data& scenarioData, const std::vector<std::vector<double>>& rawData, std::function<void(void)> completeCallback)
 {
    convertMap(rawData, m_rawdata);
-   processPathFindInternal(scenarioData, completeCallback);
+   processPathFindInternal(scenarioData, pathfinder::path_finder_settings{}, completeCallback);
 }
 
-void Engine::processPathFindInternal(const ColregSimulation::scenario_data& scenarioData, std::function<void(void)> completeCallback)
+void Engine::processPathFindInternal(const ColregSimulation::scenario_data& scenarioData, pathfinder::path_finder_settings stt, std::function<void(void)> completeCallback)
 {
    m_indata = std::make_shared<pathfinder::path_finder_indata>(pathfinder::path_finder_indata{
       scenarioData.unit_data,
-      pathfinder::path_finder_settings(),
+      stt,
       pathfinder::path_finder_statistic(),
       pathfinder::strategy_settings{ pathfinder::StrategyType::ST_RHOMBOID, 5. } // NOTE: радиус пока что тут настраивается
    });
@@ -401,9 +401,9 @@ void Engine::threadResearch(/*const std::shared_ptr<SVM::iMatrix<SurfaceElement>
       }
    }
    m_threadResStorage.info = { 
-      resstt.thread_pool_range.values.size(),
-      resstt.task_pool_range.values.size(),
-      resstt.fly_count_range.values.size()
+      resstt.thread_pool_range,
+      resstt.task_pool_range,
+      resstt.fly_count_range
    };
    m_threadTaskCurrentIdx = 0;
    threadResNextStep();
@@ -424,27 +424,34 @@ void Engine::threadResNextStep()
       //m_logger->LogThreadResearchResult(L"", GetThreadResearchResult());
       return;
    }
+   auto& resstt = GetSettings()->res_stt;
    m_threadResStorage.data.at(m_threadTaskCurrentIdx).result.time.start = startTime;
    ColregSimulation::scenario_data data;
-   generateResScenarioData(data, m_threadResStorage.data.at(m_threadTaskCurrentIdx).index);
-   std::thread(&Engine::processPathFindInternal, this, data, [this]() { threadResNextStep(); }).detach();
+   generateResScenarioData(data, resstt, m_threadResStorage.data.at(m_threadTaskCurrentIdx).index);
+   pathfinder::path_finder_settings stt(true, {}, true, true, 0, 0, false);
+   stt.packet_size = m_threadResStorage.data.at(m_threadTaskCurrentIdx).index.task_pool_value;
+   stt.thread_count = m_threadResStorage.data.at(m_threadTaskCurrentIdx).index.thread_pool_value;
+   std::thread(&Engine::processPathFindInternal, this, data, stt, [this]() { threadResNextStep(); }).detach();
    //m_communicator->Message(ICommunicator::MS_Debug, "Thread task idx %i", m_threadTaskCurrentIdx);
    m_threadTaskCurrentIdx++;
+   GetPack()->comm->SetProgress(static_cast<unsigned int>(static_cast<double>(m_threadTaskCurrentIdx)/static_cast<double>(m_threadResStorage.data.size())*100.));
 }
 
-void Engine::generateResScenarioData(ColregSimulation::scenario_data& data, const ThreadResearchComplexStorage::SuperCell::Index& idx)
+void Engine::generateResScenarioData(ColregSimulation::scenario_data& data, const settings::research_settings& stt, const ThreadResearchComplexStorage::SuperCell::Index& idx)
 {
    data.unit_data.air_units.resize(idx.fly_count_value);
    data.unit_data.land_units.resize(1);
+   auto mapSize = stt.map_size;
+   int fnCoord = static_cast<int>(mapSize) - 1; // NOTE: индекс точки отличается от размера карты на 1
    for (auto& elem : data.unit_data.air_units)
    {
-      elem.start = SVCG::route_point{ 6, 6 };
-      elem.finish = SVCG::route_point{ 250, 250 };
+      elem.start = SVCG::route_point{ 0, 0 };
+      elem.finish = SVCG::route_point{ fnCoord, fnCoord };
    }
    for (auto& elem : data.unit_data.land_units)
    {
-      elem.start = SVCG::route_point{ 6, 6 };
-      elem.finish = SVCG::route_point{ 250, 250 };
+      elem.start = SVCG::route_point{ 0, 0 };
+      elem.finish = SVCG::route_point{ fnCoord, fnCoord };
    }
 }
 

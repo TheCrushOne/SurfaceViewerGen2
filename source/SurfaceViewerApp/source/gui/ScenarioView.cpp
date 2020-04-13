@@ -48,10 +48,10 @@ user_interface::objects_to_draw user_interface::GetObjectsInsideScreen()
    std::vector<colreg::geo_point> unitCoords;
    auto unitSummator = [&unitCoords](ColregSimulation::UNIT_TYPE type, const ColregSimulation::iSimulationState& state)
    {
-      for (size_t iShip = 0; iShip < state.GetUnitCount(type); ++iShip)
+      for (size_t idx = 0; idx < state.GetUnitCount(type); idx++)
       {
-         const auto& ship = state.GetUnit(type, iShip);
-         const auto& center = ship.GetPos().point.pos;
+         const auto* unit = state.GetUnitByIdx(type, idx);
+         const auto& center = unit->GetPos().point.pos;
          if (pView->GetRenderer()->IsNeedRender({ center }))
             unitCoords.emplace_back(center);
       }
@@ -59,7 +59,7 @@ user_interface::objects_to_draw user_interface::GetObjectsInsideScreen()
 
    unitSummator(ColregSimulation::UNIT_TYPE::UT_DRONE, simulationState);
    unitSummator(ColregSimulation::UNIT_TYPE::UT_ROVER, simulationState);
-   //unitSummator(ColregSimulation::UNIT_TYPE::UT_SHIP);
+   unitSummator(ColregSimulation::UNIT_TYPE::UT_SHIP, simulationState);
 
    return { unitCoords, pView->GetRenderer()->GetObjectsInsideScreenPts() };
 }
@@ -298,17 +298,17 @@ void ScenarioView::setTimer()
    SetTimer(0, 1000 / ScenarioManager::GetInstance().GetTimeScale(), NULL);
 }
 
-bool ScenarioView::OnScenarioStatusChanged(CSENARIO_STATUS status)
+bool ScenarioView::OnScenarioStatusChanged(ColregSimulation::SCENARIO_STATUS status)
 {
    switch (status)
    {
-   case CSENARIO_STATUS::SS_RUN:
+   case ColregSimulation::SCENARIO_STATUS::SS_RUN:
       setTimer();
       break;
-   case CSENARIO_STATUS::SS_PAUSE:
+   case ColregSimulation::SCENARIO_STATUS::SS_PAUSE:
       KillTimer(0);
       break;
-   case CSENARIO_STATUS::SS_STOP:
+   case ColregSimulation::SCENARIO_STATUS::SS_STOP:
       KillTimer(0);
       break;
    }

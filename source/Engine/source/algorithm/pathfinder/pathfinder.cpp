@@ -166,6 +166,11 @@ std::vector<SVCG::route_point> PathFinder::findUniversalPath(SVCG::route_point& 
    size_t frow = finish.row, fcol = finish.col;
    size_t pointScoreCount = 0;
 
+   auto frontlineCheckEmplace = [isInRowSafeRange, isInColSafeRange](std::vector<std::pair<size_t, size_t>>& storage, size_t row, size_t col)
+   {
+      if (isInRowSafeRange(static_cast<int>(row)) && isInColSafeRange(static_cast<int>(col)))
+         storage.emplace_back(std::make_pair(row, col));
+   };
    //qint64 beginMatrixBuildTime = CURTIME_MS();
    // NOTE: построение фронта волны
    while(!find && traverse)
@@ -176,34 +181,32 @@ std::vector<SVCG::route_point> PathFinder::findUniversalPath(SVCG::route_point& 
       {
          size_t curRow = frontline.at(idx).first;
          size_t curCol = frontline.at(idx).second;
-         size_t score =/* m_pointScore[curRow][curCol];*/pointScore->Get(curRow, curCol);
+         size_t score = pointScore->Get(curRow, curCol);
          //qDebug() << "Score: " << score << " size " << frontline.size() << " row: " << curRow << " col: " << curCol;
          std::vector<std::pair<size_t, size_t>> pts;
-         if (isInRowSafeRange(static_cast<int>(curRow) - 1))
-            pts.push_back({curRow - 1, curCol});
-         if (isInColSafeRange(static_cast<int>(curCol) - 1))
-            pts.push_back({curRow, curCol - 1});
-         if (isInRowSafeRange(static_cast<int>(curRow) + 1))
-            pts.push_back({curRow + 1, curCol});
-         if (isInColSafeRange(static_cast<int>(curCol) + 1))
-            pts.push_back({curRow, curCol + 1});
+         // NOTE: если понадобится вернуть 4 направления - срезать лишнее только тут
+         frontlineCheckEmplace(pts, curRow - 1, curCol - 1);   // topleft
+         frontlineCheckEmplace(pts, curRow - 1, curCol);       // top
+         frontlineCheckEmplace(pts, curRow - 1, curCol + 1);   // topright
+         frontlineCheckEmplace(pts, curRow, curCol - 1);       // left
+         frontlineCheckEmplace(pts, curRow, curCol + 1);       // right
+         frontlineCheckEmplace(pts, curRow + 1, curCol - 1);   // bottomleft
+         frontlineCheckEmplace(pts, curRow + 1, curCol);       // bottom
+         frontlineCheckEmplace(pts, curRow + 1, curCol + 1);   // bottomright
+
          for (auto iter : pts)
          {            
             if (pointScore->Get(iter.first, iter.second) == 0)
-            //if (m_pointScore[iter.first][iter.second] == 0)
             {
-               //pointScoreCount++;
                if (logic.checker(rawdata, coverageMatrix, iter.first, iter.second))
                {
-                  pointScore->Set(iter.first, iter.second, /*ULONG_LONG_MAX*/ULLONG_MAX);
-                  //m_pointScore[iter.first][iter.second] = ULONG_LONG_MAX;
+                  pointScore->Set(iter.first, iter.second, ULLONG_MAX);
                   pointScoreCount++;
                }
                else
                {
                   newFrontline.push_back({iter.first, iter.second});
                   pointScore->Set(iter.first, iter.second, score + 1);
-                  //m_pointScore[iter.first][iter.second] = score + 1;
                   pointScoreCount++;
                   traverse = true;
                   if (frow == iter.first && fcol == iter.second)
@@ -234,10 +237,21 @@ std::vector<SVCG::route_point> PathFinder::findUniversalPath(SVCG::route_point& 
    size_t curCol = curPoint.second;
    size_t stRow = start.row;
    size_t stCol = start.col;
+   double fnRowD = static_cast<double>(finish.row);
+   double fnColD = static_cast<double>(finish.col);
+   double stRowD = static_cast<double>(start.row);
+   double stColD = static_cast<double>(start.col);
    size_t pathRecoverCount = 0;
-   auto dist = [](size_t row1, size_t col1, size_t row2, size_t col2)->double
+   auto distToLine = [stRowD, stColD, fnRowD, fnColD](size_t row, size_t col)->double
    {
-      return sqrt(pow(static_cast<double>(row2) - static_cast<double>(row1), 2.) + pow(static_cast<double>(col2) - static_cast<double>(col1), 2.));
+      double fRow = static_cast<double>(row);
+      double fCol = static_cast<double>(col);
+      return (fabs((fnColD - stColD)*fRow - (fnRowD - stRowD)*fCol + fnRowD*stColD - fnColD*stRowD))/sqrt(pow(fnColD - stColD, 2.) + pow(fnRowD - stRowD, 2.));
+   };
+   auto expRouteCheckEmplace = [isInRowSafeRange, isInColSafeRange, distToLine](std::vector<std::pair<double, std::pair<size_t, size_t>>>& pts, size_t curRow, size_t curCol)
+   {
+      if (isInRowSafeRange(curRow) && isInColSafeRange(curCol))
+         pts.emplace_back(std::make_pair(distToLine(curRow, curCol), std::make_pair(curRow, curCol)));
    };
    //qint64 beginBackfireTime = CURTIME_MS();
    // NOTE: обратка
@@ -255,28 +269,26 @@ std::vector<SVCG::route_point> PathFinder::findUniversalPath(SVCG::route_point& 
       //qDebug() << "Route point: " << current.mp.col << current.mp.row;
       exp_route.emplace_back(current);
       std::vector<std::pair<double, std::pair<size_t, size_t>>> pts;
-      if (isInRowSafeRange(curRow))
-         pts.push_back({dist(stRow, stCol, curRow - 1, curCol), {curRow - 1, curCol}});
-      if (isInColSafeRange(curCol))
-         pts.push_back({dist(stRow, stCol, curRow, curCol - 1), {curRow, curCol - 1}});
-      if (isInRowSafeRange(curRow))
-         pts.push_back({dist(stRow, stCol, curRow + 1, curCol), {curRow + 1, curCol}});
-      if (isInColSafeRange(curCol))
-         pts.push_back({dist(stRow, stCol, curRow, curCol + 1), {curRow, curCol + 1}});
+
+      expRouteCheckEmplace(pts, curRow - 1, curCol - 1);  // topleft
+      expRouteCheckEmplace(pts, curRow - 1, curCol);      // top
+      expRouteCheckEmplace(pts, curRow - 1, curCol + 1);  // topright
+      expRouteCheckEmplace(pts, curRow, curCol - 1);      // left
+      expRouteCheckEmplace(pts, curRow, curCol - 1);      // right
+      expRouteCheckEmplace(pts, curRow + 1, curCol - 1);  // bottomleft
+      expRouteCheckEmplace(pts, curRow + 1, curCol);      // bottom
+      expRouteCheckEmplace(pts, curRow + 1, curCol + 1);  // bottomright
+
       std::sort(pts.begin(), pts.end(), [](std::pair<double, std::pair<size_t, size_t>> r1, std::pair<double, std::pair<size_t, size_t>> r2)->bool { return r1.first < r2.first; });
-      //std::sort(pts.begin(), pts.end(), [](QPair<double, QPair<size_t, size_t>> r1, QPair<double, QPair<size_t, size_t>> r2)->bool { return r1.first > r2.first; });
 
       for (auto iter : pts)
       {
          if (pointScore->Get(iter.second.first, iter.second.second) != 0
              && pointScore->Get(iter.second.first, iter.second.second) < curScore)
-         /*if (m_pointScore[iter.second.first][iter.second.second] != 0
-             && m_pointScore[iter.second.first][iter.second.second] < curScore)*/
          {
             curRow = iter.second.first;
             curCol = iter.second.second;
             curScore = pointScore->Get(curRow, curCol);
-            //curScore = m_pointScore[curRow][curCol];
             //qDebug() << "cs: " << curScore;
             find = false;
             break;

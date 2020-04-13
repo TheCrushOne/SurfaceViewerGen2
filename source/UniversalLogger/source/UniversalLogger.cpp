@@ -61,9 +61,9 @@ void UniversalLogger::logThreadResearchMeta(const ThreadResearchComplexStorage& 
    auto filePath = std::wstring(GetPack()->paths->logger_folder_path) + L"//" + str + L".meta";
    std::ofstream o(filePath);
    json j;
-   j["fly_count_summary"] = meta.info.fly_count_summary;
-   j["task_pool_summary"] = meta.info.task_pool_summary;
-   j["thread_pool_summary"] = meta.info.thread_pool_summary;
+   j["fly_count_values"] = meta.info.fly_count_range.values;
+   j["task_pool_values"] = meta.info.task_pool_range.values;
+   j["thread_pool_values"] = meta.info.thread_pool_range.values;
    o << j;
 }
 

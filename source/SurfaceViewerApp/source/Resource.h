@@ -175,6 +175,24 @@
 #define ID_SCENARIO_EDIT               10027
 #define ID_SCENARIO_OPEN               10028
 
+#define ID_APPSTATUSVIEW               10029
+#define IDR_SERVICE                    10030
+#define IDR_SERVICE_256                10031
+#define ID_CHECK_ENGINE                10032
+
+#define IDC_APPST_PROGRESS             10033
+
+#define ID_DEBUG_UPDATE                10034
+#define ID_AUTO_UPDATE                 10035
+
+#define IDR_TIME_SCALE_TOOLBAR         10036
+
+#define IDC_SIMULATION_SLIDER          10037
+#define IDC_SIMULATION_TIME_SET_BUTTON 10038
+#define IDC_SIMULATION_TIME            10039
+
+#define ID_VIEW_PROGRESS               10040
+
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED

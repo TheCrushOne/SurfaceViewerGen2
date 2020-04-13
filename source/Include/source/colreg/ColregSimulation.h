@@ -17,6 +17,7 @@ namespace ColregSimulation
       RT_COLREG = 0,    //< Для передачи в COLREG/pathfinder
       RT_SIMULAION,     //< Для симуляции движения
       RT_SOURSE,        //< Исходный маршрут движения из сценария
+      RT_CONTROL,       //< Маршрут по контрольным точкам
       RT_DISIGION,      //< Маршрут-решение
       RT_SUB_OPTIMAL,   //< Маршрут-решение
    };
@@ -26,6 +27,15 @@ namespace ColregSimulation
       UT_ROVER = 0,
       UT_DRONE,
       UT_SHIP,
+   };
+
+   enum class SCENARIO_STATUS : char
+   {
+      SS_RUN = 0,
+      SS_PAUSE,
+      SS_STOP,
+      SS_NOT_LOADED,
+      SS_UPDATE
    };
 
    struct control_point_info
@@ -83,6 +93,9 @@ namespace ColregSimulation
 
       //! Исходный путь
       virtual const ship_path_ref* GetSrcPath() const = 0;
+
+      //! Исходный набор кт
+      virtual const ship_path_ref* GetSrcControlPoints() const = 0;
 
       //! Симулированный путь
       virtual const ship_path_ref* GetSimulationPath() const = 0;
@@ -150,7 +163,9 @@ namespace ColregSimulation
 
       virtual size_t GetUnitCount(UNIT_TYPE type)      const = 0;
 
-      virtual const iUnit& GetUnit(UNIT_TYPE type, size_t idx) const = 0;
+      virtual const iUnit* GetUnitByIdx(UNIT_TYPE type, size_t idx) const = 0;
+
+      virtual const iUnit* GetUnitById(colreg::id_type id) const = 0;
 
       virtual const colreg::chart_objects_ref& GetChartObjects() const = 0;
 
@@ -190,6 +205,9 @@ namespace ColregSimulation
    //! Интерфейс симулятора колрега
    struct iSimulator : colreg::iReleasable
    {
+      //! Получить корневой элемент, который будет заполняться дебажной информацией
+      virtual dbg::iDebugInfo* GetDebugInfo() const = 0;
+
       //! Запуск симулятора
       virtual void Start() = 0;
 
@@ -243,6 +261,12 @@ namespace ColregSimulation
 
       //! Логгирование результатов исследования
       virtual void LogResearchResult() = 0;
+
+      //! Статус сценария
+      virtual SCENARIO_STATUS GetSimulatorScenarioState() const = 0;
+
+      //! Установка статуса сценария
+      virtual void SetSimulatorScenarioState(SCENARIO_STATUS) = 0;
 
       /*!
       \brief Добавить динамические объекты карты в симуляцию

@@ -12,6 +12,17 @@
 #include <algorithm>
 #include <numeric>
 
+#define VALID_CHECK_DLL_LOAD(dllName, funcName, guard) \
+   guard.Create(SVGUtils::CurrentDllPath(dllName).c_str(), funcName); \
+   if (!guard.IsValid()) \
+   { \
+      user_interface::RaiseError(); \
+      std::string errMsg = std::string("Can't load '") + dllName + "'!"; \
+      user_interface::SetOutputText(user_interface::OT_ERROR, errMsg.c_str()); \
+      return; \
+   }// \
+   //guard->Init(GetPack());
+
 ConnectionManager::ConnectionManager(std::shared_ptr<Engine>& engine)
    : m_infoboard(engine->GetInfoboard())
    , m_engine(engine)
@@ -24,6 +35,7 @@ ConnectionManager::ConnectionManager(std::shared_ptr<Engine>& engine)
 
 void ConnectionManager::createTransceiver()
 {
+   //VALID_CHECK_DLL_LOAD("SocketTransceiverLine", "CreateTransceiver", m_transceiver);
    m_transceiver.Create(SVGUtils::CurrentDllPath("SocketTransceiverLine").c_str(), "CreateTransceiver");
    if (!m_transceiver.IsValid())
    {

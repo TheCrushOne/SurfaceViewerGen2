@@ -25,6 +25,12 @@
 #define new DEBUG_NEW
 #endif
 
+//CSurfaceViewerGen2App* gApp = nullptr;
+
+void user_interface::RaiseError()
+{
+   theApp.RaiseCheckEngine();
+}
 
 // CSurfaceViewerGen2App
 
@@ -69,6 +75,9 @@ BEGIN_MESSAGE_MAP(CSurfaceViewerGen2App, CWinAppEx)
    ON_COMMAND(ID_BUTTON_DNGRSTAT, &CSurfaceViewerGen2App::OnUploadDangerStatistic)
    //ON_COMMAND(ID_DEBUG, &CSurfaceViewerGen2App::OnDebug)
    ON_COMMAND(ID_DEPTH_AREA + 100, &CSurfaceViewerGen2App::OnFalse)
+
+   ON_UPDATE_COMMAND_UI(ID_EDIT_RUN/*IDR_EDIT_TOOLBAR*/, &CSurfaceViewerGen2App::OnRunUpdateCommandUI)
+   ON_UPDATE_COMMAND_UI(ID_CHECK_ENGINE, &CSurfaceViewerGen2App::OnCheckEngineUpdateCommandUI)
 END_MESSAGE_MAP()
 
 
@@ -140,7 +149,6 @@ BOOL CSurfaceViewerGen2App::InitInstance()
    // например на название организации
    SetRegistryKey(_T("Локальные приложения, созданные с помощью мастера приложений"));
    LoadStdProfileSettings(4);  // Загрузите стандартные параметры INI-файла (включая MRU)
-
 
    InitContextMenuManager();
 
@@ -262,7 +270,7 @@ void CSurfaceViewerGen2App::OnRename()
 
 void CSurfaceViewerGen2App::OnRun()
 {
-   ScenarioManager::GetInstance().GetState() == CSENARIO_STATUS::SS_RUN ? ScenarioManager::GetInstance().Pause()
+   ScenarioManager::GetInstance().GetState() == ColregSimulation::SCENARIO_STATUS::SS_RUN ? ScenarioManager::GetInstance().Pause()
       : ScenarioManager::GetInstance().Run();
 }
 
@@ -369,6 +377,16 @@ void CSurfaceViewerGen2App::OnDebug()
 void CSurfaceViewerGen2App::OnFalse()
 {
 
+}
+
+void CSurfaceViewerGen2App::OnRunUpdateCommandUI(CCmdUI* pCmdUI)
+{
+   pCmdUI->Enable(m_runStatus);
+}
+
+void CSurfaceViewerGen2App::OnCheckEngineUpdateCommandUI(CCmdUI* pCmdUI)
+{
+   pCmdUI->Enable(m_checkEngineStatus);
 }
 
 // Диалоговое окно CAboutDlg используется для описания сведений о приложении

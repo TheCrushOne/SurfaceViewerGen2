@@ -24,9 +24,13 @@ namespace ColregSimulation
 
       virtual bool Init(central_pack*);
 
-      virtual const std::shared_ptr<settings::application_settings>& GetAppSettings() const { return GetSettings(); }
+      dbg::iDebugInfo* GetDebugInfo() const override final { return m_debugInfo; }
+      virtual const std::shared_ptr<settings::application_settings>& GetAppSettings() const override final { return GetSettings(); }
 
       inline void SetSimulationType(const ColregSimulation::SIMULATION_PLAYER_TYPE type) { m_simulationType = type; }
+
+      virtual SCENARIO_STATUS GetSimulatorScenarioState() const override final { return m_scenarioStatus; }
+      virtual void SetSimulatorScenarioState(SCENARIO_STATUS status) override final { m_scenarioStatus = status; }
    protected:
       std::shared_ptr<file_utils::global_path_storage> m_paths;
       iPropertyInterface* m_prop;
@@ -36,5 +40,7 @@ namespace ColregSimulation
       colreg::ModuleGuard<engine::iEngine> m_engine;
       colreg::ModuleGuard<chart_object::iGenerator> m_generator;
       colreg::ModuleGuard<logger::iUniversalLogger> m_logger;
+      SCENARIO_STATUS m_scenarioStatus = SCENARIO_STATUS::SS_NOT_LOADED;
+      dbg::iDebugInfo* m_debugInfo = nullptr;
    };
 }

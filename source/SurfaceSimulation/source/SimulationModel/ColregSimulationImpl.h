@@ -37,6 +37,7 @@ namespace ColregSimulation
       track_point_full_info GetPos() const override final { return m_posInfo; }
       const ship_path_ref* GetRoute(ROUTE_TYPE type) const override final;
       const ship_path_ref* GetSrcPath() const override final { return &m_srcPath; }
+      const ship_path_ref* GetSrcControlPoints() const override final { return &m_controlPoints; }
       const ship_path_ref* GetSimulationPath() const override final { return nullptr/*&m_simulationPath*/; }
       const ship_path_ref* GetPredictionPath() const override final { return nullptr/*&m_predictionPath*/; }
       const colreg::domain_geometry_ref* GetDomainTopology(double time, const colreg::domain_scales* scales = nullptr) const override final { return &m_domainRef; }
@@ -46,6 +47,7 @@ namespace ColregSimulation
       const char* GetETA() const override final { return m_eta.c_str(); /*ETA formatted as: MMDDHHMM, (Month, day, hour, minute). Example: 02.06.1982 19:40 encoded as 06021940*/ }
 
       void SetSrcRoute(ColregRoutePoints&& route) { m_srcPath.SetRoute(std::move(route)); }
+      void SetSrcContolPoints(ColregRoutePoints&& route) { m_controlPoints.SetRoute(std::move(route)); }
       void SetInfo(const colreg::ship_info& info) { m_info = info; }
       void SetPosInfo(const track_point_full_info& info) { m_posInfo = info; }
    private:
@@ -55,6 +57,7 @@ namespace ColregSimulation
       std::vector<std::vector<colreg::polar>> m_domainPts;
       std::vector<colreg::domain_geometry> m_domain;
       ShipPathHolder m_srcPath;
+      ShipPathHolder m_controlPoints;
       //ShipPathHolder m_simulationPath; // Как двигается корабль реально
       //ShipPathHolder m_predictionPath; // предикшн чисто для информационных целей
 

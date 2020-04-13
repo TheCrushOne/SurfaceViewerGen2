@@ -32,7 +32,7 @@ SelectRouteBase::SelectRouteBase(colreg::id_type id, size_t data)
    if (!sim)
       return;
    const auto& simulationState = sim->GetState();
-   auto& route = simulationState.GetUnit(ColregSimulation::UNIT_TYPE::UT_DRONE, id).GetRoute(_format_type)->route;
+   auto& route = simulationState.GetUnitById(id)->GetRoute(_format_type)->route;
    _route = std::vector<colreg::route_point>{ route->begin(), route->end()};
 //   _route = ScenarioManager::GetInstance().GetRoute(_format_type, id).route;
 

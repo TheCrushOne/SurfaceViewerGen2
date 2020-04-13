@@ -1,24 +1,13 @@
 #pragma once
 
 #include "crossdllinterface/ChartObjectGeneratorInterface.h"
+#include "Modules\IsolineGenerator.h"
+#include "Modules\CoverageGenerator.h"
+#include "Modules\ZoneGenerator.h"
+#include "chart_storage.h"
 
 namespace chart_object
 {
-   struct chart_storage
-   {
-      std::vector<std::vector<colreg::geo_point>> geom_contour_vct;
-      std::vector<colreg::geo_points_ref> geom_contour_ref_vct;
-      std::vector<colreg::simple_prop> prop_vct;
-
-      colreg::OBJECT_TYPE type;
-
-      void Commit()
-      {
-         for (const auto& elem : geom_contour_vct)
-            geom_contour_ref_vct.emplace_back(elem.data(), elem.size());
-      }
-   };
-
    class ChartObjectGenerator : public iGenerator, public Central
    {
    public:
@@ -26,22 +15,19 @@ namespace chart_object
 
       bool Init(central_pack* pack) override final;
       bool GenerateStatic(const converter::raw_data_ref& rawdata) override final;
-      const colreg::chart_objects_ref& GetChartObjects() const override final { prepareRef(); return m_chartObjectRef; }
-
+      const colreg::chart_objects_ref& GetChartObjects() const override final;
       void Release() override final { delete this; }
    protected:
       void addChartObject(chart_storage& storage);
       chart_storage& generateNew() { m_chartStorage.emplace_back(); return m_chartStorage.back(); }
       void prepareRef() const;
       void prepareLocalStorage();
-      void generateChartBorder(const converter::raw_data_ref& rawdata);
-      void generateIsolines(const converter::raw_data_ref& rawdata);
-      void generateNoGoAreas(const converter::raw_data_ref& rawdata);
-      void generateNoFlyAreas(const converter::raw_data_ref& rawdata);
    private:
       bool m_lock = false;
 
-      double m_maxRadius;
+      IsolineGenerator m_isolineGenerator;
+      ZoneGenerator m_zoneGenerator;
+      CoverageGenerator m_coverageGenerator;
 
       std::vector<chart_storage> m_chartStorage;
 

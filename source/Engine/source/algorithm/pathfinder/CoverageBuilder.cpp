@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "CoverageBuilder.h"
 
 std::shared_ptr<pathfinder::Matrix<size_t>> CoverageBuilder::BuildLandCoverage(size_t rowCount, size_t colCount, pathfinder::strategy_settings strategySettings, std::vector<settings::route>& airRoutes)

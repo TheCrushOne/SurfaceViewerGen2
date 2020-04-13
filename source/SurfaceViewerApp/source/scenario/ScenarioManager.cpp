@@ -1,11 +1,19 @@
 #include "stdafx.h"
 #include "ScenarioManager.h"
-#include "simulator\simulator.h"
-//#include "TTCG\Common\FileSystem\Path.h"
 #include "gui/selection/SelectedObjectManager.h"
-//#include "engine\main\dispatcher.h"
 #include "common/file_storage.h"
 #include "gui/user_interface.h"
+
+#define VALID_CHECK_DLL_LOAD(dllName, funcName, guard) \
+   guard.Create(SVGUtils::CurrentDllPath(dllName).c_str(), funcName); \
+   if (!guard.IsValid()) \
+   { \
+      user_interface::RaiseError(); \
+      std::string errMsg = std::string("Can't load '") + dllName + "'!"; \
+      user_interface::SetOutputText(user_interface::OT_ERROR, errMsg.c_str()); \
+      return; \
+   }// \
+   //guard->Init(GetPack());
 
 ScenarioManager::ScenarioManager()
    : m_info({ "127.0.0.1", "8080", "27015", [this](const char* txt) { this->callback(txt); }})
@@ -14,19 +22,8 @@ ScenarioManager::ScenarioManager()
    // TODO: включить, когда будет более ясная картина по протоколу обмена данными
    //createTransceiver();
 
-   m_fsm.Create(SVGUtils::CurrentDllPath("FileStorageManager").c_str(), "CreateFileStorageManager");
-   if (!m_fsm.IsValid())
-   {
-      user_interface::SetOutputText(user_interface::OT_ERROR, "Can't load 'FileStorageManager'!");
-      return;
-   }
-
-   m_converter.Create(SVGUtils::CurrentDllPath("HeightMapToSVGMConverter").c_str(), "CreateConverter");
-   if (!m_converter.IsValid())
-   {
-      user_interface::SetOutputText(user_interface::OT_ERROR, "Can't load 'HeightMapToSVGMConverter'!");
-      return;
-   }
+   VALID_CHECK_DLL_LOAD("FileStorageManager", "CreateFileStorageManager", m_fsm);
+   VALID_CHECK_DLL_LOAD("HeightMapToSVGMConverter", "CreateConverter", m_converter);
 }
 
 void ScenarioManager::Open(const wchar_t* fileName)
@@ -50,28 +47,28 @@ void ScenarioManager::Open(const wchar_t* fileName)
 
    if (ScenarioDispather::GetInstance().OnScenarioLoad())
    {
-      setState(CSENARIO_STATUS::SS_PAUSE);
+      //setState(ColregSimulation::SCENARIO_STATUS::SS_PAUSE);
       //SetDebugMode(_debugMode);
    }
 }
 
-void ScenarioManager::setState(CSENARIO_STATUS state, bool force)
+void ScenarioManager::setState(ColregSimulation::SCENARIO_STATUS state, bool force)
 {
-   if (!force && m_state == state || !simulator::getSimulator())
+   // TODO: разобраться с force
+   if (!simulator::getSimulator())
       return;
-
-   m_state = state;
-   ScenarioDispather::GetInstance().OnScenarioStatusChanged(m_state);
+   simulator::getSimulator()->SetSimulatorScenarioState(state);
+   ScenarioDispather::GetInstance().OnScenarioStatusChanged(state);
 }
 
 void ScenarioManager::Run()
 {
-   setState(CSENARIO_STATUS::SS_RUN);
+   setState(ColregSimulation::SCENARIO_STATUS::SS_RUN);
 }
 
 void ScenarioManager::Pause()
 {
-   setState(CSENARIO_STATUS::SS_PAUSE);
+   setState(ColregSimulation::SCENARIO_STATUS::SS_PAUSE);
 }
 
 void ScenarioManager::Restart()
@@ -81,7 +78,7 @@ void ScenarioManager::Restart()
       return;
    sim->Stop();
    sim->Start();
-   setState(CSENARIO_STATUS::SS_PAUSE, true);
+   setState(ColregSimulation::SCENARIO_STATUS::SS_PAUSE, true);
    ScenarioDispather::GetInstance().OnScenarioTimeChanged(sim->GetState().GetTime());
    SetDebugMode(m_debugMode);
 }
@@ -92,7 +89,7 @@ void ScenarioManager::Stop()
    if (!sim)
       return;
    sim->Reset();
-   setState(CSENARIO_STATUS::SS_NOT_LOADED, true);
+   setState(ColregSimulation::SCENARIO_STATUS::SS_NOT_LOADED, true);
 }
 
 void ScenarioManager::Step()
@@ -149,12 +146,7 @@ void ScenarioManager::LogResearchResult()
 
 void ScenarioManager::createTransceiver()
 {
-   m_transceiver.Create(SVGUtils::CurrentDllPath("SocketTransceiverLine").c_str(), "CreateTransceiver");
-   if (!m_transceiver.IsValid())
-   {
-      user_interface::SetOutputText(user_interface::OT_ERROR, "Can't load 'SocketTransceiverLine'!");
-      return;
-   }
+   VALID_CHECK_DLL_LOAD("SocketTransceiverLine", "CreateTransceiver", m_transceiver);
    std::thread thr(&ScenarioManager::initTransceiver, this);
    thr.detach();
    return;

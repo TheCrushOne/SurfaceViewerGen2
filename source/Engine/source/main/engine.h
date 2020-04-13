@@ -51,10 +51,10 @@ namespace engine
       void logThreadResearchResult();
 
       void threadResNextStep();
-      void generateResScenarioData(ColregSimulation::scenario_data& data, const ThreadResearchComplexStorage::SuperCell::Index& idx);
+      void generateResScenarioData(ColregSimulation::scenario_data& data, const settings::research_settings&, const ThreadResearchComplexStorage::SuperCell::Index& idx);
 
       void processPathFind(const ColregSimulation::scenario_data& scenarioData, const std::vector<std::vector<double>>& rawData, std::function<void(void)> completeCallback);
-      void processPathFindInternal(const ColregSimulation::scenario_data& scenarioData, std::function<void(void)> completeCallback);
+      void processPathFindInternal(const ColregSimulation::scenario_data& scenarioData, pathfinder::path_finder_settings stt, std::function<void(void)> completeCallback);
       void generateResMap(size_t mapSize/*std::shared_ptr<SVM::iMatrix<SurfaceElement>>&, const STT::Gen1Settings&*/);
       pathfinder::check_fly_zone_result checkFlyZone(float);
       void convertMap(const std::vector<std::vector<double>>& rawdataSrc, std::shared_ptr<pathfinder::Matrix<SVCG::route_point>> rawdataDst);

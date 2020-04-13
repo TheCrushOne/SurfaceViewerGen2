@@ -20,10 +20,20 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\ChartObjectGenerator.cpp" />
+    <ClCompile Include="source\Modules\CoverageGenerator.cpp" />
+    <ClCompile Include="source\Modules\IsolineGenerator.cpp" />
+    <ClCompile Include="source\Modules\ModuleBase.cpp" />
+    <ClCompile Include="source\Modules\ZoneGenerator.cpp" />
     <ClCompile Include="source\stdafx.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\ChartObjectGenerator.h" />
+    <ClInclude Include="source\chart_storage.h" />
+    <ClInclude Include="source\GeneratorModuleInterface.h" />
+    <ClInclude Include="source\Modules\CoverageGenerator.h" />
+    <ClInclude Include="source\Modules\IsolineGenerator.h" />
+    <ClInclude Include="source\Modules\ModuleBase.h" />
+    <ClInclude Include="source\Modules\ZoneGenerator.h" />
     <ClInclude Include="source\stdafx.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

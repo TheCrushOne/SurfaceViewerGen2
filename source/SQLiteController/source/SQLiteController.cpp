@@ -55,6 +55,17 @@
 #define STT_SEL_DAT_RES_STR_RL(token, val) DAT_RES_STR_RL(request_storage::selectReqList.at(request_storage::RequestToken::RT_SELSCNSTT), request_storage::settingsTokenList.at(token).c_str(), val)
 using namespace database;
 
+#define VALID_CHECK_DLL_LOAD(dllName, funcName, guard) \
+   guard.Create(SVGUtils::CurrentDllPath(dllName).c_str(), funcName); \
+   if (!guard.IsValid()) \
+   { \
+      GetCommunicator()->RaiseError(); \
+      std::string errMsg = std::string("Can't load '") + dllName + "'!"; \
+      Message(ICommunicator::MS_Error, errMsg.c_str()); \
+      return; \
+   }// \
+   //guard->Init(GetPack());
+
 SQLiteController::SQLiteController()
 {}
 
@@ -63,28 +74,12 @@ void SQLiteController::Init(central_pack* pack)
    Central::Init(pack);
    m_connector = std::make_unique<Connector>();
    m_connector->Init(GetPack());
-   m_shareProvider.Create(SVGUtils::CurrentDllPath("DataShareProvider").c_str(), "CreateDataShareProvider");
-   if (!m_shareProvider.IsValid())
-   {
-      Message(ICommunicator::MS_Error, "Can't load 'DataShareProvider'!");
-      return;
-   }
+
+   VALID_CHECK_DLL_LOAD("DataShareProvider", "CreateDataShareProvider", m_shareProvider);
    m_shareProvider->Init(GetPack());
-   //return;
+   VALID_CHECK_DLL_LOAD("SettingsHandler", "CreateUnitDataSerializer", m_unitDataSerializer);
+   VALID_CHECK_DLL_LOAD("SettingsHandler", "CreateJsonSettingsSerializer", m_settingsSerializer);
 
-   m_unitDataSerializer.Create(SVGUtils::CurrentDllPath("SettingsHandler").c_str(), "CreateUnitDataSerializer");
-   if (!m_unitDataSerializer.IsValid())
-   {
-      Message(ICommunicator::MS_Error, "Can't load 'SettingsHandler'!");
-      return;
-   }
-
-   m_settingsSerializer.Create(SVGUtils::CurrentDllPath("SettingsHandler").c_str(), "CreateJsonSettingsSerializer");
-   if (!m_settingsSerializer.IsValid())
-   {
-      Message(ICommunicator::MS_Error, "Can't load 'SettingsHandler'!");
-      return;
-   }
    m_connector->Connect(SVGUtils::wstringToString(GetPathStorage()->database_path).c_str());
    baseCheckCreate();
 }

@@ -74,10 +74,14 @@ size_t RobotLogPlayer::GetUnitCount(UNIT_TYPE type) const
    return 0;
 }
 
-const iUnit& RobotLogPlayer::GetUnit(UNIT_TYPE type, size_t idx) const
+const iUnit* RobotLogPlayer::GetUnitById(colreg::id_type id) const
 {
-   static SimulationShip ship;
-   return ship;
+   return nullptr;
+}
+
+const iUnit* RobotLogPlayer::GetUnitByIdx(UNIT_TYPE type, size_t idx) const
+{
+   return nullptr;
 }
 
 double RobotLogPlayer::GetTime() const

@@ -26,9 +26,13 @@ public:
    virtual BOOL OnIdle(LONG lCount);
    virtual int ExitInstance();
 
+   void RaiseCheckEngine() { m_checkEngineStatus = true; this->OnIdle(-1); }
+
 // Реализация
    UINT  m_nAppLook;
    BOOL  m_bHiColorIcons;
+   bool m_checkEngineStatus = false;
+   bool m_runStatus = true;
 
    virtual void PreLoadState();
    virtual void LoadCustomState();
@@ -66,6 +70,9 @@ public:
    afx_msg void OnUploadDangerStatistic();
    afx_msg void OnDebug();
    afx_msg void OnFalse();
+
+   afx_msg void OnRunUpdateCommandUI(CCmdUI* pCmdUI);
+   afx_msg void OnCheckEngineUpdateCommandUI(CCmdUI* pCmdUI);
 
    DECLARE_MESSAGE_MAP()
 

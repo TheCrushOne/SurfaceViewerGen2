@@ -27,7 +27,7 @@ namespace converter
       colreg::ModuleGuard<database::iSVGMDatabaseController> m_databaseController;
       colreg::ModuleGuard<colreg::iSettingsSerializer> m_settingsSerializer;
       colreg::ModuleGuard<colreg::iUnitDataSerializer> m_unitDataSerializer;
-      png_bytep* m_row_pointers;
+      png_bytep* m_row_pointers = nullptr;
       bool m_lock = false;
 
       std::vector<std::vector<double>> m_rawData;

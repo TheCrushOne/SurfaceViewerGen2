@@ -68,9 +68,9 @@ struct ThreadResearchComplexStorage
 
    struct Info
    {
-      size_t thread_pool_summary;
-      size_t task_pool_summary;
-      size_t fly_count_summary;
+      settings::range_data<size_t> thread_pool_range;
+      settings::range_data<size_t> task_pool_range;
+      settings::range_data<size_t> fly_count_range;
    };
 
    std::vector<SuperCell> data;

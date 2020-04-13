@@ -93,6 +93,12 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
       TRACE0("Не удалось создать панель инструментов\n");
       return -1;      // не удалось создать
    }
+   if (!m_wndAppStatusToolBar.CreateEx(this, TBSTYLE_FLAT, WS_CHILD | WS_VISIBLE | CBRS_TOP | CBRS_GRIPPER | CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_SIZE_DYNAMIC) ||
+      !m_wndAppStatusToolBar.LoadToolBar(theApp.m_bHiColorIcons ? IDR_SERVICE_256 : IDR_SERVICE))
+   {
+      TRACE0("Не удалось создать панель инструментов\n");
+      return -1;      // не удалось создать
+   }
 
    m_wndScenarioToolBar.SetWindowText(L"Simulation");
 
@@ -120,15 +126,20 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
    m_wndMenuBar.EnableDocking(CBRS_ALIGN_ANY);
    m_wndScenarioToolBar.EnableDocking(CBRS_ALIGN_ANY);
    m_wndToolBar.EnableDocking(CBRS_ALIGN_ANY);
+   m_wndAppStatusToolBar.EnableDocking(CBRS_ALIGN_ANY);
    EnableDocking(CBRS_ALIGN_ANY);
    DockPane(&m_wndMenuBar);
    DockPane(&m_wndScenarioToolBar, AFX_IDW_DOCKBAR_TOP);
    DockPane(&m_wndToolBar);
+   DockPane(&m_wndAppStatusToolBar);
 
    // включить режим работы закрепляемых окон стилей Visual Studio 2005
    CDockingManager::SetDockingMode(DT_SMART);
    // включить режим работы автоматического скрытия закрепляемых окон стилей Visual Studio 2005
    EnableAutoHidePanes(CBRS_ALIGN_ANY);
+
+   // Navigation pane will be created at left, so temporary disable docking at the left side:
+   EnableDocking(CBRS_ALIGN_TOP | CBRS_ALIGN_BOTTOM | CBRS_ALIGN_RIGHT);
 
    // Загрузить изображение элемента меню (не размещенное на каких-либо стандартных панелях инструментов):
    CMFCToolBar::AddToolBarForImageCollection(IDR_MENU_IMAGES, theApp.m_bHiColorIcons ? IDB_MENU_IMAGES_24 : 0);
@@ -142,7 +153,9 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
    m_wndFileView.EnableDocking(CBRS_ALIGN_ANY);
    m_wndClassView.EnableDocking(CBRS_ALIGN_ANY);
+   m_wndAppStatusView.EnableDocking(CBRS_ALIGN_ANY);
    DockPane(&m_wndFileView);
+   DockPane(&m_wndAppStatusView);
    CDockablePane* pTabbedBar = nullptr;
    m_wndClassView.AttachToTabWnd(&m_wndFileView, DM_SHOW, FALSE, &pTabbedBar);
    m_wndOutput.EnableDocking(CBRS_ALIGN_ANY);
@@ -152,6 +165,10 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
    // установите наглядный диспетчер и стиль на основе постоянного значения
    OnApplicationLook(theApp.m_nAppLook);
+
+   m_wndProgressView.EnableDocking(CBRS_ALIGN_ANY);
+   DockPane(&m_wndProgressView, AFX_IDW_DOCKBAR_TOP);
+   m_wndProgressView.ShowPane(TRUE, FALSE, TRUE);
 
    // Включить функцию замены меню панелей инструментов и закрепляемых окон 
    EnablePaneMenu(TRUE, ID_VIEW_CUSTOMIZE, strCustomize, ID_VIEW_TOOLBAR);
@@ -167,35 +184,6 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
          CMFCToolBar::SetUserImages(&m_UserImages);
       }
    }
-
-   // включить персонализацию меню (последние использованные команды)
-   // TODO: определите свои основные команды так, чтобы каждое раскрывающееся меню содержало по крайней мере одну основную команду.
-   //CList<UINT, UINT> lstBasicCommands;
-
-   //lstBasicCommands.AddTail(ID_FILE_NEW);
-   //lstBasicCommands.AddTail(ID_FILE_OPEN);
-   //lstBasicCommands.AddTail(ID_FILE_SAVE);
-   //lstBasicCommands.AddTail(ID_FILE_PRINT);
-   //lstBasicCommands.AddTail(ID_APP_EXIT);
-   //lstBasicCommands.AddTail(ID_EDIT_CUT);
-   //lstBasicCommands.AddTail(ID_EDIT_PASTE);
-   //lstBasicCommands.AddTail(ID_EDIT_UNDO);
-   //lstBasicCommands.AddTail(ID_APP_ABOUT);
-   //lstBasicCommands.AddTail(ID_VIEW_STATUS_BAR);
-   //lstBasicCommands.AddTail(ID_VIEW_TOOLBAR);
-   //lstBasicCommands.AddTail(ID_VIEW_APPLOOK_OFF_2003);
-   //lstBasicCommands.AddTail(ID_VIEW_APPLOOK_VS_2005);
-   //lstBasicCommands.AddTail(ID_VIEW_APPLOOK_OFF_2007_BLUE);
-   //lstBasicCommands.AddTail(ID_VIEW_APPLOOK_OFF_2007_SILVER);
-   //lstBasicCommands.AddTail(ID_VIEW_APPLOOK_OFF_2007_BLACK);
-   //lstBasicCommands.AddTail(ID_VIEW_APPLOOK_OFF_2007_AQUA);
-   //lstBasicCommands.AddTail(ID_VIEW_APPLOOK_WINDOWS_7);
-   //lstBasicCommands.AddTail(ID_SORTING_SORTALPHABETIC);
-   //lstBasicCommands.AddTail(ID_SORTING_SORTBYTYPE);
-   //lstBasicCommands.AddTail(ID_SORTING_SORTBYACCESS);
-   //lstBasicCommands.AddTail(ID_SORTING_GROUPBYTYPE);
-
-   //CMFCToolBar::SetBasicCommands(lstBasicCommands);
 
    return 0;
 }
@@ -221,6 +209,12 @@ BOOL CMainFrame::CreateDockingWindows()
    if (!m_wndClassView.Create(strClassView, this, CRect(0, 0, 200, 200), TRUE, ID_VIEW_CLASSVIEW, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_LEFT | CBRS_FLOAT_MULTI))
    {
       TRACE0("Не удалось создать окно \"Представление классов\"\n");
+      return FALSE; // не удалось создать
+   }
+
+   if (!m_wndAppStatusView.Create(strClassView, this, CRect(0, 0, 200, 200), TRUE, ID_APPSTATUSVIEW, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_LEFT | CBRS_FLOAT_MULTI))
+   {
+      TRACE0("Не удалось создать окно \"Статус приложения\"\n");
       return FALSE; // не удалось создать
    }
 
@@ -254,6 +248,12 @@ BOOL CMainFrame::CreateDockingWindows()
       return FALSE; // не удалось создать
    }
 
+   if (!m_wndProgressView.Create(L"Progress", this, CRect(0, 0, 200, 60), FALSE, ID_VIEW_PROGRESS, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_RIGHT | CBRS_FLOAT_MULTI))
+   {
+      TRACE0("Failed to create Progress window\n");
+      return FALSE; // failed to create
+   }
+
    SetDockingWindowIcons(theApp.m_bHiColorIcons);
    return TRUE;
 }
@@ -265,6 +265,10 @@ void CMainFrame::SetDockingWindowIcons(BOOL bHiColorIcons)
 
    HICON hClassViewIcon = (HICON) ::LoadImage(::AfxGetResourceHandle(), MAKEINTRESOURCE(bHiColorIcons ? IDI_CLASS_VIEW_HC : IDI_CLASS_VIEW), IMAGE_ICON, ::GetSystemMetrics(SM_CXSMICON), ::GetSystemMetrics(SM_CYSMICON), 0);
    m_wndClassView.SetIcon(hClassViewIcon, FALSE);
+
+   // NOTE: частично слинковано с предыдущим
+   HICON hAppStatusViewIcon = (HICON) ::LoadImage(::AfxGetResourceHandle(), MAKEINTRESOURCE(bHiColorIcons ? IDI_CLASS_VIEW_HC : IDI_CLASS_VIEW), IMAGE_ICON, ::GetSystemMetrics(SM_CXSMICON), ::GetSystemMetrics(SM_CYSMICON), 0);
+   m_wndAppStatusView.SetIcon(hAppStatusViewIcon, FALSE);
 
    HICON hOutputBarIcon = (HICON) ::LoadImage(::AfxGetResourceHandle(), MAKEINTRESOURCE(bHiColorIcons ? IDI_OUTPUT_WND_HC : IDI_OUTPUT_WND), IMAGE_ICON, ::GetSystemMetrics(SM_CXSMICON), ::GetSystemMetrics(SM_CYSMICON), 0);
    m_wndOutput.SetIcon(hOutputBarIcon, FALSE);

@@ -6,21 +6,13 @@
 #include "crossdllinterface/DataShareInterface.h"
 #include "crossdllinterface\FileStorageInterface.h"
 #include "common/file_storage.h"
+#include "colreg\ColregSimulation.h"
+#include "simulator\simulator.h"
 
 namespace ColregSimulation
 {
    enum class ROUTE_TYPE : char;
 }
-
-enum class CSENARIO_STATUS
-{
-   SS_RUN = 0,
-   SS_PAUSE,
-   SS_STOP,
-   SS_NOT_LOADED,
-   UPDATE
-};
-
 
 /**
 * \класс ScenarioDispather
@@ -46,7 +38,14 @@ public:
             return false;
          });
 
-      m_observable2.Attach(pObj, [wptr](CSENARIO_STATUS status)
+      m_observableF.Attach(pObj, [wptr]()
+         {
+            auto ptr = wptr.lock();
+            if (ptr)return ptr->OnScenarioPathFound();
+            return false;
+         });
+
+      m_observable2.Attach(pObj, [wptr](ColregSimulation::SCENARIO_STATUS status)
          {
             auto ptr = wptr.lock();
             if (ptr)return ptr->OnScenarioStatusChanged(status);
@@ -75,7 +74,8 @@ public:
    }
 
    bool OnScenarioLoad() { return m_observable.Notify(false); }
-   bool OnScenarioStatusChanged(CSENARIO_STATUS status) { return m_observable2.Notify(false, status); }
+   bool OnScenarioPathFound() { return m_observableF.Notify(false); }
+   bool OnScenarioStatusChanged(ColregSimulation::SCENARIO_STATUS status) { return m_observable2.Notify(false, status); }
    bool OnScenarioTimeChanged(double time) { return m_observable3.Notify(false, time); }
    bool OnScenarioModified() { return m_observable4.Notify(false); }
    bool OnAppQuit() { return m_observable5.Notify(false); }
@@ -85,7 +85,8 @@ private:
    ScenarioDispather(const ScenarioDispather&) = delete;
    ScenarioDispather& operator=(const ScenarioDispather&) = delete;
    Observable< NoLock, bool > m_observable;
-   Observable< NoLock, bool, CSENARIO_STATUS  > m_observable2;
+   Observable< NoLock, bool > m_observableF;
+   Observable< NoLock, bool, ColregSimulation::SCENARIO_STATUS  > m_observable2;
    Observable< NoLock, bool, double  > m_observable3;
    Observable< NoLock, bool > m_observable4;
    Observable< NoLock, bool > m_observable5;
@@ -106,7 +107,8 @@ public:
    }
 
    bool OnScenarioLoad() { return m_pHolder->OnScenarioLoad(); }
-   bool OnScenarioStatusChanged(CSENARIO_STATUS status) { return m_pHolder->OnScenarioStatusChanged(status); }
+   bool OnScenarioPathFound() { return m_pHolder->OnScenarioPathFound(); }
+   bool OnScenarioStatusChanged(ColregSimulation::SCENARIO_STATUS status) { return m_pHolder->OnScenarioStatusChanged(status); }
    bool OnScenarioTimeChanged(double time) { return m_pHolder->OnScenarioTimeChanged(time); }
    bool OnScenarioModified() { return m_pHolder->OnScenarioModified(); }
    bool OnAppQuit() { return m_pHolder->OnAppQuit(); };
@@ -129,7 +131,8 @@ protected:
       m_spObserver->Init(this);
    }
    virtual bool OnScenarioLoad() { return false; }
-   virtual bool OnScenarioStatusChanged(CSENARIO_STATUS status) { return false; }
+   virtual bool OnScenarioPathFound() { return false; }
+   virtual bool OnScenarioStatusChanged(ColregSimulation::SCENARIO_STATUS status) { return false; }
    virtual bool OnScenarioTimeChanged(double time) { return false; }
    virtual bool OnScenarioModified() { return false; }
    virtual bool OnAppQuit() { return false; };
@@ -158,18 +161,28 @@ public:
    void SetTimeScale(int timeScale)
    {
       m_timeScale = timeScale;
-      if (m_state == CSENARIO_STATUS::SS_RUN)
-         setState(CSENARIO_STATUS::SS_RUN, true);
+      auto sim = simulator::getSimulator();
+      if (!sim)
+         return;
+      if (sim->GetSimulatorScenarioState() == ColregSimulation::SCENARIO_STATUS::SS_RUN)
+         setState(ColregSimulation::SCENARIO_STATUS::SS_RUN, true);
    }
    int GetTimeScale()const { return m_timeScale; }
 
-   CSENARIO_STATUS GetState()const { return m_state; }
-
-   std::wstring GetScenarioName()const { return m_scenarioFile; }
+   std::wstring GetScenarioName() const { return m_scenarioFile; }
 
    void ReSearch();
    void ReEstimate();
    void LogResearchResult();
+   bool OnScenarioPathFound() { return ScenarioDispather::GetInstance().OnScenarioPathFound(); }
+
+   ColregSimulation::SCENARIO_STATUS GetState()
+   {
+      auto sim = simulator::getSimulator();
+      if (!sim)
+         return ColregSimulation::SCENARIO_STATUS::SS_NOT_LOADED;
+      return sim->GetSimulatorScenarioState();
+   }
 
    bool GetAutoPause() const { return m_autoPause; }
    void SetAutoPause(bool autoPause) { m_autoPause = autoPause; }
@@ -189,7 +202,7 @@ private:
    friend class ScenarioDispather;
 
    void save(const char* fileName = 0, bool focused = false);
-   void setState(CSENARIO_STATUS state, bool force = false);
+   void setState(ColregSimulation::SCENARIO_STATUS state, bool force = false);
 
    void printSolutuins();
    void printEnentsAndSuggestions();
@@ -201,7 +214,7 @@ private:
 private:
    colreg::ModuleGuard<converter::iConverter> m_converter;
    bool m_autoPause = true;
-   CSENARIO_STATUS m_state = CSENARIO_STATUS::SS_NOT_LOADED;
+   //ColregSimulation::SCENARIO_STATUS m_state = ColregSimulation::SCENARIO_STATUS::SS_NOT_LOADED;
    bool m_showRelations = false;
    std::string m_dangerStatFileName = "";
    bool m_debugMode = false;

@@ -32,8 +32,8 @@ namespace SVCG
    inline math::point RoutePointToMathPoint(const route_point& pPoint, const settings::environment_settings settings = settings::environment_settings())
    {
       auto& info = settings.mtx_info;
-      auto ord_spos = info.scale * (pPoint.row * cos(info.angle) - pPoint.col * sin(info.angle));
-      auto abs_spos = info.scale * (pPoint.row * sin(info.angle) + pPoint.col * cos(info.angle));
+      auto ord_spos = info.scale * (static_cast<double>(pPoint.row) * cos(info.angle) - static_cast<double>(pPoint.col) * sin(info.angle));
+      auto abs_spos = info.scale * (static_cast<double>(pPoint.row) * sin(info.angle) + static_cast<double>(pPoint.col) * cos(info.angle));
       return math::point(-info.ordinate_bias + ord_spos, -info.abscissa_bias + abs_spos);
    }
 

@@ -93,12 +93,7 @@ namespace colreg
          j["max"] = range.max;
          j["min"] = range.min;
          j["step"] = range.step;
-         for (auto& elem : range.values)
-         {
-            json val;
-            val["value"] = elem;
-            j["values"].emplace_back(val);
-         }
+         j["values"] = range.values;
          return j;
       }
 
@@ -177,10 +172,8 @@ namespace colreg
          range.min = j["min"].get<T>();
          range.step = j["step"].get<T>();
          if (j.find("values") != j.end())
-         {
-            for (auto& elem : j["values"])
-               range.values.emplace_back(elem["value"].get<T>());
-         }
+            range.values = j["values"].get<std::vector<T>>();
+
          range.apply();
          return range;
       }

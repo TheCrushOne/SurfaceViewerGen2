@@ -1,0 +1,15 @@
+<SerializableClass Type="PathfindingSettings" Version="1.0">
+	<point_settings>
+		<rel_path>rel_path</rel_path>
+	</point_settings>
+	<level_settings>
+		<max_air_height>139</max_air_height>
+		<max_land_height>120</max_land_height>
+		<min_land_height>73</min_land_height>
+		<max_land_angle>90</max_land_angle>
+		<dangerous_land_angle>40</dangerous_land_angle>
+	</level_settings>
+	<!--strategy>
+		<type>1</type>
+	</strategy-->
+</SerializableClass>

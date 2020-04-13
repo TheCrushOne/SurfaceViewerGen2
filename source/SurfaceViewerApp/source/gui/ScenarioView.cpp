@@ -4,6 +4,7 @@
 
 #include "Render\GDIRender.h"
 #include "Layers\UnitLayer.h"
+#include "Layers\NetLayer.h"
 //#include "Layers\NaveStateLayer.h"
 #include "MainFrm.h"
 #include "simulator\simulator.h"
@@ -39,20 +40,28 @@ void user_interface::HideToolTip()
 
 user_interface::objects_to_draw user_interface::GetObjectsInsideScreen()
 {
-   /*const auto* sim = simulator::getSimulator();
+   const auto* sim = simulator::getSimulator();
    if (!sim)
       return {};
    const auto& simulationState = sim->GetState();
 
-   std::vector<colreg::geo_point> ships;
-   for (size_t iShip = 0; iShip < simulationState.GetShipCount(); ++iShip)
+   std::vector<colreg::geo_point> unitCoords;
+   auto unitSummator = [&unitCoords](ColregSimulation::UNIT_TYPE type, const ColregSimulation::iSimulationState& state)
    {
-      const auto& ship = simulationState.GetShip(iShip);
-      const auto& center = ship.GetPos().point.pos;
-      if (pView->GetRenderer()->IsNeedRender({ center }))
-         ships.emplace_back(center);
-   }*/
-   return { /*ships, pView->GetRenderer()->GetObjectsInsideScreenPts()*/ };
+      for (size_t idx = 0; idx < state.GetUnitCount(type); idx++)
+      {
+         const auto* unit = state.GetUnitByIdx(type, idx);
+         const auto& center = unit->GetPos().point.pos;
+         if (pView->GetRenderer()->IsNeedRender({ center }))
+            unitCoords.emplace_back(center);
+      }
+   };
+
+   unitSummator(ColregSimulation::UNIT_TYPE::UT_DRONE, simulationState);
+   unitSummator(ColregSimulation::UNIT_TYPE::UT_ROVER, simulationState);
+   unitSummator(ColregSimulation::UNIT_TYPE::UT_SHIP, simulationState);
+
+   return { unitCoords, pView->GetRenderer()->GetObjectsInsideScreenPts() };
 }
 
 void user_interface::SetEditMode(user_interface::EDIT_MODE mode, unsigned long long int userData)
@@ -155,7 +164,8 @@ int ScenarioView::OnCreate(LPCREATESTRUCT lpCreateStruct)
    CRect rect;
    GetClientRect(rect);
 
-   _renderer->SetScale(30);
+   //_renderer->SetScale(30);
+   _renderer->SetScale(300);
    _renderer->SetCenter(math::geo_point{ 0, 0 });
 
    _layers = std::make_unique<LayersContainer>();
@@ -259,7 +269,7 @@ void ScenarioView::OnRButtonUp(UINT /* nFlags */, CPoint point)
 }
 
 
-bool ScenarioView::OnScenarioLoad(file_utils::sqlite_database_file_storage& name)
+bool ScenarioView::OnScenarioLoad()
 {
    _renderer->Clear();
    math::geo_point center = simulator::getCenter();
@@ -288,17 +298,17 @@ void ScenarioView::setTimer()
    SetTimer(0, 1000 / ScenarioManager::GetInstance().GetTimeScale(), NULL);
 }
 
-bool ScenarioView::OnScenarioStatusChanged(CSENARIO_STATUS status)
+bool ScenarioView::OnScenarioStatusChanged(ColregSimulation::SCENARIO_STATUS status)
 {
    switch (status)
    {
-   case CSENARIO_STATUS::SS_RUN:
+   case ColregSimulation::SCENARIO_STATUS::SS_RUN:
       setTimer();
       break;
-   case CSENARIO_STATUS::SS_PAUSE:
+   case ColregSimulation::SCENARIO_STATUS::SS_PAUSE:
       KillTimer(0);
       break;
-   case CSENARIO_STATUS::SS_STOP:
+   case ColregSimulation::SCENARIO_STATUS::SS_STOP:
       KillTimer(0);
       break;
    }

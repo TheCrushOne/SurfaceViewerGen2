@@ -19,13 +19,15 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="source\serializer\JsonSerializer.cpp" />
+    <ClCompile Include="source\serializer\JsonSettingsSerializer.cpp" />
+    <ClCompile Include="source\serializer\JsonUnitDataSerializer.cpp" />
     <ClCompile Include="source\serializer\XMLSettingsSerializer.cpp" />
     <ClCompile Include="source\stdafx.cpp" />
     <ClCompile Include="source\thirdparty\tinyxml\tinyxml2.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="source\serializer\JsonSerializer.h" />
+    <ClInclude Include="source\serializer\JsonSettingsSerializer.h" />
+    <ClInclude Include="source\serializer\JsonUnitDataSerializer.h" />
     <ClInclude Include="source\serializer\XMLSettingsMeta.h" />
     <ClInclude Include="source\serializer\XMLSettingsSerializer.h" />
     <ClInclude Include="source\serializer\XMLSettingsStructs.h" />
@@ -144,7 +146,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>

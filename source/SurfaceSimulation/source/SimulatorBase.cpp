@@ -3,16 +3,27 @@
 
 using namespace ColregSimulation;
 
-bool SimulatorBase::Init(const file_utils::sqlite_database_file_storage& paths)
+#define VALID_CHECK_DLL_LOAD(dllName, funcName, guard) \
+   guard.Create(SVGUtils::CurrentDllPath(dllName).c_str(), funcName); \
+   if (!guard.IsValid()) \
+   { \
+      GetCommunicator()->RaiseError(); \
+      std::string errMsg = std::string("Can't load '") + dllName + "'!"; \
+      Message(ICommunicator::MS_Error, errMsg.c_str()); \
+      return false; \
+   } \
+   guard->Init(GetPack());
+
+
+bool SimulatorBase::Init(central_pack* pack)
 {
-   m_databaseController.Create(SVGUtils::CurrentDllPath("SQLiteController").c_str(), "CreateSQLiteDatabaseController");
-   if (!m_databaseController.IsValid())
-   {
-      //m_lock = true;
-      //MessageString(ICommunicator::MS_Error, "Can't load settings serializer!");
-      return false;
-   }
-   m_databaseController->Init(m_communicator, paths);
+   Central::Init(pack);
+
+   VALID_CHECK_DLL_LOAD("SQLiteController", "CreateSQLiteDatabaseController", m_databaseController);
+   VALID_CHECK_DLL_LOAD("Engine", "CreateEngine", m_engine);
+   VALID_CHECK_DLL_LOAD("ChartObjectGenerator", "CreateGenerator", m_generator);
+   VALID_CHECK_DLL_LOAD("UniversalLogger", "CreateUniversalLogger", m_logger);
+
    return true;
 }
 

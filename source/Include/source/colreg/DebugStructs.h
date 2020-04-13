@@ -8,7 +8,7 @@ namespace dbg
    const size_t        DEFAULT_COLOR = 255;
    const size_t        DEFAULT_PIX_SIZE = 3;
 
-   using dbg_info_node_path_ref = colreg::base_ref<const char*>;
+   using dbg_info_node_path_ref = colreg::base_ref<const wchar_t*>;
    using dbg_point = colreg::geo_point;
    using dbg_points_ref = colreg::base_ref<dbg_point>;
 
@@ -41,7 +41,7 @@ namespace dbg
 
    struct debug_info_node
    {
-      const char* name;
+      const wchar_t* name;
 
       colreg::geo_points_ref points;
       debug_info_node_ref subnodes;

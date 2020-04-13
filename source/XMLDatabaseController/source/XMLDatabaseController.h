@@ -4,15 +4,15 @@
 
 namespace database
 {
-   class XMLDatabaseController : public iSVGMDatabaseController
+   class XMLDatabaseController : public iSVGMDatabaseController, public Central
    {
    public:
       XMLDatabaseController();
-      void Init(ICommunicator* comm, const file_utils::file_storage_base& dst) override final;
-      void SaveScenarioData(const settings::application_settings& settings, const std::vector<std::vector<double>>& coordGrid) override final;
-      void SaveAppSettings(const settings::application_settings& settings) override final;
-      void LoadScenarioData(settings::application_settings& settings, std::vector<std::vector<double>>& coordGrid) override final;
-      void LoadAppSettings(settings::application_settings& settings) override final;
+      void Init(central_pack* pack) override final { Central::Init(pack); }
+      void SaveScenarioData(const settings::unit_source_data& unitData, const std::vector<std::vector<double>>& coordGrid) override final;
+      void SaveAppSettings() override final;
+      void LoadScenarioData(settings::unit_source_data& unitData, std::vector<std::vector<double>>& coordGrid) override final;
+      void LoadAppSettings() override final;
       void Release() override { delete this; }
    };
 }

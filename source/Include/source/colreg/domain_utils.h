@@ -127,8 +127,8 @@ namespace math
       point pntWOCorrect, nwPoint;
       curAngle = direction({ 0, 0 }, pnt);
 
-      while (angleDelta > angleSumm)      
-      {                   
+      while (angleDelta > angleSumm)
+      {
          pnt.y += -(step*(pnt.x) / minorRadius);
          pnt.x += (step*(pnt.y) / majorRadius);
                   
@@ -138,12 +138,12 @@ namespace math
          pnt.x = minorRadius * majorRadius / sqrt(pow(majorRadius, 2.) + pow(minorRadius*kt, 2.));
          if (pntWOCorrect.x*pnt.x < 0)
             pnt.x *= -1.;
-         pnt.y = kt*pnt.x;              
-                  
+         pnt.y = kt*pnt.x;
+
          nwPoint = rotate_coordinate(pnt, -transformCourse);
-                  
+
          result.emplace_back(to_polar(nwPoint + centerPt));
-         
+
          nwAngle = direction({ 0, 0 }, pnt);
          if (nwAngle < curAngle)
             nwAngle += 360;

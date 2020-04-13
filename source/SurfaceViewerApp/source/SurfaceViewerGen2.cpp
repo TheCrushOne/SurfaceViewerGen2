@@ -25,6 +25,12 @@
 #define new DEBUG_NEW
 #endif
 
+//CSurfaceViewerGen2App* gApp = nullptr;
+
+void user_interface::RaiseError()
+{
+   theApp.RaiseCheckEngine();
+}
 
 // CSurfaceViewerGen2App
 
@@ -36,6 +42,42 @@ BEGIN_MESSAGE_MAP(CSurfaceViewerGen2App, CWinAppEx)
    // Стандартная команда настройки печати
    ON_COMMAND(ID_FILE_PRINT_SETUP, &CWinAppEx::OnFilePrintSetup)
    ON_COMMAND(ID_TEST_PACKET, OnTestPacket)
+
+   ON_COMMAND(ID_NEW, &CSurfaceViewerGen2App::OnNew)
+   ON_COMMAND(ID_OPEN, &CSurfaceViewerGen2App::OnFileOpen)
+   ON_COMMAND(ID_SAVE, &CSurfaceViewerGen2App::OnFileSave)
+   ON_COMMAND(ID_SAVE_AS, &CSurfaceViewerGen2App::OnFileSaveAs)
+   ON_COMMAND(ID_SAVE_FOCUSED_AS, &CSurfaceViewerGen2App::OnFileSaveFocusedAs)
+   ON_COMMAND(ID_SCENARIO_DELETE, &CSurfaceViewerGen2App::OnDeleteScenario)
+   ON_COMMAND(ID_SCENARIO_CREATE_FOLDER, &CSurfaceViewerGen2App::OnCreateFolder)
+   ON_COMMAND(ID_SCENARIO_OPEN, &CSurfaceViewerGen2App::OnSimulate)
+   ON_COMMAND(ID_SCENARIO_EDIT, &CSurfaceViewerGen2App::OnRename)
+
+   // TODO: Оживить!!!
+   //ON_COMMAND_RANGE(ID_FILE_MRU_FILE1, ID_FILE_MRU_FILE16, OnRecentFile)
+
+   ON_COMMAND(ID_EDIT_RUN, &CSurfaceViewerGen2App::OnRun)
+   ON_COMMAND(ID_SIM_STEP, &CSurfaceViewerGen2App::OnRunStep)
+   ON_COMMAND(ID_EDIT_PAUSE, &CSurfaceViewerGen2App::OnPause)
+   ON_COMMAND(ID_EDIT_STOP, &CSurfaceViewerGen2App::OnStop)
+   //ON_COMMAND(ID_EDIT_RULER, &CSurfaceViewerGen2App::OnRuler)
+   //ON_COMMAND(ID_EDIT_SELECT, &CSurfaceViewerGen2App::OnSelect)
+   //ON_COMMAND(ID_TOOL_CREATE, &CSurfaceViewerGen2App::OnCreate)
+   //ON_COMMAND(ID_TOOL_EDIT, &CSurfaceViewerGen2App::OnEdit)
+   ON_COMMAND(ID_SIM_TIME_SCALE_1X, &CSurfaceViewerGen2App::OnTimeScale1X)
+   ON_COMMAND(ID_SIM_TIME_SCALE_10X, &CSurfaceViewerGen2App::OnTimeScale10X)
+   ON_COMMAND(ID_SIM_TIME_SCALE_100X, &CSurfaceViewerGen2App::OnTimeScale100X)
+   //ON_COMMAND(ID_TRAFFIC_STATISTIC, &CSurfaceViewerGen2App::OnEnableTrafficStatistic)
+   ON_COMMAND(ID_AUTOPAUSE, &CSurfaceViewerGen2App::OnAutoPause)
+   ON_COMMAND(ID_EDIT_DELETE, &CSurfaceViewerGen2App::OnDelete)
+   //ON_COMMAND(ID_GEN2UT_RECORD, &CSurfaceViewerGen2App::OnRecord)
+   ON_COMMAND(ID_SHOW_RELATIONS, &CSurfaceViewerGen2App::OnShowRelations)
+   ON_COMMAND(ID_BUTTON_DNGRSTAT, &CSurfaceViewerGen2App::OnUploadDangerStatistic)
+   //ON_COMMAND(ID_DEBUG, &CSurfaceViewerGen2App::OnDebug)
+   ON_COMMAND(ID_DEPTH_AREA + 100, &CSurfaceViewerGen2App::OnFalse)
+
+   ON_UPDATE_COMMAND_UI(ID_EDIT_RUN/*IDR_EDIT_TOOLBAR*/, &CSurfaceViewerGen2App::OnRunUpdateCommandUI)
+   ON_UPDATE_COMMAND_UI(ID_CHECK_ENGINE, &CSurfaceViewerGen2App::OnCheckEngineUpdateCommandUI)
 END_MESSAGE_MAP()
 
 
@@ -108,7 +150,6 @@ BOOL CSurfaceViewerGen2App::InitInstance()
    SetRegistryKey(_T("Локальные приложения, созданные с помощью мастера приложений"));
    LoadStdProfileSettings(4);  // Загрузите стандартные параметры INI-файла (включая MRU)
 
-
    InitContextMenuManager();
 
    InitKeyboardManager();
@@ -168,6 +209,185 @@ int CSurfaceViewerGen2App::ExitInstance()
 
 // Обработчики сообщений CSurfaceViewerGen2App
 
+void CSurfaceViewerGen2App::OnNew()
+{
+   void CreateScenario();
+   CreateScenario();
+}
+
+void CSurfaceViewerGen2App::OnFileOpen()
+{
+   // NOTE: отломано
+   /*CFileDialog fileDialog(TRUE, NULL, "*.txt;*.crl;*.log;*.xml");
+   if (fileDialog.DoModal() == IDOK)
+   {
+      AddToRecentFileList(fileDialog.GetPathName());
+      ScenarioManager::GetInstance().Open(fileDialog.GetPathName());
+   }*/
+}
+
+void CSurfaceViewerGen2App::OnFileSave()
+{
+   //ScenarioManager::GetInstance().Save();
+}
+
+void CSurfaceViewerGen2App::OnFileSaveAs()
+{
+   //CFileDialog fileDialog(FALSE, "xml", "state_");
+   //if (fileDialog.DoModal() == IDOK)
+   //   ScenarioManager::GetInstance().Save(fileDialog.GetPathName());
+}
+
+void CSurfaceViewerGen2App::OnFileSaveFocusedAs()
+{
+   //CFileDialog fileDialog(FALSE, "xml", "screen_state_");
+   //if (fileDialog.DoModal() == IDOK)
+   //   ScenarioManager::GetInstance().SaveFocused(fileDialog.GetPathName());
+}
+
+void CSurfaceViewerGen2App::OnDeleteScenario()
+{
+   void DeleteScenario();
+   DeleteScenario();
+}
+
+void CSurfaceViewerGen2App::OnCreateFolder()
+{
+   void CreateFolder();
+   CreateFolder();
+}
+
+void CSurfaceViewerGen2App::OnSimulate()
+{
+   void Simulate();
+   Simulate();
+}
+void CSurfaceViewerGen2App::OnRename()
+{
+   void Rename();
+   Rename();
+}
+
+void CSurfaceViewerGen2App::OnRun()
+{
+   ScenarioManager::GetInstance().GetState() == ColregSimulation::SCENARIO_STATUS::SS_RUN ? ScenarioManager::GetInstance().Pause()
+      : ScenarioManager::GetInstance().Run();
+}
+
+void CSurfaceViewerGen2App::OnRunStep()
+{
+   OnPause();
+   ScenarioManager::GetInstance().Step();
+}
+
+void CSurfaceViewerGen2App::OnPause()
+{
+   ScenarioManager::GetInstance().Pause();
+}
+
+void CSurfaceViewerGen2App::OnStop()
+{
+   ScenarioManager::GetInstance().Restart();
+   user_interface::SetOutputText(user_interface::OT_OUTPUT, "Restart scenario");
+}
+
+void CSurfaceViewerGen2App::OnRuler()
+{
+   // NOTE: Лишнее
+   //user_interface::SetEditMode(user_interface::EDIT_MODE::EM_MEASURMENT);
+}
+
+void CSurfaceViewerGen2App::OnSelect()
+{
+   user_interface::SetEditMode(user_interface::EDIT_MODE::EM_DRAG);
+}
+
+void CSurfaceViewerGen2App::OnCreate()
+{
+   // NOTE: Лишнее
+   //user_interface::SetEditMode(user_interface::EDIT_MODE::EM_CREATE);
+}
+
+void CSurfaceViewerGen2App::OnEdit()
+{
+   // NOTE: Лишнее
+   //user_interface::SetEditMode(user_interface::EDIT_MODE::EM_EDIT);
+}
+
+void CSurfaceViewerGen2App::OnTimeScale1X()
+{
+   ScenarioManager::GetInstance().SetTimeScale(1);
+   user_interface::SetOutputText(user_interface::OT_OUTPUT, "Set simulation time scale 1x1");
+}
+
+void CSurfaceViewerGen2App::OnTimeScale10X()
+{
+   ScenarioManager::GetInstance().SetTimeScale(10);
+   user_interface::SetOutputText(user_interface::OT_OUTPUT, "Set simulation time scale 1x10");
+}
+
+void CSurfaceViewerGen2App::OnTimeScale100X()
+{
+   ScenarioManager::GetInstance().SetTimeScale(100);
+   user_interface::SetOutputText(user_interface::OT_OUTPUT, "Set simulation time scale 1x100");
+}
+
+void CSurfaceViewerGen2App::OnEnableTrafficStatistic()
+{
+   // NOTE: Лишнее
+   //simulator::enableTrafficStatistic(!simulator::isTrafficStatisticEnabled());
+}
+
+void CSurfaceViewerGen2App::OnAutoPause()
+{
+   ScenarioManager::GetInstance().SetAutoPause(!ScenarioManager::GetInstance().GetAutoPause());
+}
+
+void CSurfaceViewerGen2App::OnDelete()
+{
+   //SelectedObjectManager::GetInstance().Delete();
+}
+
+void CSurfaceViewerGen2App::OnRecord()
+{
+   //ScenarioManager::GetInstance().SetRecording(!ScenarioManager::GetInstance().GetRecording());
+}
+
+void CSurfaceViewerGen2App::OnShowRelations()
+{
+   // NOTE: временно отсюда запускается расчет путей
+   ScenarioManager::GetInstance().ReEstimate();
+   //ScenarioManager::GetInstance().SetShowRelations(!ScenarioManager::GetInstance().GetShowRelations());
+   user_interface::InvalidateView();
+}
+
+void CSurfaceViewerGen2App::OnUploadDangerStatistic()
+{
+   // NOTE: временно отсюда запускаются исследования
+   ScenarioManager::GetInstance().ReSearch();
+   user_interface::InvalidateView();
+}
+
+void CSurfaceViewerGen2App::OnDebug()
+{
+   // NOTE: резерв
+   ScenarioManager::GetInstance().SetDebugMode(!ScenarioManager::GetInstance().IsDebugMode());
+}
+
+void CSurfaceViewerGen2App::OnFalse()
+{
+
+}
+
+void CSurfaceViewerGen2App::OnRunUpdateCommandUI(CCmdUI* pCmdUI)
+{
+   pCmdUI->Enable(m_runStatus);
+}
+
+void CSurfaceViewerGen2App::OnCheckEngineUpdateCommandUI(CCmdUI* pCmdUI)
+{
+   pCmdUI->Enable(m_checkEngineStatus);
+}
 
 // Диалоговое окно CAboutDlg используется для описания сведений о приложении
 

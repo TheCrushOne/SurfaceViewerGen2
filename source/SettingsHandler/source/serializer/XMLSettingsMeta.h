@@ -20,6 +20,8 @@ namespace colreg
    {
       RSFI_COUNTRANGE_ST = 0,
       RSFI_LENGTHRANGE_ST,
+      RSFI_THREADRANGE_ST,
+      RSFI_TASKRANGE_ST,
       RSFI_MIN,
       RSFI_MAX,
       RSFI_STEP,
@@ -29,6 +31,16 @@ namespace colreg
       RSFI_MULTITHREADTEST,
       RSFI_SINGLETHREADTEST,
       RSFI_DEBUGLEVEL,
+   };
+
+   enum class EnvironmentSettingsFieldIndex : unsigned short
+   {
+      ESFI_GSC = 0,
+      ESFI_MTX,
+      ESFI_ANGLE,
+      ESFI_SCALE,
+      ESFI_ORDBIAS,
+      ESFI_ABSBIAS,
    };
 
    const static std::unordered_map<PathfindingSettingsFieldIndex, std::pair<std::string, std::string>> pathfindingMeta = {
@@ -52,5 +64,14 @@ namespace colreg
       { ResearchSettingsFieldIndex::RSFI_MULTITHREADTEST, { "multi_thread_test", "flag of multi thread test" } },
       { ResearchSettingsFieldIndex::RSFI_SINGLETHREADTEST, { "single_thread_test", "flag of single thread test" } },
       { ResearchSettingsFieldIndex::RSFI_DEBUGLEVEL, { "debug_level", "level of debug trace(gui + file)" } },
+   };
+
+   const static std::unordered_map<EnvironmentSettingsFieldIndex, std::pair<std::string, std::string>> environmentMeta = {
+      { EnvironmentSettingsFieldIndex::ESFI_GSC, { "geographical_coordinate_system", "" } },
+      { EnvironmentSettingsFieldIndex::ESFI_MTX, { "matrix_coordinate_system", "" } },
+      { EnvironmentSettingsFieldIndex::ESFI_ANGLE, { "angle", "angle" } },
+      { EnvironmentSettingsFieldIndex::ESFI_SCALE, { "scale", "scale" } },
+      { EnvironmentSettingsFieldIndex::ESFI_ORDBIAS, { "ordbias", "ordinate bias" } },
+      { EnvironmentSettingsFieldIndex::ESFI_ABSBIAS, { "absbias", "abscissa bias" } },
    };
 }

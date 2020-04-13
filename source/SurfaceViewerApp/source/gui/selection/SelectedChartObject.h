@@ -51,7 +51,7 @@ private:
    size_t _index = 0;
 
    colreg::chart_object_id _obj_id;
-   colreg::OBJECT_TYPE  _type;
+   //colreg::OBJECT_TYPE  _type;
 
 };
 

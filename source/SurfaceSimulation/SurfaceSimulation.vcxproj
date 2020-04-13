@@ -19,15 +19,19 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="source\Debug\DebugInfoImpl.cpp" />
     <ClCompile Include="source\RobotLogPlayer\RobotLogPlayer.cpp" />
     <ClCompile Include="source\RobotScenarioPlayer\RobotScenarioPlayer.cpp" />
+    <ClCompile Include="source\SimulationModel\ColregSimulationImpl.cpp" />
     <ClCompile Include="source\SimulatorBase.cpp" />
     <ClCompile Include="source\SimulatorManager.cpp" />
     <ClCompile Include="source\stdafx.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="source\Debug\DebugInfoImpl.h" />
     <ClInclude Include="source\RobotLogPlayer\RobotLogPlayer.h" />
     <ClInclude Include="source\RobotScenarioPlayer\RobotScenarioPlayer.h" />
+    <ClInclude Include="source\SimulationModel\ColregSimulationImpl.h" />
     <ClInclude Include="source\SimulatorBase.h" />
     <ClInclude Include="source\SimulatorManager.h" />
     <ClInclude Include="source\stdafx.h" />
@@ -112,7 +116,6 @@
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;SURFACESIMULATION_EXPORTS;_WINDOWS;_USRDLL;SIMULATION_DLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalIncludeDirectories>source;$(SolutionDir)Include\source\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -148,7 +151,6 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;SURFACESIMULATION_EXPORTS;_WINDOWS;_USRDLL;SIMULATION_DLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalIncludeDirectories>source;$(SolutionDir)Include\source\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>

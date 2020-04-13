@@ -13,6 +13,7 @@
 #include <future>
 #include "CoverageBuilder.h"
 #include "StrategyManager.h"
+#include "TaskHolder/TaskHolder.h"
 
 namespace pathfinder
 {
@@ -23,41 +24,10 @@ namespace pathfinder
       PathFinder();
    public:
       ~PathFinder();
-   protected:
-      /*virtual void initPowertrain() override;
-      virtual void initMiscellaneous() override;*/
    public:
-      void FindPath(strategy_settings settings, std::shared_ptr<route_data> route, const std::shared_ptr<Matrix<SVCG::route_point>> rawdata, /*bool multithread = true, size_t countIdx = 0, size_t legnthIdx = 0, bool research = false, bool landPath = true, size_t packetSize = 0*/const path_finder_settings pathFinderSettings, path_finder_statistic& statistic);
+      void FindLandPath(settings::route& route, const std::shared_ptr<Matrix<SVCG::route_point>> rawdata, const std::shared_ptr<Matrix<size_t>> coverageMatrix, bool multithread, bool* pathfound);
+      void FindAirPath(settings::route& route, const std::shared_ptr<Matrix<SVCG::route_point>> rawdata, size_t iterations, bool multithread);
    private:
-      route findLandPath(route& route, const std::shared_ptr<Matrix<SVCG::route_point>> rawdata, std::shared_ptr<Matrix<size_t>> coverageMatrix, bool multithread, bool* pathFounded);
-      route findAirPath(route& route, const std::shared_ptr<Matrix<SVCG::route_point>> rawdata, size_t iterations, bool multithread);
-      std::vector<SVCG::route_point> findPath(const std::shared_ptr<Matrix<SVCG::route_point>> rawdata, SVCG::route_point& start, SVCG::route_point& finish, path_finder_logic& logic, std::shared_ptr<Matrix<size_t>> coverageMatrix, bool multithread, bool* pathFound);
-      //inline void AddItem();
-   //signals:
-      //void TimeUpdate(ProfilingData);
-      //void TaskDataUpdate(QVariant);
-      //void SubTaskDataUpdate(QVariant);
-   private:
-      //std::shared_ptr<Matrix<SVCG::route_point>> m_rawdata;
-      //size_t m_rowCount, m_colCount;
-      //std::shared_ptr<iMatrix> m_rawdata;
-      std::vector<std::future<route>> m_funAirVector;
-      std::vector<std::future<route>> m_funLandVector;
-      std::vector<std::future<route>> m_synchronizer;
-
-      std::shared_ptr<settings::application_settings> m_appSettings;
-      //XFM::Wrapper<LightPointData> m_data;
-      //std::shared_ptr<Matrix<light_point_data>> m_lpData;
-      //XFM::Wrapper<size_t> m_pointScore;
-
-      // NOTE: Опасно!!!
-      path_finder_statistic* m_statistic;
-
-      std::unique_ptr<CoverageBuilder> m_coverageBuilder;
-      std::unique_ptr<StrategyManager> m_strategyManager;
-
-      ExperimentMeta m_vmeta;
-      size_t m_rowCount;
-      size_t m_colCount;
+      std::vector<SVCG::route_point> findUniversalPath(SVCG::route_point& start, SVCG::route_point& finish, path_finder_logic& logic, const std::shared_ptr<Matrix<SVCG::route_point>> rawdata, std::shared_ptr<Matrix<size_t>> coverageMatrix, bool multithread, bool* pathFound);
    };
 }

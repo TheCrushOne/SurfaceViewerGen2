@@ -5,6 +5,7 @@
 #include <memory>
 #include "pathfinder_types.h"
 #include "SVCG/route_point.h"
+#include "common/settings.h"
 
 namespace pathfinder
 {
@@ -12,25 +13,22 @@ namespace pathfinder
    class Matrix
    {
    public:
-      Matrix(size_t rowCount, size_t colCount, type inVal = inVal())
-         : m_rowCount(rowCount)
-         , m_colCount(colCount)
-         , m_inVal(inVal)
+      Matrix(size_t rowCount, size_t colCount, type inVal = type())
+         : m_inVal(inVal)
       {
-         m_data.resize(m_rowCount);
-         for (auto& vct : m_data)
-            vct.resize(m_colCount);
+         SetRowCount(rowCount);
+         SetColCount(colCount);
       }
-      Matrix(type inVal = inVal())
+      Matrix(type inVal = type())
          : m_rowCount(0)
          , m_colCount(0)
          , m_inVal(inVal)
       {}
       Matrix(const Matrix& mtx)
-         : m_rowCount(mtx.GetRowCount())
-         , m_colCount(mtx.GetColCount())
-         , m_inVal(mtx.GetInVal())
+         : m_inVal(mtx.GetInVal())
       {
+         SetRowCount(mtx.GetRowCount());
+         SetColCount(mtx.GetColCount());
          for (size_t rIdx = 0; rIdx < m_rowCount; rIdx++)
          {
             for (size_t cIdx = 0; cIdx < m_colCount; cIdx++)
@@ -38,8 +36,20 @@ namespace pathfinder
          }
       }
 
-      type Get(size_t rIdx, size_t cIdx) const { if(m_rowCount > rIdx&& m_colCount > cIdx) return m_inVal; return m_data.at(rIdx).at(cIdx); }
-      void Set(size_t rIdx, size_t cIdx, type val) { if (!(m_rowCount > rIdx&& m_colCount > cIdx)) m_data[rIdx][cIdx] = val; }
+      type Get(size_t rIdx, size_t cIdx) const
+      {
+         if (m_rowCount <= rIdx || m_colCount <= cIdx)
+         {
+            ATLASSERT(false);
+            return m_inVal;
+         }
+         return m_data.at(rIdx).at(cIdx);
+      }
+      void Set(size_t rIdx, size_t cIdx, type val)
+      {
+         if (m_rowCount > rIdx && m_colCount > cIdx)
+            m_data[rIdx][cIdx] = val;
+      }
 
       void SetRowCount(size_t rowCount)
       {
@@ -57,10 +67,45 @@ namespace pathfinder
       size_t GetRowCount() const { return m_rowCount; }
       size_t GetColCount() const { return m_colCount; }
       type GetInVal() const { return m_inVal; }
-   private:
-      size_t m_rowCount, m_colCount;
+   protected:
+      size_t m_rowCount = 0, m_colCount = 0;
       type m_inVal;
       std::vector<std::vector<type>> m_data;
+   };
+
+   class GeoMatrix : public Matrix<double>
+   {
+   public:
+      GeoMatrix(std::vector<std::vector<double>> source)
+      {
+         m_rowCount = source.size();
+         m_colCount = m_rowCount > 0 ? source.at(0).size() : 0;
+#ifdef _DEBUG
+         for (size_t idx = 0; idx < m_rowCount; idx++)
+            ATLASSERT(source.at(idx).size() == m_colCount);
+#endif
+         m_data = source;
+      }
+      GeoMatrix(size_t rowCount, size_t colCount, double inVal = double())
+         : Matrix(rowCount, colCount, inVal)
+      {}
+
+      GeoMatrix operator*(const GeoMatrix& right)
+      {
+         ATLASSERT(GetColCount() == right.GetRowCount());
+         GeoMatrix res(GetRowCount(), right.GetColCount());
+         for (size_t resRowIdx = 0; resRowIdx < res.GetRowCount(); resRowIdx++)
+         {
+            for (size_t resColIdx = 0; resColIdx < res.GetColCount(); resColIdx++)
+            {
+               double elem = 0.;
+               for (size_t subIdx = 0; subIdx < right.GetRowCount(); subIdx++)
+                  elem += Get(resRowIdx, subIdx)*right.Get(subIdx, resColIdx);
+               res.Set(resRowIdx, resColIdx, elem);
+            }
+         }
+         return res;
+      }
    };
 
    struct check_fly_zone_result
@@ -80,39 +125,12 @@ namespace pathfinder
       double radius;
    };
 
-   struct route
-   {
-      SVCG::route_point start;
-      SVCG::route_point finish;
-      std::vector<SVCG::route_point> control_point_list;
-      std::vector<SVCG::route_point> route_list;
-      route() {}
-      route(SVCG::route_point& start, SVCG::route_point& finish)
-         : start(start)
-         , finish(finish)
-         , control_point_list()
-         , route_list()
-      {}
-      route(SVCG::route_point& start, SVCG::route_point& finish, std::vector<SVCG::route_point>& route, std::vector<SVCG::route_point>& controlPointList)
-         : start(start)
-         , finish(finish)
-         , control_point_list(controlPointList)
-         , route_list(route)
-      {}
-      route(SVCG::route_point& start, SVCG::route_point& finish, std::vector<SVCG::route_point>& controlPointList)
-         : start(start)
-         , finish(finish)
-         , control_point_list(controlPointList)
-         , route_list()
-      {}
-   };
-
    struct route_data
    {
-      std::vector<route> land_routes;
-      std::vector<route> air_routes;
+      std::vector<settings::route> land_routes;
+      std::vector<settings::route> air_routes;
       route_data() {}
-      route_data(std::vector<route>& landRoutes, std::vector<route>& airRoutes)
+      route_data(std::vector<settings::route>& landRoutes, std::vector<settings::route>& airRoutes)
          : land_routes(landRoutes)
          , air_routes(airRoutes)
       {}
@@ -139,16 +157,20 @@ namespace pathfinder
       // NOTE: Это для статистики
       std::vector<size_t> stat_field_index;    // Статистическое поле - н-мерная матрица статистики
 
-      bool research; // флаг исследовательского пробега
-      bool land_path; // необходимость расчета наземного пути
-      size_t packet_size;   // размер пакета путей для многопоточного вызова(0 - все задачи в 1 пул)
+      bool use_strategies; // флаг использования стратегий(для исследований)
+      bool research;       // флаг исследовательского пробега
+      bool land_path;      // необходимость расчета наземного пути
+      size_t packet_size;  // размер пакета путей для многопоточного вызова(0 - все задачи в 1 пул)
+      size_t thread_count; // количество запрашиваемых потоков
 
-      path_finder_settings(bool multithread = true, std::vector<size_t> statFieldIndex = {}, bool research = false, bool landPath = true, size_t packetSize = 0)
+      path_finder_settings(bool multithread = true, std::vector<size_t> statFieldIndex = {}, bool research = false, bool landPath = true, size_t packetSize = 2, size_t threadCount = 8, bool useStrategies = true)
          : multithread(multithread)
          , stat_field_index(statFieldIndex)
          , research(research)
          , land_path(landPath)
          , packet_size(packetSize)
+         , thread_count(threadCount)
+         , use_strategies(useStrategies)
       {}
    };
 
@@ -156,5 +178,13 @@ namespace pathfinder
    struct path_finder_statistic
    {
       // Пока что пусто
+   };
+
+   struct path_finder_indata
+   {
+      settings::unit_source_data unit_data;
+      path_finder_settings settings;
+      path_finder_statistic statistic;
+      strategy_settings strategy_settings;
    };
 }

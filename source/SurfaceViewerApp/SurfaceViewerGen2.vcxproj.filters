@@ -35,6 +35,18 @@
     <Filter Include="simulator">
       <UniqueIdentifier>{43548e99-e7f6-4bee-9ba9-48a483a2a237}</UniqueIdentifier>
     </Filter>
+    <Filter Include="res">
+      <UniqueIdentifier>{986895f2-4c73-4969-b5fe-1b1d4058ca11}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="res\glyphicon">
+      <UniqueIdentifier>{faf15d6e-b27e-4893-bde8-e0a8a509f587}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="gui\thirdparty">
+      <UniqueIdentifier>{f4bd3594-50b8-4d2c-8774-d35737e829aa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="gui\helpers">
+      <UniqueIdentifier>{12415a9b-3cd8-41bd-aa0d-3052392e0014}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="SurfaceViewerGen2.rc">
@@ -117,6 +129,9 @@
     <Image Include="res\Toolbar256.bmp">
       <Filter>Файлы ресурсов</Filter>
     </Image>
+    <Image Include="res\toolbar_service.bmp">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\SurfaceViewerGen2.rc2">
@@ -131,9 +146,6 @@
     <ClInclude Include="source\SurfaceViewerGen2Doc.h" />
     <ClInclude Include="source\SurfaceViewerGen2View.h" />
     <ClInclude Include="source\targetver.h" />
-    <ClInclude Include="source\gui\ClassView.h">
-      <Filter>gui</Filter>
-    </ClInclude>
     <ClInclude Include="source\gui\CModalDirectX.h">
       <Filter>gui</Filter>
     </ClInclude>
@@ -272,15 +284,48 @@
     <ClInclude Include="source\gui\WndCommunicator.h">
       <Filter>gui</Filter>
     </ClInclude>
+    <ClInclude Include="source\gui\layers\NetLayer.h">
+      <Filter>gui\layers</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gui\layers\TrackLayer.h">
+      <Filter>gui\layers</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gui\layers\TrackLayerHelper.h">
+      <Filter>gui\layers</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gui\layers\ChartLayer.h">
+      <Filter>gui\layers</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gui\selection\SelectedUnit.h">
+      <Filter>gui\selection</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gui\AppStatusView.h">
+      <Filter>gui</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gui\TaskStatusView.h">
+      <Filter>gui</Filter>
+    </ClInclude>
+    <ClInclude Include="source\thirdparty\TextProgressCtrl.h">
+      <Filter>gui\thirdparty</Filter>
+    </ClInclude>
+    <ClInclude Include="source\thirdparty\CMemDC.h">
+      <Filter>gui\thirdparty</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gui\DebugFiltersView.h">
+      <Filter>gui</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gui\helpers\DebugFiltersManager.h">
+      <Filter>gui\helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gui\ProgressView.h">
+      <Filter>gui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\stdafx.cpp" />
     <ClCompile Include="source\SurfaceViewerGen2.cpp" />
     <ClCompile Include="source\SurfaceViewerGen2Doc.cpp" />
     <ClCompile Include="source\SurfaceViewerGen2View.cpp" />
-    <ClCompile Include="source\gui\ClassView.cpp">
-      <Filter>gui</Filter>
-    </ClCompile>
     <ClCompile Include="source\gui\CModalDirectX.cpp">
       <Filter>gui</Filter>
     </ClCompile>
@@ -401,5 +446,49 @@
     <ClCompile Include="source\simulator\simulator.cpp">
       <Filter>simulator</Filter>
     </ClCompile>
+    <ClCompile Include="source\gui\layers\NetLayer.cpp">
+      <Filter>gui\layers</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gui\layers\TrackLayer.cpp">
+      <Filter>gui\layers</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gui\layers\TrackLayerHelper.cpp">
+      <Filter>gui\layers</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gui\layers\ChartLayer.cpp">
+      <Filter>gui\layers</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gui\selection\SelectedUnit.cpp">
+      <Filter>gui\selection</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gui\AppStatusView.cpp">
+      <Filter>gui</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gui\TaskStatusView.cpp">
+      <Filter>gui</Filter>
+    </ClCompile>
+    <ClCompile Include="source\thirdparty\TextProgressCtrl.cpp">
+      <Filter>gui\thirdparty</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gui\DebugFiltersView.cpp">
+      <Filter>gui</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gui\helpers\DebugFiltersManager.cpp">
+      <Filter>gui\helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gui\ProgressView.cpp">
+      <Filter>gui</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CopyFileToFolders Include="res\glyphicon\flag.png">
+      <Filter>res\glyphicon</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="res\glyphicon\citroen.png">
+      <Filter>Файлы ресурсов</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="res\glyphicon\helicopter.png">
+      <Filter>Файлы ресурсов</Filter>
+    </CopyFileToFolders>
   </ItemGroup>
 </Project>

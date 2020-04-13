@@ -6,23 +6,66 @@
 #include "coordinates.h"
 #include "SVCG/route_point.h"
 
+#include "settings_types.h"
 #include "settings_meta.h"
 
 namespace settings
 {
-   struct point_setting_element
+   struct route
    {
-      // TODO: заменить комбинеды на что-нибудь нормальное
-      std::string name;
       SVCG::route_point start;
       SVCG::route_point finish;
       std::vector<SVCG::route_point> control_point_list;
+      std::vector<SVCG::route_point> route_list;
+      route() {}
+      route(SVCG::route_point& start, SVCG::route_point& finish)
+         : start(start)
+         , finish(finish)
+         , control_point_list()
+         , route_list()
+      {}
+      route(SVCG::route_point& start, SVCG::route_point& finish, std::vector<SVCG::route_point>& route, std::vector<SVCG::route_point>& controlPointList)
+         : start(start)
+         , finish(finish)
+         , control_point_list(controlPointList)
+         , route_list(route)
+      {}
+      route(SVCG::route_point& start, SVCG::route_point& finish, std::vector<SVCG::route_point>& controlPointList)
+         : start(start)
+         , finish(finish)
+         , control_point_list(controlPointList)
+         , route_list()
+      {}
    };
 
-   struct unit_settings
+   struct unit_data_element : public route
    {
-      std::vector<point_setting_element> land_units;
-      std::vector<point_setting_element> air_units;
+      std::string name;
+      unit_data_element()
+         : route()
+      {}
+      unit_data_element(std::string name)
+         : route()
+         , name(name)
+      {}
+      unit_data_element(std::string name, SVCG::route_point& start, SVCG::route_point& finish)
+         : route(start, finish)
+         , name(name)
+      {}
+      unit_data_element(std::string name, SVCG::route_point& start, SVCG::route_point& finish, std::vector<SVCG::route_point>& route, std::vector<SVCG::route_point>& controlPointList)
+         : route(start, finish, route, controlPointList)
+         , name(name)
+      {}
+      unit_data_element(std::string name, SVCG::route_point& start, SVCG::route_point& finish, std::vector<SVCG::route_point>& controlPointList)
+         : route(start, finish, controlPointList)
+         , name(name)
+      {}
+   };
+
+   struct unit_source_data
+   {
+      std::vector<unit_data_element> land_units;
+      std::vector<unit_data_element> air_units;
    };
 
    struct level_settings
@@ -41,73 +84,89 @@ namespace settings
       {}
    };
 
-    struct pathfinding_settings
-    {
-       level_settings level_settings;
-    };
+   struct pathfinding_settings
+   {
+      level_settings level_settings;
+   };
 
-    template<typename T>
-    struct range_data
-    {
-        T min;
-        T max;
-        T step;
-    };
+   // NOTE: min, max, step формируют наборные значения, если вектор пустой в исходных
+   template<typename T>
+   struct range_data
+   {
+      T min;
+      T max;
+      T step;
+      std::vector<T> values;
 
-    struct research_settings
-    {
-        range_data<size_t> count_range;
-        range_data<double> length_range;
-        size_t iter_count;
-        size_t map_size;
-        bool multi_thread_test;
-        bool single_thread_test;
-        size_t debug_level;   // TODO: подкорректировать
-    };
+      // TODO: сделать безопасность!!!
+      void apply()
+      {
+         if (!values.empty())
+            return;
+         T cur = min;
+         while (cur <= max)
+         {
+            values.emplace_back(cur);
+            cur += step;
+         }
+      }
+   };
 
-    struct simulation_settings
-    {};
+   struct research_settings
+   {
+      ResearchType res_type;
+      range_data<size_t> thread_pool_range; // количество активных потоков
+      range_data<size_t> task_pool_range; // количество задач в пуле расчета
+      range_data<size_t> fly_count_range;  // количество летающих
+      range_data<double> length_range; // длина пути
+      size_t iter_count;
+      size_t map_size;
+      bool multi_thread_test;
+      bool single_thread_test;
+      size_t debug_level;   // TODO: подкорректировать
+   };
 
-    struct coordinate_system_info
-    {
-       double angle = 0.; // угол между x и ординатой этой СК
-       double scale = 1.; // относительный масштаб(т.е. 1к[scale])
-       double ordinate_bias;  // смещение по ординате
-       double abscissa_bias;  // смещение по абсциссе
-    };
+   struct simulation_settings
+   {};
 
-    struct environment_settings
-    {
-       // Настройки сделаны относительно пикселей,
-       // т.к. экран привязан именно к ним
-       coordinate_system_info gcs_info;   // geographical coordinate system
-       coordinate_system_info mtx_info;   // matrix coordinate system
-    };
+   struct coordinate_system_info
+   {
+      double angle = 0.; // угол между x и ординатой этой СК
+      double scale = 1.; // относительный масштаб(т.е. 1к[scale])
+      double ordinate_bias;  // смещение по ординате
+      double abscissa_bias;  // смещение по абсциссе
+   };
 
-    struct map_settings
-    {
-       size_t row_count;
-       size_t col_count;
-    };
+   struct environment_settings
+   {
+      // Настройки сделаны относительно пикселей,
+      // т.к. экран привязан именно к ним
+      coordinate_system_info gcs_info;   // geographical coordinate system
+      coordinate_system_info mtx_info;   // matrix coordinate system
+   };
 
-    struct application_settings
-    {
-        pathfinding_settings pth_stt;
-        research_settings res_stt;
-        unit_settings unit_stt;
-        environment_settings env_stt;
-        simulation_settings sim_stt;
-        map_settings map_stt;
+   struct map_settings
+   {
+      size_t row_count;
+      size_t col_count;
+   };
 
-        application_settings() = default;
+   struct application_settings
+   {
+      pathfinding_settings pth_stt;
+      research_settings res_stt;
+      environment_settings env_stt;
+      simulation_settings sim_stt;
+      map_settings map_stt;
 
-        application_settings(const pathfinding_settings& pthStt, const research_settings& resStt, const unit_settings& unitStt, const environment_settings& envStt, const simulation_settings& simStt, const map_settings& mapStt)
-           : pth_stt(pthStt)
-           , res_stt(resStt)
-           , unit_stt(unitStt)
-           , env_stt(envStt)
-           , sim_stt(simStt)
-           , map_stt(mapStt)
-        {}
-    };    
+      application_settings() = default;
+
+      application_settings(const pathfinding_settings& pthStt, const research_settings& resStt, const environment_settings& envStt, const simulation_settings& simStt, const map_settings& mapStt)
+         : pth_stt(pthStt)
+         , res_stt(resStt)
+         , env_stt(envStt)
+         , sim_stt(simStt)
+         , map_stt(mapStt)
+      {}
+   };    
 }

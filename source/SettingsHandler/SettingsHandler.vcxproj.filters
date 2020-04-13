@@ -15,20 +15,20 @@
     <ClCompile Include="source\thirdparty\tinyxml\tinyxml2.cpp">
       <Filter>thirdparty\tinyxml</Filter>
     </ClCompile>
-    <ClCompile Include="source\serializer\JsonSerializer.cpp">
-      <Filter>serializer</Filter>
-    </ClCompile>
     <ClCompile Include="source\serializer\XMLSettingsSerializer.cpp">
       <Filter>serializer</Filter>
     </ClCompile>
     <ClCompile Include="source\stdafx.cpp" />
+    <ClCompile Include="source\serializer\JsonUnitDataSerializer.cpp">
+      <Filter>serializer</Filter>
+    </ClCompile>
+    <ClCompile Include="source\serializer\JsonSettingsSerializer.cpp">
+      <Filter>serializer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\thirdparty\tinyxml\tinyxml2.h">
       <Filter>thirdparty\tinyxml</Filter>
-    </ClInclude>
-    <ClInclude Include="source\serializer\JsonSerializer.h">
-      <Filter>serializer</Filter>
     </ClInclude>
     <ClInclude Include="source\serializer\XMLSettingsMeta.h">
       <Filter>serializer</Filter>
@@ -40,6 +40,12 @@
       <Filter>serializer</Filter>
     </ClInclude>
     <ClInclude Include="source\stdafx.h" />
+    <ClInclude Include="source\serializer\JsonUnitDataSerializer.h">
+      <Filter>serializer</Filter>
+    </ClInclude>
+    <ClInclude Include="source\serializer\JsonSettingsSerializer.h">
+      <Filter>serializer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

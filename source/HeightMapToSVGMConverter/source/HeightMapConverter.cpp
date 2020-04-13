@@ -8,72 +8,70 @@
 
 using namespace converter;
 
+#define VALID_CHECK_DLL_LOAD(dllName, funcName, guard) \
+   guard.Create(SVGUtils::CurrentDllPath(dllName).c_str(), funcName); \
+   if (!guard.IsValid()) \
+   { \
+      GetCommunicator()->RaiseError(); \
+      m_lock = true; \
+      std::string errMsg = std::string("Can't load '") + dllName + "'!"; \
+      Message(ICommunicator::MS_Error, errMsg.c_str()); \
+      return; \
+   }// \
+   //guard->Init(GetPack());
+
 HeightMapConverter::HeightMapConverter()
    : m_row_pointers(nullptr)
-   , Communicable(nullptr)
 {
-   m_databaseController.Create(SVGUtils::CurrentDllPath("SQLiteController").c_str(), "CreateSQLiteDatabaseController");
-   if (!m_databaseController.IsValid())
-   {
-      m_lock = true;
-      //MessageString(ICommunicator::MS_Error, "Can't load settings serializer!");
-      return;
-   }
-   m_settingsSerializer.Create(SVGUtils::CurrentDllPath("SettingsHandler").c_str(), "CreateSettingsSerializer");
-   if (!m_settingsSerializer.IsValid())
-   {
-      m_lock = true;
-      //MessageString(ICommunicator::MS_Error, "Can't load settings serializer!");
-      return;
-   }
-   m_unitDataSerializer.Create(SVGUtils::CurrentDllPath("SettingsHandler").c_str(), "CreateUnitDataSerializer");
-   if (!m_unitDataSerializer.IsValid())
-   {
-      m_lock = true;
-      //MessageString(ICommunicator::MS_Error, "Can't load settings serializer!");
-      return;
-   }
-   return;
+   VALID_CHECK_DLL_LOAD("SQLiteController", "CreateSQLiteDatabaseController", m_databaseController);
+   VALID_CHECK_DLL_LOAD("SettingsHandler", "CreateJsonSettingsSerializer", m_settingsSerializer);
+   VALID_CHECK_DLL_LOAD("SettingsHandler", "CreateUnitDataSerializer", m_unitDataSerializer);
 }
 
-bool HeightMapConverter::Init(ICommunicator* comm)
-{
-   SetCommunicator(comm);
-   return true;
-}
-
-bool HeightMapConverter::Convert(const file_utils::file_storage_base& src, const file_utils::file_storage_base& dst)
+bool HeightMapConverter::Convert()
 {
    if (m_lock)
       return false;
-   std::string srcPngPath = SVGUtils::wstringToString((reinterpret_cast<file_utils::heightmap_file_storage&>(const_cast<file_utils::file_storage_base&>(src))).map_path);
+   auto ps = GetPathStorage();
+   auto stt = GetSettings();
+   std::string srcPngPath = SVGUtils::wstringToString(ps->map_path);
    readDataFromPng(srcPngPath.c_str());
    convertToDatabaseFormat();
-   
-   auto& srcFs = reinterpret_cast<const file_utils::heightmap_file_storage&>(src);
-   m_settingsSerializer->Deserialize(SVGUtils::wstringToString(srcFs.pathfinder_settings_path).c_str(), m_settings.pth_stt);
-   m_settingsSerializer->Deserialize(SVGUtils::wstringToString(srcFs.research_settings_path).c_str(), m_settings.res_stt);
-   m_unitDataSerializer->Deserialize(SVGUtils::wstringToString(srcFs.unit_data_path).c_str(), m_settings.unit_stt);
+  
+   m_settingsSerializer->Deserialize(SVGUtils::wstringToString(ps->pathfinder_settings_path).c_str(), stt->pth_stt);
+   m_settingsSerializer->Deserialize(SVGUtils::wstringToString(ps->research_settings_path).c_str(), stt->res_stt);
+   m_settingsSerializer->Deserialize(SVGUtils::wstringToString(ps->environment_settings_path).c_str(), stt->env_stt);
+   m_unitDataSerializer->Deserialize(SVGUtils::wstringToString(ps->unit_data_path).c_str(), m_unitData);
 
    // NOTE: share provider вызываетcя из базы
-   m_databaseController->Init(m_communicator, dst);
-   m_databaseController->SaveScenarioData(m_settings, /*const_cast<const double**>*/m_rawData);
+   m_databaseController->Init(GetPack());
+   m_databaseController->SaveScenarioData(m_unitData, m_rawData);
 
    safeReleaseData();
    return true;
 }
 
+// TODO: перенести коррекции в настройки и сделать отдельный модуль
 // к-т преобразования градиента в высоту 0-256 -> height_min-height_max
-#define HEIGHT_CORRECTOR(h) 0.1*h
+#define HEIGHT_CORRECTOR(h) 0.8*(h - 140.)
 
 void HeightMapConverter::convertToDatabaseFormat()
 {
-   m_rawData.resize(m_settings.map_stt.row_count);
-   for (int l = 0; l < m_settings.map_stt.row_count; l++)
+   auto stt = GetSettings();
+   m_rawData.resize(stt->map_stt.row_count);
+   for (int l = 0; l < stt->map_stt.row_count; l++)
    {
-      m_rawData[l].resize(m_settings.map_stt.col_count);
-      for (int w = 0; w < m_settings.map_stt.col_count; w++)
-         m_rawData[l][w] = HEIGHT_CORRECTOR(m_row_pointers[l][w]);
+      png_bytep row = m_row_pointers[l];
+      m_rawData[l].resize(stt->map_stt.col_count);
+      for (int w = 0; w < stt->map_stt.col_count; w++)
+      {
+         png_bytep px = &(row[4 * w]);
+         double r = (double)px[0];
+         double g = (double)px[1];
+         double b = (double)px[2];
+         double a = (double)px[3];
+         m_rawData[l][w] = HEIGHT_CORRECTOR(r/3. + g/3. + b/3.);
+      }
    }
 }
 
@@ -148,8 +146,8 @@ void HeightMapConverter::readDataFromPng(const char* srcPath)
    }
 
    // Так...вроде правильно
-   m_settings.map_stt.row_count = height;
-   m_settings.map_stt.col_count = png_get_rowbytes(png, info);
+   GetSettings()->map_stt.row_count = height;
+   GetSettings()->map_stt.col_count = png_get_rowbytes(png, info)/sizeof(png_bytep);
 
    png_read_image(png, m_row_pointers);
 

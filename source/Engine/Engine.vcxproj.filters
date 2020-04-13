@@ -10,6 +10,12 @@
     <Filter Include="algorithm\pathfinder">
       <UniqueIdentifier>{25cc6782-3c6a-4772-99a4-8227c99bf7c6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="algorithm\pathfinder\TaskHolder">
+      <UniqueIdentifier>{fbdd57c5-3270-4bf9-ab4c-204cfefb5d29}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="algorithm\pathfinder\Helpers">
+      <UniqueIdentifier>{b689a527-88c3-4e47-b872-27aa1393dc6c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\main\calibrator.cpp">
@@ -25,14 +31,23 @@
       <Filter>algorithm</Filter>
     </ClCompile>
     <ClCompile Include="source\stdafx.cpp" />
-    <ClCompile Include="source\algorithm\pathfinder\pathfinder.cpp">
-      <Filter>algorithm\pathfinder</Filter>
-    </ClCompile>
     <ClCompile Include="source\algorithm\pathfinder\CoverageBuilder.cpp">
       <Filter>algorithm\pathfinder</Filter>
     </ClCompile>
     <ClCompile Include="source\algorithm\pathfinder\StrategyManager.cpp">
       <Filter>algorithm\pathfinder</Filter>
+    </ClCompile>
+    <ClCompile Include="source\algorithm\pathfinder\TaskHolder\TaskHolder.cpp">
+      <Filter>algorithm\pathfinder\TaskHolder</Filter>
+    </ClCompile>
+    <ClCompile Include="source\algorithm\pathfinder\PathFinder.cpp">
+      <Filter>algorithm\pathfinder</Filter>
+    </ClCompile>
+    <ClCompile Include="source\algorithm\pathfinder\PathFinderPipeline.cpp">
+      <Filter>algorithm\pathfinder</Filter>
+    </ClCompile>
+    <ClCompile Include="source\algorithm\pathfinder\Helpers\CoordinateCorrectionHelper.cpp">
+      <Filter>algorithm\pathfinder\Helpers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -49,14 +64,23 @@
       <Filter>algorithm</Filter>
     </ClInclude>
     <ClInclude Include="source\stdafx.h" />
-    <ClInclude Include="source\algorithm\pathfinder\pathfinder.h">
-      <Filter>algorithm\pathfinder</Filter>
-    </ClInclude>
     <ClInclude Include="source\algorithm\pathfinder\CoverageBuilder.h">
       <Filter>algorithm\pathfinder</Filter>
     </ClInclude>
     <ClInclude Include="source\algorithm\pathfinder\StrategyManager.h">
       <Filter>algorithm\pathfinder</Filter>
+    </ClInclude>
+    <ClInclude Include="source\algorithm\pathfinder\TaskHolder\TaskHolder.h">
+      <Filter>algorithm\pathfinder\TaskHolder</Filter>
+    </ClInclude>
+    <ClInclude Include="source\algorithm\pathfinder\PathFinder.h">
+      <Filter>algorithm\pathfinder</Filter>
+    </ClInclude>
+    <ClInclude Include="source\algorithm\pathfinder\PathFinderPipeline.h">
+      <Filter>algorithm\pathfinder</Filter>
+    </ClInclude>
+    <ClInclude Include="source\algorithm\pathfinder\Helpers\CoordinateCorrectionHelper.h">
+      <Filter>algorithm\pathfinder\Helpers</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

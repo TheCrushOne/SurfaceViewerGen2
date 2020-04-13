@@ -9,6 +9,7 @@ namespace
 {
    colreg::ModuleGuard<ColregSimulation::iSimulatorManager> _simMgr;
    std::unique_ptr<CommunicatorWnd> comm(new CommunicatorWnd);
+   std::shared_ptr<central_pack> pack = std::make_shared<central_pack>(comm.get(), file_utils::global_path_storage{}, settings::application_settings{});  
    ColregSimulation::iSimulator* _simulator = nullptr;
 
    bool createSimulationManager()
@@ -19,7 +20,14 @@ namespace
       }
       //const fpath simulatorPath = fpath::get_module_folder().append("ColregSimulation.dll");
       auto simmgr = _simMgr.Create(SVGUtils::CurrentDllPath("SurfaceSimulation").c_str(), "CreateSimulationManager");
-      _simMgr->Init(comm.get(), LayersContainer::GetLayerProperties());
+      if (!_simMgr.IsValid())
+      {
+         user_interface::RaiseError();
+         std::string errMsg = std::string("Can't load '") + "SurfaceSimulation" + "'!";
+         user_interface::SetOutputText(user_interface::OT_ERROR, errMsg.c_str());
+         return false;
+      }
+      _simMgr->Init(pack.get(), LayersContainer::GetLayerProperties());
       return simmgr;
    }
 }
@@ -28,12 +36,17 @@ namespace simulator
 {
    ICommunicator* GetCommunicator()
    {
-      return comm.get();
+      return pack->comm.get();
    }
 
    ColregSimulation::iSimulator* getSimulator()
    {
       return _simulator;
+   }
+
+   central_pack* GetPack()
+   {
+      return pack.get();
    }
 
    void simulatorStop(bool simulatorReset)
@@ -44,7 +57,7 @@ namespace simulator
       simulatorReset ? _simulator->Reset() : _simulator->Stop();
    }
 
-   bool simulatorStart(const file_utils::sqlite_database_file_storage& fs)
+   bool simulatorStart()
    {
       if (!_simulator)
          createSimulationManager();
@@ -53,7 +66,7 @@ namespace simulator
 
       _simulator = nullptr;
 
-      _simulator = _simMgr->Get(fs);
+      _simulator = _simMgr->Get();
 
       ATLASSERT(_simulator);
 
@@ -73,7 +86,7 @@ namespace simulator
       if (_simulator == nullptr)
          return false;
 
-      //_simulator->NextControlPoint();
+      _simulator->NextControlPoint();
 
       //auto est = _simulator->GetState().GetEstimation();
 

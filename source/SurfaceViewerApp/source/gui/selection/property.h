@@ -27,9 +27,10 @@ enum class VALUE_FORMAT_TYPE
    VFT_TIME_SEC,
    VFT_COORD_LAT,
    VFT_COORD_LON,
+   VFT_PERCENT,
+
    VFT_LOGFILE,
    VFT_FOLDERPATH,
-   VFT_PERCENT
 };
 
 template<typename T>

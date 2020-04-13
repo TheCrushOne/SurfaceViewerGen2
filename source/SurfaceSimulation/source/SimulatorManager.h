@@ -8,20 +8,14 @@
 
 using iSimulatorPtr = std::unique_ptr<ColregSimulation::SimulatorBase, std::function<void(ColregSimulation::SimulatorBase*)>>;
 
-class SimulatorManager : public ColregSimulation::iSimulatorManager, public Communicable
+class SimulatorManager : public ColregSimulation::iSimulatorManager, public Central
 {
 public:
-   SimulatorManager()
-      : Communicable(nullptr)
-   {}
-   void Release() final
-   {
-      delete this;
-   }
+   void Release() override final { delete this; }
 
-   void Init(ICommunicator* pCommunicator, iPropertyInterface* prop) final;
+   void Init(central_pack* pack, iPropertyInterface* prop) final;
 
-   ColregSimulation::iSimulator* Get(const file_utils::sqlite_database_file_storage& paths) final;
+   ColregSimulation::iSimulator* Get() final;
 
 private:
    ColregSimulation::SIMULATION_PLAYER_TYPE getTypeFromExt(const char* ext) const;
@@ -31,7 +25,7 @@ private:
 
 private:
    iPropertyInterface* m_prop = nullptr;
-   file_utils::sqlite_database_file_storage m_paths;
+   file_utils::global_path_storage m_paths;
 
    std::array<iSimulatorPtr, static_cast<size_t>(ColregSimulation::SIMULATION_PLAYER_TYPE::SPT_SIZE)> m_sims;
 };

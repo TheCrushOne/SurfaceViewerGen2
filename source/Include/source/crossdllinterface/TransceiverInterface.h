@@ -8,8 +8,8 @@ namespace transceiver
 {
    struct iTransceiver : colreg::iReleasable
    {
-      virtual void Init(const transceiver_info& info) = 0;
-      virtual void Send(transceiver::JsonCommand command, const char* message) = 0;
+      virtual void Init(const transceiver_info&) = 0;
+      virtual void Send(transceiver::JsonCommand, const char*) = 0;
    };
 }
 

@@ -49,9 +49,9 @@ public:
    virtual ~ScenarioView();
 
 protected:
-   bool OnScenarioLoad(file_utils::sqlite_database_file_storage& name) override;
+   bool OnScenarioLoad() override;
    bool OnScenarioModified() override;
-   bool OnScenarioStatusChanged(CSENARIO_STATUS status) override;
+   bool OnScenarioStatusChanged(ColregSimulation::SCENARIO_STATUS status) override;
    bool OnScenarioTimeChanged(double time) override { InvalidateView(); return true; }
 
    // Generated message map functions

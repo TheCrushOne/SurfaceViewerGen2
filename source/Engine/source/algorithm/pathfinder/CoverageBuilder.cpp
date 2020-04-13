@@ -1,6 +1,7 @@
+#include "stdafx.h"
 #include "CoverageBuilder.h"
 
-std::shared_ptr<pathfinder::Matrix<size_t>> CoverageBuilder::BuildLandCoverage(size_t rowCount, size_t colCount, pathfinder::strategy_settings strategySettings, std::vector<pathfinder::route>& airRoutes)
+std::shared_ptr<pathfinder::Matrix<size_t>> CoverageBuilder::BuildLandCoverage(size_t rowCount, size_t colCount, pathfinder::strategy_settings strategySettings, std::vector<settings::route>& airRoutes)
 {
    auto countDist = [](int x1, int y1, int x2, int y2)->double
    {
@@ -73,7 +74,7 @@ std::shared_ptr<pathfinder::Matrix<size_t>> CoverageBuilder::BuildLandCoverage(s
    return coverageMatrix;
 }
 
-bool CoverageBuilder::LandPathCoverage(size_t rowCount, size_t colCount, pathfinder::strategy_settings settings, std::vector<pathfinder::route>& landRoutes, std::vector<pathfinder::route>& airRoutes)
+bool CoverageBuilder::LandPathCoverage(size_t rowCount, size_t colCount, pathfinder::strategy_settings settings, std::vector<settings::route>& landRoutes, std::vector<settings::route>& airRoutes)
 {
    auto countDist = [](int x1, int y1, int x2, int y2)->double
    {

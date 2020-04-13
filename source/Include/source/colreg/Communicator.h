@@ -31,4 +31,6 @@ struct ICommunicator
    virtual void stdCallConv SetProgress(unsigned int progress) = 0;  // 0..100
    virtual bool stdCallConv GetTerminateFlag() = 0;
    virtual bool stdCallConv UpdateUI() = 0;
+   virtual bool stdCallConv RaiseError() = 0;
+   virtual bool stdCallConv OnPathFound() = 0;
 };

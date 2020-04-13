@@ -17,16 +17,24 @@ namespace
       { VALUE_FORMAT_TYPE::VFT_NONE, { "" , "" } },
       /*{ VALUE_FORMAT_TYPE::VFT_ANGLE, { "ddd d°"
                                        , "___._°" } },*/
-      { VALUE_FORMAT_TYPE::VFT_DISTANCE, { "ddd m"
+      { VALUE_FORMAT_TYPE::VFT_SPEED, { "ddd dd kts"
+                                       ,   "___.__ kts" } },
+      { VALUE_FORMAT_TYPE::VFT_SPEED_MS, { "ddd dd m/s"
+                                       ,   "___.__ m/s" } },
+      { VALUE_FORMAT_TYPE::VFT_COURSE, { "ddd d°"
+                                       , "___._°" } },
+      { VALUE_FORMAT_TYPE::VFT_DISTANCE, { "ddd NM"
+                                       ,   "___ NM" } },
+      { VALUE_FORMAT_TYPE::VFT_DISTANCE_METERS, { "ddd m"
                                        ,   "___ m" } },
 
       { VALUE_FORMAT_TYPE::VFT_TIME_SEC, { "00000 s"
                                        ,   "_____ s" } },
 
-      /*{ VALUE_FORMAT_TYPE::VFT_COORD_X, { "ddd XC"
-                                       ,   "___ XC" } },
-      { VALUE_FORMAT_TYPE::VFT_COORD_Y, { "ddd YC"
-                                       ,   "___ YC" } },*/
+      { VALUE_FORMAT_TYPE::VFT_COORD_LAT, { "ddd dddd °"
+                                       ,   "___.____ °" } },
+      { VALUE_FORMAT_TYPE::VFT_COORD_LON, { "ddd dddd °"
+                                       ,   "___.____ °" } },
 
       { VALUE_FORMAT_TYPE::VFT_PERCENT, { "ddd %"
                                       ,   "___ %" } },

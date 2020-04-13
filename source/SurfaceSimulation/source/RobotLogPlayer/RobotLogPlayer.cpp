@@ -3,8 +3,8 @@
 
 using namespace ColregSimulation;
 
-RobotLogPlayer::RobotLogPlayer(ICommunicator* pCommunicator, iPropertyInterface* prop)
-   : SimulatorBase(pCommunicator, prop)
+RobotLogPlayer::RobotLogPlayer(iPropertyInterface* prop)
+   : SimulatorBase(prop)
 {}
 
 void RobotLogPlayer::Start()
@@ -28,7 +28,8 @@ size_t RobotLogPlayer::GetControlPointsCount() const
 
 const control_point_info& RobotLogPlayer::GetControlPointInfo(size_t controlPntIdx) const
 {
-   return control_point_info{ 0 };
+   static control_point_info cp{ 0 };
+   return cp;
 }
 
 bool RobotLogPlayer::PlayFrom(size_t controlPointIdx)
@@ -56,13 +57,55 @@ const ColregSimulation::SIMULATION_PLAYER_TYPE RobotLogPlayer::GetSimulationType
    return ColregSimulation::SIMULATION_PLAYER_TYPE::SPT_LOG;
 }
 
-void RobotLogPlayer::SetSettings(const settings::application_settings& s)
-{}
-
 void RobotLogPlayer::ReloadSettings()
 {}
 
-const settings::application_settings& RobotLogPlayer::GetSettings() const
+void RobotLogPlayer::RecountRoutes()
+{}
+
+void RobotLogPlayer::RecountResearch()
+{}
+
+void RobotLogPlayer::LogResearchResult()
+{}
+
+size_t RobotLogPlayer::GetUnitCount(UNIT_TYPE type) const
 {
-   return m_settings;
+   return 0;
+}
+
+const iUnit* RobotLogPlayer::GetUnitById(colreg::id_type id) const
+{
+   return nullptr;
+}
+
+const iUnit* RobotLogPlayer::GetUnitByIdx(UNIT_TYPE type, size_t idx) const
+{
+   return nullptr;
+}
+
+double RobotLogPlayer::GetTime() const
+{
+   return 0.;
+}
+
+const settings::map_settings& RobotLogPlayer::GetChartGridMeta() const
+{
+   static settings::map_settings meta;
+   return meta;
+}
+
+const colreg::chart_objects_ref& RobotLogPlayer::GetChartObjects() const
+{
+   return m_chartObjects;
+}
+
+const colreg::chart_object* RobotLogPlayer::GetChartObject(colreg::chart_object_id id) const
+{
+   return nullptr;
+}
+
+bool RobotLogPlayer::PrepareDataForSave(/*const ScenarioIO::scenario_data* pInputScenarioData, ScenarioIO::scenario_data* pScenarioData, */const bool focused, const colreg::geo_points_ref& ships, const colreg::base_ref<colreg::geo_points_ref>& chart_objects) const
+{
+   return false;
 }

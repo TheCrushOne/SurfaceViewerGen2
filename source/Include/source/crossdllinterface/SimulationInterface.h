@@ -1,16 +1,17 @@
 #pragma once
 
 #include "colreg/ColregSimulation.h"
+#include "common/central_class.h"
 
 namespace ColregSimulation
 {
    struct iSimulatorManager : colreg::iReleasable
    {
       //! Подготовка менеджера симуляторов
-      virtual void Init(ICommunicator* pCommunicator, iPropertyInterface* prop) = 0;
+      virtual void Init(central_pack*, iPropertyInterface*) = 0;
 
       //! Получение симулятора в зависимости от расширения сценария и загрузка сценария
-      virtual iSimulator* Get(const file_utils::sqlite_database_file_storage& paths) = 0;
+      virtual iSimulator* Get() = 0;
    };
 }
 

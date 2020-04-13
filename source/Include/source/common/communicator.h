@@ -4,6 +4,8 @@
 #include <wchar.h>
 #include <cstdlib>
 #include <cstdarg>
+#include <memory>
+#include "colreg/Communicator.h"
 
 #ifdef _WIN32
 #pragma warning (disable: 4996)
@@ -14,32 +16,29 @@
 #endif
 
 
-struct ICommunicator
-{
-   enum MessageType
-   {
-      MS_Info = 0,
-      MS_Error = 1,
-      MS_Warning = 2,
-      MS_Debug = 3,
-      // MS_Progress и MS_InProgress могут комбинироваться с MS_AbortSupport
-      MS_EndProgress = 4,
-      MS_Progress = 8,
-      MS_InProgress = 16,
-      MS_AbortSupport = 32
-   };
-   virtual bool stdCallConv Message(MessageType t, const char* msg, ...) = 0;
-   virtual void stdCallConv SetProgress(unsigned int progress) = 0;  // 0..100
-   virtual bool stdCallConv GetTerminateFlag() = 0;
-   virtual bool stdCallConv UpdateUI() = 0;
-};
+//struct ICommunicator
+//{
+//   enum MessageType
+//   {
+//      MS_Info = 0,
+//      MS_Error = 1,
+//      MS_Warning = 2,
+//      MS_Debug = 3,
+//      // MS_Progress и MS_InProgress могут комбинироваться с MS_AbortSupport
+//      MS_EndProgress = 4,
+//      MS_Progress = 8,
+//      MS_InProgress = 16,
+//      MS_AbortSupport = 32
+//   };
+//   virtual bool stdCallConv Message(MessageType t, const char* msg, ...) = 0;
+//   virtual void stdCallConv SetProgress(unsigned int progress) = 0;  // 0..100
+//   virtual bool stdCallConv GetTerminateFlag() = 0;
+//   virtual bool stdCallConv UpdateUI() = 0;
+//};
 
 class Communicable
 {
 public:
-   Communicable(ICommunicator* comm)
-      : m_communicator(comm)
-   {}
    bool Message(ICommunicator::MessageType t, const char* msg, ...)
    {
       char str[512];
@@ -47,17 +46,10 @@ public:
       va_start(list, msg);
       vsprintf(str, msg, list);
       va_end(list);
-      return m_communicator->Message(t, str);
+      return GetCommunicator()->Message(t, str);
    }
-   void SetCommunicator(ICommunicator* comm)
-   {
-      // NOTE: запаска
-      m_communicator = comm;
-   }
-   ICommunicator* GetCommunicator()
-   {
-      return m_communicator;
-   }
-protected:
-   ICommunicator* m_communicator;
+   virtual void SetCommunicator(ICommunicator* comm) = 0;
+   virtual ICommunicator* GetCommunicator() = 0;
+//protected:
+   //ICommunicator* m_communicator;
 };

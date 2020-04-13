@@ -2,14 +2,16 @@
 #include "colreg/ModuleGuard.h"
 #include "colreg/ColregSimulation.h"
 #include "common/file_storage.h"
+#include "common/central_class.h"
 
 namespace simulator
 {
    ColregSimulation::iSimulator* getSimulator();
 
    bool simulatorStep();
-   bool simulatorStart(const file_utils::sqlite_database_file_storage& fs);
+   bool simulatorStart();
    void simulatorStop(bool simulatorReset = false);
+   central_pack* GetPack();
 
    ICommunicator* GetCommunicator();
 

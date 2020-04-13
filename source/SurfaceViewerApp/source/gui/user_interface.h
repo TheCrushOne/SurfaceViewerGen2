@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <windows.h>
+#include "colreg\CommonStructs.h"
 
 typedef DWORD COLORREF;
 
@@ -29,9 +30,11 @@ namespace user_interface
 
    void InvalidateView();
    void SetStatusBarText(const wchar_t* text);
+   void SetProgress(unsigned int progress);
    void ShowToolTip(const wchar_t* title, const wchar_t* description);
    void HideToolTip();
    void SetCenter(double lt, double ln);
+   void RaiseError();
 
    void SetOutputText(OUTPUT_TYPE type, const char* text, COLORREF color = 0, bool bold = false, bool italic = false);
 
@@ -51,8 +54,8 @@ namespace user_interface
 
    struct objects_to_draw
    {
-      //std::vector<colreg::geo_point> ships;
-      //std::vector<std::vector<colreg::geo_point>> chart_objects;
+      std::vector<colreg::geo_point> units;
+      std::vector<std::vector<colreg::geo_point>> chart_objects;
    };
 
    objects_to_draw GetObjectsInsideScreen();

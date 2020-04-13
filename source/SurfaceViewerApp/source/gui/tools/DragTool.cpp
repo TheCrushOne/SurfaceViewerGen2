@@ -103,7 +103,8 @@ void DragTool::MouseLeave()
 }
 
 
-const char* route_type_to_string(ColregSimulation::ROUTE_TYPE _type) { return ""; }
+inline const char* route_type_to_string(ColregSimulation::ROUTE_TYPE _type) { return ""; }
+
 bool DragTool::processFindInfo(const render::find_info& find)
 {
    if (find.find_object_type == render::FIND_OBJECT_TYPE::FOT_NONE)

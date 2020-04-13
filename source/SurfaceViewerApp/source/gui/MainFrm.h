@@ -4,10 +4,12 @@
 
 #pragma once
 #include "FileView.h"
-#include "ClassView.h"
+#include "DebugFiltersView.h"
 #include "OutputWnd.h"
+#include "AppStatusView.h"
 #include "properties/PropertiesWnd.h"
 #include "user_interface.h"
+#include "ProgressView.h"
 
 class CMainFrame : public CFrameWndEx
 {
@@ -36,16 +38,21 @@ public:
 #endif
 
    void SetOutputText(user_interface::OUTPUT_TYPE mode, const char* text, COLORREF color = 0, bool bold = false, bool italic = false);
+   void CMainFrame::SetPanelText(const wchar_t* text);
 
 protected:  // встроенные члены панели элементов управления
    CMFCMenuBar       m_wndMenuBar;
+   CMFCToolBar       m_wndScenarioToolBar;
    CMFCToolBar       m_wndToolBar;
+   CMFCToolBar       m_wndAppStatusToolBar;
    CMFCStatusBar     m_wndStatusBar;
    CMFCToolBarImages m_UserImages;
    CFileView         m_wndFileView;
-   CClassView        m_wndClassView;
+   DebugFiltersView  m_wndClassView;
    COutputWnd        m_wndOutput;
    CPropertiesWnd    m_wndProperties;
+   CAppStatusView    m_wndAppStatusView;
+   CProgressViewWnd  m_wndProgressView;
 
 // Созданные функции схемы сообщений
 protected:

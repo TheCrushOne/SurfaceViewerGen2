@@ -4,6 +4,7 @@
 #include "common/pathfinder_structs.h"
 
 using namespace chart_object;
+std::recursive_mutex g_mutex;
 
 void HSVtoRGB(int H, double S, double V, int output[3])
 {
@@ -68,7 +69,8 @@ void IsolineGenerator::GenerateIsolines(const converter::raw_data_ref& rawdata)
 
    // NOTE: менять тип алгоритма тут
    for (size_t levelIdx = 0; levelIdx < levelCount; levelIdx++)
-      generateIsolineLevel(AlgorithmType::AT_RC1, rawdata, min + step * static_cast<double>(levelIdx), 360. / static_cast<double>(levelCount)* static_cast<double>(levelIdx));
+      std::thread(&IsolineGenerator::generateIsolineLevel, this, AlgorithmType::AT_RC2, rawdata, min + step * static_cast<double>(levelIdx), 360. / static_cast<double>(levelCount)* static_cast<double>(levelIdx)).detach();
+      //generateIsolineLevel();
 }
 
 void IsolineGenerator::generateIsolineLevel(AlgorithmType type, const converter::raw_data_ref& rawdata, double height, int H)
@@ -237,6 +239,7 @@ void IsolineGenerator::generateRC1(const converter::raw_data_ref& rawdata, doubl
       isoLineGeoVct.emplace_back(geoline);
    }
 
+   std::lock_guard<std::recursive_mutex> guard(g_mutex);
    addChartObjectSet(isoLineGeoVct, height, H);
 }
 
@@ -621,6 +624,7 @@ void IsolineGenerator::generateRC2(const converter::raw_data_ref& rawdata, doubl
    //   }
    //}
 
+   std::lock_guard<std::recursive_mutex> guard(g_mutex);
    addChartObjectSet(isoLineVct, height, H);
 }
 

@@ -70,7 +70,7 @@ SVCG::route_point CoordinateCorrectionHelper::CorrectPoint(const std::shared_ptr
                      found = true;
                      correctedRow = iter.first;
                      correctedCol = iter.second;
-                     communicator->Message(ICommunicator::MessageType::MS_Info, "fly control point correction [%i %i] -> [%i %i]", row, col, correctedRow, correctedCol);
+                     communicator->Message(ICommunicator::MessageType::MT_INFO, "fly control point correction [%i %i] -> [%i %i]", row, col, correctedRow, correctedCol);
                      return SVCG::route_point(correctedRow, correctedCol, 0.f);
                   }
                   else
@@ -86,7 +86,7 @@ SVCG::route_point CoordinateCorrectionHelper::CorrectPoint(const std::shared_ptr
          if (frontline.size() == 0)
          {
             stuck = true;
-            communicator->Message(ICommunicator::MessageType::MS_Error, "fly control point correction stucked [%i %i]", row, col);
+            communicator->Message(ICommunicator::MessageType::MT_ERROR, "fly control point correction stucked [%i %i]", row, col);
             return SVCG::route_point(0, 0);
          }
          //qDebug() << "corrector step:" << step << row << col;//row << static_cast<int>(rowCount) << (row - step < 0) << (row + step >= static_cast<int>(rowCount)) << (col - step < 0) << (col + step >= static_cast<int>(colCount));

@@ -4,8 +4,12 @@
 #include "common/pathfinder_structs.h"
 #include <future>
 #include "IsolineAlgorithms\AlgorithmHelpers.h"
+#include <iostream>
+#include <chrono>
+#include <ctime>
 
 #define LOCALMULTITHREAD
+#define CURTIME_MS(time_ms) time_ms = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count()
 
 using namespace chart_object;
 
@@ -43,6 +47,8 @@ void IsolineGenerator::GenerateIsolines(const converter::raw_data_ref& rawdata)
    //double height = 27.;
    //double height = 50.;
    AlgorithmType type = AlgorithmType::AT_WAVEFL;
+   __int64 start;
+   CURTIME_MS(start);
 #ifdef LOCALMULTITHREAD
    std::vector<std::future<void>> futures;
    // NOTE: менять тип алгоритма тут
@@ -56,6 +62,9 @@ void IsolineGenerator::GenerateIsolines(const converter::raw_data_ref& rawdata)
    for (size_t levelIdx = 0; levelIdx < levelCount; levelIdx++)
       IsolineGenerator::generateIsolineLevel(type, rawdata, min + step * static_cast<double>(levelIdx), 360. / static_cast<double>(levelCount)* static_cast<double>(levelIdx));
 #endif
+   __int64 finish;
+   CURTIME_MS(finish);
+   GetPack()->comm->Message(ICommunicator::MessageType::MT_PERFORMANCE, (std::string("Isoline build time: ") + std::to_string(finish - start) + " ms.").c_str());
 }
 
 void IsolineGenerator::generateIsolineLevel(AlgorithmType type, const converter::raw_data_ref& rawdata, double height, int H)

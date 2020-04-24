@@ -131,17 +131,19 @@
 #define ID_MODAL_FRAME                  1044
 #define IDR_MODALFRAME                  1045
 #define IDD_DXMODAL                     1046
+
 #define IDS_INFO_TAB                    1047
 #define IDS_ERROR_TAB                   1048
 #define IDS_WARNING_TAB                 1049
 #define IDS_DEBUG_TAB                   1050
 #define IDS_OUTPUT_TAB                  1051
+#define IDS_PERFORMANCE_TAB             1052
 
-#define ID_TEST_PACKET                  1052
-#define ID_NO1                          1053
-#define ID_NO2                          1054
-#define ID_NO3                          1055
-#define ID_NO4                          1056
+#define ID_TEST_PACKET                  2001
+#define ID_NO1                          2002
+#define ID_NO2                          2003
+#define ID_NO3                          2004
+#define ID_NO4                          2005
 
 #define IDR_EDIT_TOOLBAR               10001
 

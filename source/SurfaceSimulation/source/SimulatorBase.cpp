@@ -9,7 +9,7 @@ using namespace ColregSimulation;
    { \
       GetCommunicator()->RaiseError(); \
       std::string errMsg = std::string("Can't load '") + dllName + "'!"; \
-      Message(ICommunicator::MS_Error, errMsg.c_str()); \
+      Message(ICommunicator::MessageType::MT_ERROR, errMsg.c_str()); \
       return false; \
    } \
    guard->Init(GetPack());

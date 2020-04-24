@@ -17,15 +17,17 @@ struct ICommunicator
 {
    enum MessageType
    {
-      MS_Info = 0,
-      MS_Error = 1,
-      MS_Warning = 2,
-      MS_Debug = 3,
+      MT_INFO = 0,
+      MT_ERROR = 1,
+      MT_WARNING = 2,
+      MT_DEBUG = 3,
+      MT_OUTPUT = 4,
+      MT_PERFORMANCE = 5,
       // MS_Progress и MS_InProgress могут комбинироваться с MS_AbortSupport
-      MS_EndProgress = 4,
-      MS_Progress = 8,
-      MS_InProgress = 16,
-      MS_AbortSupport = 32
+      MT_EndProgress = 6,
+      MT_Progress = 8,
+      MT_InProgress = 16,
+      MT_AbortSupport = 32
    };
    virtual bool stdCallConv Message(MessageType t, const char* msg, ...) = 0;
    virtual void stdCallConv SetProgress(unsigned int progress) = 0;  // 0..100

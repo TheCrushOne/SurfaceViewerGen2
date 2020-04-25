@@ -275,7 +275,7 @@ void PathFinderPipeline::correctControlPoints()
       corrected = CoordinateCorrectionHelper::CorrectPoint(m_rawdata, src.row, src.col, affilationChecker, GetCommunicator());
       src = corrected;
    };
-   auto& landUnitData = m_indata->unit_data.land_units.at(0);
+   auto& landUnitData = m_paths.land_routes.at(0);
    corrector(landUnitData.start);
    corrector(landUnitData.finish);
    for (auto& elem : landUnitData.control_point_list)

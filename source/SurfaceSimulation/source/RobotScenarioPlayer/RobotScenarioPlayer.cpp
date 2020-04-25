@@ -119,17 +119,20 @@ void RobotScenarioPlayer::moveUnits()
       auto& rl = paths.land_routes.at(idx).route_list;
 
       auto rlIdx = m_roversIdxVct.at(m_currentIdx).at(idx);
-      pos.point.pos = SVCG::RoutePointToPositionPoint(rl.at(rlIdx), GetSettings()->env_stt);
-      if (rl.size() > rlIdx + 1)
+      if (rlIdx < rl.size())
       {
-         auto nextPoint = SVCG::RoutePointToPositionPoint(rl.at(rlIdx + 1), GetSettings()->env_stt);
-         pos.point.heading = math::direction(pos.point.pos, static_cast<colreg::geo_point>(nextPoint));
-         pos.point.course = pos.point.heading;
-         pos.point.speed = m_defaultUnitSpeed;
+         pos.point.pos = SVCG::RoutePointToPositionPoint(rl.at(rlIdx), GetSettings()->env_stt);
+         if (rl.size() > rlIdx + 1)
+         {
+            auto nextPoint = SVCG::RoutePointToPositionPoint(rl.at(rlIdx + 1), GetSettings()->env_stt);
+            pos.point.heading = math::direction(pos.point.pos, static_cast<colreg::geo_point>(nextPoint));
+            pos.point.course = pos.point.heading;
+            pos.point.speed = m_defaultUnitSpeed;
+         }
+         else
+            pos.point.speed = 0.;
+         m_rovers.at(idx)->SetPosInfo(pos);
       }
-      else
-         pos.point.speed = 0.;
-      m_rovers.at(idx)->SetPosInfo(pos);
    }
 }
 

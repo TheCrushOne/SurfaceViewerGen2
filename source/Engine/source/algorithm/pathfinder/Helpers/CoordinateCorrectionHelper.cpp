@@ -38,7 +38,7 @@ SVCG::route_point CoordinateCorrectionHelper::CorrectPoint(const std::shared_ptr
          storage.emplace_back(std::make_pair(row, col));
    };
 
-   if (rawdata->Get(static_cast<size_t>(row), static_cast<size_t>(col)).fly == pathfinder::FlyZoneAffilation::FZA_FORBIDDEN)
+   if (!checker(rawdata, row, col))
    {
       auto pointScore = std::make_shared<pathfinder::Matrix<size_t>>(rawdata->GetRowCount(), rawdata->GetColCount(), 0);
       std::vector<std::pair<size_t, size_t>> frontline = { { row, col } };

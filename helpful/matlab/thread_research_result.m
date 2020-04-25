@@ -1,4 +1,4 @@
-basePath = '../../logs/test_g2/03042020_162109_TRR';
+basePath = '../../logs/test_g2/25042020_182437_TRR';
 dataPath = strcat(basePath, '.dat');
 metaPath = strcat(basePath, '.meta');
 [data, delimiterOut] = importdata(dataPath);

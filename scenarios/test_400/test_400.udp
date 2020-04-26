@@ -1,0 +1,60 @@
+{
+    "land_units" : [
+        {
+            "name" : "range rover",
+            "start" : {
+                "row" : 1,
+                "col" : 1
+            },
+            "finish" : {
+                "row" : 398,
+                "col" : 398
+            },
+            "control_points" : [
+                {
+                    "row" : 100,
+                    "col" : 100
+                },
+                {
+                    "row" : 200,
+                    "col" : 200
+                }
+            ]
+        }
+    ],
+    "air_units" : [
+        {
+            "name" : "helidrone",
+            "start" : {
+                "row" : 1,
+                "col" : 1
+            },
+            "finish" : {
+                "row" : 398,
+                "col" : 398
+            }
+        },
+		{
+            "name" : "gyrocopter",
+            "start" : {
+                "row" : 1,
+                "col" : 1
+            },
+            "finish" : {
+                "row" : 398,
+                "col" : 398
+            }
+        },
+		{
+            "name" : "i-bird",
+            "start" : {
+                "row" : 1,
+                "col" : 1
+            },
+            "finish" : {
+                "row" : 398,
+                "col" : 398
+            }
+        }
+    ]
+}

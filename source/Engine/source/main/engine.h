@@ -56,10 +56,10 @@ namespace engine
       void processPathFind(const ColregSimulation::scenario_data& scenarioData, const std::vector<std::vector<double>>& rawData, std::function<void(void)> completeCallback);
       void processPathFindInternal(const ColregSimulation::scenario_data& scenarioData, pathfinder::path_finder_settings stt, std::function<void(void)> completeCallback);
       void generateResMap(size_t mapSize/*std::shared_ptr<SVM::iMatrix<SurfaceElement>>&, const STT::Gen1Settings&*/);
-      pathfinder::check_fly_zone_result checkFlyZone(float);
+      pathfinder::check_fly_zone_result checkFlyZone(const std::vector<std::vector<double>>&, int, int);
       void convertMap(const std::vector<std::vector<double>>& rawdataSrc, std::shared_ptr<pathfinder::Matrix<SVCG::route_point>> rawdataDst);
-      //CheckGoZoneResult checkGoZone(const std::shared_ptr<QHeightMapSurfaceDataProxy>, int, int, int, int);
-      //CheckGoZoneResult checkAngles(const QSurfaceDataItem*, const QSurfaceDataItem*, const QSurfaceDataItem*, const QSurfaceDataItem*, const QSurfaceDataItem*);
+      pathfinder::check_go_zone_result checkGoZone(const std::vector<std::vector<double>>&, int, int);
+      pathfinder::check_go_zone_result checkAngles(double center, double left, double right, double top, double bottom, double topleft, double bottomleft, double topright, double bottomright);
       //SurfaceElement recountElement(const std::shared_ptr<QHeightMapSurfaceDataProxy>, int, int, int, int);
    //signals:
    protected:

@@ -15,6 +15,15 @@
     <ClCompile Include="source\Modules\ModuleBase.cpp">
       <Filter>Modules</Filter>
     </ClCompile>
+    <ClCompile Include="source\Modules\IsolineAlgorithms\LabirinthTraverse.cpp">
+      <Filter>Modules\IsolineAlgorithms</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Modules\IsolineAlgorithms\SegmentCollector.cpp">
+      <Filter>Modules\IsolineAlgorithms</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Modules\IsolineAlgorithms\WaveFrontline.cpp">
+      <Filter>Modules\IsolineAlgorithms</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\ChartObjectGenerator.h" />
@@ -33,10 +42,28 @@
     <ClInclude Include="source\Modules\ModuleBase.h">
       <Filter>Modules</Filter>
     </ClInclude>
+    <ClInclude Include="source\Modules\IsolineAlgorithms\AlgorithmHelpers.h">
+      <Filter>Modules\IsolineAlgorithms</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Modules\IsolineAlgorithms\LabirinthTraverse.h">
+      <Filter>Modules\IsolineAlgorithms</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Modules\IsolineAlgorithms\SegmentCollector.h">
+      <Filter>Modules\IsolineAlgorithms</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Modules\IsolineAlgorithms\WaveFrontline.h">
+      <Filter>Modules\IsolineAlgorithms</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Modules\IsolineAlgorithms\AlgorithmBase.h">
+      <Filter>Modules\IsolineAlgorithms</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Modules">
       <UniqueIdentifier>{f66ccf47-218f-4cae-ba3e-29bed3e72959}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Modules\IsolineAlgorithms">
+      <UniqueIdentifier>{2c934336-f43d-4391-8934-157835edb615}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

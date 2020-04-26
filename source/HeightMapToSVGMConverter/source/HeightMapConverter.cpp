@@ -15,7 +15,7 @@ using namespace converter;
       GetCommunicator()->RaiseError(); \
       m_lock = true; \
       std::string errMsg = std::string("Can't load '") + dllName + "'!"; \
-      Message(ICommunicator::MS_Error, errMsg.c_str()); \
+      Message(ICommunicator::MessageType::MT_ERROR, errMsg.c_str()); \
       return; \
    }// \
    //guard->Init(GetPack());

@@ -15,6 +15,7 @@ namespace user_interface
       OT_WARNING,
       OT_DEBUG,
       OT_OUTPUT,
+      OT_PERFORMANCE,
       OT_SIZE
    };
 

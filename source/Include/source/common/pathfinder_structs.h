@@ -116,7 +116,10 @@ namespace pathfinder
    struct check_go_zone_result
    {
       GoZoneAffilation gza;
-      double asn, awe;   // angle south-north, angle west-east
+      double asn; // angle south-north
+      double awe; // angle west-east
+      double aswne;  // angle southwest-northeast
+      double asenw;  // angle southeast-northwest
    };
 
    struct strategy_settings

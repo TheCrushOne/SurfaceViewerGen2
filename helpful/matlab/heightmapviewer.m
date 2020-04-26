@@ -1,9 +1,12 @@
 data = struct;
-[data, delimiterOut] = importdata('test_g2.dat');
+[data, delimiterOut] = importdata('C:\Projects\surfaceviewergen2\scenarios\test_400\test_400.dat');
 xAxis = 1:1:size(data, 1);
 yAxis = 1:1:size(data, 2);
+data = 0.02*data;
 waterfall(xAxis, yAxis', data');
 xlabel('x');
 ylabel('y');
-dmax = max(data, [], 'all');
-dmin = min(data, [], 'all');
+mult = 15;
+axis([1 size(data, 1) 1 size(data, 2) -mult mult]);
+%dmax = max(data, [], 'all');
+%dmin = min(data, [], 'all');

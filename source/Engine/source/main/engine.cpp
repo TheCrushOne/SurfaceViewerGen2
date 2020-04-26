@@ -66,66 +66,70 @@ void Engine::convertMap(const std::vector<std::vector<double>>& rawdataSrc, std:
    for (size_t rIdx = 0; rIdx < rwCount; rIdx++)
    {
       for (size_t cIdx = 0; cIdx < rawdataSrc.at(rIdx).size(); cIdx++)
-         rawdataDst->Set(rIdx, cIdx, SVCG::route_point(rIdx, cIdx, rawdataSrc.at(rIdx).at(cIdx)));
+         rawdataDst->Set(rIdx, cIdx, SVCG::route_point(rIdx, cIdx, rawdataSrc.at(rIdx).at(cIdx), checkFlyZone(rawdataSrc, rIdx, cIdx).fza, checkGoZone(rawdataSrc, rIdx, cIdx).gza));
    }
 }
 
 
-pathfinder::check_fly_zone_result Engine::checkFlyZone(float y)
+pathfinder::check_fly_zone_result Engine::checkFlyZone(const std::vector<std::vector<double>>& rawdataSrc, int rowIdx, int colIdx)
 {
-   return { pathfinder::FlyZoneAffilation::FZA_NORMAL };// { (y > m_appSettings->sim_settings.levelSettings.maxAirHeight) ? FZA_FORBIDDEN : FZA_NORMAL };
+   return { (rawdataSrc.at(rowIdx).at(colIdx) > GetSettings()->pth_stt.level_settings.max_air_height) ? pathfinder::FlyZoneAffilation::FZA_FORBIDDEN : pathfinder::FlyZoneAffilation::FZA_NORMAL };
 }
 
-//CheckGoZoneResult Engine::checkGoZone(const std::shared_ptr<QHeightMapSurfaceDataProxy> mapProxy, int rowIdx, int colIdx, int rowCount, int colCount)
-//{
-//   return checkAngles(mapProxy->itemAt(rowIdx, colIdx)
-//                       , mapProxy->itemAt(rowIdx > 0 ? rowIdx - 1 : 0, colIdx)
-//                       , mapProxy->itemAt(rowIdx, colIdx > 0 ? colIdx - 1 : 0)
-//                       , mapProxy->itemAt(rowIdx < rowCount - 1 ? rowIdx + 1 : rowCount - 1, colIdx)
-//                       , mapProxy->itemAt(rowIdx, colIdx < colCount - 1 ? colIdx + 1 : colCount - 1));
-//}
+pathfinder::check_go_zone_result Engine::checkGoZone(const std::vector<std::vector<double>>& rawdataSrc, int rowIdx, int colIdx)
+{
+   // NOTE: стоблцы идут снизу вверх(по крайней мере тут считаем именно так)
+   size_t rowCount = rawdataSrc.size();
+   size_t colCount = rawdataSrc.at(0).size();
+   return checkAngles(
+        rawdataSrc.at(rowIdx).at(colIdx)  // center
+      , rawdataSrc.at(rowIdx).at(colIdx > 0 ? colIdx - 1 : 0)  // left
+      , rawdataSrc.at(rowIdx).at(colIdx < colCount - 1 ? colIdx + 1 : colCount - 1)  // right
+      , rawdataSrc.at(rowIdx < rowCount - 1 ? rowIdx + 1 : rowCount - 1).at(colIdx) // top
+      , rawdataSrc.at(rowIdx > 0 ? rowIdx - 1 : 0).at(colIdx) // bottom
+      , rawdataSrc.at(rowIdx < rowCount - 1 ? rowIdx + 1 : rowCount - 1).at(colIdx > 0 ? colIdx - 1 : 0) // topleft
+      , rawdataSrc.at(rowIdx > 0 ? rowIdx - 1 : 0).at(colIdx > 0 ? colIdx - 1 : 0) // bottomleft
+      , rawdataSrc.at(rowIdx < rowCount - 1 ? rowIdx + 1 : rowCount - 1).at(colIdx < colCount - 1 ? colIdx + 1 : colCount - 1) // topright
+      , rawdataSrc.at(rowIdx > 0 ? rowIdx - 1 : 0).at(colIdx > 0 ? colIdx - 1 : 0) // bottomright
+   );
+}
 
-//CheckGoZoneResult Engine::checkAngles(const QSurfaceDataItem* center, const QSurfaceDataItem* up, const QSurfaceDataItem* left, const QSurfaceDataItem* down, const QSurfaceDataItem* right)
-//{
-//   // NOTE: проверяем 4 стороны света(как верх, низ, право, лево)
-//   //float xc = center->x(), yc = center->y(), zc = center->z();
-//   //float xu = up->x(), yu = up->y(), zu = up->z();
-//   //float xd = down->x(), yd = down->y(), zd = down->z();
-//   //float xl = left->x(), yl = left->y(), zl = left->z();
-//   //float xr = right->x(), yr = right->y(), zr = right->z();
-//   CheckGoZoneResult result;
-//   float xc = center->position().x(), yc = center->y(), zc = center->position().z();
-//   float xu = up->position().x(), yu = up->y(), zu = up->position().z();
-//   float xd = down->position().x(), yd = down->y(), zd = down->position().z();
-//   float xl = left->position().x(), yl = left->y(), zl = left->position().z();
-//   float xr = right->position().x(), yr = right->y(), zr = right->position().z();
-//
-//   float mult = 180.f/static_cast<float>(M_PI);
-//   // z - const
-//   float angleUD = (atan(fabs(yl - yc)/fabs(xl - xc))*mult + atan(fabs(yc - yr)/fabs(xc - xr))*mult)/2.;
-//   // x - const
-//   float angleLR = (atan(fabs(yu - yc)/fabs(zu - zc))*mult + atan(fabs(yc - yd)/fabs(zc - zd))*mult)/2.;
-//   result.asn = angleUD;
-//   result.awe = angleLR;
-//   Q_ASSERT(xd == xu);
-//   Q_ASSERT(zr == zl);
-//   auto minDA = m_appSettings->sim_settings.levelSettings.dangerousLandAngle;
-//   auto maxDA = m_appSettings->sim_settings.levelSettings.maxLandAngle;
-//   auto minLH = m_appSettings->sim_settings.levelSettings.minLandHeight;
-//   auto maxLH = m_appSettings->sim_settings.levelSettings.maxLandHeight;
-//   //qDebug() << "angles:" << fabs(angleUD) << fabs(angleLR);
-//   if (((maxDA < fabs(angleUD))
-//       || (maxDA < fabs(angleLR)))
-//       || ((yc < minLH)
-//       || (yc > maxLH)))
-//      result.gza = GZA_FORBIDDEN;
-//   else if ((minDA < fabs(angleUD))
-//      || (minDA < fabs(angleLR)))
-//      result.gza = GZA_DANGEROUS;
-//   else
-//      result.gza = GZA_NORMAL;
-//   return result;
-//}
+pathfinder::check_go_zone_result Engine::checkAngles(double center, double left, double right, double top, double bottom, double topleft, double bottomleft, double topright, double bottomright)
+{
+   // NOTE: проверяем 4 направления по 8 сторонам света
+   pathfinder::check_go_zone_result result;
+   double cellMult = 6.;
+   float mult = 180.f/static_cast<float>(M_PI);
+   // top-bottom
+   float angleTB = (atan(fabs(top - center) / cellMult)*mult + atan(fabs(center - bottom) / cellMult)*mult)/2.;
+   // left-right
+   float angleLR = (atan(fabs(left - center) / cellMult)*mult + atan(fabs(center - right) / cellMult)*mult)/2.;
+   // topleft-bottomright
+   float angleTLBR = (atan(fabs(topleft - center) / cellMult) * mult + atan(fabs(center - bottomright) / cellMult) * mult) / 2.;
+   // topright-bottomleft
+   float angleTRBL = (atan(fabs(bottomleft - center) / cellMult) * mult + atan(fabs(center - topright) / cellMult) * mult) / 2.;
+   result.asn = angleTB;
+   result.awe = angleLR;
+   result.aswne = angleTRBL;
+   result.asenw = angleTLBR;
+
+   auto minDA = GetSettings()->pth_stt.level_settings.dangerous_land_angle;
+   auto maxDA = GetSettings()->pth_stt.level_settings.max_land_angle;
+   auto minLH = GetSettings()->pth_stt.level_settings.min_land_height;
+   auto maxLH = GetSettings()->pth_stt.level_settings.max_land_height;
+   //qDebug() << "angles:" << fabs(angleUD) << fabs(angleLR);
+   bool maxAngleExcess = (maxDA < fabs(angleTB)) || (maxDA < fabs(angleLR)) || (maxDA < fabs(angleTRBL)) || (maxDA < fabs(angleTLBR));
+   bool minAngleExcess = (minDA < fabs(angleTB)) || (minDA < fabs(angleLR)) || (minDA < fabs(angleTRBL)) || (minDA < fabs(angleTLBR));
+   if (maxAngleExcess
+       || (center < minLH)
+       || (center > maxLH))
+      result.gza = pathfinder::GoZoneAffilation::GZA_FORBIDDEN;
+   else if (minAngleExcess)
+      result.gza = pathfinder::GoZoneAffilation::GZA_DANGEROUS;
+   else
+      result.gza = pathfinder::GoZoneAffilation::GZA_NORMAL;
+   return result;
+}
 
 void Engine::LaunchResearch(std::function<void(void)> callback)
 {
@@ -251,7 +255,7 @@ void Engine::timeResearch(/*const std::shared_ptr<SVM::iMatrix<SurfaceElement>>&
    ////Q_ASSERT(resmap->GetRowCount() == cntIdx && resmap->GetColCount() == lnIdx);
 }
 
-void Engine::generateResMap(size_t mapSize/*std::shared_ptr<SVM::iMatrix<SurfaceElement>>& map, const STT::Gen1Settings& stt*/)
+void Engine::generateResMap(size_t mapSize)
 {
    // NOTE: тут всегда что-то квадратное
    m_rawdata->SetRowCount(mapSize);
@@ -263,15 +267,6 @@ void Engine::generateResMap(size_t mapSize/*std::shared_ptr<SVM::iMatrix<Surface
          m_rawdata->Set(rowIdx, colIdx, { static_cast<int>(rowIdx), static_cast<int>(colIdx), 0. });
       }
    }
-   //for (size_t rowIdx = 0; rowIdx < stt.mapSize; rowIdx++)
-   //{
-   //   for (size_t colIdx = 0; colIdx < stt.mapSize; colIdx++)
-   //   {
-   //      map->Set(SurfaceElement(static_cast<float>(rowIdx)
-   //                             , 0.f
-   //                             , static_cast<float>(colIdx)), rowIdx, colIdx);
-   //   }
-   //}
 }
 
 void Engine::lengthResearch(/*const std::shared_ptr<SVM::iMatrix<SurfaceElement>>& rawmap, std::shared_ptr<ResearchResultGen2>& result*/)

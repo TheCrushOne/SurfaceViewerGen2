@@ -102,7 +102,15 @@ void ChartLayer::addChartObject(render::iRender* renderer, const colreg::chart_o
    //const auto id = colreg::check_chart_obj_type(colreg::OT_DYNAMIC_AREAS | colreg::OT_STATISTIC_AREA, obj.type) ? obj.id.dynamic_id : obj.id.static_id;
    //    if (id == 147838)
    //       info.width = 10;
+
    renderer->AddObject({ points, info, {render::FIND_TYPE::FT_FIND_DETAILED, obj.id, render::FIND_OBJECT_TYPE::FOT_CHART_OBJECT, 0, obj.type}, minScale }, false);
+   render::object_info ptInfo{ 1, render::LINE_STYLE::LL_DASH, render::FILL_TYPE::FT_NONE, RGB(110, 110, 110) };
+   ptInfo.alpha = 255;
+   if (colorOverride)
+      ptInfo.color = RGB(r, g, b);
+   ptInfo.width += 2;
+   for (size_t i = 0; i < points.size(); i++)
+      renderer->AddObject({ {points[i]}, ptInfo });
 }
 
 iProperty* ChartLayer::GetProperties()

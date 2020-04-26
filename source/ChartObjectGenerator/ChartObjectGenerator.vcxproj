@@ -21,6 +21,9 @@
   <ItemGroup>
     <ClCompile Include="source\ChartObjectGenerator.cpp" />
     <ClCompile Include="source\Modules\CoverageGenerator.cpp" />
+    <ClCompile Include="source\Modules\IsolineAlgorithms\LabirinthTraverse.cpp" />
+    <ClCompile Include="source\Modules\IsolineAlgorithms\SegmentCollector.cpp" />
+    <ClCompile Include="source\Modules\IsolineAlgorithms\WaveFrontline.cpp" />
     <ClCompile Include="source\Modules\IsolineGenerator.cpp" />
     <ClCompile Include="source\Modules\ModuleBase.cpp" />
     <ClCompile Include="source\Modules\ZoneGenerator.cpp" />
@@ -31,6 +34,11 @@
     <ClInclude Include="source\chart_storage.h" />
     <ClInclude Include="source\GeneratorModuleInterface.h" />
     <ClInclude Include="source\Modules\CoverageGenerator.h" />
+    <ClInclude Include="source\Modules\IsolineAlgorithms\AlgorithmBase.h" />
+    <ClInclude Include="source\Modules\IsolineAlgorithms\AlgorithmHelpers.h" />
+    <ClInclude Include="source\Modules\IsolineAlgorithms\LabirinthTraverse.h" />
+    <ClInclude Include="source\Modules\IsolineAlgorithms\SegmentCollector.h" />
+    <ClInclude Include="source\Modules\IsolineAlgorithms\WaveFrontline.h" />
     <ClInclude Include="source\Modules\IsolineGenerator.h" />
     <ClInclude Include="source\Modules\ModuleBase.h" />
     <ClInclude Include="source\Modules\ZoneGenerator.h" />

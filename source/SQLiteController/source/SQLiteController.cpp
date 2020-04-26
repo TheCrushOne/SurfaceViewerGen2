@@ -61,7 +61,7 @@ using namespace database;
    { \
       GetCommunicator()->RaiseError(); \
       std::string errMsg = std::string("Can't load '") + dllName + "'!"; \
-      Message(ICommunicator::MS_Error, errMsg.c_str()); \
+      Message(ICommunicator::MessageType::MT_ERROR, errMsg.c_str()); \
       return; \
    }// \
    //guard->Init(GetPack());

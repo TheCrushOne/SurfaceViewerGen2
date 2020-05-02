@@ -369,7 +369,7 @@ void Engine::threadResearch(/*const std::shared_ptr<SVM::iMatrix<SurfaceElement>
       size_t threadCount = resstt.thread_pool_range.values.at(threadPoolIdx);
       for (size_t taskPoolIdx = 0; taskPoolIdx < resstt.task_pool_range.values.size(); taskPoolIdx++)
       {
-         size_t taskCount = resstt.thread_pool_range.values.at(taskPoolIdx);
+         size_t taskCount = resstt.task_pool_range.values.at(taskPoolIdx);
          for (size_t flyCountIdx = 0; flyCountIdx < resstt.fly_count_range.values.size(); flyCountIdx++)
          {
             size_t flyCount = resstt.fly_count_range.values.at(flyCountIdx);

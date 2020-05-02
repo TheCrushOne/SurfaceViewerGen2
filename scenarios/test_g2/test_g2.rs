@@ -5,11 +5,13 @@
 		"max" : 1,
 		"values" : [
 			2,
+			16,
+			64
+		],
+		"values_not_used" : [
 			4,
 			8,
-			16,
-			32,
-			64
+			32
 		]
 	},
 	"length_range" : {
@@ -26,7 +28,8 @@
 		"values" : [
 			1,
 			4,
-			8
+			8,
+			16
 		]
 	},
 	"task_pool_range" : {
@@ -34,9 +37,12 @@
 		"step" : 1,
 		"max" : 1,
 		"values" : [
+			1,
 			2,
+			3,
 			4,
-			8
+			5,
+			6
 		]
 	},
 	"debug_level" : 1,

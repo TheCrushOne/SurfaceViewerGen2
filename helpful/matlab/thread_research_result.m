@@ -1,4 +1,4 @@
-basePath = '../../logs/test_g2/25042020_182437_TRR';
+basePath = '../../logs/test_g2/26042020_193042_TRR';
 dataPath = strcat(basePath, '.dat');
 metaPath = strcat(basePath, '.meta');
 [data, delimiterOut] = importdata(dataPath);
@@ -24,7 +24,7 @@ for threadIdx=1:1:thread_pool_size
             mtxs(taskIdx, flyIdx) = toPlot(threadIdx, taskIdx, flyIdx);
         end
     end
-    mesh(jsonDee.task_pool_values, jsonDee.fly_count_values, mtxs', 'LineWidth', 1);
+    mesh(jsonDee.task_pool_values, jsonDee.fly_count_values, mtxs', 'LineWidth', 2);
 end
 alpha 0.1;
 grid on;

@@ -54,10 +54,12 @@ struct ThreadResearchComplexStorage
          size_t thread_pool_idx;
          size_t task_pool_idx;
          size_t fly_count_idx;
+         size_t length_idx;
 
          size_t thread_pool_value;
          size_t task_pool_value;
          size_t fly_count_value;
+         double length_value;
       } index;
 
       struct Result
@@ -71,6 +73,7 @@ struct ThreadResearchComplexStorage
       settings::range_data<size_t> thread_pool_range;
       settings::range_data<size_t> task_pool_range;
       settings::range_data<size_t> fly_count_range;
+      settings::range_data<double> length_range;
    };
 
    std::vector<SuperCell> data;

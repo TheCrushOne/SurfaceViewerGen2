@@ -360,45 +360,47 @@ void Engine::lengthResearch(/*const std::shared_ptr<SVM::iMatrix<SurfaceElement>
 void Engine::threadResearch(/*const std::shared_ptr<SVM::iMatrix<SurfaceElement>>& resmap, std::shared_ptr<ResearchResultGen3>& result*/)
 {
    auto& resstt = GetSettings()->res_stt;
+   // Длин путей 62, 125, 250, 500
    // Потоков 1, 2, 4, 8
    // Пул задач 2, 4, 8
    // Путей 2, 4, 8, 16, 32, 64, 128
 
-   for (size_t threadPoolIdx = 0; threadPoolIdx < resstt.thread_pool_range.values.size(); threadPoolIdx++)
+   for (size_t legnthIdx = 0; legnthIdx < resstt.length_range.values.size(); legnthIdx++)
    {
-      size_t threadCount = resstt.thread_pool_range.values.at(threadPoolIdx);
-      for (size_t taskPoolIdx = 0; taskPoolIdx < resstt.task_pool_range.values.size(); taskPoolIdx++)
+      double length = resstt.length_range.values.at(legnthIdx);
+      for (size_t threadPoolIdx = 0; threadPoolIdx < resstt.thread_pool_range.values.size(); threadPoolIdx++)
       {
-         size_t taskCount = resstt.task_pool_range.values.at(taskPoolIdx);
-         for (size_t flyCountIdx = 0; flyCountIdx < resstt.fly_count_range.values.size(); flyCountIdx++)
+         size_t threadCount = resstt.thread_pool_range.values.at(threadPoolIdx);
+         for (size_t taskPoolIdx = 0; taskPoolIdx < resstt.task_pool_range.values.size(); taskPoolIdx++)
          {
-            size_t flyCount = resstt.fly_count_range.values.at(flyCountIdx);
-            m_threadResStorage.data.emplace_back(ThreadResearchComplexStorage::SuperCell{
-               ThreadResearchComplexStorage::SuperCell::Index{
-                  threadPoolIdx,
-                  taskPoolIdx,
-                  flyCountIdx,
-                  threadCount,
-                  taskCount,
-                  flyCount
-               },
-               ThreadResearchComplexStorage::SuperCell::Result{
-                  0
-               }
-            });
-            
-            //PathFinderSettings settings{ true, {packetIdx, pathShardIdx}, true };
-            
-            //gStatistic.dataStorage->Set({finishTime - startTime, 0, 0}, packetIdx, pathShardIdx);
-            // Прогрессбар
-            //emit percent(static_cast<int>(pckStep*packetIdx + pthshStep*pathShardIdx));
+            size_t taskCount = resstt.task_pool_range.values.at(taskPoolIdx);
+            for (size_t flyCountIdx = 0; flyCountIdx < resstt.fly_count_range.values.size(); flyCountIdx++)
+            {
+               size_t flyCount = resstt.fly_count_range.values.at(flyCountIdx);
+               m_threadResStorage.data.emplace_back(ThreadResearchComplexStorage::SuperCell{
+                  ThreadResearchComplexStorage::SuperCell::Index{
+                     threadPoolIdx,
+                     taskPoolIdx,
+                     flyCountIdx,
+                     legnthIdx,
+                     threadCount,
+                     taskCount,
+                     flyCount,
+                     length
+                  },
+                  ThreadResearchComplexStorage::SuperCell::Result{
+                     0
+                  }
+               });
+            }
          }
       }
    }
    m_threadResStorage.info = { 
       resstt.thread_pool_range,
       resstt.task_pool_range,
-      resstt.fly_count_range
+      resstt.fly_count_range,
+      resstt.length_range
    };
    m_threadTaskCurrentIdx = 0;
    threadResNextStep();
@@ -436,8 +438,10 @@ void Engine::generateResScenarioData(ColregSimulation::scenario_data& data, cons
 {
    data.unit_data.air_units.resize(idx.fly_count_value);
    data.unit_data.land_units.resize(1);
-   auto mapSize = stt.map_size;
-   int fnCoord = static_cast<int>(mapSize) - 1; // NOTE: индекс точки отличается от размера карты на 1
+   int mapSize = static_cast<int>(stt.map_size);
+   int curSize = static_cast<int>(idx.length_value);
+   // NOTE: индекс предельной точки отличается от размера карты на 1
+   int fnCoord = curSize < mapSize - 1 ? curSize : mapSize - 1;
    for (auto& elem : data.unit_data.air_units)
    {
       elem.start = SVCG::route_point{ 0, 0 };

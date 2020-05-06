@@ -47,9 +47,11 @@ void UniversalLogger::logThreadResearchResult(const ThreadResearchComplexStorage
    fil.open(filePath, std::ios::out | std::ios::binary);
    for (auto metaElement : meta.data)
    {
+      // NOTE: тут только карта индексов, парсинг в значения есть в матлабе
       fil << metaElement.index.thread_pool_idx << " "
           << metaElement.index.task_pool_idx << " "
           << metaElement.index.fly_count_idx << " "
+          << metaElement.index.length_idx << " "
           << metaElement.result.time.diff;
       fil << "\n";
    }
@@ -64,6 +66,7 @@ void UniversalLogger::logThreadResearchMeta(const ThreadResearchComplexStorage& 
    j["fly_count_values"] = meta.info.fly_count_range.values;
    j["task_pool_values"] = meta.info.task_pool_range.values;
    j["thread_pool_values"] = meta.info.thread_pool_range.values;
+   j["length_values"] = meta.info.length_range.values;
    o << j;
 }
 

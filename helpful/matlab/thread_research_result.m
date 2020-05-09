@@ -6,17 +6,22 @@ jsonDee = jsondecode(fileread(metaPath));
 thread_pool_size = size(jsonDee.thread_pool_values, 1);
 task_pool_size = size(jsonDee.task_pool_values, 1);
 fly_count_size = size(jsonDee.fly_count_values, 1);
+length_size = size(jsonDee.length_values, 1);
 
-toPlot = zeros(thread_pool_size, task_pool_size, fly_count_size);
+toPlot = zeros(thread_pool_size, task_pool_size, fly_count_size, length_size);
 for rowIdx=1:1:size(data, 1)
-    toPlot(data(rowIdx, 1) + 1, data(rowIdx, 2) + 1, data(rowIdx, 3) + 1) = data(rowIdx, 4);
+    toPlot(data(rowIdx, 1) + 1, data(rowIdx, 2) + 1, data(rowIdx, 3) + 1, data(rowIdx, 4) + 1) = data(rowIdx, 5);
 end
 
 %figure;
 %hold on;
 
-viewAzimuth = -45;
-viewElevation = 45;
+view_settings = {};
+
+view_settings.azimuth = -45;
+view_settings.elevation = 45;
+
+thread_res_slice_print(view_settings);
 
 % «ависимость времени расчета от размера пула задач и количества летающих
 % роботов на разных объемах пула потоков

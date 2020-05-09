@@ -15,10 +15,13 @@
 		]
 	},
 	"length_range" : {
-		"min" : 5,
-		"step" : 10,
-		"max" : 75,
+		"min" : 1,
+		"step" : 1,
+		"max" : 1,
 		"values" : [
+			10,
+			50,
+			100
 		]
 	},
 	"thread_pool_range" : {

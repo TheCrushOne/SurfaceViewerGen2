@@ -10,6 +10,7 @@
 #include "algorithm/statistic.h"
 
 using namespace engine;
+std::recursive_mutex g_engineMutex;
 
 Engine::Engine()
    : m_rawdata(std::make_shared<pathfinder::Matrix<SVCG::route_point>>(SVCG::route_point{}))
@@ -365,9 +366,9 @@ void Engine::threadResearch(/*const std::shared_ptr<SVM::iMatrix<SurfaceElement>
    // Пул задач 2, 4, 8
    // Путей 2, 4, 8, 16, 32, 64, 128
 
-   for (size_t legnthIdx = 0; legnthIdx < resstt.length_range.values.size(); legnthIdx++)
+   for (size_t lengthIdx = 0; lengthIdx < resstt.length_range.values.size(); lengthIdx++)
    {
-      double length = resstt.length_range.values.at(legnthIdx);
+      double length = resstt.length_range.values.at(lengthIdx);
       for (size_t threadPoolIdx = 0; threadPoolIdx < resstt.thread_pool_range.values.size(); threadPoolIdx++)
       {
          size_t threadCount = resstt.thread_pool_range.values.at(threadPoolIdx);
@@ -382,7 +383,7 @@ void Engine::threadResearch(/*const std::shared_ptr<SVM::iMatrix<SurfaceElement>
                      threadPoolIdx,
                      taskPoolIdx,
                      flyCountIdx,
-                     legnthIdx,
+                     lengthIdx,
                      threadCount,
                      taskCount,
                      flyCount,
@@ -408,6 +409,7 @@ void Engine::threadResearch(/*const std::shared_ptr<SVM::iMatrix<SurfaceElement>
 
 void Engine::threadResNextStep()
 {
+   std::lock_guard<std::recursive_mutex> guard(g_engineMutex);
    __int64 startTime;
    CURTIME_MS(startTime);
    if (m_threadTaskCurrentIdx > 0)
@@ -422,15 +424,18 @@ void Engine::threadResNextStep()
       return;
    }
    auto& resstt = GetSettings()->res_stt;
-   m_threadResStorage.data.at(m_threadTaskCurrentIdx).result.time.start = startTime;
+   auto& threadRes = m_threadResStorage.data.at(m_threadTaskCurrentIdx);
+   auto& threadResIndex = threadRes.index;
+   threadRes.result.time.start = startTime;
    ColregSimulation::scenario_data data;
-   generateResScenarioData(data, resstt, m_threadResStorage.data.at(m_threadTaskCurrentIdx).index);
+   generateResScenarioData(data, resstt, threadResIndex);
    pathfinder::path_finder_settings stt(true, {}, true, true, 0, 0, false);
-   stt.packet_size = m_threadResStorage.data.at(m_threadTaskCurrentIdx).index.task_pool_value;
-   stt.thread_count = m_threadResStorage.data.at(m_threadTaskCurrentIdx).index.thread_pool_value;
+   stt.packet_size = threadResIndex.task_pool_value;
+   stt.thread_count = threadResIndex.thread_pool_value;
    std::thread(&Engine::processPathFindInternal, this, data, stt, [this]() { threadResNextStep(); }).detach();
    //m_communicator->Message(ICommunicator::MS_Debug, "Thread task idx %i", m_threadTaskCurrentIdx);
    m_threadTaskCurrentIdx++;
+   GetPack()->comm->Message(ICommunicator::MessageType::MT_INFO, "task started: [fly: %i, length: %f, task: %i, thread: %i]", threadResIndex.fly_count_value, threadResIndex.length_value, threadResIndex.task_pool_value, threadResIndex.thread_pool_value);
    GetPack()->comm->SetProgress(static_cast<unsigned int>(static_cast<double>(m_threadTaskCurrentIdx)/static_cast<double>(m_threadResStorage.data.size())*100.));
 }
 

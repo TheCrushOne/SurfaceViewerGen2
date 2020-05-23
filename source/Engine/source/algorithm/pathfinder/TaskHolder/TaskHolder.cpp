@@ -8,13 +8,14 @@ void TaskHolder::Launch(std::shared_ptr<std::vector<task_unit>> taskPacket, std:
 {
    this->callback = callback;
    packet = taskPacket;
-   onFinished();  // NOTE: принудительный старт
+   onFinished(true);  // NOTE: принудительный старт
 }
 
-void TaskHolder::onFinished()
+void TaskHolder::onFinished(bool fromLaunch)
 {
    std::lock_guard<std::recursive_mutex> guard(g_mutex);
    status = HolderStatus::HS_FINISHED;
+   GetPack()->comm->Message(ICommunicator::MessageType::MT_INFO, "task finished: thread [%d], from launch [%i], packet size [%d]", std::this_thread::get_id(), fromLaunch, packet->size());
    for (task_unit& task : *packet.get())
    {
       if (task.status == TaskStatus::TS_QUEUED)
@@ -31,7 +32,9 @@ void TaskHolder::onFinished()
 
 void TaskHolder::launchSingleTask(task_unit& task)
 {
-   task.runnable();
+   using namespace std::chrono_literals;
+   std::this_thread::sleep_for(2s);
+   //task.runnable();
    task.status = TaskStatus::TS_FINISHED;
-   onFinished();
+   onFinished(false);
 }

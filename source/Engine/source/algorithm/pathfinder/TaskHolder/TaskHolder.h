@@ -2,6 +2,7 @@
 #include <functional>
 #include <thread>
 #include "common/pathfinder_structs.h"
+#include "common/central_class.h"
 
 namespace pathfinder
 {
@@ -26,12 +27,12 @@ namespace pathfinder
       TaskStatus status;
    };
 
-   class TaskHolder
+   class TaskHolder : public Central
    {
    public:
       void Launch(std::shared_ptr<std::vector<task_unit>> taskPacket, std::function<void(void)> callback);
    protected:
-      void onFinished();
+      void onFinished(bool);
    public:
       void launchSingleTask(task_unit& task);
    private:

@@ -155,6 +155,7 @@ void PathFinderPipeline::onAirRoutePacketFinished()
    //Message(ICommunicator::MS_Debug, "ar task packet finished %i", m_taskPool.size());
    for (auto& holder : m_holders)
    {
+      holder.first.Init(GetPack());
       holder.first.Launch(m_taskPacket,
          [this]()
          {

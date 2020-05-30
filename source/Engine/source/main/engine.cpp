@@ -71,7 +71,6 @@ void Engine::convertMap(const std::vector<std::vector<double>>& rawdataSrc, std:
    }
 }
 
-
 pathfinder::check_fly_zone_result Engine::checkFlyZone(const std::vector<std::vector<double>>& rawdataSrc, int rowIdx, int colIdx)
 {
    return { (rawdataSrc.at(rowIdx).at(colIdx) > GetSettings()->pth_stt.level_settings.max_air_height) ? pathfinder::FlyZoneAffilation::FZA_FORBIDDEN : pathfinder::FlyZoneAffilation::FZA_NORMAL };
@@ -432,10 +431,10 @@ void Engine::threadResNextStep()
    pathfinder::path_finder_settings stt(true, {}, true, true, 0, 0, false);
    stt.packet_size = threadResIndex.task_pool_value;
    stt.thread_count = threadResIndex.thread_pool_value;
+   GetPack()->comm->Message(ICommunicator::MessageType::MT_INFO, "task started: [fly: %i, length: %f, task: %i, thread: %i]", threadResIndex.fly_count_value, threadResIndex.length_value, threadResIndex.task_pool_value, threadResIndex.thread_pool_value);
    std::thread(&Engine::processPathFindInternal, this, data, stt, [this]() { threadResNextStep(); }).detach();
    //m_communicator->Message(ICommunicator::MS_Debug, "Thread task idx %i", m_threadTaskCurrentIdx);
    m_threadTaskCurrentIdx++;
-   GetPack()->comm->Message(ICommunicator::MessageType::MT_INFO, "task started: [fly: %i, length: %f, task: %i, thread: %i]", threadResIndex.fly_count_value, threadResIndex.length_value, threadResIndex.task_pool_value, threadResIndex.thread_pool_value);
    GetPack()->comm->SetProgress(static_cast<unsigned int>(static_cast<double>(m_threadTaskCurrentIdx)/static_cast<double>(m_threadResStorage.data.size())*100.));
 }
 

@@ -36,7 +36,7 @@ void PathFinder::FindAirPath(settings::route& route, const std::shared_ptr<Matri
    //Q_ASSERT(waypointList.size() >= 2);
    //Q_UNUSED(iterations);
    // NOTE: Миграция чего-то непонятно чего...
-   for (auto& item : waypointList)   
+   for (auto& item : waypointList)
       item = rawdata->Get(item.row, item.col);
    
    aff_checker checker = [](const std::shared_ptr<Matrix<SVCG::route_point>>& data, std::shared_ptr<Matrix<size_t>>& coverageMatrix, size_t row, size_t col) -> bool

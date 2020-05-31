@@ -14,23 +14,29 @@ PathFinderPipeline::PathFinderPipeline()
    , m_statistic(nullptr)
    , m_coverageBuilder(std::make_unique<CoverageBuilder>())
    , m_strategyManager(std::make_unique<StrategyManager>())
+   , m_taskManager(std::make_unique<MultithreadComputingManager>())
    , m_pathfinder(std::make_unique<PathFinder>())
-   , m_taskPacket(std::make_shared<std::vector<pathfinder::task_unit>>())
    //, m_packetMutex(m_taskPacket)
-{}
+   , m_taskPacket(std::make_shared<TaskStorage>())
+{
+   // TODO: check!!!
+   m_taskManager->SetTaskPacketFinishCallback([this] { onAirRoutePacketFinished(); });
+}
 
 PathFinderPipeline::~PathFinderPipeline()
 {}
+
+void PathFinderPipeline::Init(central_pack* pack)
+{ 
+   Central::Init(pack);
+   m_strategyManager->Init(pack);
+   m_taskManager->Init(pack);
+}
 
 // NOTE: желательно и лаунчер запускать в своем потоке
 // WARNING: распараллелено!!!
 void PathFinderPipeline::FindPath(std::function<void(void)> callback, const std::shared_ptr<Matrix<SVCG::route_point>> rawdata, std::shared_ptr<path_finder_indata> indata)
 {
-   //m_statistic = &statistic;
-   //m_vmeta = ExperimentMeta{
-   //   pathFinderSettings.statFieldIndex,
-   //   pathFinderSettings.multithread
-   //};
    // NOTE: итерация шага стратегий
    m_iterations = 2;
 
@@ -38,28 +44,14 @@ void PathFinderPipeline::FindPath(std::function<void(void)> callback, const std:
    m_pathFound = false;
    m_rawdata = rawdata;
    m_indata = indata;
-   //qint64 startTime = CURTIME_MS();
    m_rowCount = rawdata->GetRowCount();
    m_colCount = rawdata->GetColCount();
-   //m_funLandVector.clear();
-   m_appSettings = std::make_shared<settings::application_settings>();//WFM::GetSharedInstance<Dispatcher>(DBG_DATA)->GetSettings();
+   m_appSettings = std::make_shared<settings::application_settings>();
 
    if (m_indata->settings.multithread)
       findPathMultiThread();
    else
       findPathSingleThread();
-   //qint64 finishTime = CURTIME_MS();
-   //qint64 time = finishTime - startTime;
-   //qDebug() << "path finding ended: mt: " << pathFinderSettings.multithread << " :" << time;
-   //TaskStat stat{m_vmeta, time};
-   //QVariant vdata;
-   //vdata.setValue(stat);
-   //WFM::GetSharedInstance<Statistic>(DBG_DATA)->StatUpdateTaskRun(vdata);
-   /*if (m_appSettings->type == STT::ApplicationRunType::ART_RESEARCH
-       && m_appSettings->res_settings.type == STT::ResearchType::RT_GEN1)
-      emit TaskDataUpdate(vdata);*/
-      //clearSupportData();
-   //statistic = *m_statistic;
 }
 
 void PathFinderPipeline::prepareSourcePoints()
@@ -109,6 +101,7 @@ void PathFinderPipeline::formatTaskPool()
    {
       auto& path = m_paths.air_routes.at(idx);
       m_taskPool.at(idx).status = TaskStatus::TS_QUEUED;
+      m_taskPool.at(idx).index = idx;
       m_taskPool.at(idx).runnable = [this, &path]()
       {
          this->m_pathfinder->FindAirPath(path, m_rawdata, m_iterations, true);
@@ -126,41 +119,33 @@ void PathFinderPipeline::formatTaskPacket()
    }
 }
 
-void PathFinderPipeline::onAirRouteTaskHolderFinished()
-{
-   for (const auto& task : *m_taskPacket.get())
-   {
-      if (task.status != TaskStatus::TS_FINISHED)
-         return;
-   }
-   onAirRoutePacketFinished();
-}
+//void PathFinderPipeline::onAirRouteTaskHolderFinished()
+//{
+//   for (const auto& task : *m_taskPacket.get())
+//   {
+//      if (task.status != TaskStatus::TS_FINISHED)
+//         return;
+//   }
+//   onAirRoutePacketFinished();
+//}
 
 void PathFinderPipeline::onAirRoutePacketFinished()
 {
-   //m_communicator->Message(ICommunicator::MessageType::MS_Error, "air route packet finished");
    static const unsigned long long int threadCountSpec = std::thread::hardware_concurrency();
+
    if (m_taskPool.size() == 0)
    {
+      m_taskManager->Finale();
       buildLandCoverage();
+      GetPack()->comm->Message(ICommunicator::MessageType::MT_INFO, "Land coverage complete");
       return;
    }
    formatTaskPacket();
 
    // test 4/8
    //const int threadCount = 16;   // NOTE: По количеству логических ядер 8+HT
-   m_holders.clear();
-   m_holders.resize(m_indata->settings.thread_count);   // TODO: чекнуть, вызывается ли конструктор
-   //QThreadPool::globalInstance()->setMaxThreadCount(threadCount);
-   //Message(ICommunicator::MS_Debug, "ar task packet finished %i", m_taskPool.size());
-   for (auto& holder : m_holders)
-   {
-      holder.first.Launch(m_taskPacket,
-         [this]()
-         {
-            onAirRouteTaskHolderFinished();
-         });
-   }
+   m_taskManager->SetHolderCount(m_indata->settings.thread_count);
+   m_taskManager->LaunchTaskPacket(m_taskPacket);
 }
 
 void PathFinderPipeline::buildLandCoverage()

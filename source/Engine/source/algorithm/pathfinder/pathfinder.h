@@ -13,7 +13,7 @@
 #include <future>
 #include "CoverageBuilder.h"
 #include "StrategyManager.h"
-#include "TaskHolder/TaskHolder.h"
+#include "Multithread/TaskHolder.h"
 
 namespace pathfinder
 {

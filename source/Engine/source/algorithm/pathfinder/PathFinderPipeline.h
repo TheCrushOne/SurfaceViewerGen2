@@ -10,7 +10,7 @@
 #include "common/pathfinder_types.h"
 #include "CoverageBuilder.h"
 #include "StrategyManager.h"
-#include "TaskHolder/TaskHolder.h"
+#include "Multithread/MCManager.h"
 #include "PathFinder.h"
 #include "common/central_class.h"
 
@@ -23,8 +23,8 @@ namespace pathfinder
    public:
       ~PathFinderPipeline();
    public:
-      void Init(central_pack* pack) { Central::Init(pack); m_strategyManager->Init(pack); }
-      void FindPath(std::function<void(void)> callback, const std::shared_ptr<Matrix<SVCG::route_point>> rawdata, std::shared_ptr<path_finder_indata>/*bool multithread = true, size_t countIdx = 0, size_t legnthIdx = 0, bool research = false, bool landPath = true, size_t packetSize = 0*//*strategy_settings settings, const path_finder_settings pathFinderSettings*//*, path_finder_statistic& statistic*/);
+      void Init(central_pack* pack);
+      void FindPath(std::function<void(void)> callback, const std::shared_ptr<Matrix<SVCG::route_point>> rawdata, std::shared_ptr<path_finder_indata> indata);
       const pathfinder::route_data& GetPaths() const { return m_paths; }
       const std::shared_ptr<Matrix<size_t>>& GetCurrentCoverage() const { return m_currentCoverage; }
    private:
@@ -39,7 +39,7 @@ namespace pathfinder
       void generateIterationStep();
       void formatTaskPool();
       void formatTaskPacket();
-      void onAirRouteTaskHolderFinished();
+      //void onAirRouteTaskHolderFinished();
       void onAirRoutePacketFinished();
       void buildLandCoverage();
       bool checkLandCoverage(std::shared_ptr<Matrix<size_t>> coverageMatrix);
@@ -53,24 +53,25 @@ namespace pathfinder
       std::shared_ptr<path_finder_indata> m_indata;
 
       std::shared_ptr<Matrix<size_t>> m_currentCoverage;
-      std::vector<std::pair<TaskHolder, TaskStatus>> m_holders;
+      
 
-      std::vector<task_unit> m_taskPool;
-      std::shared_ptr<std::vector<task_unit>> m_taskPacket;
+      TaskStorage m_taskPool;
+      std::shared_ptr<TaskStorage> m_taskPacket;
       //std::mutex m_packetMutex;
 
       route_data m_paths;
 
       std::shared_ptr<settings::application_settings> m_appSettings;
 
-      bool m_pathFound;
-      size_t m_iterations;
+      bool m_pathFound = false;
+      size_t m_iterations = 0;
 
       // NOTE: Опасно!!!
       path_finder_statistic* m_statistic;
 
       std::unique_ptr<CoverageBuilder> m_coverageBuilder;
       std::unique_ptr<StrategyManager> m_strategyManager;
+      std::unique_ptr<MultithreadComputingManager> m_taskManager;
 
       //ExperimentMeta m_vmeta;
       size_t m_rowCount;

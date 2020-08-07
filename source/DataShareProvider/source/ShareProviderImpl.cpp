@@ -10,7 +10,8 @@ using namespace data_share;
 
 void ShareProviderImpl::Share(const wchar_t* fileName, const std::vector<std::vector<double>>& data)
 {
-   auto mapstt = GetSettings()->map_stt;
+   return;
+   settings::map_settings mapstt;// = GetSettings()->map_stt;
    std::ofstream fil;
    fil.open(fileName, std::ios::out | std::ios::binary);
    for (size_t i = 0; i < mapstt.row_count; i++)
@@ -24,7 +25,8 @@ void ShareProviderImpl::Share(const wchar_t* fileName, const std::vector<std::ve
 
 void ShareProviderImpl::GetShared(const wchar_t* fileName, std::vector<std::vector<double>>& data)
 {
-   auto mapstt = GetSettings()->map_stt;
+   return;
+   settings::map_settings mapstt;// = GetSettings()->map_stt;
    std::ifstream fil;
    fil.open(fileName, std::ios::out | std::ios::binary);
    data.resize(mapstt.row_count);
@@ -37,7 +39,7 @@ void ShareProviderImpl::GetShared(const wchar_t* fileName, std::vector<std::vect
    fil.close();
 }
 
-data_share::iDataShareProvider* CreateDataShareProvider()
+data_share::iDataShareProvider* CreateDataShareProvider(central_pack* pack)
 {
-   return new ShareProviderImpl();
+   return new ShareProviderImpl(pack);
 }

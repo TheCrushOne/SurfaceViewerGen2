@@ -2,7 +2,7 @@
 
 //#include "SettingsSerializer.h"
 //#include "ColregSimulation.h"
-#include "common/settings.h"
+#include "common/header_collector.h"
 #include "colreg/BaseRef.h"
 #include "crossdllinterface\SettingsSerializerInterface.h"
 

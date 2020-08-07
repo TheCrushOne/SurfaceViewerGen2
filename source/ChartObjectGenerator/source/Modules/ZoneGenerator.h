@@ -9,7 +9,9 @@ namespace chart_object
    class ZoneGenerator : public ModuleBase
    {
    public:
-      ZoneGenerator() {}
+      ZoneGenerator(central_pack *pack)
+         : ModuleBase(pack)
+      {}
 
       void GenerateNoGoAreas(const converter::raw_data_ref& rawdata);
       void GenerateNoFlyAreas(const converter::raw_data_ref& rawdata);

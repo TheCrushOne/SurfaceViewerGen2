@@ -12,10 +12,11 @@
 using namespace engine;
 std::recursive_mutex g_engineMutex;
 
-Engine::Engine()
-   : m_rawdata(std::make_shared<pathfinder::Matrix<SVCG::route_point>>(SVCG::route_point{}))
+Engine::Engine(central_pack* pack)
+   : Central(pack)
+   , m_rawdata(std::make_shared<pathfinder::Matrix<SVCG::route_point>>(SVCG::route_point{}))
    , m_routedata(std::make_shared<pathfinder::route_data>())
-   , m_pathfinder(std::make_unique<pathfinder::PathFinderPipeline>())
+   , m_pathfinder(std::make_unique<pathfinder::PathFinderPipeline>(pack))
 {
    /*m_noGoLowLevel = 73.f;
    m_noGoHighLevel = 120.f;
@@ -73,7 +74,9 @@ void Engine::convertMap(const std::vector<std::vector<double>>& rawdataSrc, std:
 
 pathfinder::check_fly_zone_result Engine::checkFlyZone(const std::vector<std::vector<double>>& rawdataSrc, int rowIdx, int colIdx)
 {
-   return { (rawdataSrc.at(rowIdx).at(colIdx) > GetSettings()->pth_stt.level_settings.max_air_height) ? pathfinder::FlyZoneAffilation::FZA_FORBIDDEN : pathfinder::FlyZoneAffilation::FZA_NORMAL };
+   ATLASSERT(false);
+   settings::pathfinding_settings pth_stt;
+   return { (rawdataSrc.at(rowIdx).at(colIdx) > /*GetSettings()->*/pth_stt.level_settings.max_air_height) ? pathfinder::FlyZoneAffilation::FZA_FORBIDDEN : pathfinder::FlyZoneAffilation::FZA_NORMAL };
 }
 
 pathfinder::check_go_zone_result Engine::checkGoZone(const std::vector<std::vector<double>>& rawdataSrc, int rowIdx, int colIdx)
@@ -96,6 +99,8 @@ pathfinder::check_go_zone_result Engine::checkGoZone(const std::vector<std::vect
 
 pathfinder::check_go_zone_result Engine::checkAngles(double center, double left, double right, double top, double bottom, double topleft, double bottomleft, double topright, double bottomright)
 {
+   ATLASSERT(false);
+   settings::pathfinding_settings pth_stt;
    // NOTE: проверяем 4 направления по 8 сторонам света
    pathfinder::check_go_zone_result result;
    double cellMult = 6.;
@@ -113,10 +118,10 @@ pathfinder::check_go_zone_result Engine::checkAngles(double center, double left,
    result.aswne = angleTRBL;
    result.asenw = angleTLBR;
 
-   auto minDA = GetSettings()->pth_stt.level_settings.dangerous_land_angle;
-   auto maxDA = GetSettings()->pth_stt.level_settings.max_land_angle;
-   auto minLH = GetSettings()->pth_stt.level_settings.min_land_height;
-   auto maxLH = GetSettings()->pth_stt.level_settings.max_land_height;
+   auto minDA = /*GetSettings()->*/pth_stt.level_settings.dangerous_land_angle;
+   auto maxDA = /*GetSettings()->*/pth_stt.level_settings.max_land_angle;
+   auto minLH = /*GetSettings()->*/pth_stt.level_settings.min_land_height;
+   auto maxLH = /*GetSettings()->*/pth_stt.level_settings.max_land_height;
    //qDebug() << "angles:" << fabs(angleUD) << fabs(angleLR);
    bool maxAngleExcess = (maxDA < fabs(angleTB)) || (maxDA < fabs(angleLR)) || (maxDA < fabs(angleTRBL)) || (maxDA < fabs(angleTLBR));
    bool minAngleExcess = (minDA < fabs(angleTB)) || (minDA < fabs(angleLR)) || (minDA < fabs(angleTRBL)) || (minDA < fabs(angleTLBR));
@@ -133,8 +138,10 @@ pathfinder::check_go_zone_result Engine::checkAngles(double center, double left,
 
 void Engine::LaunchResearch(std::function<void(void)> callback)
 {
+   ATLASSERT(false);
+   settings::research_settings res_stt;
    m_endRoundCallback = callback;
-   auto resstt = GetSettings()->res_stt;
+   auto resstt = /*GetSettings()->*/res_stt;
    generateResMap(resstt.map_size);
    switch (resstt.res_type)
    {
@@ -359,7 +366,9 @@ void Engine::lengthResearch(/*const std::shared_ptr<SVM::iMatrix<SurfaceElement>
 // NOTE: Исследование направлено на определение оптимального соотношения размера пула задач к расчету и количества потоков
 void Engine::threadResearch(/*const std::shared_ptr<SVM::iMatrix<SurfaceElement>>& resmap, std::shared_ptr<ResearchResultGen3>& result*/)
 {
-   auto& resstt = GetSettings()->res_stt;
+   ATLASSERT(false);
+   settings::research_settings res_stt;
+   auto& resstt = /*GetSettings()->*/res_stt;
    // Длин путей 62, 125, 250, 500
    // Потоков 1, 2, 4, 8
    // Пул задач 2, 4, 8
@@ -408,6 +417,8 @@ void Engine::threadResearch(/*const std::shared_ptr<SVM::iMatrix<SurfaceElement>
 
 void Engine::threadResNextStep()
 {
+   ATLASSERT(false);
+   settings::research_settings res_stt;
    std::lock_guard<std::recursive_mutex> guard(g_engineMutex);
    __int64 startTime;
    CURTIME_MS(startTime);
@@ -422,7 +433,7 @@ void Engine::threadResNextStep()
       //m_logger->LogThreadResearchResult(L"", GetThreadResearchResult());
       return;
    }
-   auto& resstt = GetSettings()->res_stt;
+   auto& resstt = /*GetSettings()->*/res_stt;
    auto& threadRes = m_threadResStorage.data.at(m_threadTaskCurrentIdx);
    auto& threadResIndex = threadRes.index;
    threadRes.result.time.start = startTime;
@@ -463,7 +474,7 @@ void Engine::logThreadResearchResult()
 
 }
 
-engine::iEngine* CreateEngine()
+engine::iEngine* CreateEngine(central_pack* pack)
 {
-   return new engine::Engine();
+   return new engine::Engine(pack);
 }

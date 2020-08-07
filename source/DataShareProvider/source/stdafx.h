@@ -21,7 +21,7 @@
 #undef min
 #undef max
 
-#include "common/settings.h"
+#include "settings/settings.h"
 #include "common/utils.h"
 #include "common/base_class.h"
 

@@ -63,29 +63,27 @@ inline frontlineType checkAddSurrondPoints(const std::shared_ptr<pathfinder::Mat
    return result;
 }
 
-void WaveFrontline::GenerateIsolineLevel(const converter::raw_data_ref& rawdata, double height, int H)
+void WaveFrontline::GenerateIsolineLevel(const pathfinder::GeoMatrix* rawdata, double height, int H)
 {
-   if (!rawdata.size)
+   if (!rawdata->GetRowCount())
       return;
 
-   auto actValMtx = std::make_shared<pathfinder::Matrix<bool>>(rawdata.size, rawdata.arr[0].size, false);
-   auto inLineFlagMtx = std::make_shared<pathfinder::Matrix<bool>>(rawdata.size, rawdata.arr[0].size, false);
-   auto passedFlagMtx = std::make_shared<pathfinder::Matrix<bool>>(rawdata.size, rawdata.arr[0].size, false);
+   auto actValMtx = std::make_shared<pathfinder::Matrix<bool>>(rawdata->GetRowCount(), rawdata->GetColCount(), false);
+   auto inLineFlagMtx = std::make_shared<pathfinder::Matrix<bool>>(rawdata->GetRowCount(), rawdata->GetColCount(), false);
+   auto passedFlagMtx = std::make_shared<pathfinder::Matrix<bool>>(rawdata->GetRowCount(), rawdata->GetColCount(), false);
 
-   for (size_t rIdx = 0; rIdx < rawdata.size; rIdx++)
+   for (size_t rIdx = 0; rIdx < rawdata->GetRowCount(); rIdx++)
    {
-      auto& row = rawdata.arr[rIdx];
-      for (size_t cIdx = 0; cIdx < row.size; cIdx++)
+      for (size_t cIdx = 0; cIdx < rawdata->GetColCount(); cIdx++)
       {
-         if (row[cIdx] >= height)
+         if (rawdata->Get(rIdx, cIdx) >= height)
             actValMtx->Set(rIdx, cIdx, true);
       }
    }
 
-   for (size_t rIdx = 0; rIdx < rawdata.size; rIdx++)
+   for (size_t rIdx = 0; rIdx < rawdata->GetRowCount(); rIdx++)
    {
-      auto& row = rawdata.arr[rIdx];
-      for (size_t cIdx = 0; cIdx < row.size; cIdx++)
+      for (size_t cIdx = 0; cIdx < rawdata->GetColCount(); cIdx++)
          inLineFlagMtx->Set(rIdx, cIdx, activationCheck(actValMtx, rIdx, cIdx) && nearestActivationCheck(actValMtx, rIdx, cIdx));
    }
 
@@ -93,7 +91,6 @@ void WaveFrontline::GenerateIsolineLevel(const converter::raw_data_ref& rawdata,
    // Построение контура
    for (size_t rIdx = 0; rIdx < actValMtx->GetRowCount(); rIdx++)
    {
-      auto& row = rawdata.arr[rIdx];
       for (size_t cIdx = 0; cIdx < actValMtx->GetColCount(); cIdx++)
       {
          int row = static_cast<int>(rIdx);
@@ -125,7 +122,9 @@ void WaveFrontline::GenerateIsolineLevel(const converter::raw_data_ref& rawdata,
       }
    }
 
-   const auto& envstt = GetPack()->settings->env_stt;
+   ATLASSERT(false);
+   settings::environment_settings env_stt;
+   const auto& envstt = /*GetPack()->settings->*/env_stt;
    std::vector<math::geo_points> isoLineGeoVct;
    for (auto& line : isoLineVct)
    {

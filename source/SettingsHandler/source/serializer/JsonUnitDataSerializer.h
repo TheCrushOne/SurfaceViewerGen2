@@ -1,6 +1,6 @@
 #pragma once
 
-#include "common/settings.h"
+#include "common/header_collector.h"
 #include "crossdllinterface/UnitDataSerializerInterface.h"
 
 namespace colreg

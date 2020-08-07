@@ -12,7 +12,7 @@ namespace pathfinder
    class MultithreadComputingManager : public Central
    {
    public:
-      MultithreadComputingManager();
+      MultithreadComputingManager(central_pack*);
       ~MultithreadComputingManager();
 
       void SetHolderCount(size_t count);

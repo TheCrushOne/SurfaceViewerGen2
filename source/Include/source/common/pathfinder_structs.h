@@ -5,7 +5,7 @@
 #include <memory>
 #include "pathfinder_types.h"
 #include "SVCG/route_point.h"
-#include "common/settings.h"
+#include "common/header_collector.h"
 
 namespace pathfinder
 {
@@ -40,7 +40,7 @@ namespace pathfinder
       {
          if (m_rowCount <= rIdx || m_colCount <= cIdx)
          {
-            ATLASSERT(false);
+            _ASSERT(false);
             return m_inVal;
          }
          return m_data.at(rIdx).at(cIdx);
@@ -76,23 +76,29 @@ namespace pathfinder
    class GeoMatrix : public Matrix<double>
    {
    public:
+      GeoMatrix(double inVal = double())
+         : Matrix(inVal)
+      {}
       GeoMatrix(std::vector<std::vector<double>> source)
       {
          m_rowCount = source.size();
          m_colCount = m_rowCount > 0 ? source.at(0).size() : 0;
 #ifdef _DEBUG
          for (size_t idx = 0; idx < m_rowCount; idx++)
-            ATLASSERT(source.at(idx).size() == m_colCount);
+            _ASSERT(source.at(idx).size() == m_colCount);
 #endif
          m_data = source;
       }
       GeoMatrix(size_t rowCount, size_t colCount, double inVal = double())
          : Matrix(rowCount, colCount, inVal)
       {}
+      GeoMatrix(const GeoMatrix& mtx)
+         : Matrix(mtx)
+      {}
 
       GeoMatrix operator*(const GeoMatrix& right)
       {
-         ATLASSERT(GetColCount() == right.GetRowCount());
+         _ASSERT(GetColCount() == right.GetRowCount());
          GeoMatrix res(GetRowCount(), right.GetColCount());
          for (size_t resRowIdx = 0; resRowIdx < res.GetRowCount(); resRowIdx++)
          {
@@ -105,6 +111,40 @@ namespace pathfinder
             }
          }
          return res;
+      }
+
+      double Min() const
+      {
+         auto rowCount = GetRowCount(), colCount = GetColCount();
+         if (rowCount < 1 || colCount < 1)
+            return GetInVal();
+         double min = Get(0, 0);
+         for (size_t ridx = 0; ridx < rowCount; ridx++)
+         {
+            for (size_t cidx = 0; cidx < colCount; cidx++)
+            {
+               if (Get(ridx, cidx) < min)
+                  min = Get(ridx, cidx);
+            }
+         }
+         return min;
+      }
+
+      double Max() const
+      {
+         auto rowCount = GetRowCount(), colCount = GetColCount();
+         if (rowCount < 1 || colCount < 1)
+            return GetInVal();
+         double max = Get(0, 0);
+         for (size_t ridx = 0; ridx < rowCount; ridx++)
+         {
+            for (size_t cidx = 0; cidx < colCount; cidx++)
+            {
+               if (Get(ridx, cidx) > max)
+                  max = Get(ridx, cidx);
+            }
+         }
+         return max;
       }
    };
 

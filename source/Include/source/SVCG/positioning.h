@@ -2,7 +2,7 @@
 
 #include "route_point.h"
 #include "position_point.h"
-#include "common/settings.h"
+#include "common/header_collector.h"
 #include "math/point.h"
 
 // TODO: пофиксить преобразования координат

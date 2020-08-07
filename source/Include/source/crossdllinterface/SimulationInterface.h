@@ -8,7 +8,7 @@ namespace ColregSimulation
    struct iSimulatorManager : colreg::iReleasable
    {
       //! Подготовка менеджера симуляторов
-      virtual void Init(central_pack*, iPropertyInterface*) = 0;
+      virtual void SetPropertyInterface(iPropertyInterface*) = 0;
 
       //! Получение симулятора в зависимости от расширения сценария и загрузка сценария
       virtual iSimulator* Get() = 0;
@@ -22,4 +22,4 @@ namespace ColregSimulation
 #define SIMEXPRTIMPRT __declspec(dllimport) // import DLL information
 #endif
 
-extern "C" SIMEXPRTIMPRT ColregSimulation::iSimulatorManager * __cdecl CreateSimulationManager();
+extern "C" SIMEXPRTIMPRT ColregSimulation::iSimulatorManager * __cdecl CreateSimulationManager(central_pack*);

@@ -194,7 +194,7 @@ BOOL CSurfaceViewerGen2App::InitInstance()
 
    // Запуск всего и вся
    //createDirectXApp();
-   ScenarioManager::GetInstance();
+   ScenarioManager::GetInstance(simulator::GetPack());
 
    return TRUE;
 }
@@ -270,24 +270,24 @@ void CSurfaceViewerGen2App::OnRename()
 
 void CSurfaceViewerGen2App::OnRun()
 {
-   ScenarioManager::GetInstance().GetState() == ColregSimulation::SCENARIO_STATUS::SS_RUN ? ScenarioManager::GetInstance().Pause()
-      : ScenarioManager::GetInstance().Run();
+   ScenarioManager::GetInstance(simulator::GetPack()).GetState() == ColregSimulation::SCENARIO_STATUS::SS_RUN ? ScenarioManager::GetInstance(simulator::GetPack()).Pause()
+      : ScenarioManager::GetInstance(simulator::GetPack()).Run();
 }
 
 void CSurfaceViewerGen2App::OnRunStep()
 {
    OnPause();
-   ScenarioManager::GetInstance().Step();
+   ScenarioManager::GetInstance(simulator::GetPack()).Step();
 }
 
 void CSurfaceViewerGen2App::OnPause()
 {
-   ScenarioManager::GetInstance().Pause();
+   ScenarioManager::GetInstance(simulator::GetPack()).Pause();
 }
 
 void CSurfaceViewerGen2App::OnStop()
 {
-   ScenarioManager::GetInstance().Restart();
+   ScenarioManager::GetInstance(simulator::GetPack()).Restart();
    user_interface::SetOutputText(user_interface::OT_OUTPUT, "Restart scenario");
 }
 
@@ -316,19 +316,19 @@ void CSurfaceViewerGen2App::OnEdit()
 
 void CSurfaceViewerGen2App::OnTimeScale1X()
 {
-   ScenarioManager::GetInstance().SetTimeScale(1);
+   ScenarioManager::GetInstance(simulator::GetPack()).SetTimeScale(1);
    user_interface::SetOutputText(user_interface::OT_OUTPUT, "Set simulation time scale 1x1");
 }
 
 void CSurfaceViewerGen2App::OnTimeScale10X()
 {
-   ScenarioManager::GetInstance().SetTimeScale(10);
+   ScenarioManager::GetInstance(simulator::GetPack()).SetTimeScale(10);
    user_interface::SetOutputText(user_interface::OT_OUTPUT, "Set simulation time scale 1x10");
 }
 
 void CSurfaceViewerGen2App::OnTimeScale100X()
 {
-   ScenarioManager::GetInstance().SetTimeScale(100);
+   ScenarioManager::GetInstance(simulator::GetPack()).SetTimeScale(100);
    user_interface::SetOutputText(user_interface::OT_OUTPUT, "Set simulation time scale 1x100");
 }
 
@@ -340,7 +340,7 @@ void CSurfaceViewerGen2App::OnEnableTrafficStatistic()
 
 void CSurfaceViewerGen2App::OnAutoPause()
 {
-   ScenarioManager::GetInstance().SetAutoPause(!ScenarioManager::GetInstance().GetAutoPause());
+   ScenarioManager::GetInstance(simulator::GetPack()).SetAutoPause(!ScenarioManager::GetInstance(simulator::GetPack()).GetAutoPause());
 }
 
 void CSurfaceViewerGen2App::OnDelete()
@@ -356,7 +356,7 @@ void CSurfaceViewerGen2App::OnRecord()
 void CSurfaceViewerGen2App::OnShowRelations()
 {
    // NOTE: временно отсюда запускается расчет путей
-   ScenarioManager::GetInstance().ReEstimate();
+   ScenarioManager::GetInstance(simulator::GetPack()).ReEstimate();
    //ScenarioManager::GetInstance().SetShowRelations(!ScenarioManager::GetInstance().GetShowRelations());
    user_interface::InvalidateView();
 }
@@ -364,14 +364,14 @@ void CSurfaceViewerGen2App::OnShowRelations()
 void CSurfaceViewerGen2App::OnUploadDangerStatistic()
 {
    // NOTE: временно отсюда запускаются исследования
-   ScenarioManager::GetInstance().ReSearch();
+   ScenarioManager::GetInstance(simulator::GetPack()).ReSearch();
    user_interface::InvalidateView();
 }
 
 void CSurfaceViewerGen2App::OnDebug()
 {
    // NOTE: резерв
-   ScenarioManager::GetInstance().SetDebugMode(!ScenarioManager::GetInstance().IsDebugMode());
+   ScenarioManager::GetInstance(simulator::GetPack()).SetDebugMode(!ScenarioManager::GetInstance(simulator::GetPack()).IsDebugMode());
 }
 
 void CSurfaceViewerGen2App::OnFalse()

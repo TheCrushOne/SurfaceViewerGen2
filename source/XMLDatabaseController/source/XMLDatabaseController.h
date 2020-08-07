@@ -7,8 +7,7 @@ namespace database
    class XMLDatabaseController : public iSVGMDatabaseController, public Central
    {
    public:
-      XMLDatabaseController();
-      void Init(central_pack* pack) override final { Central::Init(pack); }
+      XMLDatabaseController(central_pack* pack);
       void SaveScenarioData(const settings::unit_source_data& unitData, const std::vector<std::vector<double>>& coordGrid) override final;
       void SaveAppSettings() override final;
       void LoadScenarioData(settings::unit_source_data& unitData, std::vector<std::vector<double>>& coordGrid) override final;

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "SurfaceInterfaces.h"
+#include "common/central_class.h"
 
 namespace raw_data
 {
@@ -18,4 +19,4 @@ namespace raw_data
 #endif
 
 
-extern "C" RDATAEXPRTIMPRT raw_data::iRawDataController * CreateRawDataController();
+extern "C" RDATAEXPRTIMPRT raw_data::iRawDataController * CreateRawDataController(central_pack*);

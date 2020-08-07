@@ -295,7 +295,7 @@ bool ScenarioView::OnScenarioModified()
 
 void ScenarioView::setTimer()
 {
-   SetTimer(0, 1000 / ScenarioManager::GetInstance().GetTimeScale(), NULL);
+   SetTimer(0, 1000 / ScenarioManager::GetInstance(simulator::GetPack()).GetTimeScale(), NULL);
 }
 
 bool ScenarioView::OnScenarioStatusChanged(ColregSimulation::SCENARIO_STATUS status)
@@ -321,7 +321,7 @@ void ScenarioView::OnTimer(UINT_PTR nIDEvent)
 {
    if (nIDEvent == 0)
    {
-      ScenarioManager::GetInstance().Step();
+      ScenarioManager::GetInstance(simulator::GetPack()).Step();
 
       if (_needResetCenter)
       {

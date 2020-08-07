@@ -3,27 +3,21 @@
 
 using namespace ColregSimulation;
 
-#define VALID_CHECK_DLL_LOAD(dllName, funcName, guard) \
-   guard.Create(SVGUtils::CurrentDllPath(dllName).c_str(), funcName); \
+#define VALID_CHECK_DLL_LOAD(dllName, funcName, guard, ...) \
+   guard.Create(SVGUtils::CurrentDllPath(dllName).c_str(), funcName, __VA_ARGS__); \
    if (!guard.IsValid()) \
    { \
       GetCommunicator()->RaiseError(); \
       std::string errMsg = std::string("Can't load '") + dllName + "'!"; \
       Message(ICommunicator::MessageType::MT_ERROR, errMsg.c_str()); \
-      return false; \
-   } \
-   guard->Init(GetPack());
+   }
 
-
-bool SimulatorBase::Init(central_pack* pack)
+SimulatorBase::SimulatorBase(central_pack * pack, iPropertyInterface * prop)
+   : Central(pack)
+   , m_prop(prop)
 {
-   Central::Init(pack);
-
-   VALID_CHECK_DLL_LOAD("SQLiteController", "CreateSQLiteDatabaseController", m_databaseController);
-   VALID_CHECK_DLL_LOAD("Engine", "CreateEngine", m_engine);
-   VALID_CHECK_DLL_LOAD("ChartObjectGenerator", "CreateGenerator", m_generator);
-   VALID_CHECK_DLL_LOAD("UniversalLogger", "CreateUniversalLogger", m_logger);
-
-   return true;
+   VALID_CHECK_DLL_LOAD("SQLiteController", "CreateSQLiteDatabaseController", m_databaseController, pack);
+   VALID_CHECK_DLL_LOAD("Engine", "CreateEngine", m_engine, pack);
+   VALID_CHECK_DLL_LOAD("NavigationDispatcher", "CreateNavigationDispatcher", m_navigationDispatcher, pack);
+   VALID_CHECK_DLL_LOAD("UniversalLogger", "CreateUniversalLogger", m_logger, pack);
 }
-

@@ -9,8 +9,11 @@ namespace chart_object
 {
    class ModuleBase : public iGeneratorModule, public Central
    {
+   protected:
+      ModuleBase(central_pack* pack)
+         : Central(pack)
+      {}
    public:
-      ModuleBase() = default;
       bool SetAdder(std::function<chart_storage&()> crMtd, std::function<void(chart_storage&)> addMtd) override final
       {
          m_addObject = addMtd;

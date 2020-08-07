@@ -3,7 +3,8 @@
 
 using namespace pathfinder;
 
-MultithreadComputingManager::MultithreadComputingManager()
+MultithreadComputingManager::MultithreadComputingManager(central_pack* pack)
+   : Central(pack)
 {}
 
 MultithreadComputingManager::~MultithreadComputingManager()
@@ -18,9 +19,7 @@ void MultithreadComputingManager::SetTaskPacketFinishCallback(std::function<void
 void MultithreadComputingManager::SetHolderCount(size_t count)
 {
    m_holders.clear();
-   m_holders.resize(count, std::pair<TaskHolder, TaskStatus>(TaskHolder(), TaskStatus::TS_IDLE));   // TODO: чекнуть, вызывается ли конструктор
-   for (auto& holder : m_holders)
-      holder.first.Init(GetPack());
+   m_holders.resize(count, std::pair<TaskHolder, TaskStatus>(TaskHolder(GetPack()), TaskStatus::TS_IDLE));   // TODO: чекнуть, вызывается ли конструктор
 }
 
 void MultithreadComputingManager::LaunchTaskPacket(std::shared_ptr<TaskStorage> taskPacket)

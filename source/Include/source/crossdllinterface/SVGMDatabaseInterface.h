@@ -10,7 +10,6 @@ namespace database
 {
    struct iSVGMDatabaseController : colreg::iReleasable
    {
-      virtual void Init(central_pack*) = 0;
       virtual void SaveScenarioData(const settings::unit_source_data&, const std::vector<std::vector<double>>&) = 0;
       virtual void SaveAppSettings() = 0;
       virtual void LoadScenarioData(settings::unit_source_data&, std::vector<std::vector<double>>&) = 0;
@@ -24,5 +23,5 @@ namespace database
 #define SVGMDBCEXPRTIMPRT __declspec(dllimport) // import DLL information
 #endif
 
-extern "C" SVGMDBCEXPRTIMPRT database::iSVGMDatabaseController * CreateSQLiteDatabaseController();
-extern "C" SVGMDBCEXPRTIMPRT database::iSVGMDatabaseController * CreateXMLDatabaseController();
+extern "C" SVGMDBCEXPRTIMPRT database::iSVGMDatabaseController * CreateSQLiteDatabaseController(central_pack*);
+extern "C" SVGMDBCEXPRTIMPRT database::iSVGMDatabaseController * CreateXMLDatabaseController(central_pack*);

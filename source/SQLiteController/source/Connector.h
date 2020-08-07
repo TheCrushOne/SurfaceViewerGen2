@@ -10,8 +10,9 @@ namespace database
    class Connector : public Central
    {
    public:
-      void Init(central_pack* pack) { Central::Init(pack); }
-
+      Connector(central_pack* pack)
+         : Central(pack)
+      {}
       void Connect(const char* baseFileName);
       void Disconnect();
       void SQLNoResRequest(const char* sql);

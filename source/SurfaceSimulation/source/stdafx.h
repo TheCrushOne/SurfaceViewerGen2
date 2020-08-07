@@ -35,16 +35,7 @@
 #undef min
 #undef max
 
-#include "common/settings.h"
-#include "common/utils.h"
-#include "common/base_class.h"
-
-#include <algorithm>
-#include <string>
-#include <vector>
-#include <unordered_map>
-#include <sstream>
-#include <iostream>
+#include "common\header_collector.h"
 
 #include <functional>
 #include <string>

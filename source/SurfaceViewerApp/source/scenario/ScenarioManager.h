@@ -1,13 +1,16 @@
 #pragma once
 #include "common\observer.h"
 #include "colreg/ModuleGuard.h"
-#include "crossdllinterface/ConverterInterface.h"
 #include "crossdllinterface\TransceiverInterface.h"
 #include "crossdllinterface/DataShareInterface.h"
 #include "crossdllinterface\FileStorageInterface.h"
+#include "crossdllinterface\TaskInterface.h"
 #include "common/file_storage.h"
+#include "common/transceiver_types.h"
 #include "colreg\ColregSimulation.h"
 #include "simulator\simulator.h"
+#include "navdisp\OrderBase.h"
+#include "navdisp\ComService.h"
 
 namespace ColregSimulation
 {
@@ -144,10 +147,10 @@ private:
 
 
 class ScenarioManager
-   : public Singleton< ScenarioManager>
+   : public Singleton< ScenarioManager, central_pack*>
 {
 public:
-   ScenarioManager();
+   ScenarioManager(central_pack*);
 public:
    void Open(const wchar_t* name);
 
@@ -198,7 +201,7 @@ public:
    void SetDebugMode(bool debug);
 private:
    //ScenarioManager() = default;
-   friend class Singleton< ScenarioManager>;
+   friend class Singleton< ScenarioManager, central_pack*>;
    friend class ScenarioDispather;
 
    void save(const char* fileName = 0, bool focused = false);
@@ -212,7 +215,7 @@ private:
    void initTransceiver();
    void callback(const char*);
 private:
-   colreg::ModuleGuard<converter::iConverter> m_converter;
+   //colreg::ModuleGuard<navigation_dispatcher::iOrder, central_pack*, navigation_dispatcher::iComService*> m_converter;
    bool m_autoPause = true;
    //ColregSimulation::SCENARIO_STATUS m_state = ColregSimulation::SCENARIO_STATUS::SS_NOT_LOADED;
    bool m_showRelations = false;

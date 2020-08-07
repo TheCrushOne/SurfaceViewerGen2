@@ -3,7 +3,7 @@
 #include "ColregInterfaces.h"
 #include "WeatherInterface.h"
 #include "StateFullColregInterface.h"
-#include "common/settings.h"
+#include "common/header_collector.h"
 #include "common/file_storage.h"
 
 struct iPropertyInterface;
@@ -251,7 +251,7 @@ namespace ColregSimulation
       virtual void ReloadSettings() = 0;
 
       //! Взять настройки
-      virtual const std::shared_ptr<settings::application_settings>& GetAppSettings() const = 0;
+      //virtual const std::shared_ptr<settings::application_settings>& GetAppSettings() const = 0;
       
       //! Перерасчет путей
       virtual void RecountRoutes() = 0;

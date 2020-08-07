@@ -3,7 +3,7 @@
 #include <limits>
 #include <string>
 #include <vector>
-#include "coordinates.h"
+#include "common/coordinates.h"
 #include "SVCG/route_point.h"
 
 #include "settings_types.h"
@@ -168,5 +168,5 @@ namespace settings
          , sim_stt(simStt)
          , map_stt(mapStt)
       {}
-   };    
+   };
 }

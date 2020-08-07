@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "HeightMapConverter.h"
 #include "common/utils.h"
+#include "navdisp\ComService.h"
+#include "navdisp\OrderCreation.h"
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -20,34 +22,64 @@ using namespace converter;
    }// \
    //guard->Init(GetPack());
 
-HeightMapConverter::HeightMapConverter()
-   : m_row_pointers(nullptr)
+HeightMapConverter::HeightMapConverter(central_pack * pack, navigation_dispatcher::iComService * pService)
+   : OrderBase(pack, pService)
+   , m_row_pointers(nullptr)
 {
    VALID_CHECK_DLL_LOAD("SQLiteController", "CreateSQLiteDatabaseController", m_databaseController);
    VALID_CHECK_DLL_LOAD("SettingsHandler", "CreateJsonSettingsSerializer", m_settingsSerializer);
    VALID_CHECK_DLL_LOAD("SettingsHandler", "CreateUnitDataSerializer", m_unitDataSerializer);
 }
 
-bool HeightMapConverter::Convert()
+bool HeightMapConverter::processCommand()
 {
    if (m_lock)
       return false;
-   auto ps = GetPathStorage();
-   auto stt = GetSettings();
-   std::string srcPngPath = SVGUtils::wstringToString(ps->map_path);
-   readDataFromPng(srcPngPath.c_str());
-   convertToDatabaseFormat();
-  
-   m_settingsSerializer->Deserialize(SVGUtils::wstringToString(ps->pathfinder_settings_path).c_str(), stt->pth_stt);
-   m_settingsSerializer->Deserialize(SVGUtils::wstringToString(ps->research_settings_path).c_str(), stt->res_stt);
-   m_settingsSerializer->Deserialize(SVGUtils::wstringToString(ps->environment_settings_path).c_str(), stt->env_stt);
-   m_unitDataSerializer->Deserialize(SVGUtils::wstringToString(ps->unit_data_path).c_str(), m_unitData);
+
+   auto* src = m_pService->GetDataStandartFactory()->GetDataStandart(m_commandData.source);
+   auto* dst = m_pService->GetDataStandartFactory()->GetDataStandart(m_commandData.destination);
+   if (!readFromSource(reinterpret_cast<data_standart::iPngHeightMapDataStandart*>(src)))
+      return false;
+
+   if (!processData())
+      return false;
+
+   if (!writeToDestination(reinterpret_cast<data_standart::iSurfaceVieverGenMapDataStandart*>(dst)))
+      return false;
+
+   //auto ps = GetPathStorage();
+   //auto stt = GetSettings();
+
+   //m_settingsSerializer->Deserialize(SVGUtils::wstringToString(ps->pathfinder_settings_path).c_str(), stt->pth_stt);
+   //m_settingsSerializer->Deserialize(SVGUtils::wstringToString(ps->research_settings_path).c_str(), stt->res_stt);
+   //m_settingsSerializer->Deserialize(SVGUtils::wstringToString(ps->environment_settings_path).c_str(), stt->env_stt);
+   //m_unitDataSerializer->Deserialize(SVGUtils::wstringToString(ps->unit_data_path).c_str(), m_unitData);
 
    // NOTE: share provider вызываетcя из базы
-   m_databaseController->Init(GetPack());
-   m_databaseController->SaveScenarioData(m_unitData, m_rawData);
+   //m_databaseController->Init(GetPack());
+   //m_databaseController->SaveScenarioData(m_unitData, m_rawData);
 
    safeReleaseData();
+   return true;
+}
+
+bool HeightMapConverter::readFromSource(data_standart::iPngHeightMapDataStandart* src)
+{
+   readDataFromPng(src->GetPngData());
+   src->ReleasePngData();
+   return true;
+}
+
+bool HeightMapConverter::processData()
+{
+   convertToRawData();
+   return true;
+}
+
+bool HeightMapConverter::writeToDestination(data_standart::iSurfaceVieverGenMapDataStandart* dst)
+{
+   //dst->SetData(m_rawData, m_meta);
+   //dst->WriteToDestination();
    return true;
 }
 
@@ -55,15 +87,14 @@ bool HeightMapConverter::Convert()
 // к-т преобразования градиента в высоту 0-256 -> height_min-height_max
 #define HEIGHT_CORRECTOR(h) 0.8*(h - 140.)
 
-void HeightMapConverter::convertToDatabaseFormat()
+void HeightMapConverter::convertToRawData()
 {
-   auto stt = GetSettings();
-   m_rawData.resize(stt->map_stt.row_count);
-   for (int l = 0; l < stt->map_stt.row_count; l++)
+   m_rawData.resize(m_meta.row_count);
+   for (int l = 0; l < m_meta.row_count; l++)
    {
       png_bytep row = m_row_pointers[l];
-      m_rawData[l].resize(stt->map_stt.col_count);
-      for (int w = 0; w < stt->map_stt.col_count; w++)
+      m_rawData[l].resize(m_meta.col_count);
+      for (int w = 0; w < m_meta.col_count; w++)
       {
          png_bytep px = &(row[4 * w]);
          double r = (double)px[0];
@@ -84,14 +115,11 @@ void HeightMapConverter::safeReleaseData()
    //delete m_rawData;
 }
 
-void HeightMapConverter::readDataFromPng(const char* srcPath)
+void HeightMapConverter::readDataFromPng(FILE* fp)
 {
    int width, height;
    png_byte color_type;
    png_byte bit_depth;
-
-   FILE* fp = nullptr;
-   auto err_no = fopen_s(&fp, srcPath, "rb");
 
    png_structp png = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
    if (!png)
@@ -146,15 +174,13 @@ void HeightMapConverter::readDataFromPng(const char* srcPath)
    }
 
    // Так...вроде правильно
-   GetSettings()->map_stt.row_count = height;
-   GetSettings()->map_stt.col_count = png_get_rowbytes(png, info)/sizeof(png_bytep);
+   m_meta.row_count = height;
+   m_meta.col_count = png_get_rowbytes(png, info)/sizeof(png_bytep);
 
    png_read_image(png, m_row_pointers);
-
-   fclose(fp);
 }
 
-iConverter* CreateConverter()
+navigation_dispatcher::iOrder* CreatePngHeightmapConverter(central_pack* pack, navigation_dispatcher::iComService* pService)
 {
-   return new HeightMapConverter();
+   return new HeightMapConverter(pack, pService);
 }

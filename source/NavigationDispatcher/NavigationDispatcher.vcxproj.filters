@@ -1,0 +1,81 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="source\NavigationDispatcher.cpp" />
+    <ClCompile Include="source\stdafx.cpp" />
+    <ClCompile Include="source\DataStandartManager\DataStandartManager.cpp">
+      <Filter>DataStandartManager</Filter>
+    </ClCompile>
+    <ClCompile Include="source\DataStandartManager\nd_command.cxx">
+      <Filter>DataStandartManager</Filter>
+    </ClCompile>
+    <ClCompile Include="source\ComService\OrderFactoryImpl.cpp">
+      <Filter>ComService</Filter>
+    </ClCompile>
+    <ClCompile Include="source\ComService\DataStandartFactoryImpl.cpp">
+      <Filter>ComService</Filter>
+    </ClCompile>
+    <ClCompile Include="source\ComService\ConfigDispatcherImpl.cpp">
+      <Filter>ComService</Filter>
+    </ClCompile>
+    <ClCompile Include="source\ComService\SettingsSerializerHolderImpl.cpp">
+      <Filter>ComService</Filter>
+    </ClCompile>
+    <ClCompile Include="source\ComService\OrderProcessorImpl.cpp">
+      <Filter>ComService</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="source\NavigationDispatcher.h" />
+    <ClInclude Include="source\stdafx.h" />
+    <ClInclude Include="source\DataStandartManager\DataStandartManager.h">
+      <Filter>DataStandartManager</Filter>
+    </ClInclude>
+    <ClInclude Include="source\DataStandartManager\nd_command.hxx">
+      <Filter>DataStandartManager</Filter>
+    </ClInclude>
+    <ClInclude Include="source\ComService\ComServiceHolder.h">
+      <Filter>ComService</Filter>
+    </ClInclude>
+    <ClInclude Include="source\ComService\ComServiceImpl.h">
+      <Filter>ComService</Filter>
+    </ClInclude>
+    <ClInclude Include="source\ComService\OrderFactoryImpl.h">
+      <Filter>ComService</Filter>
+    </ClInclude>
+    <ClInclude Include="source\ComService\DataStandartFactoryImpl.h">
+      <Filter>ComService</Filter>
+    </ClInclude>
+    <ClInclude Include="source\ComService\ConfigDispatcherImpl.h">
+      <Filter>ComService</Filter>
+    </ClInclude>
+    <ClInclude Include="source\ComService\SettingsSerializerHolderImpl.h">
+      <Filter>ComService</Filter>
+    </ClInclude>
+    <ClInclude Include="source\ComService\OrderProcessorImpl.h">
+      <Filter>ComService</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="DataStandartManager">
+      <UniqueIdentifier>{f62eb243-b028-4da5-a299-92ced8864df2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DataStandart">
+      <UniqueIdentifier>{3ab598a4-1df3-4862-b681-c6414176c343}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DataStandart\CombinedChartCache">
+      <UniqueIdentifier>{59f89ad3-f907-4b49-a960-6d4a6678e84a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DataStandart\PngHeightmap">
+      <UniqueIdentifier>{1f357a9f-2afb-44b7-84a3-8efaec9e0a1a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ComService">
+      <UniqueIdentifier>{6dec3ede-5f17-43b3-8d0d-dc7a979dc914}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="source\DataStandartManager\nd_command.xsd">
+      <Filter>DataStandartManager</Filter>
+    </CustomBuild>
+  </ItemGroup>
+</Project>

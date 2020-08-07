@@ -33,7 +33,7 @@ namespace pathfinder
    class TaskHolder : public Central
    {
    public:
-      TaskHolder();
+      TaskHolder(central_pack*);
       ~TaskHolder();
 
       static void SetTaskPacket(std::shared_ptr<std::vector<task_unit>> taskPacket) { m_packet = taskPacket; }

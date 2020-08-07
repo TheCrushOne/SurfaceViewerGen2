@@ -19,11 +19,10 @@ namespace pathfinder
    class PathFinderPipeline : public Central
    {
    public:
-      PathFinderPipeline();
+      PathFinderPipeline(central_pack* pack);
    public:
       ~PathFinderPipeline();
    public:
-      void Init(central_pack* pack);
       void FindPath(std::function<void(void)> callback, const std::shared_ptr<Matrix<SVCG::route_point>> rawdata, std::shared_ptr<path_finder_indata> indata);
       const pathfinder::route_data& GetPaths() const { return m_paths; }
       const std::shared_ptr<Matrix<size_t>>& GetCurrentCoverage() const { return m_currentCoverage; }

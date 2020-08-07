@@ -6,7 +6,7 @@
 #include "XMLSettingsMeta.h"
 #include "colreg/PropertyInterface.h"
 //#include "WeatherInterface.h"
-#include "common/settings.h"
+#include "common/header_collector.h"
 
 #define _PSN(x) colreg::pathfindingMeta.at(x)
 #define _RSN(x) colreg::researchMeta.at(x)

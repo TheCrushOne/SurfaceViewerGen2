@@ -2,6 +2,7 @@
 
 #include "CommonStructs.h"
 #include "BaseRef.h"
+#include <string>
 
 namespace colreg
 {

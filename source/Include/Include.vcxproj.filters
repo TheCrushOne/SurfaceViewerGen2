@@ -28,6 +28,15 @@
     <Filter Include="database">
       <UniqueIdentifier>{ee9d03f5-e8e2-4759-b9b5-30c214360126}</UniqueIdentifier>
     </Filter>
+    <Filter Include="datastandart">
+      <UniqueIdentifier>{f2711dd6-7561-4aac-acae-b2070a038f1f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="navdisp">
+      <UniqueIdentifier>{13a872cf-7c47-4456-b330-420f51f460aa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="settings">
+      <UniqueIdentifier>{1b8f464b-5f7c-487b-9e4c-a2f24694c586}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\crossdllinterface\SettingsSerializerInterface.h">
@@ -138,9 +147,6 @@
     <ClInclude Include="source\colreg\XMLSettingsSerializer.h">
       <Filter>colreg</Filter>
     </ClInclude>
-    <ClInclude Include="source\common\settings.h">
-      <Filter>common</Filter>
-    </ClInclude>
     <ClInclude Include="source\SVCG\route_point.h">
       <Filter>SVCG</Filter>
     </ClInclude>
@@ -180,9 +186,6 @@
     <ClInclude Include="source\colreg\Communicator.h">
       <Filter>colreg</Filter>
     </ClInclude>
-    <ClInclude Include="source\crossdllinterface\ConverterInterface.h">
-      <Filter>crossdllinterface</Filter>
-    </ClInclude>
     <ClInclude Include="source\crossdllinterface\SVGMDatabaseInterface.h">
       <Filter>crossdllinterface</Filter>
     </ClInclude>
@@ -199,9 +202,6 @@
       <Filter>crossdllinterface</Filter>
     </ClInclude>
     <ClInclude Include="source\common\transceiver_types.h">
-      <Filter>common</Filter>
-    </ClInclude>
-    <ClInclude Include="source\common\settings_meta.h">
       <Filter>common</Filter>
     </ClInclude>
     <ClInclude Include="source\common\pathfinder_types.h">
@@ -237,13 +237,7 @@
     <ClInclude Include="source\common\simulation_structs.h">
       <Filter>common</Filter>
     </ClInclude>
-    <ClInclude Include="source\crossdllinterface\ChartObjectGeneratorInterface.h">
-      <Filter>crossdllinterface</Filter>
-    </ClInclude>
     <ClInclude Include="source\common\converter_structs.h">
-      <Filter>common</Filter>
-    </ClInclude>
-    <ClInclude Include="source\common\settings_types.h">
       <Filter>common</Filter>
     </ClInclude>
     <ClInclude Include="source\crossdllinterface\UniversalLoggerInterface.h">
@@ -264,8 +258,98 @@
     <ClInclude Include="source\common\central_class.h">
       <Filter>common</Filter>
     </ClInclude>
-    <ClInclude Include="source\crossdllinterface\PackHoundInterface.h">
+    <ClInclude Include="source\crossdllinterface\NavigationDispatcherInterface.h">
       <Filter>crossdllinterface</Filter>
+    </ClInclude>
+    <ClInclude Include="source\common\dispatcher_command.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="source\crossdllinterface\TaskInterface.h">
+      <Filter>crossdllinterface</Filter>
+    </ClInclude>
+    <ClInclude Include="source\common\global.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="source\datastandart\PackHoundDataStandartInterface.h">
+      <Filter>datastandart</Filter>
+    </ClInclude>
+    <ClInclude Include="source\datastandart\PngHeightMapDataStandartInterface.h">
+      <Filter>datastandart</Filter>
+    </ClInclude>
+    <ClInclude Include="source\datastandart\SVGenMapDataStandartInterface.h">
+      <Filter>datastandart</Filter>
+    </ClInclude>
+    <ClInclude Include="source\datastandart\ChartObjectDataStandartInterface.h">
+      <Filter>datastandart</Filter>
+    </ClInclude>
+    <ClInclude Include="source\datastandart\DataStandartInterfaceBase.h">
+      <Filter>datastandart</Filter>
+    </ClInclude>
+    <ClInclude Include="source\navdisp\ComService.h">
+      <Filter>navdisp</Filter>
+    </ClInclude>
+    <ClInclude Include="source\common\holder_base.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="source\navdisp\OrderFactory.h">
+      <Filter>navdisp</Filter>
+    </ClInclude>
+    <ClInclude Include="source\navdisp\OrderInterface.h">
+      <Filter>navdisp</Filter>
+    </ClInclude>
+    <ClInclude Include="source\navdisp\OrderCreation.h">
+      <Filter>navdisp</Filter>
+    </ClInclude>
+    <ClInclude Include="source\navdisp\OrderBase.h">
+      <Filter>navdisp</Filter>
+    </ClInclude>
+    <ClInclude Include="source\navdisp\NavDispTypes.h">
+      <Filter>navdisp</Filter>
+    </ClInclude>
+    <ClInclude Include="source\datastandart\DataStandartFactory.h">
+      <Filter>datastandart</Filter>
+    </ClInclude>
+    <ClInclude Include="source\datastandart\DataStandart.h">
+      <Filter>datastandart</Filter>
+    </ClInclude>
+    <ClInclude Include="source\datastandart\DataStandartTypes.h">
+      <Filter>datastandart</Filter>
+    </ClInclude>
+    <ClInclude Include="source\datastandart\OptimizedPathStorageDataStandartInterface.h">
+      <Filter>datastandart</Filter>
+    </ClInclude>
+    <ClInclude Include="source\datastandart\PathStorageDataStandartInterface.h">
+      <Filter>datastandart</Filter>
+    </ClInclude>
+    <ClInclude Include="source\common\enum_class.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="source\datastandart\DataStandartStruct.h">
+      <Filter>datastandart</Filter>
+    </ClInclude>
+    <ClInclude Include="source\navdisp\OrderStruct.h">
+      <Filter>navdisp</Filter>
+    </ClInclude>
+    <ClInclude Include="source\settings\settings.h">
+      <Filter>settings</Filter>
+    </ClInclude>
+    <ClInclude Include="source\settings\settings_meta.h">
+      <Filter>settings</Filter>
+    </ClInclude>
+    <ClInclude Include="source\settings\settings_types.h">
+      <Filter>settings</Filter>
+    </ClInclude>
+    <ClInclude Include="source\settings\SettingsSerializerHolder.h">
+      <Filter>settings</Filter>
+    </ClInclude>
+    <ClInclude Include="source\navdisp\ConfigDispatcher.h">
+      <Filter>navdisp</Filter>
+    </ClInclude>
+    <ClInclude Include="source\navdisp\OrderProcessor.h">
+      <Filter>navdisp</Filter>
+    </ClInclude>
+    <ClInclude Include="source\common\header_collector.h">
+      <Filter>common</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

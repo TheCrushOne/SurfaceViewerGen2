@@ -20,11 +20,10 @@ namespace chart_object
    class IsolineGenerator : public ModuleBase
    {
    public:
-      IsolineGenerator();
-      void Init(central_pack* pack);
-      void GenerateIsolines(const converter::raw_data_ref& rawdata);
+      IsolineGenerator(central_pack* pack);
+      void GenerateIsolines(const pathfinder::GeoMatrix* rawdata);
    private:
-      void generateIsolineLevel(AlgorithmType type, const converter::raw_data_ref& rawdata, double height, int H);
+      void generateIsolineLevel(AlgorithmType type, const pathfinder::GeoMatrix* rawdata, double height, int H);
 
       void addChartObjectSet(const std::vector<math::geo_points>& data, double height, int H);
    private:

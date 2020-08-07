@@ -1,7 +1,7 @@
 #pragma once
 
 #include "colreg/ModuleGuard.h"
-#include "common/settings.h"
+#include "common/header_collector.h"
 #include "common\communicator.h"
 #include "common\pathfinder_structs.h"
 #include "crossdllinterface\EngineInterface.h"
@@ -31,10 +31,8 @@ namespace engine
    class Engine : public iEngine, public Central
    {
    public:
-      Engine();
+      Engine(central_pack* pack);
    public:
-      void Init(central_pack* pack) { Central::Init(pack); m_pathfinder->Init(pack); }
-
       void LaunchResearch(std::function<void(void)>) override final;
       const TimeResearchComplexStorage& GetTimeResearchResult() const override final { return m_timeResStorage; }
       const LengthResearchComplexStorage& GetLengthResearchResult() const override final { return m_lengthResStorage; }
@@ -42,7 +40,7 @@ namespace engine
 
       void ProcessPathFind(const ColregSimulation::scenario_data& scenarioData, const std::vector<std::vector<double>>& rawData, std::function<void(void)> completeCallback) override final;
       const pathfinder::route_data& GetLastProcessedPaths() const override final { return m_pathfinder->GetPaths(); }
-      void Release() { delete this; }
+      void Release() override final { delete this; }
    private:
       void timeResearch(/*const std::shared_ptr<SVM::iMatrix<SurfaceElement>>&, std::shared_ptr<ResearchResultGen1>&*/);
       void lengthResearch(/*const std::shared_ptr<SVM::iMatrix<SurfaceElement>>&, std::shared_ptr<ResearchResultGen2>&*/);

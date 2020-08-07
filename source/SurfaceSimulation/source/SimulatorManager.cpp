@@ -6,9 +6,8 @@
 
 using namespace ColregSimulation;
 
-void SimulatorManager::Init(central_pack* pack, iPropertyInterface* prop)
+void SimulatorManager::SetPropertyInterface(iPropertyInterface* prop)
 {
-   Central::Init(pack);
    m_prop = prop;
 }
 
@@ -18,8 +17,8 @@ ColregSimulation::iSimulator* SimulatorManager::Get()
    auto type = SIMULATION_PLAYER_TYPE::SPT_SCENARIO;
    size_t stType = static_cast<size_t>(type);
    m_sims[stType] = createSimulationPlayer(type);
-   if (!m_sims[stType]->Init(GetPack()))
-      return nullptr;
+   //if (!m_sims[stType]->Init(GetPack()))
+      //return nullptr;
    return m_sims[stType].get();
 }
 
@@ -30,21 +29,21 @@ iSimulatorPtr SimulatorManager::createSimulationPlayer(SIMULATION_PLAYER_TYPE ty
    switch (type)
    {
    case SIMULATION_PLAYER_TYPE::SPT_SCENARIO:
-      sim = new ColregSimulation::RobotScenarioPlayer(m_prop);
+      sim = new ColregSimulation::RobotScenarioPlayer(GetPack(), m_prop);
       break;
    case SIMULATION_PLAYER_TYPE::SPT_LOG:
-      sim = new ColregSimulation::RobotLogPlayer(m_prop);
+      sim = new ColregSimulation::RobotLogPlayer(GetPack(), m_prop);
       break;
    default:
       ATLASSERT(false);
    }
-   sim->Init(GetPack());
+   //sim->Init(GetPack());
    sim->SetSimulationType(type);
    ATLASSERT(sim && "ColregSimulation type isn't implemented");
    return iSimulatorPtr(sim ? sim : nullptr, deleterFun);
 }
 
-extern "C" SIMEXPRTIMPRT ColregSimulation::iSimulatorManager * __cdecl CreateSimulationManager()
+extern "C" SIMEXPRTIMPRT ColregSimulation::iSimulatorManager * __cdecl CreateSimulationManager(central_pack * pack)
 {
-   return new SimulatorManager{};
+   return new SimulatorManager(pack);
 }

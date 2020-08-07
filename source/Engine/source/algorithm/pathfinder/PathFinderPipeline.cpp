@@ -6,18 +6,19 @@
 
 using namespace pathfinder;
 
-PathFinderPipeline::PathFinderPipeline()
+PathFinderPipeline::PathFinderPipeline(central_pack* pack)
 //: m_data(LightPointData())
 //: m_pointScore(0)
    : m_rowCount(0)
    , m_colCount(0)
    , m_statistic(nullptr)
    , m_coverageBuilder(std::make_unique<CoverageBuilder>())
-   , m_strategyManager(std::make_unique<StrategyManager>())
-   , m_taskManager(std::make_unique<MultithreadComputingManager>())
+   , m_strategyManager(std::make_unique<StrategyManager>(pack))
+   , m_taskManager(std::make_unique<MultithreadComputingManager>(pack))
    , m_pathfinder(std::make_unique<PathFinder>())
    //, m_packetMutex(m_taskPacket)
    , m_taskPacket(std::make_shared<TaskStorage>())
+   , Central(pack)
 {
    // TODO: check!!!
    m_taskManager->SetTaskPacketFinishCallback([this] { onAirRoutePacketFinished(); });
@@ -25,13 +26,6 @@ PathFinderPipeline::PathFinderPipeline()
 
 PathFinderPipeline::~PathFinderPipeline()
 {}
-
-void PathFinderPipeline::Init(central_pack* pack)
-{ 
-   Central::Init(pack);
-   m_strategyManager->Init(pack);
-   m_taskManager->Init(pack);
-}
 
 // NOTE: желательно и лаунчер запускать в своем потоке
 // WARNING: распараллелено!!!

@@ -12,8 +12,7 @@ namespace database
    class SQLiteController : public iSVGMDatabaseController, public Central
    {
    public:
-      SQLiteController();
-      void Init(central_pack* pack) override final;
+      SQLiteController(central_pack_ptr pack);
       void SaveScenarioData(const settings::unit_source_data& unitData, const std::vector<std::vector<double>>& coordGrid) override final;
       void SaveAppSettings() override final;
       void LoadScenarioData(settings::unit_source_data& unitData, std::vector<std::vector<double>>& coordGrid) override final;
@@ -37,7 +36,7 @@ namespace database
       void loadUnitData(settings::unit_source_data& settings);
    private:
       std::unique_ptr<Connector> m_connector;
-      colreg::ModuleGuard<data_share::iDataShareProvider> m_shareProvider;
+      colreg::ModuleGuard<data_share::iDataShareProvider, central_pack_ptr> m_shareProvider;
       colreg::ModuleGuard<colreg::iUnitDataSerializer> m_unitDataSerializer;
       colreg::ModuleGuard<colreg::iSettingsSerializer> m_settingsSerializer;
    };

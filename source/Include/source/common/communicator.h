@@ -6,6 +6,7 @@
 #include <cstdarg>
 #include <memory>
 #include "colreg/Communicator.h"
+#include "global.h"
 
 #ifdef _WIN32
 #pragma warning (disable: 4996)

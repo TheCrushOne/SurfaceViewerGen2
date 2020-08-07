@@ -33,13 +33,13 @@ namespace chart_object
       { TraversalDirection::TD_U, {{1, -1}, {1, 0}} },
    };
 
-   class LabirinthTraverse : public iAlgorithm
+   class LabirinthTraverse : public AlgorithmBase
    {
    public:
-      LabirinthTraverse(std::function<void(const std::vector<math::geo_points>&, double, int)> adder)
-         : iAlgorithm(adder)
+      LabirinthTraverse(central_pack* pack, std::function<void(const std::vector<math::geo_points>&, double, int)> adder)
+         : AlgorithmBase(pack, adder)
       {}
 
-      void GenerateIsolineLevel(const converter::raw_data_ref& rawdata, double height, int H) override final;
+      void GenerateIsolineLevel(const pathfinder::GeoMatrix* rawdata, double height, int H) override final;
    };
 }

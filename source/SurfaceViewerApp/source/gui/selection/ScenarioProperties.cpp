@@ -21,7 +21,9 @@ ScenarioProperties::ScenarioProperties()
 void ScenarioProperties::prepareScenarioPathfindingSettingsFolder()
 {
    const auto* sim = simulator::getSimulator();
-   const auto& settings = sim->GetAppSettings();
+   ATLASSERT(false);
+   std::shared_ptr<settings::application_settings> settings;
+   //const auto& settings = sim->GetAppSettings();
    m_scenario_pathfinding_settings_folder = std::make_unique<FolderProperty>("Pathfinding settings");
    m_prop_pathfinding_settings.resize(ScenarioPathfindingSettingsFieldIndex::SPSFI_END);
 
@@ -48,7 +50,9 @@ void ScenarioProperties::prepareScenarioPathfindingSettingsFolder()
 void ScenarioProperties::prepareScenarioResearchSettingsFolder()
 {
    const auto* sim = simulator::getSimulator();
-   const auto& settings = sim->GetAppSettings();
+   ATLASSERT(false);
+   std::shared_ptr<settings::application_settings> settings;
+   //const auto& settings = sim->GetAppSettings();
    m_scenario_research_settings_folder = std::make_unique<FolderProperty>("Research settings");
    m_prop_research_settings.resize(ScenarioResearchSettingsFieldIndex::SRSFI_END);
 

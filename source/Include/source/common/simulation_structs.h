@@ -1,5 +1,5 @@
 #pragma once
-#include "settings.h"
+#include "header_collector.h"
 
 namespace ColregSimulation
 {

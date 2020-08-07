@@ -11,8 +11,9 @@ bool TaskHolder::m_crsRaised = false;
 
 CRITICAL_SECTION critical_inner, critical_outer, critical_chck;
 
-TaskHolder::TaskHolder()
-   : status(HolderStatus::HS_IDLE)
+TaskHolder::TaskHolder(central_pack* pack)
+   : Central(pack)
+   , status(HolderStatus::HS_IDLE)
 {}
 
 TaskHolder::~TaskHolder()

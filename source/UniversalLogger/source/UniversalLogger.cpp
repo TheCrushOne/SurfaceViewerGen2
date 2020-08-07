@@ -12,13 +12,9 @@ namespace fs = std::filesystem;
 using namespace logger;
 using namespace nlohmann;
 
-UniversalLogger::UniversalLogger()
+UniversalLogger::UniversalLogger(central_pack* pack)
+   : Central(pack)
 {}
-
-void UniversalLogger::Init(central_pack* pack)
-{
-   Central::Init(pack);
-}
 
 bool UniversalLogger::LogThreadResearchResult(const ThreadResearchComplexStorage& meta)
 {
@@ -42,7 +38,8 @@ bool UniversalLogger::LogThreadResearchResult(const ThreadResearchComplexStorage
 
 void UniversalLogger::logThreadResearchResult(const ThreadResearchComplexStorage& meta, const std::wstring str)
 {
-   auto filePath = std::wstring(GetPack()->paths->logger_folder_path) + L"//" + str + L".dat";
+   return;
+   auto filePath = std::wstring(/*GetPack()->paths->logger_folder_path*/) + L"//" + str + L".dat";
    std::ofstream fil;
    fil.open(filePath, std::ios::out | std::ios::binary);
    for (auto metaElement : meta.data)
@@ -60,7 +57,8 @@ void UniversalLogger::logThreadResearchResult(const ThreadResearchComplexStorage
 
 void UniversalLogger::logThreadResearchMeta(const ThreadResearchComplexStorage& meta, const std::wstring str)
 {
-   auto filePath = std::wstring(GetPack()->paths->logger_folder_path) + L"//" + str + L".meta";
+   return;
+   auto filePath = std::wstring(/*GetPack()->paths->logger_folder_path*/) + L"//" + str + L".meta";
    std::ofstream o(filePath);
    json j;
    j["fly_count_values"] = meta.info.fly_count_range.values;
@@ -70,7 +68,7 @@ void UniversalLogger::logThreadResearchMeta(const ThreadResearchComplexStorage& 
    o << j;
 }
 
-logger::iUniversalLogger* CreateUniversalLogger()
+logger::iUniversalLogger* CreateUniversalLogger(central_pack* pack)
 {
-   return new logger::UniversalLogger();
+   return new logger::UniversalLogger(pack);
 }

@@ -8,7 +8,7 @@
 class TransceiverImpl : public transceiver::iTransceiver, public Central
 {
 public:
-   TransceiverImpl();
+   TransceiverImpl(central_pack* pack);
 
    void Init(const transceiver::transceiver_info& info) override final;
    void Send(transceiver::JsonCommand token, const char* jsonDee) override final;

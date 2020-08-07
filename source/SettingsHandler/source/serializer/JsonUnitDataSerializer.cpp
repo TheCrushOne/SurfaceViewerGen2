@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "JsonUnitDataSerializer.h"
-#include "common\settings.h"
+#include "common\header_collector.h"
 #include <nlohmann/json.hpp>
 #include <fstream>
 #include <string>

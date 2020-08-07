@@ -1,7 +1,7 @@
 #pragma once
 
 #include <memory>
-#include "common\settings.h"
+#include "common\header_collector.h"
 #include "common\pathfinder_structs.h"
 
 class CoverageBuilder

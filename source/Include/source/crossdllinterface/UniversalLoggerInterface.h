@@ -9,7 +9,6 @@ namespace logger
 {
    struct iUniversalLogger : colreg::iReleasable
    {
-      virtual void Init(central_pack*) = 0;
       virtual bool LogThreadResearchResult(const ThreadResearchComplexStorage&) = 0;
    };
 }
@@ -20,4 +19,4 @@ namespace logger
 #define UNILOGGEREXPRTIMPRT __declspec(dllimport) // import DLL information
 #endif
 
-extern "C" UNILOGGEREXPRTIMPRT logger::iUniversalLogger * CreateUniversalLogger();
+extern "C" UNILOGGEREXPRTIMPRT logger::iUniversalLogger * CreateUniversalLogger(central_pack*);

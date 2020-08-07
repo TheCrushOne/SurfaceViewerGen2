@@ -13,36 +13,20 @@
 
 using namespace chart_object;
 
-IsolineGenerator::IsolineGenerator()
+IsolineGenerator::IsolineGenerator(central_pack* pack)
+   : ModuleBase(pack)
 {
    auto adder = [this](const std::vector<math::geo_points>& obj, double H, int height) { addChartObjectSet(obj, H, height); };
-   m_labirinthTraverseAlgorithm = std::make_unique<LabirinthTraverse>(adder);
-   m_segmentCollectorAlgorithm = std::make_unique<SegmentCollector>(adder);
-   m_waveFrontlineAlgortihm = std::make_unique<WaveFrontline>(adder);
+   m_labirinthTraverseAlgorithm = std::make_unique<LabirinthTraverse>(pack, adder);
+   m_segmentCollectorAlgorithm = std::make_unique<SegmentCollector>(pack, adder);
+   m_waveFrontlineAlgortihm = std::make_unique<WaveFrontline>(pack, adder);
 }
 
-void IsolineGenerator::Init(central_pack* pack)
-{
-   Central::Init(pack);
-   m_labirinthTraverseAlgorithm->Init(pack);
-   m_segmentCollectorAlgorithm->Init(pack);
-   m_waveFrontlineAlgortihm->Init(pack);
-}
-
-void IsolineGenerator::GenerateIsolines(const converter::raw_data_ref& rawdata)
+void IsolineGenerator::GenerateIsolines(const pathfinder::GeoMatrix* rawdata)
 {
    size_t levelCount = 10;
-   double min = rawdata.arr[0].arr[0], max = rawdata.arr[0].arr[0];
-   for (auto& row : rawdata)
-   {
-      for (auto& col : row)
-      {
-         if (col < min)
-            min = col;
-         if (col > max)
-            max = col;
-      }
-   }
+   double min = rawdata->Min(), max = rawdata->Max();
+
    double step = (max - min) / static_cast<double>(levelCount);
    //double height = 27.;
    //double height = 50.;
@@ -67,7 +51,7 @@ void IsolineGenerator::GenerateIsolines(const converter::raw_data_ref& rawdata)
    GetPack()->comm->Message(ICommunicator::MessageType::MT_PERFORMANCE, (std::string("Isoline build time: ") + std::to_string(finish - start) + " ms.").c_str());
 }
 
-void IsolineGenerator::generateIsolineLevel(AlgorithmType type, const converter::raw_data_ref& rawdata, double height, int H)
+void IsolineGenerator::generateIsolineLevel(AlgorithmType type, const pathfinder::GeoMatrix* rawdata, double height, int H)
 {
    switch(type)
    {
@@ -97,14 +81,14 @@ void IsolineGenerator::addChartObjectSet(const std::vector<math::geo_points>& da
       HSVtoRGB(H, 1., 1., rgb);
       char color[64];
       sprintf(color, "%i %i %i", rgb[0], rgb[1], rgb[2]);
-      isoLineStorageCell.prop_holder_vct.emplace_back("Color", color);
-      isoLineStorageCell.prop_holder_vct.emplace_back("Depth", std::to_string(height).c_str());
-      for (auto& elem : isoLineStorageCell.prop_holder_vct)
-         isoLineStorageCell.prop_vct.emplace_back(elem.key.c_str(), elem.val.c_str());
+      isoLineStorageCell.prop_vct.emplace_back("Color", color);
+      isoLineStorageCell.prop_vct.emplace_back("Depth", std::to_string(height).c_str());
+      /*for (auto& elem : isoLineStorageCell.prop_holder_vct)
+         isoLineStorageCell.prop_vct.emplace_back(elem.key.c_str(), elem.val.c_str());*/
       auto& isoLineGeom = isoLineStorageCell.geom_contour_vct.back();
       for (auto& point : isoLine)
          isoLineGeom.emplace_back(point);
-      isoLineStorageCell.Commit();
+      //isoLineStorageCell.Commit();
 
       m_addObject(isoLineStorageCell);
    }

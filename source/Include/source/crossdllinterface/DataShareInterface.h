@@ -7,7 +7,6 @@ namespace data_share
 {
    struct iDataShareProvider : colreg::iReleasable
    {
-      virtual void Init(central_pack*) = 0;
       virtual void Share(const wchar_t*, const std::vector<std::vector<double>>&) = 0;
       virtual void GetShared(const wchar_t*, std::vector<std::vector<double>>&) = 0;
    };
@@ -19,4 +18,4 @@ namespace data_share
 #define DSHAREEXPRTIMPRT __declspec(dllimport) // import DLL information
 #endif
 
-extern "C" DSHAREEXPRTIMPRT data_share::iDataShareProvider * CreateDataShareProvider();
+extern "C" DSHAREEXPRTIMPRT data_share::iDataShareProvider * CreateDataShareProvider(central_pack_ptr);

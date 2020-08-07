@@ -4,8 +4,8 @@
 #include "common/file_storage.h"
 #include "gui/user_interface.h"
 
-#define VALID_CHECK_DLL_LOAD(dllName, funcName, guard) \
-   guard.Create(SVGUtils::CurrentDllPath(dllName).c_str(), funcName); \
+#define VALID_CHECK_DLL_LOAD(dllName, funcName, guard, ...) \
+   guard.Create(SVGUtils::CurrentDllPath(dllName).c_str(), funcName, __VA_ARGS__); \
    if (!guard.IsValid()) \
    { \
       user_interface::RaiseError(); \
@@ -15,15 +15,14 @@
    }// \
    //guard->Init(GetPack());
 
-ScenarioManager::ScenarioManager()
+ScenarioManager::ScenarioManager(central_pack* pack)
    : m_info({ "127.0.0.1", "8080", "27015", [this](const char* txt) { this->callback(txt); }})
 {
    m_info.data_callback_map[transceiver::JsonCommand::JC_NEWSURFACE] = [this](const char* txt) {};
    // TODO: включить, когда будет более ясная картина по протоколу обмена данными
    //createTransceiver();
-
    VALID_CHECK_DLL_LOAD("FileStorageManager", "CreateFileStorageManager", m_fsm);
-   VALID_CHECK_DLL_LOAD("HeightMapToSVGMConverter", "CreateConverter", m_converter);
+   //VALID_CHECK_DLL_LOAD("NavigationDispatcher", "CreateNavigationDispatcher", m_navigationDispatcher, pack);
 }
 
 void ScenarioManager::Open(const wchar_t* fileName)
@@ -31,11 +30,9 @@ void ScenarioManager::Open(const wchar_t* fileName)
    m_scenarioFile = fileName;
    SelectedObjectManager::GetInstance().Unselect();
 
-   m_fsm->Init(simulator::GetPack());
-   m_fsm->PrepareStorage(fileName);
+   //m_fsm->PrepareStorage(fileName);
 
-   m_converter->Init(simulator::GetPack());
-   m_converter->Convert();
+   //m_converter->Run();
    
    //data_share::share_meta meta{L"file.bin"};
 

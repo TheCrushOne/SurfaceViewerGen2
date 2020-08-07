@@ -2,6 +2,11 @@
 
 #include "BaseRef.h"
 #include <limits>
+
+// HACK: переопределяем мин и макс для ухода к стл
+#undef min
+#undef max
+
 namespace colreg
 {
    using id_type = unsigned long long int;

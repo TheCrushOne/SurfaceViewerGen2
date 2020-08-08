@@ -12,7 +12,7 @@ namespace navigation_dispatcher
       ~NavigationDispatcher();
    public:
       void Release() override final { delete this; }
-      int ProcessCommand(const wchar_t* configFilePath, const wchar_t* begCommandName) override final;
+      int ProcessCommand(const char*, const char*) override final;
    private:
       //std::unique_ptr<data_standart::DataStandartManager> m_manager;
    };

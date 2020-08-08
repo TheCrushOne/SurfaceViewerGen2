@@ -1,0 +1,34 @@
+<SerializableClass Type="OrderConfig" Version="1.0">
+	<root>
+		<common>
+		</common>
+		
+		<orders>
+			<order id="1">
+				<type>PngHMConvert</type>
+				<name>TestConvert</name>
+				<params>
+					<source>PngSrc</source>
+					<destination>SVGMDst</destination>
+				</params>
+			</order>
+		</orders>
+		
+		<data_standarts>
+			<data_standart>
+				<type>PngHeightMap</type>
+				<name>PngSrc</name>
+				<params>
+					<folder>C:\Projects\surfaceviewergen2\scenarios\test_g2</folder>
+				</params>
+			</data_standart>
+			<data_standart>
+				<type>SurfaceViewerGenMap</type>
+				<name>SVGMDst</name>
+				<params>
+					<folder>C:\Projects\surfaceviewergen2\cache\test_g2</folder>
+				</params>
+			</data_standart>
+		</data_standarts>
+	</root>
+</SerializableClass>

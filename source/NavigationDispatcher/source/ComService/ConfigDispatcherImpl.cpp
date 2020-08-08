@@ -6,19 +6,19 @@
 
 using namespace navigation_dispatcher;
 
-void ConfigDispatcherImpl::Dispatch(const wchar_t* configPath)
+void ConfigDispatcherImpl::Dispatch(const char* configPath)
 {
    xml_properties::PropertyContainer properties("NavigationDispatcherOrderConfig", "1.0");
-   std::string path = SVGUtils::wstringToString(configPath);
 
-   if (!properties.load(path.c_str()))
+   if (!properties.load(configPath))
       return;
 
-   const auto& root = properties.GetRoot();
+   const auto& sClass = properties.GetRoot();
+   const auto root = sClass.GetChild(tag::root);
 
-   const auto commonParams = root.GetChild(tag::common);
-   const auto orders = root.GetChild(tag::orders);
-   const auto standarts = root.GetChild(tag::standarts);
+   const auto commonParams = root->GetChild(tag::common);
+   const auto orders = root->GetChild(tag::orders);
+   const auto standarts = root->GetChild(tag::standarts);
 
    const auto& orderList = orders->GetChildren().equal_range(tag::order);
    for (auto iter = orderList.first; iter != orderList.second; ++iter)
@@ -31,20 +31,24 @@ void ConfigDispatcherImpl::Dispatch(const wchar_t* configPath)
 
 void ConfigDispatcherImpl::readDataStandart(const xml_properties::PropertyItem& standart)
 {
-   std::string type;
-   std::wstring name;
+   std::string type, name;
+   std::wstring wname;
    standart[tag::type].Get(type);
    standart[tag::name].Get(name);
-   m_services->GetDataStandartFactory()->CreateDataStandart(data_standart::convert_datastandart_name(name.c_str()), name.c_str());
-   m_services->GetDataStandartFactory()->GetDataStandart(name.c_str())->DeserializeAttrs(standart[tag::params]);
+   wname = SVGUtils::stringToWstring(name);
+   auto* ds = m_services->GetDataStandartFactory()->CreateDataStandart(data_standart::convert_datastandart_name(wname.c_str()), name.c_str());
+   ds->DeserializeAttrs(standart[tag::params]);
 }
 
 void ConfigDispatcherImpl::readOrder(const xml_properties::PropertyItem& order)
 {
-   std::string type;
-   std::wstring name;
+   std::string type, name;
+   std::wstring wtype;
+   std::string id = order.GetAttribute(tag::id);
    order[tag::type].Get(type);
    order[tag::name].Get(name);
-   m_services->GetOrderFactory()->CreateOrder(navigation_dispatcher::convert_command_name(name.c_str()));
-   m_services->GetOrderFactory()->GetOrder()->
+   wtype = SVGUtils::stringToWstring(type);
+   auto* ord = m_services->GetOrderFactory()->CreateOrder(navigation_dispatcher::convert_command_name(wtype.c_str()), id.c_str());
+   ord->DeserializeAttrs(order[tag::params]);
+   m_services->GetOrderProcessor()->AddOrder(ord);
 }

@@ -44,33 +44,102 @@ namespace navigation_dispatcher
       }
    };
 
-   struct chart_object_gen_order
+   struct order_base
    {
-      _bstr_t destination;
-      _bstr_t source;
+      //std::string name;
+
+      virtual bool Deserialize(const xml_properties::PropertyItem&) = 0;
    };
 
-   struct png_hm_convert_order
+   struct chart_object_gen_order : order_base
    {
-      _bstr_t destination;
-      _bstr_t source;
+      std::string source;
+      std::string destination;
+
+      struct tag
+      {
+         static constexpr char source[] = "source";
+         static constexpr char destination[] = "destination";
+      };
+
+      virtual bool Deserialize(const xml_properties::PropertyItem& params)
+      {
+         params[tag::source].Get(source);
+         params[tag::destination].Get(destination);
+         return true;
+      }
    };
 
-   struct pathfind_order
+   struct png_hm_convert_order : order_base
    {
-      _bstr_t destination;
-      _bstr_t source;
+      std::string destination;
+      std::string source;
+
+      struct tag
+      {
+         static constexpr char source[] = "source";
+         static constexpr char destination[] = "destination";
+      };
+
+      virtual bool Deserialize(const xml_properties::PropertyItem& params)
+      {
+         params[tag::source].Get(source);
+         params[tag::destination].Get(destination);
+         return true;
+      }
    };
 
-   struct opt_pathfind_order
+   struct pathfind_order : order_base
    {
-      _bstr_t destination;
-      _bstr_t source;
+      std::string destination;
+      std::string source;
+
+      struct tag
+      {
+         static constexpr char source[] = "source";
+         static constexpr char destination[] = "destination";
+      };
+
+      virtual bool Deserialize(const xml_properties::PropertyItem& params)
+      {
+         params[tag::source].Get(source);
+         params[tag::destination].Get(destination);
+         return true;
+      }
    };
 
-   struct packhound_order
+   struct opt_pathfind_order : order_base
    {
-      _bstr_t destination;
-      _bstr_t source;
+      std::string destination;
+      std::string source;
+
+      struct tag
+      {
+         static constexpr char source[] = "source";
+         static constexpr char destination[] = "destination";
+      };
+
+      virtual bool Deserialize(const xml_properties::PropertyItem& params)
+      {
+         params[tag::source].Get(source);
+         params[tag::destination].Get(destination);
+         return true;
+      }
+   };
+
+   struct packhound_order : order_base
+   {
+      std::string destination;
+
+      struct tag
+      {
+         static constexpr char destination[] = "destination";
+      };
+
+      virtual bool Deserialize(const xml_properties::PropertyItem& params)
+      {
+         params[tag::destination].Get(destination);
+         return true;
+      }
    };
 }

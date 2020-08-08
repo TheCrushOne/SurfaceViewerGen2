@@ -38,6 +38,6 @@ namespace data_standart
       }
    private:
       void resolvePathDee();
-      LPCWSTR getPath() override final { return m_dataStandartData.folder.c_str(); }
+      LPCSTR getPath() override final { return m_dataStandartData.folder.c_str(); }
    };
 }

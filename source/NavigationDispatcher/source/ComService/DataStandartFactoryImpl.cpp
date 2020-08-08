@@ -13,43 +13,43 @@ using namespace data_standart;
 
 namespace DataStandartFactoryTags
 {
-   static LPCWSTR TagParameters = L"Parameters";
-   static LPCWSTR TagType = L"Type";
-   static LPCWSTR TagDataStandarts = L"Data sources";
-   static LPCWSTR TagLink = L"Link";
-   static LPCWSTR TagBaseFolder = L"Base folder";
+   static LPCSTR TagParameters = "Parameters";
+   static LPCSTR TagType = "Type";
+   static LPCSTR TagDataStandarts = "Data sources";
+   static LPCSTR TagLink = "Link";
+   static LPCSTR TagBaseFolder = "Base folder";
 }
 
-iDataStandart* DataStandartFactoryImpl::CreateDataStandart(DataStandartType type, LPCWSTR name)
+iDataStandart* DataStandartFactoryImpl::CreateDataStandart(DataStandartType type, LPCSTR name)
 {
    return m_dataStandartImplInt.CreateDataStandart(type, name);
 }
-void DataStandartFactoryImpl::DeleteDataStandart(LPCWSTR name)
+void DataStandartFactoryImpl::DeleteDataStandart(LPCSTR name)
 {
    m_dataStandartImplInt.DeleteDataStandart(name);
 }
 
-iDataStandart* DataStandartFactoryImpl::GetDataStandart(LPCWSTR name) const
+iDataStandart* DataStandartFactoryImpl::GetDataStandart(LPCSTR name) const
 {
    return m_dataStandartImplInt.GetDataStandart(name);
 }
 
-LPCWSTR DataStandartFactoryImpl::GetBaseFolder() const
+LPCSTR DataStandartFactoryImpl::GetBaseFolder() const
 {
    return m_dataStandartImplInt.GetBaseFolder();
 }
 
-void DataStandartFactoryImpl::SetBaseFolder(LPCWSTR baseFolder)
+void DataStandartFactoryImpl::SetBaseFolder(LPCSTR baseFolder)
 {
    m_dataStandartImplInt.SetBaseFolder(baseFolder);
 }
 
-LPCWSTR DataStandartFactoryImpl::GetScriptFolder() const
+LPCSTR DataStandartFactoryImpl::GetScriptFolder() const
 {
    return m_dataStandartImplInt.GetBaseFolder();
 }
 
-void DataStandartFactoryImpl::SetScriptFolder(LPCWSTR scriptFolder)
+void DataStandartFactoryImpl::SetScriptFolder(LPCSTR scriptFolder)
 {
    m_dataStandartImplInt.SetScriptFolder(scriptFolder);
 }
@@ -59,18 +59,18 @@ void DataStandartFactoryImpl::Clear()
    m_dataStandartImplInt.Clear();
 }
 
-iDataStandart* DataStandartFactoryImpl::DataStandartFactoryImplInternal::CreateDataStandart(DataStandartType type, LPCWSTR name)
+iDataStandart* DataStandartFactoryImpl::DataStandartFactoryImplInternal::CreateDataStandart(DataStandartType type, LPCSTR name)
 {
    return createDataStandart(type, name);
 }
 
-void DataStandartFactoryImpl::DataStandartFactoryImplInternal::DeleteDataStandart(LPCWSTR name)
+void DataStandartFactoryImpl::DataStandartFactoryImplInternal::DeleteDataStandart(LPCSTR name)
 {
    m_dataStandartMap.erase(name);
    m_linksMap.erase(name);
 }
 
-iDataStandart* DataStandartFactoryImpl::DataStandartFactoryImplInternal::GetDataStandart(LPCWSTR name)
+iDataStandart* DataStandartFactoryImpl::DataStandartFactoryImplInternal::GetDataStandart(LPCSTR name)
 {
    auto itLink = m_linksMap.find(name);
    if (itLink != m_linksMap.end())
@@ -87,22 +87,22 @@ iDataStandart* DataStandartFactoryImpl::DataStandartFactoryImplInternal::GetData
    return it->second;
 }
 
-LPCWSTR DataStandartFactoryImpl::DataStandartFactoryImplInternal::GetBaseFolder() const
+LPCSTR DataStandartFactoryImpl::DataStandartFactoryImplInternal::GetBaseFolder() const
 {
    return m_baseFolder.c_str();
 }
 
-void DataStandartFactoryImpl::DataStandartFactoryImplInternal::SetBaseFolder(LPCWSTR baseFolder)
+void DataStandartFactoryImpl::DataStandartFactoryImplInternal::SetBaseFolder(LPCSTR baseFolder)
 {
    m_baseFolder = baseFolder;
 }
 
-LPCWSTR DataStandartFactoryImpl::DataStandartFactoryImplInternal::GetScriptFolder() const
+LPCSTR DataStandartFactoryImpl::DataStandartFactoryImplInternal::GetScriptFolder() const
 {
    return nullptr;
 }
 
-void DataStandartFactoryImpl::DataStandartFactoryImplInternal::SetScriptFolder(LPCWSTR scriptFolder)
+void DataStandartFactoryImpl::DataStandartFactoryImplInternal::SetScriptFolder(LPCSTR scriptFolder)
 {
 }
 
@@ -117,7 +117,7 @@ void DataStandartFactoryImpl::DataStandartFactoryImplInternal::clear()
    m_linksMap.clear();
 }
 
-bool DataStandartFactoryImpl::DataStandartFactoryImplInternal::deserializeDataStandart(const _bstr_t& name/*, const fly_attrs_w& attrs*/)
+bool DataStandartFactoryImpl::DataStandartFactoryImplInternal::deserializeDataStandart(const std::string &name/*, const fly_attrs_w& attrs*/)
 {
    /*fly_attrs_w itemAttrs(attrs);
    if (!attrs.check_item(DataStandartFactoryTags::TagLink))
@@ -133,7 +133,7 @@ bool DataStandartFactoryImpl::DataStandartFactoryImplInternal::deserializeDataSt
    return true;
 }
 
-bool DataStandartFactoryImpl::DataStandartFactoryImplInternal::processDataStandart(LPCWSTR DataStandartName/*, const fly_attrs_w& DataStandartAttrs*/)
+bool DataStandartFactoryImpl::DataStandartFactoryImplInternal::processDataStandart(LPCSTR DataStandartName/*, const fly_attrs_w& DataStandartAttrs*/)
 {
    /*const _bstr_t typeStr = DataStandartAttrs.get_item(DataStandartFactoryTags::TagType, L"");
 
@@ -164,17 +164,17 @@ bool DataStandartFactoryImpl::DataStandartFactoryImplInternal::processDataStanda
    } \
    break;
 
-iDataStandart* DataStandartFactoryImpl::DataStandartFactoryImplInternal::createDataStandart(DataStandartType type, LPCWSTR name)
+iDataStandart* DataStandartFactoryImpl::DataStandartFactoryImplInternal::createDataStandart(DataStandartType type, LPCSTR name)
 {
    //StandartModuleGuard obj;
    switch (type)
    {
-      VALID_CHECK_DLL_LOAD(DST_PNGHM, "DataStandart", "CreatePngHeighMapDataStandart", GetPack(), L"", m_services);
-      VALID_CHECK_DLL_LOAD(DST_SVGM, "DataStandart", "CreateSurfaceViewerGenMapDataStandart", GetPack(), L"", m_services);
-      VALID_CHECK_DLL_LOAD(DST_OBJ, "DataStandart", "CreateChartObjectDataStandart", GetPack(), L"", m_services);
-      VALID_CHECK_DLL_LOAD(DST_PATHS, "DataStandart", "CreatePathStorageDataStandart", GetPack(), L"", m_services);
-      VALID_CHECK_DLL_LOAD(DST_OPTPATHS, "DataStandart", "CreateOptimizedPathStorageDataStandart", GetPack(), L"", m_services);
-      VALID_CHECK_DLL_LOAD(DST_PCKHND, "DataStandart", "CreatePackHoundDataStandart", GetPack(), L"", m_services);
+      VALID_CHECK_DLL_LOAD(DST_PNGHM, "DataStandart", "CreatePngHeighMapDataStandart", GetPack(), "", m_services);
+      VALID_CHECK_DLL_LOAD(DST_SVGM, "DataStandart", "CreateSurfaceViewerGenMapDataStandart", GetPack(), "", m_services);
+      VALID_CHECK_DLL_LOAD(DST_OBJ, "DataStandart", "CreateChartObjectDataStandart", GetPack(), "", m_services);
+      VALID_CHECK_DLL_LOAD(DST_PATHS, "DataStandart", "CreatePathStorageDataStandart", GetPack(), "", m_services);
+      VALID_CHECK_DLL_LOAD(DST_OPTPATHS, "DataStandart", "CreateOptimizedPathStorageDataStandart", GetPack(), "", m_services);
+      VALID_CHECK_DLL_LOAD(DST_PCKHND, "DataStandart", "CreatePackHoundDataStandart", GetPack(), "", m_services);
    default:
       GetPack()->comm->Message(ICommunicator::MessageType::MT_ERROR, "Error! Unknown type of data source '%s'.\n", (LPCSTR)_bstr_t(convert_datastandart_type(type)));
       return nullptr;

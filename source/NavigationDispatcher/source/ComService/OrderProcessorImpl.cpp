@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "OrderProcessorImpl.h"
 #include "common/utils.h"
 
@@ -7,13 +8,14 @@ void OrderProcessorImpl::ClearOrders()
    m_commands.clear();
 }
 
-void OrderProcessorImpl::AddOrder(navigation_dispatcher::iOrderPtr command)
+void OrderProcessorImpl::AddOrder(/*size_t id, */navigation_dispatcher::iOrder* command)
 {
-   m_commands.insert(std::make_pair(std::to_wstring(m_commands.size()), command));
+   m_commands.insert(std::make_pair(std::to_string(m_commands.size()), command));
+   //return m_commands[std::to_string(id)];
    //addLoggerForCommand(it.first->first.c_str(), command->GetType());
 }
 
-bool OrderProcessorImpl::ProcessOrders(LPCWSTR begCommandName)
+bool OrderProcessorImpl::ProcessOrders(LPCSTR begCommandName)
 {
    if (begCommandName != nullptr && m_commands.find(begCommandName) == m_commands.end())
    {
@@ -31,12 +33,12 @@ bool OrderProcessorImpl::ProcessOrders(LPCWSTR begCommandName)
    return true;
 }
 
-bool OrderProcessorImpl::processOrder(LPCWSTR name, navigation_dispatcher::iOrderPtr& order)
+bool OrderProcessorImpl::processOrder(LPCSTR name, navigation_dispatcher::iOrder* order)
 {
    std::string orderType = SVGUtils::wstringToString(convert_order_type(order->GetType()));
-   std::string orderTypeStrStart = orderType + "%S command started...";
-   std::string orderTypeStrFailed = orderType + "%S command failed...";
-   std::string orderTypeStrFinished = orderType + "%S command finished...";
+   std::string orderTypeStrStart = orderType + "command started...";
+   std::string orderTypeStrFailed = orderType + "command failed...";
+   std::string orderTypeStrFinished = orderType + "command finished...";
    GetPack()->comm->Message(ICommunicator::MessageType::MT_INFO, orderTypeStrStart.c_str());
    bool result = order->Process();
 
@@ -47,6 +49,6 @@ bool OrderProcessorImpl::processOrder(LPCWSTR name, navigation_dispatcher::iOrde
 
    //m_loggers[name].reset();
    // NOTE: shared_ptr dee
-   order.reset();
+   //order.reset();
    return result;
 }

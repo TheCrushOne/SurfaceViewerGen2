@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Include\source\colreg\ThirdParty\tinyxml2\tinyxml2.cpp" />
     <ClCompile Include="source\ComService\ConfigDispatcherImpl.cpp" />
     <ClCompile Include="source\ComService\DataStandartFactoryImpl.cpp" />
     <ClCompile Include="source\ComService\OrderFactoryImpl.cpp" />
@@ -33,6 +34,7 @@
     <ClCompile Include="source\stdafx.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Include\source\colreg\ThirdParty\tinyxml2\tinyxml2.h" />
     <ClInclude Include="nd_command.h">
       <DependentUpon>source\DataStandartManager\nd_command.xsd</DependentUpon>
     </ClInclude>

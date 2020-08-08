@@ -9,10 +9,9 @@ void PngHeightMapDataStandart::resolvePathDee()
 {
    std::filesystem::path filePath(m_dataStandartData.file);
    if (filePath.is_relative())
-      m_dataStandartData.file = (std::filesystem::path(m_baseFolder) / filePath).generic_wstring().c_str();
+      m_dataStandartData.file = (std::filesystem::path(m_baseFolder) / filePath).generic_string().c_str();
 
-   std::string srcPngPath = SVGUtils::wstringToString(m_dataStandartData.file);
-   fopen_s(&m_file, srcPngPath.c_str(), "rb");
+   fopen_s(&m_file, m_dataStandartData.file.c_str(), "rb");
    ATLASSERT(m_file);
 }
 

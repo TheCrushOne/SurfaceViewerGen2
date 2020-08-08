@@ -15,14 +15,14 @@ public:
    {}
 
    // iOrderProcessor
-   void AddOrder(navigation_dispatcher::iOrderPtr command) override final;
+   void AddOrder(navigation_dispatcher::iOrder* command) override final;
    void ClearOrders() override final;
 
-   bool ProcessOrders(LPCWSTR begCommandName = NULL) override final;
+   bool ProcessOrders(LPCSTR begCommandName = NULL) override final;
 protected:
-   bool processOrder(LPCWSTR name, navigation_dispatcher::iOrderPtr& order);
+   bool processOrder(LPCSTR name, navigation_dispatcher::iOrder* order);
 private:
    navigation_dispatcher::iComService* m_service;
-   std::map<std::wstring, navigation_dispatcher::iOrderPtr> m_commands;
+   std::map<std::string, navigation_dispatcher::iOrder*> m_commands;
    //std::map<std::wstring, std::shared_ptr<Logger>>  m_loggers;
 };

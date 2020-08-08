@@ -37,11 +37,11 @@ namespace navigation_dispatcher
    {
       switch (type)
       {
-         DECLARE_TYPE(OT_PNGHMCONVERT, L"Copy")
-         DECLARE_TYPE(OT_GENOBJLIST, L"CalcRect")
-         DECLARE_TYPE(OT_PATHFIND, L"CalcTile")
-         DECLARE_TYPE(OT_OPTPATH, L"S57UpdateToFilter")
-         DECLARE_TYPE(OT_PACKHOUND, L"S57ToUnc")
+         DECLARE_TYPE(OT_PNGHMCONVERT, L"PngHMConvert")
+         DECLARE_TYPE(OT_GENOBJLIST, L"GenObjList")
+         DECLARE_TYPE(OT_PATHFIND, L"PathFind")
+         DECLARE_TYPE(OT_OPTPATH, L"OptPathFind")
+         DECLARE_TYPE(OT_PACKHOUND, L"PackHound")
       }
 
       _ASSERT(!"Unknown command type");

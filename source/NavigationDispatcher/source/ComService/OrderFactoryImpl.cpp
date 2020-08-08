@@ -10,20 +10,35 @@ OrderFactoryImpl::OrderFactoryImpl(central_pack* pack, iComService* service)
 {
 }
 
+void OrderFactoryImpl::DeleteOrder(LPCSTR id)
+{
+   m_orderMap.erase(id);
+}
+
+iOrder* OrderFactoryImpl::GetOrder(LPCSTR id) const
+{
+   return m_orderMap[id];
+}
+
+void OrderFactoryImpl::Clear()
+{
+   m_orderMap.clear();
+}
+
 #define ORDER_CASE(type, method) case type: return std::shared_ptr<iOrder>(method(GetPack(), m_service));
 
 #define VALID_CHECK_DLL_LOAD(type, dllName, funcName) case type: \
-   m_orderMap[type] = OrderModuleGuard(); \
-   m_orderMap[type].Create(SVGUtils::CurrentDllPath(dllName).c_str(), funcName, GetPack(), m_service); \
-   if (!m_orderMap[type].IsValid()) \
+   m_orderMap[id] = OrderModuleGuard(); \
+   m_orderMap[id].Create(SVGUtils::CurrentDllPath(dllName).c_str(), funcName, GetPack(), m_service); \
+   if (!m_orderMap[id].IsValid()) \
    { \
       GetPack()->comm->RaiseError(); \
-      std::string errMsg = std::string("Can't load '") + dllName + "'!"; \
+      std::string errMsg = std::string("Can't load '") + dllName + "' from '" + SVGUtils::CurrentDllPath(dllName).c_str() + "'!"; \
       Message(ICommunicator::MessageType::MT_ERROR, errMsg.c_str()); \
    } \
-   break;
+   return m_orderMap[id].operator->();
 
-iOrderPtr OrderFactoryImpl::CreateOrder(navigation_dispatcher::OrderType type)
+iOrder* OrderFactoryImpl::CreateOrder(navigation_dispatcher::OrderType type, LPCSTR id)
 {
    switch (type)
    {
@@ -35,7 +50,7 @@ iOrderPtr OrderFactoryImpl::CreateOrder(navigation_dispatcher::OrderType type)
    }
 
    _ASSERT(!"Unknown command type!");
-   return std::shared_ptr<iOrder>(NULL);
+   return nullptr;
 }
 
 #undef ORDER_CASE

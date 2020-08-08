@@ -42,7 +42,7 @@ namespace data_standart
       }
    private:
       void resolvePathDee();
-      LPCWSTR getPath() override final { return m_dataStandartData.file.c_str(); }
+      LPCSTR getPath() override final { return m_dataStandartData.file.c_str(); }
    private:
       FILE* m_file;
    };

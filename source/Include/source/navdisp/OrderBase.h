@@ -19,6 +19,7 @@ namespace navigation_dispatcher
       OrderType GetType() const override { return static_cast<OrderType>(command_type); }
       bool IsMultithread() const override { return false; }
       void SetThreadNum(unsigned int threadNum) override {}
+      bool DeserializeAttrs(const xml_properties::PropertyItem& params) override final { return m_commandData.Deserialize(params); }
       bool Process() override { return processCommand(); }
    private:
       virtual bool processCommand() = 0;

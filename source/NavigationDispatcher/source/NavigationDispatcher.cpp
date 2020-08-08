@@ -27,7 +27,7 @@ NavigationDispatcher::NavigationDispatcher(central_pack * pack)
 NavigationDispatcher::~NavigationDispatcher()
 {}
 
-int NavigationDispatcher::ProcessCommand(const wchar_t* configFilePath, const wchar_t* begCommandName)
+int NavigationDispatcher::ProcessCommand(const char* configFilePath, const char* begCommandName)
 {
    //Logger logger(L"CommandServices.log");
    ComServiceHolder service(GetPack());

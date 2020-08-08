@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "PackHound.h"
 #include "navdisp/OrderBase.h"
 #include "navdisp\ComService.h"

@@ -2,6 +2,7 @@
 
 #include "NavDispTypes.h"
 #include "colreg/BaseRef.h"
+#include "colreg/XmlProperties/xml_property_container.h"
 #include <memory>
 
 namespace navigation_dispatcher
@@ -21,6 +22,8 @@ namespace navigation_dispatcher
       //virtual bool CanSplitToProcess() const = 0;
 
       virtual bool Process() = 0;
+
+      virtual bool DeserializeAttrs(const xml_properties::PropertyItem&) = 0;
    };
 
    typedef std::shared_ptr<iOrder> iOrderPtr;

@@ -46,7 +46,7 @@ namespace data_standart
       }
    private:
       void resolvePathDee();
-      LPCWSTR getPath() override final { return m_dataStandartData.folder.c_str(); }
+      LPCSTR getPath() override final { return m_dataStandartData.folder.c_str(); }
    private:
       // NOTE: путь до каталога
       std::wstring m_baseFolderPath;

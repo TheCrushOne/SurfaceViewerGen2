@@ -19,6 +19,8 @@
       return false; \
    }
 
+#define MAX_LEN 100
+
 int print_help()
 {
    _tprintf(_T("Usage: NavigationManager.exe config.xml\n"));
@@ -30,12 +32,19 @@ int _tmain(int argc, _TCHAR* argv[])
 {
    if (argc != 2 /*&& argc != 3 || !fpath(argv[1]).is_exists()*/)
       return print_help();
+   std::vector<std::string> argVct;
+   for (size_t idx = 0; idx < argc; idx++)
+   {
+      char converted[MAX_LEN];
+      wcstombs(converted, argv[idx], wcslen(argv[idx]) + 1);
+      argVct.emplace_back(std::string(converted));
+   }
    ConsoleCommunicator comm;
    std::shared_ptr<central_pack> pack = std::make_shared<central_pack>(&comm);
    colreg::ModuleGuard<navigation_dispatcher::iNavigationDispatcher, central_pack*> m_navigationDispatcher;
    VALID_CHECK_DLL_LOAD("NavigationDispatcher", "CreateNavigationDispatcher", m_navigationDispatcher, pack.get());
 
-   if (m_navigationDispatcher->ProcessCommand(_bstr_t(argv[1]), argc == 3 ? argv[2] : NULL) == 1)
+   if (m_navigationDispatcher->ProcessCommand(argVct.at(1).c_str(), argc == 3 ? argVct.at(2).c_str() : NULL) == 1)
    {
       _tprintf(_T("Process command success. Press any key...\n"));
       return 0;

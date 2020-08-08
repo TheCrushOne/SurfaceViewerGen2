@@ -24,6 +24,9 @@
     <ClCompile Include="source\ComService\OrderProcessorImpl.cpp">
       <Filter>ComService</Filter>
     </ClCompile>
+    <ClCompile Include="..\Include\source\colreg\ThirdParty\tinyxml2\tinyxml2.cpp">
+      <Filter>ThirdParty\tinyxml2</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\NavigationDispatcher.h" />
@@ -55,6 +58,9 @@
     <ClInclude Include="source\ComService\OrderProcessorImpl.h">
       <Filter>ComService</Filter>
     </ClInclude>
+    <ClInclude Include="..\Include\source\colreg\ThirdParty\tinyxml2\tinyxml2.h">
+      <Filter>ThirdParty\tinyxml2</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="DataStandartManager">
@@ -71,6 +77,12 @@
     </Filter>
     <Filter Include="ComService">
       <UniqueIdentifier>{6dec3ede-5f17-43b3-8d0d-dc7a979dc914}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ThirdParty">
+      <UniqueIdentifier>{9d0d405f-7450-4a8e-b227-070fdf86fd4d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ThirdParty\tinyxml2">
+      <UniqueIdentifier>{3da2cfa8-754f-4f6e-b76b-5edcb7ce5676}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

@@ -28,11 +28,11 @@ namespace data_standart
          }
          return create();
       }
-      LPCWSTR GetPath() override { return getPath(); }
+      LPCSTR GetPath() override { return getPath(); }
       void Release() override { delete this; }
-      bool DeserializeAttrs(const xml_properties::PropertyItem& stadnart) override final { m_dataStandartData.Deserialize(stadnart); }
+      bool DeserializeAttrs(const xml_properties::PropertyItem& standart) override final { return m_dataStandartData.Deserialize(standart); }
    protected:
-      virtual LPCWSTR getPath() = 0;
+      virtual LPCSTR getPath() = 0;
       virtual bool create() = 0;
       virtual bool open() = 0;
    protected:

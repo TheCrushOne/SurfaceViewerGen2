@@ -8,7 +8,7 @@ namespace navigation_dispatcher
 {
    struct iNavigationDispatcher : colreg::iReleasable
    {
-      virtual int ProcessCommand(const wchar_t* configFilePath, const wchar_t* begCommandName) = 0;
+      virtual int ProcessCommand(const char* configFilePath, const char* begCommandName) = 0;
    };
 }
 

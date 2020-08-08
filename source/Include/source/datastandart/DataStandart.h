@@ -20,7 +20,7 @@ namespace data_standart
 
       virtual bool Create() = 0;
 
-      virtual LPCWSTR GetPath() = 0;
+      virtual LPCSTR GetPath() = 0;
 
       virtual bool DeserializeAttrs(const xml_properties::PropertyItem&) = 0;
    };

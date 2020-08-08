@@ -36,8 +36,8 @@ bool HeightMapConverter::processCommand()
    if (m_lock)
       return false;
 
-   auto* src = m_pService->GetDataStandartFactory()->GetDataStandart(m_commandData.source);
-   auto* dst = m_pService->GetDataStandartFactory()->GetDataStandart(m_commandData.destination);
+   auto* src = m_pService->GetDataStandartFactory()->GetDataStandart(m_commandData.source.c_str());
+   auto* dst = m_pService->GetDataStandartFactory()->GetDataStandart(m_commandData.destination.c_str());
    if (!readFromSource(reinterpret_cast<data_standart::iPngHeightMapDataStandart*>(src)))
       return false;
 

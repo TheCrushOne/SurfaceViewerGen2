@@ -7,6 +7,11 @@ namespace navigation_dispatcher
 {
    struct iOrderFactory
    {
-      virtual iOrderPtr CreateOrder(OrderType type) = 0;
+      virtual iOrder* CreateOrder(OrderType type, LPCSTR name) = 0;
+      virtual void DeleteOrder(LPCSTR id) = 0;
+
+      virtual iOrder* GetOrder(LPCSTR id) const = 0;
+
+      virtual void Clear() = 0;
    };
 }

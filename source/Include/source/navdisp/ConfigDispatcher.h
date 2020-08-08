@@ -4,6 +4,6 @@ namespace navigation_dispatcher
 {
    struct iConfigDispatcher
    {
-      virtual void Dispatch(const wchar_t* configPath) = 0;
+      virtual void Dispatch(const char* configPath) = 0;
    };
 }

@@ -16,9 +16,11 @@ public:
 
    // iCommandFactory
 private:
-   navigation_dispatcher::iOrderPtr CreateOrder(navigation_dispatcher::OrderType type) override final;
-
+   navigation_dispatcher::iOrder* CreateOrder(navigation_dispatcher::OrderType type, LPCSTR id) override final;
+   void DeleteOrder(LPCSTR id) override final;
+   navigation_dispatcher::iOrder* GetOrder(LPCSTR id) const override final;
+   void Clear() override final;
 private:
    navigation_dispatcher::iComService* m_service;
-   mutable std::unordered_map<navigation_dispatcher::OrderType, OrderModuleGuard> m_orderMap;
+   mutable std::unordered_map<std::string, OrderModuleGuard> m_orderMap;
 };

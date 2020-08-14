@@ -52,6 +52,15 @@
     <ClCompile Include="source\algorithm\pathfinder\Multithread\TaskHolder.cpp">
       <Filter>algorithm\pathfinder\Multithread</Filter>
     </ClCompile>
+    <ClCompile Include="source\main\OptimizedPathfinderExternal.cpp">
+      <Filter>main</Filter>
+    </ClCompile>
+    <ClCompile Include="source\main\PathfinderExternal.cpp">
+      <Filter>main</Filter>
+    </ClCompile>
+    <ClCompile Include="source\main\ResearchExternal.cpp">
+      <Filter>main</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\main\calibrator.h">
@@ -90,6 +99,15 @@
     </ClInclude>
     <ClInclude Include="source\algorithm\pathfinder\Multithread\TaskHolder.h">
       <Filter>algorithm\pathfinder\Multithread</Filter>
+    </ClInclude>
+    <ClInclude Include="source\main\OptimizedPathfinderExternal.h">
+      <Filter>main</Filter>
+    </ClInclude>
+    <ClInclude Include="source\main\PathfinderExternal.h">
+      <Filter>main</Filter>
+    </ClInclude>
+    <ClInclude Include="source\main\ResearchExternal.h">
+      <Filter>main</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -27,20 +27,17 @@ namespace converter
       bool readFromSource(data_standart::iPngHeightMapDataStandart*);
       bool writeToDestination(data_standart::iSurfaceVieverGenMapDataStandart*);
       bool processData();
-      void readDataFromPng(FILE* fp);
-      void convertToRawData();
-      void safeReleaseData();
    private:
       colreg::ModuleGuard<database::iSVGMDatabaseController> m_databaseController;
       colreg::ModuleGuard<colreg::iSettingsSerializer> m_settingsSerializer;
       colreg::ModuleGuard<colreg::iUnitDataSerializer> m_unitDataSerializer;
-      png_bytep* m_row_pointers = nullptr;
+      
       bool m_lock = false;
 
       std::vector<std::vector<double>> m_rawData;
       raw_data_ref m_rawDataRef;
-
-      data_standart::svgm_meta m_meta;
+      data_standart::png_data m_srcRawData;
+      pathfinder::GeoMatrix m_dstRawData;
       //settings::unit_source_data m_unitData;
    };
 }

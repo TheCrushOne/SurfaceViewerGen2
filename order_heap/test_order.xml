@@ -12,21 +12,35 @@
 					<destination>SVGMDst</destination>
 				</params>
 			</order>
+			<order id="2">
+				<type>PathFind</type>
+				<name>TestPathfind</name>
+				<params>
+					<source>SVGMDst</source>
+					<destination>PathDst</destination>
+				</params>
+			</order>
 		</orders>
-		
 		<data_standarts>
 			<data_standart>
 				<type>PngHeightMap</type>
 				<name>PngSrc</name>
 				<params>
-					<folder>C:\Projects\surfaceviewergen2\scenarios\test_g2</folder>
+					<file>..\..\..\scenarios\test_g2\test_g2.png</file>
 				</params>
 			</data_standart>
 			<data_standart>
 				<type>SurfaceViewerGenMap</type>
 				<name>SVGMDst</name>
 				<params>
-					<folder>C:\Projects\surfaceviewergen2\cache\test_g2</folder>
+					<folder>..\..\..\cache\test_g2\svgm</folder>
+				</params>
+			</data_standart>
+			<data_standart>
+				<type>PathData</type>
+				<name>PathDst</name>
+				<params>
+					<folder>..\..\..\cache\test_g2\paths</folder>
 				</params>
 			</data_standart>
 		</data_standarts>

@@ -12,7 +12,7 @@ namespace engine
 {
    struct iEngine : colreg::iReleasable
    {
-      virtual void ProcessPathFind(const ColregSimulation::scenario_data&, const std::vector<std::vector<double>>&, std::function<void(void)>) = 0;
+      virtual void ProcessPathFind(const ColregSimulation::scenario_data&, const pathfinder::GeoMatrix&, std::function<void(void)>) = 0;
       virtual const pathfinder::route_data& GetLastProcessedPaths() const = 0;
       virtual void LaunchResearch(std::function<void(void)>) = 0;
       virtual const TimeResearchComplexStorage& GetTimeResearchResult() const = 0;

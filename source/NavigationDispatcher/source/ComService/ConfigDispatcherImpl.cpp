@@ -24,7 +24,7 @@ void ConfigDispatcherImpl::Dispatch(const char* configPath)
    for (auto iter = orderList.first; iter != orderList.second; ++iter)
       readOrder(iter->second);
 
-   const auto& standartList = orders->GetChildren().equal_range(tag::standart);
+   const auto& standartList = standarts->GetChildren().equal_range(tag::standart);
    for (auto iter = standartList.first; iter != standartList.second; ++iter)
       readDataStandart(iter->second);
 }
@@ -32,11 +32,11 @@ void ConfigDispatcherImpl::Dispatch(const char* configPath)
 void ConfigDispatcherImpl::readDataStandart(const xml_properties::PropertyItem& standart)
 {
    std::string type, name;
-   std::wstring wname;
+   std::wstring wtype;
    standart[tag::type].Get(type);
    standart[tag::name].Get(name);
-   wname = SVGUtils::stringToWstring(name);
-   auto* ds = m_services->GetDataStandartFactory()->CreateDataStandart(data_standart::convert_datastandart_name(wname.c_str()), name.c_str());
+   wtype = SVGUtils::stringToWstring(type);
+   auto* ds = m_services->GetDataStandartFactory()->CreateDataStandart(data_standart::convert_datastandart_name(wtype.c_str()), name.c_str());
    ds->DeserializeAttrs(standart[tag::params]);
 }
 

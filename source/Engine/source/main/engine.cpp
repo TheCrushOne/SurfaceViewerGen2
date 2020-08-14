@@ -34,7 +34,7 @@ Engine::Engine(central_pack* pack)
             , Qt::QueuedConnection);*/
 }
 
-void Engine::ProcessPathFind(const ColregSimulation::scenario_data& scenarioData, const std::vector<std::vector<double>>& rawData, std::function<void(void)> completeCallback)
+void Engine::ProcessPathFind(const ColregSimulation::scenario_data& scenarioData, const pathfinder::GeoMatrix& rawData, std::function<void(void)> completeCallback)
 {
    std::thread(&Engine::processPathFind, this, scenarioData, rawData, completeCallback).detach();
 }

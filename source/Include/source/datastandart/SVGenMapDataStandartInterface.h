@@ -5,16 +5,10 @@
 
 namespace data_standart
 {
-   struct svgm_meta
+   struct iSurfaceVieverGenMapDataStandart : public iDataStandart
    {
-      size_t row_count;
-      size_t col_count;
-   };
-
-   struct iSurfaceVieverGenMapDataStandart
-   {
-      //virtual void SetData(const pathfinder::GeoMatrix&, const svgm_meta&) = 0;
-      //virtual pathfinder::GeoMatrix* GetData() = 0;
+      virtual void SetData(const pathfinder::GeoMatrix&) = 0;
+      virtual pathfinder::GeoMatrix& GetData() = 0;
    };
 }
 

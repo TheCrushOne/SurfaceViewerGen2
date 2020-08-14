@@ -4,7 +4,7 @@
 
 namespace data_standart
 {
-   struct iPathStorageDataStandart
+   struct iPathStorageDataStandart : public iDataStandart
    {
    };
 }

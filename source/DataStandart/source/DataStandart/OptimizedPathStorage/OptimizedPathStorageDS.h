@@ -15,26 +15,26 @@ namespace data_standart
          : DataStandart(pack, base_folder, pService)
       {}
    public:
+      // iDataStandart
       // Common
-      // Read
-      // Write
-   protected:
-      // Common
-      // Read
-      virtual bool open() override final
-      {
-         resolvePathDee();
-         // TODO: check existence
-         return true;
-      }
-      // Write
-      virtual bool create() override final
+      virtual bool Create() override final
       {
          resolvePathDee();
          //if (fpath(m_dataSourceData.file).is_exists())
             //return fpath(m_dataSourceData.file).delete_from_disk();
          return true;
       }
+      bool DeserializeAttrs(const xml_properties::PropertyItem& standart) override final { return deserializeAttrs(standart); }
+      LPCSTR GetPath() override { return getPath(); }
+      DataStandartType GetType() const override { return getType(); }
+      void Release() override final { delete this; }
+      // Read
+      // Write
+
+      // iSurfaceViewerGenMapDataStandart
+      // Common
+      // Read
+      // Write
    private:
       void resolvePathDee();
       LPCSTR getPath() override final { return m_dataStandartData.folder.c_str(); }

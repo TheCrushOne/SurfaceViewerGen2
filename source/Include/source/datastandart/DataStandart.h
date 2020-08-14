@@ -16,13 +16,13 @@ namespace data_standart
    {
       virtual ~iDataStandart() = 0 { }
 
-      virtual DataStandartType GetType() const = 0;
-
       virtual bool Create() = 0;
 
-      virtual LPCSTR GetPath() = 0;
-
       virtual bool DeserializeAttrs(const xml_properties::PropertyItem&) = 0;
+
+      virtual DataStandartType GetType() const = 0;
+
+      virtual LPCSTR GetPath() = 0;
    };
 
    typedef std::shared_ptr<iDataStandart> iDataStandartPtr;

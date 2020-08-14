@@ -5,7 +5,7 @@
 
 namespace data_standart
 {
-   struct iChartObjectDataStandart
+   struct iChartObjectDataStandart : public iDataStandart
    {
       // Common
       // Read

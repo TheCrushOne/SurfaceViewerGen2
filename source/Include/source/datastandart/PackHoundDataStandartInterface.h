@@ -3,7 +3,7 @@
 
 namespace data_standart
 {
-   class iPackHoundConfigDataStandart
+   class iPackHoundConfigDataStandart : public iDataStandart
    {
       // Common
       // Read

@@ -3,55 +3,59 @@
 #include <fstream>
 #include <nlohmann/json.hpp>
 
+#include <filesystem>
+
 using namespace nlohmann;
 using namespace data_standart;
 
 void SurfaceViewerGenMapDataStandart::resolvePathDee()
 {
-
+   std::filesystem::path filePath(m_dataStandartData.folder);
+   if (filePath.is_relative())
+      m_dataStandartData.folder = (std::filesystem::path(m_baseFolder) / filePath).generic_string().c_str();
 }
 
-//void SurfaceViewerGenMapDataStandart::SetData(const pathfinder::GeoMatrix& rawData, const svgm_meta& meta)
-//{
-//   m_rawdata = TransitPtr<pathfinder::GeoMatrix>(rawData);
-//   m_meta = meta;
-//}
-//
-//void SurfaceViewerGenMapDataStandart::ReadFromSource()
-//{
-//   readMetaData();
-//   readHeightData();
-//}
-//
-//void SurfaceViewerGenMapDataStandart::WriteToDestination()
-//{
-//   saveMetaData();
-//   saveHeightData();
-//}
+void SurfaceViewerGenMapDataStandart::SetData(const pathfinder::GeoMatrix& rawData)
+{
+   m_rawdata = pathfinder::GeoMatrix(rawData);
+   m_rowCount = m_rawdata.GetRowCount();
+   m_colCount = m_rawdata.GetColCount();
+   std::filesystem::path path(getPath());
+   std::filesystem::create_directories(path);
+   saveMetaData();
+   saveHeightData();
+}
+
+pathfinder::GeoMatrix& SurfaceViewerGenMapDataStandart::GetData()
+{
+   readMetaData();
+   readHeightData();
+   return m_rawdata;
+}
 
 void SurfaceViewerGenMapDataStandart::readMetaData()
 {
-   std::wstring metaDataPath = getMetaFilePath();
+   std::string metaDataPath = getMetaFilePath();
    std::ifstream i(metaDataPath, std::ios_base::in | std::ios::binary);
    json j;
    i >> j;
-   m_meta.row_count = j["row_count"].get<size_t>();
-   m_meta.col_count = j["col_count"].get<size_t>();
+   m_rowCount = j["row_count"].get<size_t>();
+   m_colCount = j["col_count"].get<size_t>();
 }
 
 void SurfaceViewerGenMapDataStandart::readHeightData()
 {
-   std::wstring dataFilePath = getDataFilePath();
+   std::string dataFilePath = getDataFilePath();
    std::ifstream file(dataFilePath, std::ios::in | std::ios::binary);
-   m_rawdata.Get()->SetRowCount(m_meta.row_count);
-   m_rawdata.Get()->SetColCount(m_meta.col_count);
+   m_rawdata.SetRowCount(m_rowCount);
+   m_rawdata.SetColCount(m_colCount);
    char* buffer = new char[sizeof(double)];
-   for (size_t ridx = 0; ridx < m_meta.row_count; ridx++)
+   for (size_t ridx = 0; ridx < m_rowCount; ridx++)
    {
-      for (size_t cidx = 0; cidx < m_meta.col_count; cidx++)
+      for (size_t cidx = 0; cidx < m_colCount; cidx++)
       {
          file.read(buffer, sizeof(double));
-         m_rawdata.Get()->Set(ridx, cidx, *reinterpret_cast<double*>(buffer));
+         m_rawdata.Set(ridx, cidx, *reinterpret_cast<double*>(buffer));
       }
    }
    delete [] buffer;
@@ -60,23 +64,23 @@ void SurfaceViewerGenMapDataStandart::readHeightData()
 
 void SurfaceViewerGenMapDataStandart::saveMetaData()
 {
-   std::wstring metaDataPath = getMetaFilePath();
+   std::string metaDataPath = getMetaFilePath();
    std::ofstream o(metaDataPath);
    json j;
-   j["row_count"] = m_meta.row_count;
-   j["col_count"] = m_meta.col_count;
+   j["row_count"] = m_rowCount;
+   j["col_count"] = m_colCount;
    o << j;
 }
 
 void SurfaceViewerGenMapDataStandart::saveHeightData()
 {
-   std::wstring dataFilePath = getDataFilePath();
+   std::string dataFilePath = getDataFilePath();
    std::ofstream file(dataFilePath, std::ios::out | std::ios::binary);
-   for (size_t ridx = 0; ridx < m_meta.row_count; ridx++)
+   for (size_t ridx = 0; ridx < m_rowCount; ridx++)
    {
-      for (size_t cidx = 0; cidx < m_meta.col_count; cidx++)
+      for (size_t cidx = 0; cidx < m_colCount; cidx++)
       {
-         double buffer = m_rawdata.Get()->Get(ridx, cidx);
+         double buffer = m_rawdata.Get(ridx, cidx);
          file.write(reinterpret_cast<const char*>(&buffer), sizeof(double));
       }
    }

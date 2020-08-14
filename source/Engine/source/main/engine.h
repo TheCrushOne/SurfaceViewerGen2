@@ -38,7 +38,7 @@ namespace engine
       const LengthResearchComplexStorage& GetLengthResearchResult() const override final { return m_lengthResStorage; }
       const ThreadResearchComplexStorage& GetThreadResearchResult() const override final { return m_threadResStorage; }
 
-      void ProcessPathFind(const ColregSimulation::scenario_data& scenarioData, const std::vector<std::vector<double>>& rawData, std::function<void(void)> completeCallback) override final;
+      void ProcessPathFind(const ColregSimulation::scenario_data& scenarioData, const pathfinder::GeoMatrix& rawData, std::function<void(void)> completeCallback) override final;
       const pathfinder::route_data& GetLastProcessedPaths() const override final { return m_pathfinder->GetPaths(); }
       void Release() override final { delete this; }
    private:

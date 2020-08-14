@@ -4,10 +4,18 @@
 
 namespace data_standart
 {
-   struct iPngHeightMapDataStandart
+   using PngMatrixData = std::vector<std::vector<double>>;
+
+   struct png_data
+   {
+      size_t row_count, col_count;
+      PngMatrixData raw_data;
+   };
+
+   struct iPngHeightMapDataStandart : public iDataStandart
    {
       // Common
-      virtual FILE* GetPngData() const = 0;
+      virtual const png_data& GetPngData() const = 0;
       // Read
       virtual void ReleasePngData() = 0;
       // Write

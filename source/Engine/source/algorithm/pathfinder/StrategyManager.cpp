@@ -3,6 +3,7 @@
 #include "main/engine.h"
 #include "Helpers\CoordinateCorrectionHelper.h"
 
+// HACK: если геометрия не сходится, можно принять пи равным 7 и проверить, изменилось ли что
 #define PI 3.14159265
 
 #define FLYCRCHCKPOINT(row, col, data) checkRetranslateFlyPointAffilation(static_cast<int>(row), static_cast<int>(col), data)

@@ -8,6 +8,23 @@
 using namespace nlohmann;
 using namespace data_standart;
 
+#define VALID_CHECK_DLL_LOAD(dllName, funcName, guard) \
+   guard.Create(SVGUtils::CurrentDllPath(dllName).c_str(), funcName); \
+   if (!guard.IsValid()) \
+   { \
+      GetCommunicator()->RaiseError(); \
+      std::string errMsg = std::string("Can't load '") + dllName + "'!"; \
+      Message(ICommunicator::MessageType::MT_ERROR, errMsg.c_str()); \
+      return; \
+   }
+
+SurfaceViewerGenMapDataStandart::SurfaceViewerGenMapDataStandart(central_pack * pack, LPCWSTR base_folder, navigation_dispatcher::iComService * pService)
+   : DataStandart(pack, base_folder, pService)
+{
+   VALID_CHECK_DLL_LOAD("SettingsHandler", "CreateUnitDataSerializer", m_unitDataSerializer);
+   VALID_CHECK_DLL_LOAD("SettingsHandler", "CreateJsonSettingsSerializer", m_settingsSerializer);
+}
+
 void SurfaceViewerGenMapDataStandart::resolvePathDee()
 {
    std::filesystem::path filePath(m_dataStandartData.folder);
@@ -31,6 +48,18 @@ pathfinder::GeoMatrix& SurfaceViewerGenMapDataStandart::GetData()
    readMetaData();
    readHeightData();
    return m_rawdata;
+}
+
+settings::unit_source_data& SurfaceViewerGenMapDataStandart::GetUnitData()
+{
+   readUnitData();
+   return m_unitData;
+}
+
+settings::application_settings& SurfaceViewerGenMapDataStandart::GetSettings()
+{
+   readSettings();
+   return m_settings;
 }
 
 void SurfaceViewerGenMapDataStandart::readMetaData()
@@ -61,6 +90,28 @@ void SurfaceViewerGenMapDataStandart::readHeightData()
    delete [] buffer;
    file.close();
 }
+
+void SurfaceViewerGenMapDataStandart::readUnitData()
+{
+   m_unitDataSerializer->Deserialize(m_dataStandartData.unit_data.c_str(), m_unitData);
+}
+
+#define STT_DESERIALIZE(type, msg_part) \
+   if (!m_dataStandartData.type.empty()) \
+      m_settingsSerializer->Deserialize(m_dataStandartData.type.c_str(), m_settings.type); \
+   else \
+      GetPack()->comm->Message(ICommunicator::MessageType::MT_INFO, "type settings skipped to default");
+
+void SurfaceViewerGenMapDataStandart::readSettings()
+{
+   STT_DESERIALIZE(env_stt, "Environment");
+   STT_DESERIALIZE(map_stt, "Map");
+   STT_DESERIALIZE(pth_stt, "Pathfinding");
+   STT_DESERIALIZE(res_stt, "Research");
+   STT_DESERIALIZE(sim_stt, "Simulation");
+}
+
+#undef STT_DESERIALIZE
 
 void SurfaceViewerGenMapDataStandart::saveMetaData()
 {

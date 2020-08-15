@@ -24,5 +24,6 @@ namespace engine
       pathfinder::GeoMatrix m_data;
       ColregSimulation::scenario_data m_scenarioData;
       std::shared_ptr<engine::Engine> m_engine;
+      std::shared_ptr<settings::application_settings> m_settings;
    };
 }

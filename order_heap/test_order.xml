@@ -34,6 +34,12 @@
 				<name>SVGMDst</name>
 				<params>
 					<folder>..\..\..\cache\test_g2\svgm</folder>
+					<unit_data>..\..\..\scenarios\test_g2\test_g2.udp</unit_data>
+					<env_stt>..\..\..\scenarios\test_g2\test_g2.es</env_stt>
+					<!--map_stt>..\..\..\scenarios\test_g2\test_g2.ms</map_stt-->
+					<pth_stt>..\..\..\scenarios\test_g2\test_g2.ps</pth_stt>
+					<res_stt>..\..\..\scenarios\test_g2\test_g2.rs</res_stt>
+					<!--sim_stt>..\..\..\scenarios\test_g2\test_g2.ss</sim_stt-->
 				</params>
 			</data_standart>
 			<data_standart>

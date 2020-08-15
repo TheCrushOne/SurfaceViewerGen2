@@ -34,6 +34,8 @@ bool PathfinderExternal::processCommand()
 bool PathfinderExternal::readFromSource(data_standart::iSurfaceVieverGenMapDataStandart* src)
 {
    m_data = src->GetData();
+   m_scenarioData.unit_data = src->GetUnitData();
+   m_settings = std::make_shared<settings::application_settings>(src->GetSettings());
    return true;
 }
 
@@ -44,7 +46,7 @@ bool PathfinderExternal::writeToDestination(data_standart::iPathStorageDataStand
 
 bool PathfinderExternal::processData()
 {
-   m_engine->ProcessPathFind(m_scenarioData, m_data, [this]() { cv.notify_all(); });
+   m_engine->ProcessPathFind(m_scenarioData, m_data, m_settings, [this]() { cv.notify_all(); });
    return true;
 }
 

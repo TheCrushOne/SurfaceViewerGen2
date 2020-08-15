@@ -23,24 +23,17 @@ Engine::Engine(central_pack* pack)
    m_noFlyLevel = 139.f;
    m_minDangerAngle = 40.f;
    m_maxDangerAngle = 70.f;*/
-   /*connect(this, SIGNAL(percent(int))
-         , WFM::GetSharedInstance<StatusWnd>(DBG_DATA).get(), SLOT(SetPercent(int))
-         , Qt::QueuedConnection);
-   connect(this, SIGNAL(drop())
-         , WFM::GetSharedInstance<StatusWnd>(DBG_DATA).get(), SLOT(Drop())
-         , Qt::QueuedConnection);*/
-   /*connect(this, SIGNAL(percent(int))
-            , WFM::GetSharedInstance<LoadingDlg>(DBG_DATA).get(), SLOT(SetPercent(int))
-            , Qt::QueuedConnection);*/
 }
 
-void Engine::ProcessPathFind(const ColregSimulation::scenario_data& scenarioData, const pathfinder::GeoMatrix& rawData, std::function<void(void)> completeCallback)
+void Engine::ProcessPathFind(const ColregSimulation::scenario_data& scenarioData, const pathfinder::GeoMatrix& rawData, std::shared_ptr<settings::application_settings> settings, std::function<void(void)> completeCallback)
 {
+   m_settings = settings;
    std::thread(&Engine::processPathFind, this, scenarioData, rawData, completeCallback).detach();
 }
 
 void Engine::processPathFind(const ColregSimulation::scenario_data& scenarioData, const std::vector<std::vector<double>>& rawData, std::function<void(void)> completeCallback)
 {
+   // TODO: разобраться с настройками
    convertMap(rawData, m_rawdata);
    processPathFindInternal(scenarioData, pathfinder::path_finder_settings{}, completeCallback);
 }
@@ -75,8 +68,8 @@ void Engine::convertMap(const std::vector<std::vector<double>>& rawdataSrc, std:
 pathfinder::check_fly_zone_result Engine::checkFlyZone(const std::vector<std::vector<double>>& rawdataSrc, int rowIdx, int colIdx)
 {
    ATLASSERT(false);
-   settings::pathfinding_settings pth_stt;
-   return { (rawdataSrc.at(rowIdx).at(colIdx) > /*GetSettings()->*/pth_stt.level_settings.max_air_height) ? pathfinder::FlyZoneAffilation::FZA_FORBIDDEN : pathfinder::FlyZoneAffilation::FZA_NORMAL };
+   auto& pth_stt = m_settings->pth_stt;
+   return { (rawdataSrc.at(rowIdx).at(colIdx) > pth_stt.level_settings.max_air_height) ? pathfinder::FlyZoneAffilation::FZA_FORBIDDEN : pathfinder::FlyZoneAffilation::FZA_NORMAL };
 }
 
 pathfinder::check_go_zone_result Engine::checkGoZone(const std::vector<std::vector<double>>& rawdataSrc, int rowIdx, int colIdx)
@@ -100,7 +93,7 @@ pathfinder::check_go_zone_result Engine::checkGoZone(const std::vector<std::vect
 pathfinder::check_go_zone_result Engine::checkAngles(double center, double left, double right, double top, double bottom, double topleft, double bottomleft, double topright, double bottomright)
 {
    ATLASSERT(false);
-   settings::pathfinding_settings pth_stt;
+   auto& pth_stt = m_settings->pth_stt;
    // NOTE: проверяем 4 направления по 8 сторонам света
    pathfinder::check_go_zone_result result;
    double cellMult = 6.;
@@ -118,10 +111,10 @@ pathfinder::check_go_zone_result Engine::checkAngles(double center, double left,
    result.aswne = angleTRBL;
    result.asenw = angleTLBR;
 
-   auto minDA = /*GetSettings()->*/pth_stt.level_settings.dangerous_land_angle;
-   auto maxDA = /*GetSettings()->*/pth_stt.level_settings.max_land_angle;
-   auto minLH = /*GetSettings()->*/pth_stt.level_settings.min_land_height;
-   auto maxLH = /*GetSettings()->*/pth_stt.level_settings.max_land_height;
+   auto minDA = pth_stt.level_settings.dangerous_land_angle;
+   auto maxDA = pth_stt.level_settings.max_land_angle;
+   auto minLH = pth_stt.level_settings.min_land_height;
+   auto maxLH = pth_stt.level_settings.max_land_height;
    //qDebug() << "angles:" << fabs(angleUD) << fabs(angleLR);
    bool maxAngleExcess = (maxDA < fabs(angleTB)) || (maxDA < fabs(angleLR)) || (maxDA < fabs(angleTRBL)) || (maxDA < fabs(angleTLBR));
    bool minAngleExcess = (minDA < fabs(angleTB)) || (minDA < fabs(angleLR)) || (minDA < fabs(angleTRBL)) || (minDA < fabs(angleTLBR));
@@ -138,12 +131,11 @@ pathfinder::check_go_zone_result Engine::checkAngles(double center, double left,
 
 void Engine::LaunchResearch(std::function<void(void)> callback)
 {
-   ATLASSERT(false);
-   settings::research_settings res_stt;
+   ATLASSERT(false);   
    m_endRoundCallback = callback;
-   auto resstt = /*GetSettings()->*/res_stt;
-   generateResMap(resstt.map_size);
-   switch (resstt.res_type)
+   auto& res_stt = m_settings->res_stt;
+   generateResMap(res_stt.map_size);
+   switch (res_stt.res_type)
    {
    case settings::ResearchType::RT_TIME:
    {
@@ -367,25 +359,24 @@ void Engine::lengthResearch(/*const std::shared_ptr<SVM::iMatrix<SurfaceElement>
 void Engine::threadResearch(/*const std::shared_ptr<SVM::iMatrix<SurfaceElement>>& resmap, std::shared_ptr<ResearchResultGen3>& result*/)
 {
    ATLASSERT(false);
-   settings::research_settings res_stt;
-   auto& resstt = /*GetSettings()->*/res_stt;
+   auto& res_stt = m_settings->res_stt;
    // Длин путей 62, 125, 250, 500
    // Потоков 1, 2, 4, 8
    // Пул задач 2, 4, 8
    // Путей 2, 4, 8, 16, 32, 64, 128
 
-   for (size_t lengthIdx = 0; lengthIdx < resstt.length_range.values.size(); lengthIdx++)
+   for (size_t lengthIdx = 0; lengthIdx < res_stt.length_range.values.size(); lengthIdx++)
    {
-      double length = resstt.length_range.values.at(lengthIdx);
-      for (size_t threadPoolIdx = 0; threadPoolIdx < resstt.thread_pool_range.values.size(); threadPoolIdx++)
+      double length = res_stt.length_range.values.at(lengthIdx);
+      for (size_t threadPoolIdx = 0; threadPoolIdx < res_stt.thread_pool_range.values.size(); threadPoolIdx++)
       {
-         size_t threadCount = resstt.thread_pool_range.values.at(threadPoolIdx);
-         for (size_t taskPoolIdx = 0; taskPoolIdx < resstt.task_pool_range.values.size(); taskPoolIdx++)
+         size_t threadCount = res_stt.thread_pool_range.values.at(threadPoolIdx);
+         for (size_t taskPoolIdx = 0; taskPoolIdx < res_stt.task_pool_range.values.size(); taskPoolIdx++)
          {
-            size_t taskCount = resstt.task_pool_range.values.at(taskPoolIdx);
-            for (size_t flyCountIdx = 0; flyCountIdx < resstt.fly_count_range.values.size(); flyCountIdx++)
+            size_t taskCount = res_stt.task_pool_range.values.at(taskPoolIdx);
+            for (size_t flyCountIdx = 0; flyCountIdx < res_stt.fly_count_range.values.size(); flyCountIdx++)
             {
-               size_t flyCount = resstt.fly_count_range.values.at(flyCountIdx);
+               size_t flyCount = res_stt.fly_count_range.values.at(flyCountIdx);
                m_threadResStorage.data.emplace_back(ThreadResearchComplexStorage::SuperCell{
                   ThreadResearchComplexStorage::SuperCell::Index{
                      threadPoolIdx,
@@ -406,10 +397,10 @@ void Engine::threadResearch(/*const std::shared_ptr<SVM::iMatrix<SurfaceElement>
       }
    }
    m_threadResStorage.info = { 
-      resstt.thread_pool_range,
-      resstt.task_pool_range,
-      resstt.fly_count_range,
-      resstt.length_range
+      res_stt.thread_pool_range,
+      res_stt.task_pool_range,
+      res_stt.fly_count_range,
+      res_stt.length_range
    };
    m_threadTaskCurrentIdx = 0;
    threadResNextStep();
@@ -418,7 +409,6 @@ void Engine::threadResearch(/*const std::shared_ptr<SVM::iMatrix<SurfaceElement>
 void Engine::threadResNextStep()
 {
    ATLASSERT(false);
-   settings::research_settings res_stt;
    std::lock_guard<std::recursive_mutex> guard(g_engineMutex);
    __int64 startTime;
    CURTIME_MS(startTime);
@@ -433,12 +423,12 @@ void Engine::threadResNextStep()
       //m_logger->LogThreadResearchResult(L"", GetThreadResearchResult());
       return;
    }
-   auto& resstt = /*GetSettings()->*/res_stt;
+   auto& res_stt = m_settings->res_stt;
    auto& threadRes = m_threadResStorage.data.at(m_threadTaskCurrentIdx);
    auto& threadResIndex = threadRes.index;
    threadRes.result.time.start = startTime;
    ColregSimulation::scenario_data data;
-   generateResScenarioData(data, resstt, threadResIndex);
+   generateResScenarioData(data, res_stt, threadResIndex);
    pathfinder::path_finder_settings stt(true, {}, true, true, 0, 0, false);
    stt.packet_size = threadResIndex.task_pool_value;
    stt.thread_count = threadResIndex.thread_pool_value;

@@ -9,6 +9,8 @@ namespace data_standart
    {
       virtual void SetData(const pathfinder::GeoMatrix&) = 0;
       virtual pathfinder::GeoMatrix& GetData() = 0;
+      virtual settings::unit_source_data& GetUnitData() = 0;
+      virtual settings::application_settings& GetSettings() = 0;
    };
 }
 

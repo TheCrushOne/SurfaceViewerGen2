@@ -20,6 +20,9 @@
     <ClCompile Include="source\DataStandart\PathStorage\PathStorageDS.cpp">
       <Filter>DataStandart\PathStorage</Filter>
     </ClCompile>
+    <ClCompile Include="..\Include\source\colreg\ThirdParty\md5\md5.cpp">
+      <Filter>ThirdParty</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\stdafx.h" />
@@ -41,6 +44,9 @@
     <ClInclude Include="source\DataStandart\PathStorage\PathStorageDS.h">
       <Filter>DataStandart\PathStorage</Filter>
     </ClInclude>
+    <ClInclude Include="..\Include\source\colreg\ThirdParty\md5\md5.h">
+      <Filter>ThirdParty</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="DataStandart">
@@ -60,6 +66,9 @@
     </Filter>
     <Filter Include="DataStandart\OptimizedPathStorage">
       <UniqueIdentifier>{687d21b3-6e6e-4beb-8f15-c8a12f5d51f1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ThirdParty">
+      <UniqueIdentifier>{c17e5496-3d8d-4e12-ae14-c990e1dd26e6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

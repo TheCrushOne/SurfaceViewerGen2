@@ -61,6 +61,7 @@
     <ClInclude Include="source\common\converter_structs.h" />
     <ClInclude Include="source\common\coordinates.h" />
     <ClInclude Include="source\common\database_misc.h" />
+    <ClInclude Include="source\common\data_hash.h" />
     <ClInclude Include="source\common\dispatcher_command.h" />
     <ClInclude Include="source\common\enum_class.h" />
     <ClInclude Include="source\common\file_storage.h" />

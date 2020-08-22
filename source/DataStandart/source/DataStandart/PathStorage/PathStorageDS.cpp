@@ -8,6 +8,11 @@ void PathStorageDataStandart::resolvePathDee()
 
 }
 
+size_t PathStorageDataStandart::GetDataHash()
+{
+   return 0;
+}
+
 iDataStandart* CreatePathStorageDataStandart(central_pack* pack, LPCWSTR base_folder, navigation_dispatcher::iComService* pService)
 {
    return new PathStorageDataStandart(pack, base_folder, pService);

@@ -14,9 +14,7 @@ namespace data_standart
       , public DataStandart<DataStandartType::DST_SVGM, svgm_data_standart>
    {
    public:
-      SurfaceViewerGenMapDataStandart(central_pack* pack, LPCWSTR base_folder, navigation_dispatcher::iComService* pService)
-         : DataStandart(pack, base_folder, pService)
-      {}
+      SurfaceViewerGenMapDataStandart(central_pack*, LPCWSTR, navigation_dispatcher::iComService*);
       // iDataStandart
       // Common
       virtual bool Create() override final
@@ -30,6 +28,8 @@ namespace data_standart
       LPCSTR GetPath() override { return getPath(); }
       DataStandartType GetType() const override { return getType(); }
       void Release() override final { delete this; }
+      bool NeedToRewrite(size_t hash) override final { return needToRewrite(hash); }
+      size_t GetDataHash() override final;
       // Read
       // Write
 

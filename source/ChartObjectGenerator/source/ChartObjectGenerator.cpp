@@ -22,8 +22,12 @@ bool ChartObjectGenerator::processCommand()
    if (m_lock)
       return false;
 
-   auto* src = m_pService->GetDataStandartFactory()->GetDataStandart(m_commandData.source.c_str());
-   auto* dst = m_pService->GetDataStandartFactory()->GetDataStandart(m_commandData.destination.c_str());
+   auto* src = m_pService->GetDataStandartFactory()->GetDataStandart(m_commandData.source.AsString());
+   auto* dst = m_pService->GetDataStandartFactory()->GetDataStandart(m_commandData.destination.AsString());   
+
+   if (!dst->NeedToRewrite(src->GetDataHash()))
+      return true;
+
    if (!readFromSource(reinterpret_cast<data_standart::iSurfaceVieverGenMapDataStandart*>(src)))
       return false;
 

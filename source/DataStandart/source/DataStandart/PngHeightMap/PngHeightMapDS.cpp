@@ -1,7 +1,9 @@
 #include "stdafx.h"
 #include "PngHeightMapDS.h"
+#include "colreg/ThirdParty/md5/md5.h"
 
 #include <filesystem>
+#include <fstream>
 
 using namespace data_standart;
 
@@ -126,6 +128,30 @@ void PngHeightMapDataStandart::convertToRawData()
 }
 
 #undef HEIGHT_CORRECTOR
+
+size_t PngHeightMapDataStandart::GetDataHash()
+{
+   std::ifstream inBigArrayfile(m_dataStandartData.file.c_str(), std::ios::binary | std::ios::in);
+
+   inBigArrayfile.seekg(0, std::ios::end);
+   long Length = inBigArrayfile.tellg();
+   inBigArrayfile.seekg(0, std::ios::beg);
+
+   //read in the data from your file
+   char* InFileData = new char[Length];
+   inBigArrayfile.read(InFileData, Length);
+
+   //Calculate MD5 hash
+   std::string Temp = md5(InFileData);
+   std::stringstream sstream(Temp);
+   size_t hash;
+   sstream >> hash;
+   std::cout << hash << std::endl;
+
+   //Clean up
+   delete[] InFileData;
+   return hash;
+}
 
 iDataStandart* CreatePngHeighMapDataStandart(central_pack* pack, LPCWSTR base_folder, navigation_dispatcher::iComService* pService)
 {

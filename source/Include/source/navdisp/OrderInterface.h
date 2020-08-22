@@ -19,7 +19,7 @@ namespace navigation_dispatcher
 
       virtual void SetThreadNum(unsigned int threadNum) = 0;
 
-      //virtual bool CanSplitToProcess() const = 0;
+      virtual bool RecordOrderResult() = 0;
 
       virtual bool Process() = 0;
 

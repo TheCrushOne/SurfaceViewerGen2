@@ -148,6 +148,30 @@ namespace pathfinder
       }
    };
 
+   class RoutePointMatrix : public Matrix<SVCG::route_point>
+   {
+   public:
+      RoutePointMatrix(SVCG::route_point inVal = SVCG::route_point{})
+         : Matrix(inVal)
+      {}
+      RoutePointMatrix(std::vector<std::vector<SVCG::route_point>> source)
+      {
+         m_rowCount = source.size();
+         m_colCount = m_rowCount > 0 ? source.at(0).size() : 0;
+#ifdef _DEBUG
+         for (size_t idx = 0; idx < m_rowCount; idx++)
+            _ASSERT(source.at(idx).size() == m_colCount);
+#endif
+         m_data = source;
+      }
+      RoutePointMatrix(size_t rowCount, size_t colCount, double inVal = double())
+         : Matrix(rowCount, colCount, inVal)
+      {}
+      RoutePointMatrix(const RoutePointMatrix& mtx)
+         : Matrix(mtx)
+      {}
+   };
+
    struct check_fly_zone_result
    {
       FlyZoneAffilation fza;

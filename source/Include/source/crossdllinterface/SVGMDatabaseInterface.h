@@ -5,15 +5,18 @@
 #include "common/file_storage.h"
 #include "common/communicator.h"
 #include "common/central_class.h"
+#include "common/data_hash.h"
 
 namespace database
 {
    struct iSVGMDatabaseController : colreg::iReleasable
    {
+      virtual void Connect(const char*) = 0;
       virtual void SaveScenarioData(const settings::unit_source_data&, const std::vector<std::vector<double>>&) = 0;
       virtual void SaveAppSettings() = 0;
       virtual void LoadScenarioData(settings::unit_source_data&, std::vector<std::vector<double>>&) = 0;
       virtual void LoadAppSettings() = 0;
+      virtual void SaveDataStandartHashJunction(data_hash::hash_junction&) = 0;
    };
 }
 

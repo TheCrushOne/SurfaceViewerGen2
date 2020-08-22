@@ -25,7 +25,6 @@ using namespace converter;
 HeightMapConverter::HeightMapConverter(central_pack * pack, navigation_dispatcher::iComService * pService)
    : OrderBase(pack, pService)
 {
-   VALID_CHECK_DLL_LOAD("SQLiteController", "CreateSQLiteDatabaseController", m_databaseController);
    VALID_CHECK_DLL_LOAD("SettingsHandler", "CreateJsonSettingsSerializer", m_settingsSerializer);
    VALID_CHECK_DLL_LOAD("SettingsHandler", "CreateUnitDataSerializer", m_unitDataSerializer);
 }
@@ -35,8 +34,12 @@ bool HeightMapConverter::processCommand()
    if (m_lock)
       return false;
 
-   auto* src = m_pService->GetDataStandartFactory()->GetDataStandart(m_commandData.source.c_str());
-   auto* dst = m_pService->GetDataStandartFactory()->GetDataStandart(m_commandData.destination.c_str());
+   auto* src = m_pService->GetDataStandartFactory()->GetDataStandart(m_commandData.source.AsString());
+   auto* dst = m_pService->GetDataStandartFactory()->GetDataStandart(m_commandData.destination.AsString());
+
+   if (!dst->NeedToRewrite(src->GetDataHash()))
+      return true;
+
    if (!readFromSource(reinterpret_cast<data_standart::iPngHeightMapDataStandart*>(src)))
       return false;
 

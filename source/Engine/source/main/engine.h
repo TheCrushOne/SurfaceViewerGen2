@@ -32,7 +32,7 @@ namespace engine
       const LengthResearchComplexStorage& GetLengthResearchResult() const override final { return m_lengthResStorage; }
       const ThreadResearchComplexStorage& GetThreadResearchResult() const override final { return m_threadResStorage; }
 
-      void ProcessPathFind(const ColregSimulation::scenario_data& scenarioData, const pathfinder::GeoMatrix& rawData, std::shared_ptr<settings::application_settings> app_stt, std::function<void(void)> completeCallback) override final;
+      void ProcessPathFind(const ColregSimulation::scenario_data&, const pathfinder::GeoMatrix&, std::shared_ptr<settings::application_settings>, std::function<void(void)>) override final;
       const pathfinder::route_data& GetLastProcessedPaths() const override final { return m_pathfinder->GetPaths(); }
       void Release() override final { delete this; }
    private:
@@ -43,15 +43,15 @@ namespace engine
       void logThreadResearchResult();
 
       void threadResNextStep();
-      void generateResScenarioData(ColregSimulation::scenario_data& data, const settings::research_settings&, const ThreadResearchComplexStorage::SuperCell::Index& idx);
+      void generateResScenarioData(ColregSimulation::scenario_data&, const settings::research_settings&, const ThreadResearchComplexStorage::SuperCell::Index&);
 
-      void processPathFind(const ColregSimulation::scenario_data& scenarioData, const std::vector<std::vector<double>>& rawData, std::function<void(void)> completeCallback);
-      void processPathFindInternal(const ColregSimulation::scenario_data& scenarioData, pathfinder::path_finder_settings stt, std::function<void(void)> completeCallback);
+      void processPathFind(const ColregSimulation::scenario_data&, const pathfinder::GeoMatrix&, std::function<void(void)>);
+      void processPathFindInternal(const ColregSimulation::scenario_data&, pathfinder::path_finder_settings, std::function<void(void)>);
       void generateResMap(size_t mapSize);
-      pathfinder::check_fly_zone_result checkFlyZone(const std::vector<std::vector<double>>&, int, int);
-      void convertMap(const std::vector<std::vector<double>>& rawdataSrc, std::shared_ptr<pathfinder::Matrix<SVCG::route_point>> rawdataDst);
-      pathfinder::check_go_zone_result checkGoZone(const std::vector<std::vector<double>>&, int, int);
-      pathfinder::check_go_zone_result checkAngles(double center, double left, double right, double top, double bottom, double topleft, double bottomleft, double topright, double bottomright);
+      pathfinder::check_fly_zone_result checkFlyZone(const pathfinder::GeoMatrix&, int, int);
+      void convertMap(const pathfinder::GeoMatrix&, std::shared_ptr<pathfinder::RoutePointMatrix>);
+      pathfinder::check_go_zone_result checkGoZone(const pathfinder::GeoMatrix&, int, int);
+      pathfinder::check_go_zone_result checkAngles(double, double, double, double, double, double, double, double, double);
       //SurfaceElement recountElement(const std::shared_ptr<QHeightMapSurfaceDataProxy>, int, int, int, int);
    //signals:
    protected:
@@ -63,7 +63,7 @@ namespace engine
       std::unique_ptr<pathfinder::PathFinderPipeline> m_pathfinder;
       std::shared_ptr<settings::application_settings> m_settings;
 
-      std::shared_ptr<pathfinder::Matrix<SVCG::route_point>> m_rawdata;
+      std::shared_ptr<pathfinder::RoutePointMatrix> m_rawdata;
       std::shared_ptr<pathfinder::route_data> m_routedata;
       //std::shared_ptr<pathfinder::route_data> m_routedata;
       std::function<void(void)> m_endRoundCallback;

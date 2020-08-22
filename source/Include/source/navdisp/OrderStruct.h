@@ -44,102 +44,109 @@ namespace navigation_dispatcher
       }
    };
 
+   struct attr_data
+   {
+      std::string val;
+
+      const char* AsString() { return val.c_str(); }
+      int AsInteger() { return atoi(val.c_str()); }
+      double AsDouble() { return atof(val.c_str()); }
+      bool AsBoolean()
+      {
+         // TODO: вы€снить, почему так сложно...
+         std::string buffer = val;
+         std::transform(buffer.begin(), buffer.end(), buffer.begin(),
+            [](unsigned char c) { return std::tolower(c); });
+         return buffer.compare("true") == 0;
+      }
+   };
+
+   struct tag_meta
+   {
+      const char* tag;
+      attr_data& data;
+   };
+
+#define ATTR_DECLARE(attr) attr_data attr;
+#define BEGIN_DEFINE_ZONE() virtual void fillTagList() override {
+#define END_DEFINE_ZONE() }
+#define ATTR_DEFINE(attr) meta_list.emplace_back(tag_meta{ "attr", attr });
+
    struct order_base
    {
-      //std::string name;
+      ATTR_DECLARE(rewrite_dst)
+      std::vector<tag_meta> meta_list;
 
-      virtual bool Deserialize(const xml_properties::PropertyItem&) = 0;
+      bool Deserialize(const xml_properties::PropertyItem& params)
+      {
+         ATTR_DEFINE(rewrite_dst)
+         fillTagList();
+         for (auto& meta : meta_list)
+         {
+            if (params.Exists(meta.tag))
+               params[meta.tag].Get(meta.data.val);
+         }
+         return true;
+      }
+
+      virtual void fillTagList() = 0;
    };
 
    struct chart_object_gen_order : order_base
    {
-      std::string source;
-      std::string destination;
+      ATTR_DECLARE(source);
+      ATTR_DECLARE(destination);
 
-      struct tag
-      {
-         static constexpr char source[] = "source";
-         static constexpr char destination[] = "destination";
-      };
-
-      virtual bool Deserialize(const xml_properties::PropertyItem& params)
-      {
-         params[tag::source].Get(source);
-         params[tag::destination].Get(destination);
-         return true;
-      }
+      BEGIN_DEFINE_ZONE()
+         ATTR_DEFINE(source);
+         ATTR_DEFINE(destination);
+      END_DEFINE_ZONE()
    };
 
    struct png_hm_convert_order : order_base
    {
-      std::string destination;
-      std::string source;
+      ATTR_DECLARE(source);
+      ATTR_DECLARE(destination);
 
-      struct tag
-      {
-         static constexpr char source[] = "source";
-         static constexpr char destination[] = "destination";
-      };
-
-      virtual bool Deserialize(const xml_properties::PropertyItem& params)
-      {
-         params[tag::source].Get(source);
-         params[tag::destination].Get(destination);
-         return true;
-      }
+      BEGIN_DEFINE_ZONE()
+         ATTR_DEFINE(source);
+         ATTR_DEFINE(destination);
+      END_DEFINE_ZONE()
    };
 
    struct pathfind_order : order_base
    {
-      std::string destination;
-      std::string source;
+      ATTR_DECLARE(source);
+      ATTR_DECLARE(destination);
 
-      struct tag
-      {
-         static constexpr char source[] = "source";
-         static constexpr char destination[] = "destination";
-      };
-
-      virtual bool Deserialize(const xml_properties::PropertyItem& params)
-      {
-         params[tag::source].Get(source);
-         params[tag::destination].Get(destination);
-         return true;
-      }
+      BEGIN_DEFINE_ZONE()
+         ATTR_DEFINE(source);
+         ATTR_DEFINE(destination);
+      END_DEFINE_ZONE()
    };
 
    struct opt_pathfind_order : order_base
    {
-      std::string destination;
-      std::string source;
+      ATTR_DECLARE(source);
+      ATTR_DECLARE(destination);
 
-      struct tag
-      {
-         static constexpr char source[] = "source";
-         static constexpr char destination[] = "destination";
-      };
-
-      virtual bool Deserialize(const xml_properties::PropertyItem& params)
-      {
-         params[tag::source].Get(source);
-         params[tag::destination].Get(destination);
-         return true;
-      }
+      BEGIN_DEFINE_ZONE()
+         ATTR_DEFINE(source);
+         ATTR_DEFINE(destination);
+      END_DEFINE_ZONE()
    };
 
    struct packhound_order : order_base
    {
-      std::string destination;
+      ATTR_DECLARE(destination);
 
-      struct tag
-      {
-         static constexpr char destination[] = "destination";
-      };
-
-      virtual bool Deserialize(const xml_properties::PropertyItem& params)
-      {
-         params[tag::destination].Get(destination);
-         return true;
-      }
+      BEGIN_DEFINE_ZONE()
+         ATTR_DEFINE(destination);
+      END_DEFINE_ZONE()
    };
+
+#undef ATTR_DECLARE
+#undef BEGIN_DEFINE_ZONE
+#undef END_DEFINE_ZONE
+#undef ATTR_DEFINE
 }

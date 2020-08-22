@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Include\source\colreg\ThirdParty\md5\md5.cpp" />
     <ClCompile Include="source\DataStandart\ChartObject\ChartObjectDS.cpp" />
     <ClCompile Include="source\DataStandart\DataStandartBase.cpp" />
     <ClCompile Include="source\DataStandart\OptimizedPathStorage\OptimizedPathStorageDS.cpp" />
@@ -28,6 +29,7 @@
     <ClCompile Include="source\stdafx.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Include\source\colreg\ThirdParty\md5\md5.h" />
     <ClInclude Include="source\DataStandart\ChartObject\ChartObjectDS.h" />
     <ClInclude Include="source\DataStandart\DataStandartBase.h" />
     <ClInclude Include="source\DataStandart\OptimizedPathStorage\OptimizedPathStorageDS.h" />

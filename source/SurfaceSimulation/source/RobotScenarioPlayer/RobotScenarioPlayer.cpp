@@ -158,8 +158,8 @@ void RobotScenarioPlayer::ReloadSettings()
 
 void RobotScenarioPlayer::RecountRoutes()
 {
-   // NOTE: Отключено для отладки отрисовки изолиний
-   m_engine->ProcessPathFind(m_data, m_coordGrid, [this]() { updateUnitsPath(); GetPack()->comm->OnPathFound(); });
+   // NOTE: Отключено для реализации приказного интерфейса
+   //m_engine->ProcessPathFind(m_data, m_coordGrid, [this]() { updateUnitsPath(); GetPack()->comm->OnPathFound(); });
    m_currentIdx = 0;
 }
 

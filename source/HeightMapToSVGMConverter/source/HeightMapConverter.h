@@ -28,7 +28,7 @@ namespace converter
       bool writeToDestination(data_standart::iSurfaceVieverGenMapDataStandart*);
       bool processData();
    private:
-      colreg::ModuleGuard<database::iSVGMDatabaseController> m_databaseController;
+      
       colreg::ModuleGuard<colreg::iSettingsSerializer> m_settingsSerializer;
       colreg::ModuleGuard<colreg::iUnitDataSerializer> m_unitDataSerializer;
       

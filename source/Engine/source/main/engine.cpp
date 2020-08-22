@@ -14,7 +14,7 @@ std::recursive_mutex g_engineMutex;
 
 Engine::Engine(central_pack* pack)
    : Central(pack)
-   , m_rawdata(std::make_shared<pathfinder::Matrix<SVCG::route_point>>(SVCG::route_point{}))
+   , m_rawdata(std::make_shared<pathfinder::RoutePointMatrix>(SVCG::route_point{}))
    , m_routedata(std::make_shared<pathfinder::route_data>())
    , m_pathfinder(std::make_unique<pathfinder::PathFinderPipeline>(pack))
 {
@@ -31,7 +31,7 @@ void Engine::ProcessPathFind(const ColregSimulation::scenario_data& scenarioData
    std::thread(&Engine::processPathFind, this, scenarioData, rawData, completeCallback).detach();
 }
 
-void Engine::processPathFind(const ColregSimulation::scenario_data& scenarioData, const std::vector<std::vector<double>>& rawData, std::function<void(void)> completeCallback)
+void Engine::processPathFind(const ColregSimulation::scenario_data& scenarioData, const pathfinder::GeoMatrix& rawData, std::function<void(void)> completeCallback)
 {
    // TODO: разобраться с настройками
    convertMap(rawData, m_rawdata);
@@ -52,41 +52,42 @@ void Engine::processPathFindInternal(const ColregSimulation::scenario_data& scen
    //completeCallback();
 }
 
-void Engine::convertMap(const std::vector<std::vector<double>>& rawdataSrc, std::shared_ptr<pathfinder::Matrix<SVCG::route_point>> rawdataDst)
+void Engine::convertMap(const pathfinder::GeoMatrix& rawdataSrc, std::shared_ptr<pathfinder::RoutePointMatrix> rawdataDst)
 {
-   size_t rwCount = rawdataSrc.size();
-   rawdataDst->SetRowCount(rwCount);
-   if (rwCount > 0)
-      rawdataDst->SetColCount(rawdataSrc.at(0).size());
-   for (size_t rIdx = 0; rIdx < rwCount; rIdx++)
+   size_t rowCount = rawdataSrc.GetRowCount();
+   size_t colCount = rawdataSrc.GetColCount();
+   rawdataDst->SetRowCount(rowCount);
+   if (rowCount > 0)
+      rawdataDst->SetColCount(colCount);
+   for (size_t rIdx = 0; rIdx < rowCount; rIdx++)
    {
-      for (size_t cIdx = 0; cIdx < rawdataSrc.at(rIdx).size(); cIdx++)
-         rawdataDst->Set(rIdx, cIdx, SVCG::route_point(rIdx, cIdx, rawdataSrc.at(rIdx).at(cIdx), checkFlyZone(rawdataSrc, rIdx, cIdx).fza, checkGoZone(rawdataSrc, rIdx, cIdx).gza));
+      for (size_t cIdx = 0; cIdx < colCount; cIdx++)
+         rawdataDst->Set(rIdx, cIdx, SVCG::route_point(rIdx, cIdx, rawdataSrc.Get(rIdx, cIdx), checkFlyZone(rawdataSrc, rIdx, cIdx).fza, checkGoZone(rawdataSrc, rIdx, cIdx).gza));
    }
 }
 
-pathfinder::check_fly_zone_result Engine::checkFlyZone(const std::vector<std::vector<double>>& rawdataSrc, int rowIdx, int colIdx)
+pathfinder::check_fly_zone_result Engine::checkFlyZone(const pathfinder::GeoMatrix& rawdataSrc, int rowIdx, int colIdx)
 {
    ATLASSERT(false);
    auto& pth_stt = m_settings->pth_stt;
-   return { (rawdataSrc.at(rowIdx).at(colIdx) > pth_stt.level_settings.max_air_height) ? pathfinder::FlyZoneAffilation::FZA_FORBIDDEN : pathfinder::FlyZoneAffilation::FZA_NORMAL };
+   return { (rawdataSrc.Get(rowIdx, colIdx) > pth_stt.level_settings.max_air_height) ? pathfinder::FlyZoneAffilation::FZA_FORBIDDEN : pathfinder::FlyZoneAffilation::FZA_NORMAL };
 }
 
-pathfinder::check_go_zone_result Engine::checkGoZone(const std::vector<std::vector<double>>& rawdataSrc, int rowIdx, int colIdx)
+pathfinder::check_go_zone_result Engine::checkGoZone(const pathfinder::GeoMatrix& rawdataSrc, int rowIdx, int colIdx)
 {
    // NOTE: стоблцы идут снизу вверх(по крайней мере тут считаем именно так)
-   size_t rowCount = rawdataSrc.size();
-   size_t colCount = rawdataSrc.at(0).size();
+   size_t rowCount = rawdataSrc.GetRowCount();
+   size_t colCount = rawdataSrc.GetColCount();
    return checkAngles(
-        rawdataSrc.at(rowIdx).at(colIdx)  // center
-      , rawdataSrc.at(rowIdx).at(colIdx > 0 ? colIdx - 1 : 0)  // left
-      , rawdataSrc.at(rowIdx).at(colIdx < colCount - 1 ? colIdx + 1 : colCount - 1)  // right
-      , rawdataSrc.at(rowIdx < rowCount - 1 ? rowIdx + 1 : rowCount - 1).at(colIdx) // top
-      , rawdataSrc.at(rowIdx > 0 ? rowIdx - 1 : 0).at(colIdx) // bottom
-      , rawdataSrc.at(rowIdx < rowCount - 1 ? rowIdx + 1 : rowCount - 1).at(colIdx > 0 ? colIdx - 1 : 0) // topleft
-      , rawdataSrc.at(rowIdx > 0 ? rowIdx - 1 : 0).at(colIdx > 0 ? colIdx - 1 : 0) // bottomleft
-      , rawdataSrc.at(rowIdx < rowCount - 1 ? rowIdx + 1 : rowCount - 1).at(colIdx < colCount - 1 ? colIdx + 1 : colCount - 1) // topright
-      , rawdataSrc.at(rowIdx > 0 ? rowIdx - 1 : 0).at(colIdx > 0 ? colIdx - 1 : 0) // bottomright
+        rawdataSrc.Get(rowIdx, colIdx) // center
+      , rawdataSrc.Get(rowIdx, colIdx > 0 ? colIdx - 1 : 0) // left
+      , rawdataSrc.Get(rowIdx, colIdx < colCount - 1 ? colIdx + 1 : colCount - 1) // right
+      , rawdataSrc.Get(rowIdx < rowCount - 1 ? rowIdx + 1 : rowCount - 1, colIdx) // top
+      , rawdataSrc.Get(rowIdx > 0 ? rowIdx - 1 : 0, colIdx) // bottom
+      , rawdataSrc.Get(rowIdx < rowCount - 1 ? rowIdx + 1 : rowCount - 1, colIdx > 0 ? colIdx - 1 : 0) // topleft
+      , rawdataSrc.Get(rowIdx > 0 ? rowIdx - 1 : 0, colIdx > 0 ? colIdx - 1 : 0) // bottomleft
+      , rawdataSrc.Get(rowIdx < rowCount - 1 ? rowIdx + 1 : rowCount - 1, colIdx < colCount - 1 ? colIdx + 1 : colCount - 1) // topright
+      , rawdataSrc.Get(rowIdx > 0 ? rowIdx - 1 : 0, colIdx > 0 ? colIdx - 1 : 0) // bottomright
    );
 }
 

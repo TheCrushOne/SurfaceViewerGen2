@@ -23,6 +23,11 @@ namespace data_standart
       virtual DataStandartType GetType() const = 0;
 
       virtual LPCSTR GetPath() = 0;
+
+      // NOTE: сюда подается GetDataHash от сурсового стандарта
+      virtual bool NeedToRewrite(size_t) = 0;
+
+      virtual size_t GetDataHash() = 0;
    };
 
    typedef std::shared_ptr<iDataStandart> iDataStandartPtr;

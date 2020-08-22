@@ -98,7 +98,7 @@ void TaskHolder::onFinished(bool fromLaunch)
    }
    LeaveCriticalSection(&(fromLaunch ? critical_outer : critical_inner));
    if (status == HolderStatus::HS_FINISHED)
-      onTaskHolderFinished();
+      onTaskHolderFinished(); 
    //TaskHolder::m_sema->unlock();
 }
 

@@ -70,7 +70,7 @@ namespace navigation_dispatcher
 #define ATTR_DECLARE(attr) attr_data attr;
 #define BEGIN_DEFINE_ZONE() virtual void fillTagList() override {
 #define END_DEFINE_ZONE() }
-#define ATTR_DEFINE(attr) meta_list.emplace_back(tag_meta{ "attr", attr });
+#define ATTR_DEFINE(attr) meta_list.emplace_back(tag_meta{ #attr, attr });
 
    struct order_base
    {

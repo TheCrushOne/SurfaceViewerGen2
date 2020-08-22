@@ -25,7 +25,7 @@ bool ChartObjectGenerator::processCommand()
    auto* src = m_pService->GetDataStandartFactory()->GetDataStandart(m_commandData.source.AsString());
    auto* dst = m_pService->GetDataStandartFactory()->GetDataStandart(m_commandData.destination.AsString());   
 
-   if (!dst->NeedToRewrite(src->GetDataHash()))
+   if (!needToProcess())
       return true;
 
    if (!readFromSource(reinterpret_cast<data_standart::iSurfaceVieverGenMapDataStandart*>(src)))
@@ -35,6 +35,9 @@ bool ChartObjectGenerator::processCommand()
       return false;
 
    if (!writeToDestination(reinterpret_cast<data_standart::iChartObjectDataStandart*>(dst)))
+      return false;
+
+   if (!recordOrderHashResult())
       return false;
 
    return true;

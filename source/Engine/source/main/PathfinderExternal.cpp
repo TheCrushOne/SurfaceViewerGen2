@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "PathfinderExternal.h"
 #include "common/simulation_structs.h"
+#include "navdisp\OrderCreation.h"
 
 using namespace engine;
 
@@ -16,15 +17,26 @@ PathfinderExternal::PathfinderExternal(central_pack* pack, navigation_dispatcher
 
 bool PathfinderExternal::processCommand()
 {
-   auto* src = m_pService->GetDataStandartFactory()->GetDataStandart(m_commandData.source.c_str());
-   //auto* dst = m_pService->GetDataStandartFactory()->GetDataStandart(m_commandData.destination.c_str());
+   auto* src = m_pService->GetDataStandartFactory()->GetDataStandart(m_commandData.source.AsString());
+   auto* dst = m_pService->GetDataStandartFactory()->GetDataStandart(m_commandData.destination.AsString());
+   
+   if (!needToProcess())
+      return true;
+
    if (!readFromSource(reinterpret_cast<data_standart::iSurfaceVieverGenMapDataStandart*>(src)))
       return false;
 
    if (!processData())
       return false;
 
+   if (!writeToDestination(reinterpret_cast<data_standart::iPathStorageDataStandart*>(dst)))
+      return false;
+
+   if (!recordOrderHashResult())
+      return false;
+
    // NOTE: локер, который стопает главный поток, пока все пути не будут рассчитаны
+   // NOTE: анлок прокинут из processData 
    std::unique_lock<std::mutex> lk(cv_m);
    cv.wait(lk);
 

@@ -23,14 +23,14 @@
 
 int print_help()
 {
-   _tprintf(_T("Usage: NavigationManager.exe config.xml\n"));
+   _tprintf(_T("Usage: NavigationManager.exe [base folder] [config].xml [begin order name]\n"));
    std::getchar();
    return 0;
 }
 
 int _tmain(int argc, _TCHAR* argv[])
 {
-   if (argc != 2 /*&& argc != 3 || !fpath(argv[1]).is_exists()*/)
+   if (argc < 2 /*&& argc != 3 || !fpath(argv[1]).is_exists()*/)
       return print_help();
    std::vector<std::string> argVct;
    for (size_t idx = 0; idx < argc; idx++)
@@ -44,7 +44,7 @@ int _tmain(int argc, _TCHAR* argv[])
    colreg::ModuleGuard<navigation_dispatcher::iNavigationDispatcher, central_pack*> m_navigationDispatcher;
    VALID_CHECK_DLL_LOAD("NavigationDispatcher", "CreateNavigationDispatcher", m_navigationDispatcher, pack.get());
 
-   if (m_navigationDispatcher->ProcessCommand(argVct.at(1).c_str(), argc == 3 ? argVct.at(2).c_str() : NULL) == 1)
+   if (m_navigationDispatcher->ProcessCommand(argVct.at(2).c_str(), argc == 4 ? argVct.at(3).c_str() : NULL, argVct.at(1).c_str()) == 1)
    {
       _tprintf(_T("Process command success. Press any key...\n"));
       return 0;

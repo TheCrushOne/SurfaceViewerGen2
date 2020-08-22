@@ -11,8 +11,8 @@ namespace navigation_dispatcher
    class ComServiceHolder : public HolderBase<iComService>
    {
    public:
-      ComServiceHolder(central_pack* pack)
-         : HolderBase<iComService>(CreateCommandServices(pack))
+      ComServiceHolder(central_pack* pack, const char* baseFolder)
+         : HolderBase<iComService>(CreateCommandServices(pack, baseFolder))
       { }
 
       ~ComServiceHolder()

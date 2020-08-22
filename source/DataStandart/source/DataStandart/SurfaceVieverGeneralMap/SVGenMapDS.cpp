@@ -138,6 +138,11 @@ void SurfaceViewerGenMapDataStandart::saveHeightData()
    file.close();
 }
 
+size_t SurfaceViewerGenMapDataStandart::GetDataHash()
+{
+   return 1907;
+}
+
 iDataStandart* CreateSurfaceViewerGenMapDataStandart(central_pack* pack, LPCWSTR base_folder, navigation_dispatcher::iComService* pService)
 {
    return new SurfaceViewerGenMapDataStandart(pack, base_folder, pService);

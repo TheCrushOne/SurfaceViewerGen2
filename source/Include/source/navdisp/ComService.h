@@ -6,6 +6,7 @@
 #include "settings/SettingsSerializerHolder.h"
 #include "ConfigDispatcher.h"
 #include "OrderProcessor.h"
+#include "crossdllinterface\SVGMDatabaseInterface.h"
 
 namespace navigation_dispatcher
 {
@@ -19,5 +20,6 @@ namespace navigation_dispatcher
       virtual data_standart::iDataStandartFactory* GetDataStandartFactory() = 0;
       virtual iOrderFactory* GetOrderFactory() = 0;
       virtual iOrderProcessor* GetOrderProcessor() = 0;
+      virtual database::iSVGMDatabaseController* GetDatabaseController() = 0;
    };
 }

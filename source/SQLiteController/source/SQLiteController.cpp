@@ -6,7 +6,7 @@
 // NOTE: запаска
 //  ##__VA_ARGS__
 
-#define NO_RES_PREP char buffer[65536]; buffer[0] = '\0';
+#define NO_RES_PREP char buffer[10000]; buffer[0] = '\0';
 #define RES_PREP_INT int rvalbuf; NO_RES_PREP
 #define RES_PREP_STR std::string rvalbuf; NO_RES_PREP
 
@@ -66,29 +66,39 @@ using namespace database;
    }
 
 template<typename... Ts>
-void launchNoResultRequest(std::string& req, Ts... args)
+void launchNoResultRequest(Connector * conn, const std::string& req, Ts... args)
 {
    NO_RES_PREP
-   sprintf_s(buffer, req.c_str(), args...);
-   m_connector->SQLNoResRequest(buffer);
+   sprintf_s(buffer, 1024, req.c_str(), args...);
+   conn->SQLNoResRequest(buffer);
 }
 
 template<typename... Ts>
-void launchCreateRequest(request_storage::CreateRequestToken token, Ts... args)
+bool launchResultExistenceRequest(Connector* conn, const std::string& req, Ts... args)
 {
-   launchNoResultRequest(request_storage::createReqList.at(token), args...);
+   NO_RES_PREP
+   sprintf_s(buffer, 1024, req.c_str(), args...);
+   bool exists = false;
+   conn->SQLResRequest(buffer, [&exists](sqlite3_stmt* stmt) { exists = true; });
+   return exists;
 }
 
 template<typename... Ts>
-void launchInsertRequest(request_storage::InsertRequestToken token, Ts... args)
+void launchCreateRequest(Connector* conn, request_storage::CreateRequestToken token, Ts... args)
 {
-   launchNoResultRequest(request_storage::insReqList.at(token), args...);
+   launchNoResultRequest(conn, request_storage::createReqList.at(token), args...);
 }
 
 template<typename... Ts>
-void launchSelectRequest(request_storage::SelectRequestToken token, Ts... args)
+void launchInsertRequest(Connector* conn, request_storage::InsertRequestToken token, Ts... args)
 {
-   launchNoResultRequest(request_storage::selectReqList.at(token), args...);
+   launchNoResultRequest(conn, request_storage::insReqList.at(token), args...);
+}
+
+template<typename... Ts>
+bool launchSelectRequest(Connector* conn, request_storage::SelectRequestToken token, Ts... args)
+{
+   return launchResultExistenceRequest(conn, request_storage::selectReqList.at(token), args...);
 }
 
 SQLiteController::SQLiteController(central_pack_ptr pack)
@@ -143,7 +153,12 @@ void SQLiteController::LoadAppSettings()
 
 void SQLiteController::SaveDataStandartHashJunction(data_hash::hash_junction& junc)
 {
-   launchInsertRequest(request_storage::InsertRequestToken::RT_SETDSHJ);
+   launchInsertRequest(m_connector.get(), request_storage::InsertRequestToken::RT_SETDSHJ, junc.source, junc.destination);
+}
+
+bool SQLiteController::CheckDataStandartHashJunction(data_hash::hash_junction& junc)
+{
+   return launchSelectRequest(m_connector.get(), request_storage::SelectRequestToken::RT_SELDSHJ, junc.source, junc.destination);
 }
 
 void SQLiteController::baseCheckCreate()

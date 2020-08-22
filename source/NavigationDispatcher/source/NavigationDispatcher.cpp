@@ -27,10 +27,10 @@ NavigationDispatcher::NavigationDispatcher(central_pack * pack)
 NavigationDispatcher::~NavigationDispatcher()
 {}
 
-int NavigationDispatcher::ProcessCommand(const char* configFilePath, const char* begCommandName)
+int NavigationDispatcher::ProcessCommand(const char* configFilePath, const char* begCommandName, const char* baseFolder)
 {
    //Logger logger(L"CommandServices.log");
-   ComServiceHolder service(GetPack());
+   ComServiceHolder service(GetPack(), baseFolder);
    service.Get()->GetConfigDispatcher()->Dispatch(configFilePath);
    service.Get()->GetOrderProcessor()->ProcessOrders(begCommandName);
    //data_standart::command_meta meta;

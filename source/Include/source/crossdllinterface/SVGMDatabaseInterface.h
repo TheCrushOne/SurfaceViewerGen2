@@ -14,9 +14,10 @@ namespace database
       virtual void Connect(const char*) = 0;
       virtual void SaveScenarioData(const settings::unit_source_data&, const std::vector<std::vector<double>>&) = 0;
       virtual void SaveAppSettings() = 0;
+      virtual void SaveDataStandartHashJunction(data_hash::hash_junction&) = 0;
       virtual void LoadScenarioData(settings::unit_source_data&, std::vector<std::vector<double>>&) = 0;
       virtual void LoadAppSettings() = 0;
-      virtual void SaveDataStandartHashJunction(data_hash::hash_junction&) = 0;
+      virtual bool CheckDataStandartHashJunction(data_hash::hash_junction&) = 0;
    };
 }
 

@@ -7,6 +7,7 @@
 #include "OrderProcessorImpl.h"
 #include "ConfigDispatcherImpl.h"
 #include "SettingsSerializerHolderImpl.h"
+#include "crossdllinterface\SVGMDatabaseInterface.h"
 /*#include "FilterFactoryImpl.h"
 #include "DataSerializerImpl.h"
 #include "DataSourceFactoryImpl.h"
@@ -15,12 +16,23 @@
 #include "MetadataAccessorImpl.h"
 #include "CommonBuildParamsHolderImpl.h"*/
 
+
+#define VALID_CHECK_DLL_LOAD(dllName, funcName, guard) \
+   guard.Create(SVGUtils::CurrentDllPath(dllName).c_str(), funcName); \
+   if (!guard.IsValid()) \
+   { \
+      GetCommunicator()->RaiseError(); \
+      std::string errMsg = std::string("Can't load '") + dllName + "'!"; \
+      Message(ICommunicator::MessageType::MT_ERROR, errMsg.c_str()); \
+      return; \
+   }
+
 namespace navigation_dispatcher
 {
    class CommandServicesImpl : public iComService, public Central
    {
    public:
-      CommandServicesImpl(central_pack* pack)
+      CommandServicesImpl(central_pack* pack, const char* baseFolder)
          : Central(pack)
          , m_dataStandartFactory(std::make_shared<DataStandartFactoryImpl>(pack, this))
          , m_orderFactory(std::make_shared<OrderFactoryImpl>(pack, this))
@@ -33,7 +45,11 @@ namespace navigation_dispatcher
          , m_commandFactoryImpl(this)
          , m_commandProcessor(this)
          , m_metadataAccessor(this)*/
-      {}
+      {
+         VALID_CHECK_DLL_LOAD("SQLiteController", "CreateSQLiteDatabaseController", m_databaseController);
+         auto pathToDb = std::string(baseFolder) + "\\svgm.db";
+         m_databaseController->Connect(pathToDb.c_str());
+      }
       settings::iSettingsSerializerHolder* GetSettingsSerializerHolder() override final
       {
          return m_settingsSerializer.get();
@@ -53,6 +69,10 @@ namespace navigation_dispatcher
       iOrderProcessor* GetOrderProcessor() override final
       {
          return m_orderProcessor.get();
+      }
+      database::iSVGMDatabaseController* GetDatabaseController() override final
+      {
+         return m_databaseController;
       }
       //iCommandService
       /*iFilterFactory* GetFilterFactory() final
@@ -85,11 +105,12 @@ namespace navigation_dispatcher
       }*/
 
    private:
-      std::shared_ptr<DataStandartFactoryImpl>           m_dataStandartFactory;
-      std::shared_ptr<OrderFactoryImpl>                  m_orderFactory;
-      std::shared_ptr<ConfigDispatcherImpl>              m_configDispatcher;
-      std::shared_ptr<SettingsSerializerHolderImpl>      m_settingsSerializer;
-      std::shared_ptr<OrderProcessorImpl>                m_orderProcessor;
+      std::shared_ptr<DataStandartFactoryImpl>                 m_dataStandartFactory;
+      std::shared_ptr<OrderFactoryImpl>                        m_orderFactory;
+      std::shared_ptr<ConfigDispatcherImpl>                    m_configDispatcher;
+      std::shared_ptr<SettingsSerializerHolderImpl>            m_settingsSerializer;
+      std::shared_ptr<OrderProcessorImpl>                      m_orderProcessor;
+      colreg::ModuleGuard<database::iSVGMDatabaseController>   m_databaseController;
       /*FilterFactoryImpl           m_filterFactory;
       DataSerializerImpl          m_dataSerializer;
       DataSourceFactoryImpl       m_dataSourceFactory;
@@ -101,9 +122,9 @@ namespace navigation_dispatcher
 
    // extern functions implementation
 
-   iComService* CreateCommandServices(central_pack* pack)
+   iComService* CreateCommandServices(central_pack* pack, const char* baseFolder)
    {
-      return new CommandServicesImpl(pack);
+      return new CommandServicesImpl(pack, baseFolder);
    }
 
    void DestroyCommandServices(iComService* commandServices)

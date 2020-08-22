@@ -131,7 +131,7 @@ void PngHeightMapDataStandart::convertToRawData()
 
 size_t PngHeightMapDataStandart::GetDataHash()
 {
-   std::ifstream inBigArrayfile(m_dataStandartData.file.c_str(), std::ios::binary | std::ios::in);
+   /*std::ifstream inBigArrayfile(m_dataStandartData.file.c_str(), std::ios::binary | std::ios::in);
 
    inBigArrayfile.seekg(0, std::ios::end);
    long Length = inBigArrayfile.tellg();
@@ -149,8 +149,9 @@ size_t PngHeightMapDataStandart::GetDataHash()
    std::cout << hash << std::endl;
 
    //Clean up
-   delete[] InFileData;
-   return hash;
+   delete[] InFileData;*/
+   //return hash;
+   return 1908;
 }
 
 iDataStandart* CreatePngHeighMapDataStandart(central_pack* pack, LPCWSTR base_folder, navigation_dispatcher::iComService* pService)

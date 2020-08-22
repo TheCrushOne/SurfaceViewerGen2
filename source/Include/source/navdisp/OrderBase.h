@@ -3,18 +3,7 @@
 #include "OrderInterface.h"
 #include "OrderFactory.h"
 #include "ComService.h"
-#include "crossdllinterface\SVGMDatabaseInterface.h"
-
-#define VALID_CHECK_DLL_LOAD(dllName, funcName, guard) \
-   guard.Create(SVGUtils::CurrentDllPath(dllName).c_str(), funcName); \
-   if (!guard.IsValid()) \
-   { \
-      GetCommunicator()->RaiseError(); \
-      m_lock = true; \
-      std::string errMsg = std::string("Can't load '") + dllName + "'!"; \
-      Message(ICommunicator::MessageType::MT_ERROR, errMsg.c_str()); \
-      return;
-
+#include "common/data_hash.h"
 
 namespace navigation_dispatcher
 {
@@ -26,25 +15,37 @@ namespace navigation_dispatcher
       OrderBase(central_pack* pack, iComService* service)
          : Central(pack)
          , m_pService(service)
-      {
-         VALID_CHECK_DLL_LOAD("SQLiteController", "CreateSQLiteDatabaseController", m_databaseController);
-      }
+      {}
    protected:
       OrderType GetType() const override { return static_cast<OrderType>(command_type); }
       bool IsMultithread() const override { return false; }
       void SetThreadNum(unsigned int threadNum) override {}
       bool DeserializeAttrs(const xml_properties::PropertyItem& params) override final { return m_commandData.Deserialize(params); }
       bool Process() override { return processCommand(); }
-      bool RecordOrderResult()
+      
+      bool recordOrderHashResult()
       {
          auto hash = getHashData();
-         m_databaseController->
+         m_pService->GetDatabaseController()->SaveDataStandartHashJunction(hash);
+         return true;
+      }
+      bool needToProcess()
+      {
+         auto hash = getHashData();
+         ATLASSERT(hash.source != data_hash::INVALID_HASH);
+         if (hash.destination == data_hash::INVALID_HASH)
+            return true;   // NOTE: случай, когда дест пустой
+         return m_pService->GetDatabaseController()->CheckDataStandartHashJunction(hash);
       }
    private:
-      virtual hash_junction getHashData() = 0;
+      data_hash::hash_junction getHashData()
+      {
+         auto* src = m_pService->GetDataStandartFactory()->GetDataStandart(m_commandData.source.AsString());
+         auto* dst = m_pService->GetDataStandartFactory()->GetDataStandart(m_commandData.destination.AsString());
+         return data_hash::hash_junction{ src->GetDataHash(), dst->GetDataHash() };
+      }
       virtual bool processCommand() = 0;
    protected:
-      colreg::ModuleGuard<database::iSVGMDatabaseController> m_databaseController;
       TOrderData m_commandData;
       iComService* m_pService;
       // NOTE: ThreadJobsManager -> check unidata

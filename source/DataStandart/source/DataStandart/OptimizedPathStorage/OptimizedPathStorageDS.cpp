@@ -13,6 +13,11 @@ size_t OptimizedPathStorageDataStandart::GetDataHash()
    return 1902;
 }
 
+void OptimizedPathStorageDataStandart::SetData(const pathfinder::route_data& paths)
+{
+
+}
+
 iDataStandart* CreateOptimizedPathStorageDataStandart(central_pack* pack, LPCWSTR base_folder, navigation_dispatcher::iComService* pService)
 {
    return new OptimizedPathStorageDataStandart(pack, base_folder, pService);

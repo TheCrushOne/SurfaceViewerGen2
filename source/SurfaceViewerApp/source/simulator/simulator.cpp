@@ -8,8 +8,8 @@
 namespace
 {
    colreg::ModuleGuard<ColregSimulation::iSimulatorManager, central_pack*> _simMgr;
-   std::unique_ptr<CommunicatorWnd> comm(new CommunicatorWnd);
-   std::shared_ptr<central_pack> pack = std::make_shared<central_pack>(comm.get()/*, file_utils::global_path_storage{}, settings::application_settings{}*/);  
+   std::shared_ptr<ICommunicator> comm = std::make_shared<CommunicatorWnd>();
+   std::shared_ptr<central_pack> pack = std::make_shared<central_pack>(comm);
    ColregSimulation::iSimulator* _simulator = nullptr;
 
    bool createSimulationManager()

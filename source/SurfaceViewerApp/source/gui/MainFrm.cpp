@@ -170,6 +170,10 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
    DockPane(&m_wndProgressView, AFX_IDW_DOCKBAR_TOP);
    m_wndProgressView.ShowPane(TRUE, FALSE, TRUE);
 
+   m_wndStatuses.EnableDocking(CBRS_ALIGN_ANY);
+   DockPane(&m_wndStatuses);
+   m_wndStatuses.ShowPane(TRUE, FALSE, TRUE);
+
    // Включить функцию замены меню панелей инструментов и закрепляемых окон 
    EnablePaneMenu(TRUE, ID_VIEW_CUSTOMIZE, strCustomize, ID_VIEW_TOOLBAR);
 
@@ -251,6 +255,12 @@ BOOL CMainFrame::CreateDockingWindows()
    if (!m_wndProgressView.Create(L"Progress", this, CRect(0, 0, 200, 60), FALSE, ID_VIEW_PROGRESS, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_RIGHT | CBRS_FLOAT_MULTI))
    {
       TRACE0("Failed to create Progress window\n");
+      return FALSE; // failed to create
+   }
+
+   if (!m_wndStatuses.Create(L"Statuses", this, CRect(0, 0, 200, 60), FALSE, ID_WND_STATUSES, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_RIGHT | CBRS_FLOAT_MULTI))
+   {
+      TRACE0("Failed to create Statuses window\n");
       return FALSE; // failed to create
    }
 

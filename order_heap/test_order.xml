@@ -18,6 +18,7 @@
 				<params>
 					<source>SVGMDst</source>
 					<destination>PathDst</destination>
+					<rewrite_dst>true</rewrite_dst>
 				</params>
 			</order>
 		</orders>

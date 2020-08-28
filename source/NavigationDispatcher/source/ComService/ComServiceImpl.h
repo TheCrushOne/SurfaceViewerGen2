@@ -17,8 +17,8 @@
 #include "CommonBuildParamsHolderImpl.h"*/
 
 
-#define VALID_CHECK_DLL_LOAD(dllName, funcName, guard) \
-   guard.Create(SVGUtils::CurrentDllPath(dllName).c_str(), funcName); \
+#define VALID_CHECK_DLL_LOAD(dllName, funcName, guard, ...) \
+   guard.Create(SVGUtils::CurrentDllPath(dllName).c_str(), funcName, __VA_ARGS__); \
    if (!guard.IsValid()) \
    { \
       GetCommunicator()->RaiseError(); \
@@ -46,7 +46,7 @@ namespace navigation_dispatcher
          , m_commandProcessor(this)
          , m_metadataAccessor(this)*/
       {
-         VALID_CHECK_DLL_LOAD("SQLiteController", "CreateSQLiteDatabaseController", m_databaseController);
+         VALID_CHECK_DLL_LOAD("SQLiteController", "CreateSQLiteDatabaseController", m_databaseController, pack);
          auto pathToDb = std::string(baseFolder) + "\\svgm.db";
          m_databaseController->Connect(pathToDb.c_str());
       }
@@ -110,7 +110,7 @@ namespace navigation_dispatcher
       std::shared_ptr<ConfigDispatcherImpl>                    m_configDispatcher;
       std::shared_ptr<SettingsSerializerHolderImpl>            m_settingsSerializer;
       std::shared_ptr<OrderProcessorImpl>                      m_orderProcessor;
-      colreg::ModuleGuard<database::iSVGMDatabaseController>   m_databaseController;
+      colreg::ModuleGuard<database::iSVGMDatabaseController, central_pack*>   m_databaseController;
       /*FilterFactoryImpl           m_filterFactory;
       DataSerializerImpl          m_dataSerializer;
       DataSourceFactoryImpl       m_dataSourceFactory;

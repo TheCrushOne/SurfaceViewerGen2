@@ -37,9 +37,17 @@ namespace data_standart
       // Common
       // Read
       // Write
+      void SetData(const pathfinder::route_data& paths) override final;
+   private:
+      // Common
+      std::string getDataFilePath() { return std::string(getPath()) + "\\pathdata.pl"; }
+      // Read
+      // Write
+      void savePathData();
    private:
       void resolvePathDee();
       LPCSTR getPath() override final { return m_dataStandartData.folder.c_str(); }
    private:
+      pathfinder::route_data m_paths;
    };
 }

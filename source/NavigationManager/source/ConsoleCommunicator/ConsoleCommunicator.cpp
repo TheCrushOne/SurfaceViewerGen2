@@ -8,7 +8,7 @@ bool stdCallConv ConsoleCommunicator::Message(ICommunicator::MessageType t, cons
    va_start(list, msg);
    char buffer[512];
    vsprintf(buffer, msg, list);
-   std::cout << typeMap.at(t) << buffer;
+   std::cout << typeMap.at(t) << buffer << std::endl;
    //user_interface::SetOutputText(static_cast<user_interface::OUTPUT_TYPE>(t), buffer);
    va_end(list);
    return true;

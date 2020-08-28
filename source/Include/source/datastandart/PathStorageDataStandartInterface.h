@@ -1,11 +1,13 @@
 #pragma once
 #include "DataStandart.h"
 #include "navdisp/ComService.h"
+#include "common/pathfinder_structs.h"
 
 namespace data_standart
 {
    struct iPathStorageDataStandart : public iDataStandart
    {
+      virtual void SetData(const pathfinder::route_data& paths) = 0;
    };
 }
 

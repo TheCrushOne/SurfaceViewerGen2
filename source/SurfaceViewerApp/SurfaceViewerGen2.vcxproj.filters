@@ -47,6 +47,9 @@
     <Filter Include="gui\helpers">
       <UniqueIdentifier>{12415a9b-3cd8-41bd-aa0d-3052392e0014}</UniqueIdentifier>
     </Filter>
+    <Filter Include="gui\templates">
+      <UniqueIdentifier>{4912c198-ada7-44c0-92a7-a7b730fdb153}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="SurfaceViewerGen2.rc">
@@ -320,6 +323,15 @@
     <ClInclude Include="source\gui\ProgressView.h">
       <Filter>gui</Filter>
     </ClInclude>
+    <ClInclude Include="source\gui\PipelineStatusWnd.h">
+      <Filter>gui</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gui\templates\SortableList.h">
+      <Filter>gui\templates</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gui\templates\SortableListDataModel.h">
+      <Filter>gui\templates</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\stdafx.cpp" />
@@ -477,6 +489,9 @@
       <Filter>gui\helpers</Filter>
     </ClCompile>
     <ClCompile Include="source\gui\ProgressView.cpp">
+      <Filter>gui</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gui\PipelineStatusWnd.cpp">
       <Filter>gui</Filter>
     </ClCompile>
   </ItemGroup>

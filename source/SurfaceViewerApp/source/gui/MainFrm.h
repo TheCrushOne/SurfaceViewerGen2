@@ -10,6 +10,7 @@
 #include "properties/PropertiesWnd.h"
 #include "user_interface.h"
 #include "ProgressView.h"
+#include "PipelineStatusWnd.h"
 
 class CMainFrame : public CFrameWndEx
 {
@@ -53,6 +54,7 @@ protected:  // встроенные члены панели элементов �
    CPropertiesWnd    m_wndProperties;
    CAppStatusView    m_wndAppStatusView;
    CProgressViewWnd  m_wndProgressView;
+   CPipeplineStatusWnd m_wndStatuses;
 
 // Созданные функции схемы сообщений
 protected:

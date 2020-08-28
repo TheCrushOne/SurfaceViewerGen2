@@ -69,7 +69,7 @@ template<typename... Ts>
 void launchNoResultRequest(Connector * conn, const std::string& req, Ts... args)
 {
    NO_RES_PREP
-   sprintf_s(buffer, 1024, req.c_str(), args...);
+   sprintf_s(buffer, req.c_str(), args...);
    conn->SQLNoResRequest(buffer);
 }
 
@@ -77,7 +77,7 @@ template<typename... Ts>
 bool launchResultExistenceRequest(Connector* conn, const std::string& req, Ts... args)
 {
    NO_RES_PREP
-   sprintf_s(buffer, 1024, req.c_str(), args...);
+   sprintf_s(buffer, req.c_str(), args...);
    bool exists = false;
    conn->SQLResRequest(buffer, [&exists](sqlite3_stmt* stmt) { exists = true; });
    return exists;
@@ -153,12 +153,19 @@ void SQLiteController::LoadAppSettings()
 
 void SQLiteController::SaveDataStandartHashJunction(data_hash::hash_junction& junc)
 {
-   launchInsertRequest(m_connector.get(), request_storage::InsertRequestToken::RT_SETDSHJ, junc.source, junc.destination);
+   auto src = std::to_string(junc.source);
+   auto dst = std::to_string(junc.destination);
+   if (!CheckDataStandartHashJunction(junc))
+      launchInsertRequest(m_connector.get(), request_storage::InsertRequestToken::RT_SETDSHJ, src.c_str(), dst.c_str());
+   else
+      GetCommunicator()->Message(ICommunicator::MessageType::MT_ERROR, "hash junction conflict on %i -> %i", junc.source, junc.destination);
 }
 
 bool SQLiteController::CheckDataStandartHashJunction(data_hash::hash_junction& junc)
 {
-   return launchSelectRequest(m_connector.get(), request_storage::SelectRequestToken::RT_SELDSHJ, junc.source, junc.destination);
+   auto src = std::to_string(junc.source);
+   auto dst = std::to_string(junc.destination);
+   return launchSelectRequest(m_connector.get(), request_storage::SelectRequestToken::RT_SELDSHJ, src.c_str(), dst.c_str());
 }
 
 void SQLiteController::baseCheckCreate()

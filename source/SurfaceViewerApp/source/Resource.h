@@ -145,6 +145,9 @@
 #define ID_NO3                          2004
 #define ID_NO4                          2005
 
+#define IDR_DOWNARROW                   5001
+#define IDR_UPARROW                     5002
+
 #define IDR_EDIT_TOOLBAR               10001
 
 #define ID_EDIT_RUN                    10002
@@ -194,6 +197,9 @@
 #define IDC_SIMULATION_TIME            10039
 
 #define ID_VIEW_PROGRESS               10040
+
+#define ID_WND_STATUSES                10041
+#define IDC_LIST_STATUSES              10042
 
 // Next default values for new objects
 // 

@@ -354,6 +354,12 @@
     <ClInclude Include="source\common\data_hash.h">
       <Filter>common</Filter>
     </ClInclude>
+    <ClInclude Include="source\crossdllinterface\ChecksumServiceInterface.h">
+      <Filter>crossdllinterface</Filter>
+    </ClInclude>
+    <ClInclude Include="source\crossdllinterface\MCMInterface.h">
+      <Filter>crossdllinterface</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\colreg\ThirdParty\tinyxml2\tinyxml2.cpp">

@@ -70,7 +70,7 @@ BEGIN_MESSAGE_MAP(CSurfaceViewerGen2App, CWinAppEx)
    //ON_COMMAND(ID_TRAFFIC_STATISTIC, &CSurfaceViewerGen2App::OnEnableTrafficStatistic)
    ON_COMMAND(ID_AUTOPAUSE, &CSurfaceViewerGen2App::OnAutoPause)
    ON_COMMAND(ID_EDIT_DELETE, &CSurfaceViewerGen2App::OnDelete)
-   //ON_COMMAND(ID_GEN2UT_RECORD, &CSurfaceViewerGen2App::OnRecord)
+   ON_COMMAND(ID_GEN2UT_RECORD, &CSurfaceViewerGen2App::OnRecord)
    ON_COMMAND(ID_SHOW_RELATIONS, &CSurfaceViewerGen2App::OnShowRelations)
    ON_COMMAND(ID_BUTTON_DNGRSTAT, &CSurfaceViewerGen2App::OnUploadDangerStatistic)
    //ON_COMMAND(ID_DEBUG, &CSurfaceViewerGen2App::OnDebug)
@@ -350,6 +350,7 @@ void CSurfaceViewerGen2App::OnDelete()
 
 void CSurfaceViewerGen2App::OnRecord()
 {
+   // NOTE: временно используется как инициализатор пайплайна
    //ScenarioManager::GetInstance().SetRecording(!ScenarioManager::GetInstance().GetRecording());
 }
 

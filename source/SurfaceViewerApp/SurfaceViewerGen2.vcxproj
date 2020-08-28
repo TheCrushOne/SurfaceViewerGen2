@@ -324,6 +324,7 @@
     <ClInclude Include="source\gui\modal\TestFrame.h" />
     <ClInclude Include="source\gui\modal\TestView.h" />
     <ClInclude Include="source\gui\OutputWnd.h" />
+    <ClInclude Include="source\gui\PipelineStatusWnd.h" />
     <ClInclude Include="source\gui\ProgressView.h" />
     <ClInclude Include="source\gui\properties\PropComboBox.h" />
     <ClInclude Include="source\gui\properties\PropertiesCtrl.h" />
@@ -338,6 +339,8 @@
     <ClInclude Include="source\gui\selection\SelectedRoute.h" />
     <ClInclude Include="source\gui\selection\SelectedUnit.h" />
     <ClInclude Include="source\gui\TaskStatusView.h" />
+    <ClInclude Include="source\gui\templates\SortableList.h" />
+    <ClInclude Include="source\gui\templates\SortableListDataModel.h" />
     <ClInclude Include="source\gui\tools\CreateObjectTool.h" />
     <ClInclude Include="source\gui\tools\DragTool.h" />
     <ClInclude Include="source\gui\tools\MouseTool.h" />
@@ -437,6 +440,7 @@
     <ClCompile Include="source\gui\modal\TestFrame.cpp" />
     <ClCompile Include="source\gui\modal\TestView.cpp" />
     <ClCompile Include="source\gui\OutputWnd.cpp" />
+    <ClCompile Include="source\gui\PipelineStatusWnd.cpp" />
     <ClCompile Include="source\gui\ProgressView.cpp" />
     <ClCompile Include="source\gui\properties\PropComboBox.cpp" />
     <ClCompile Include="source\gui\properties\PropertiesCtrl.cpp" />

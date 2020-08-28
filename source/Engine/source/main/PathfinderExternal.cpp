@@ -29,16 +29,16 @@ bool PathfinderExternal::processCommand()
    if (!processData())
       return false;
 
+   // NOTE: локер, который стопает главный поток, пока все пути не будут рассчитаны
+   // NOTE: анлок прокинут из processData 
+   std::unique_lock<std::mutex> lk(cv_m);
+   cv.wait(lk);
+
    if (!writeToDestination(reinterpret_cast<data_standart::iPathStorageDataStandart*>(dst)))
       return false;
 
    if (!recordOrderHashResult())
       return false;
-
-   // NOTE: локер, который стопает главный поток, пока все пути не будут рассчитаны
-   // NOTE: анлок прокинут из processData 
-   std::unique_lock<std::mutex> lk(cv_m);
-   cv.wait(lk);
 
    return true;
 }
@@ -53,6 +53,7 @@ bool PathfinderExternal::readFromSource(data_standart::iSurfaceVieverGenMapDataS
 
 bool PathfinderExternal::writeToDestination(data_standart::iPathStorageDataStandart* dst)
 {
+   dst->SetData(m_engine->GetLastProcessedPaths());
    return true;
 }
 

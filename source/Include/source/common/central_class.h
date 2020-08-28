@@ -5,7 +5,7 @@
 
 struct central_pack
 {
-   central_pack(ICommunicator* comm/*, file_utils::global_path_storage paths, settings::application_settings stt*/)
+   central_pack(std::shared_ptr<ICommunicator> comm/*, file_utils::global_path_storage paths, settings::application_settings stt*/)
       : comm(comm)
       //, paths(std::make_shared<file_utils::global_path_storage>(paths))
       //, settings(std::make_shared<settings::application_settings>(stt))

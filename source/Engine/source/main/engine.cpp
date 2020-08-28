@@ -68,7 +68,6 @@ void Engine::convertMap(const pathfinder::GeoMatrix& rawdataSrc, std::shared_ptr
 
 pathfinder::check_fly_zone_result Engine::checkFlyZone(const pathfinder::GeoMatrix& rawdataSrc, int rowIdx, int colIdx)
 {
-   ATLASSERT(false);
    auto& pth_stt = m_settings->pth_stt;
    return { (rawdataSrc.Get(rowIdx, colIdx) > pth_stt.level_settings.max_air_height) ? pathfinder::FlyZoneAffilation::FZA_FORBIDDEN : pathfinder::FlyZoneAffilation::FZA_NORMAL };
 }
@@ -93,7 +92,6 @@ pathfinder::check_go_zone_result Engine::checkGoZone(const pathfinder::GeoMatrix
 
 pathfinder::check_go_zone_result Engine::checkAngles(double center, double left, double right, double top, double bottom, double topleft, double bottomleft, double topright, double bottomright)
 {
-   ATLASSERT(false);
    auto& pth_stt = m_settings->pth_stt;
    // NOTE: проверяем 4 направления по 8 сторонам света
    pathfinder::check_go_zone_result result;
@@ -132,7 +130,6 @@ pathfinder::check_go_zone_result Engine::checkAngles(double center, double left,
 
 void Engine::LaunchResearch(std::function<void(void)> callback)
 {
-   ATLASSERT(false);   
    m_endRoundCallback = callback;
    auto& res_stt = m_settings->res_stt;
    generateResMap(res_stt.map_size);
@@ -359,7 +356,6 @@ void Engine::lengthResearch(/*const std::shared_ptr<SVM::iMatrix<SurfaceElement>
 // NOTE: Исследование направлено на определение оптимального соотношения размера пула задач к расчету и количества потоков
 void Engine::threadResearch(/*const std::shared_ptr<SVM::iMatrix<SurfaceElement>>& resmap, std::shared_ptr<ResearchResultGen3>& result*/)
 {
-   ATLASSERT(false);
    auto& res_stt = m_settings->res_stt;
    // Длин путей 62, 125, 250, 500
    // Потоков 1, 2, 4, 8

@@ -106,9 +106,7 @@ namespace request_storage
          "DO UPDATE SET setting_json = excluded.setting_json" },
       { InsertRequestToken::RT_SETDSHJ,
          "INSERT INTO data_standart_hash_junction(source_hash, target_hash) "
-         "VALUES ('%s', '%s') "
-         "ON CONFLICT(source_hash, target_hash) "
-         "DO NOTHING" },
+         "VALUES ('%s', '%s') " },
    };
 
    const static std::unordered_map<InsertRequestToken, std::string> insupdReqList = {
@@ -146,6 +144,7 @@ namespace request_storage
       { SelectRequestToken::RT_SELDSHJ,
          "SELECT source_hash, target_hash "
          "FROM data_standart_hash_junction "
-         "WHERE source_hash='%s', target_hash='%s'" },
+         "WHERE source_hash='%s' "
+         "AND target_hash='%s'" },
    };
 }

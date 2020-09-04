@@ -202,11 +202,23 @@ namespace ColregSimulation
       SPT_SIZE
    };
 
-   //! Интерфейс симулятора колрега
+   //! Интерфейс симулятора
    struct iSimulator : colreg::iReleasable
    {
       //! Получить корневой элемент, который будет заполняться дебажной информацией
       virtual dbg::iDebugInfo* GetDebugInfo() const = 0;
+
+      //! Реакция на загрузку метаданных сценария
+      virtual bool CheckOpenScenario() = 0;
+
+      //! Загрузить обработанную карту высот
+      virtual bool LoadProcessedMap() = 0;
+
+      //! Загрузить рассчитанный стандартный путь
+      virtual bool LoadProcessedPaths() = 0;
+
+      //! Загрузить рассчитанные оптимизированные пути
+      virtual bool LoadProcessedOptPaths() = 0;
 
       //! Запуск симулятора
       virtual void Start() = 0;
@@ -245,13 +257,13 @@ namespace ColregSimulation
       virtual const ColregSimulation::SIMULATION_PLAYER_TYPE GetSimulationType() = 0;
 
       //! Установить настройки
-      //virtual void SetAppSettings(const settings::application_settings& s) = 0;
+      virtual void SetAppSettings(const settings::application_settings& s) = 0;
       
       //! Перезагрузить настройки с xml
       virtual void ReloadSettings() = 0;
 
       //! Взять настройки
-      //virtual const std::shared_ptr<settings::application_settings>& GetAppSettings() const = 0;
+      virtual const settings::application_settings& GetAppSettings() const = 0;
       
       //! Перерасчет путей
       virtual void RecountRoutes() = 0;

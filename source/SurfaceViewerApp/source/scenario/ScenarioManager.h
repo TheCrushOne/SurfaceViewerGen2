@@ -5,6 +5,7 @@
 #include "crossdllinterface/DataShareInterface.h"
 #include "crossdllinterface\FileStorageInterface.h"
 #include "crossdllinterface\TaskInterface.h"
+#include "crossdllinterface/SurfaceViewerOrderingWrapperInterface.h"
 #include "common/file_storage.h"
 #include "common/transceiver_types.h"
 #include "colreg\ColregSimulation.h"
@@ -17,6 +18,21 @@ namespace ColregSimulation
    enum class ROUTE_TYPE : char;
 }
 
+#define OBSERVABLE_ATTACH_NO_ARGS(obs, fun) \
+   obs.Attach(pObj, [wptr]() \
+   { \
+      auto ptr = wptr.lock(); \
+      if (ptr)return ptr->##fun(); \
+      return false; \
+   });
+
+#define OBSERVABLE_ATTACH_ARG(obs, fun, type) \
+   obs.Attach(pObj, [wptr](type var) \
+   { \
+      auto ptr = wptr.lock(); \
+      if (ptr)return ptr->##fun(var); \
+      return false; \
+   });
 /**
 * \класс ScenarioDispather
 * –егистрирует наблюдателей дл€ рассылки уведомлений изменений при работе сценари€
@@ -34,65 +50,37 @@ public:
    {
       std::weak_ptr<T> wptr{ pObj };
 
-      m_observable.Attach(pObj, [wptr]()
-         {
-            auto ptr = wptr.lock();
-            if (ptr)return ptr->OnScenarioLoad();
-            return false;
-         });
-
-      m_observableF.Attach(pObj, [wptr]()
-         {
-            auto ptr = wptr.lock();
-            if (ptr)return ptr->OnScenarioPathFound();
-            return false;
-         });
-
-      m_observable2.Attach(pObj, [wptr](ColregSimulation::SCENARIO_STATUS status)
-         {
-            auto ptr = wptr.lock();
-            if (ptr)return ptr->OnScenarioStatusChanged(status);
-            return false;
-         });
-
-      m_observable3.Attach(pObj, [wptr](double time)
-         {
-            auto ptr = wptr.lock();
-            if (ptr)return ptr->OnScenarioTimeChanged(time);
-            return false;
-         });
-      m_observable4.Attach(pObj, [wptr]()
-         {
-            auto ptr = wptr.lock();
-            if (ptr)return ptr->OnScenarioModified();
-            return false;
-         });
-
-      m_observable5.Attach(pObj, [wptr]()
-         {
-            auto ptr = wptr.lock();
-            if (ptr)return ptr->OnAppQuit();
-            return false;
-         });
+      OBSERVABLE_ATTACH(m_observableCheckOpened, OnScenarioCheckOpened);
+      OBSERVABLE_ATTACH(m_observableMapProcessed, OnScenarioMapProcessed);
+      OBSERVABLE_ATTACH(m_observablePathFound, OnScenarioPathFound);
+      OBSERVABLE_ATTACH(m_observableOptPathFound, OnScenarioOptPathFound);
+      OBSERVABLE_ATTACH(m_observableStatusChanged, OnScenarioStatusChanged, ColregSimulation::SCENARIO_STATUS);
+      OBSERVABLE_ATTACH(m_observableTimeChanged, OnScenarioTimeChanged, double);
+      OBSERVABLE_ATTACH(m_observableModified, OnScenarioModified);
+      OBSERVABLE_ATTACH(m_observableQuit, OnAppQuit);
    }
 
-   bool OnScenarioLoad() { return m_observable.Notify(false); }
-   bool OnScenarioPathFound() { return m_observableF.Notify(false); }
-   bool OnScenarioStatusChanged(ColregSimulation::SCENARIO_STATUS status) { return m_observable2.Notify(false, status); }
-   bool OnScenarioTimeChanged(double time) { return m_observable3.Notify(false, time); }
-   bool OnScenarioModified() { return m_observable4.Notify(false); }
-   bool OnAppQuit() { return m_observable5.Notify(false); }
+   bool OnScenarioCheckOpened() { return m_observableCheckOpened.Notify(false); }
+   bool OnScenarioMapProcessed() { return m_observableMapProcessed.Notify(false); }
+   bool OnScenarioPathFound() { return m_observablePathFound.Notify(false); }
+   bool OnScenarioOptPathFound() { return m_observableOptPathFound.Notify(false); }
+   bool OnScenarioStatusChanged(ColregSimulation::SCENARIO_STATUS status) { return m_observableStatusChanged.Notify(false, status); }
+   bool OnScenarioTimeChanged(double time) { return m_observableTimeChanged.Notify(false, time); }
+   bool OnScenarioModified() { return m_observableModified.Notify(false); }
+   bool OnAppQuit() { return m_observableQuit.Notify(false); }
 
 private:
    ScenarioDispather() = default;
    ScenarioDispather(const ScenarioDispather&) = delete;
    ScenarioDispather& operator=(const ScenarioDispather&) = delete;
-   Observable< NoLock, bool > m_observable;
-   Observable< NoLock, bool > m_observableF;
-   Observable< NoLock, bool, ColregSimulation::SCENARIO_STATUS  > m_observable2;
-   Observable< NoLock, bool, double  > m_observable3;
-   Observable< NoLock, bool > m_observable4;
-   Observable< NoLock, bool > m_observable5;
+   Observable<NoLock, bool> m_observableCheckOpened;
+   Observable<NoLock, bool> m_observableMapProcessed;
+   Observable<NoLock, bool> m_observablePathFound;
+   Observable<NoLock, bool> m_observableOptPathFound;
+   Observable<NoLock, bool, ColregSimulation::SCENARIO_STATUS> m_observableStatusChanged;
+   Observable<NoLock, bool, double> m_observableTimeChanged;
+   Observable<NoLock, bool> m_observableModified;
+   Observable<NoLock, bool> m_observableQuit;
    friend class Singleton< ScenarioDispather >;
 };
 
@@ -108,9 +96,10 @@ public:
       m_pHolder = pHolder;
       ScenarioDispather::GetInstance().AddReciever(shared_from_this());
    }
-
-   bool OnScenarioLoad() { return m_pHolder->OnScenarioLoad(); }
+   bool OnScenarioCheckOpened() { return m_pHolder->OnScenarioCheckOpened(); }
+   bool OnScenarioMapProcessed() { return m_pHolder->OnScenarioMapProcessed(); }
    bool OnScenarioPathFound() { return m_pHolder->OnScenarioPathFound(); }
+   bool OnScenarioOptPathFound() { return m_pHolder->OnScenarioOptPathFound(); }
    bool OnScenarioStatusChanged(ColregSimulation::SCENARIO_STATUS status) { return m_pHolder->OnScenarioStatusChanged(status); }
    bool OnScenarioTimeChanged(double time) { return m_pHolder->OnScenarioTimeChanged(time); }
    bool OnScenarioModified() { return m_pHolder->OnScenarioModified(); }
@@ -133,8 +122,10 @@ protected:
       m_spObserver = ScenarioObserver< ScenarioObserverBase >::Create();
       m_spObserver->Init(this);
    }
-   virtual bool OnScenarioLoad() { return false; }
+   virtual bool OnScenarioCheckOpened() { return false; }
+   virtual bool OnScenarioMapProcessed() { return false; }
    virtual bool OnScenarioPathFound() { return false; }
+   virtual bool OnScenarioOptPathFound() { return false; }
    virtual bool OnScenarioStatusChanged(ColregSimulation::SCENARIO_STATUS status) { return false; }
    virtual bool OnScenarioTimeChanged(double time) { return false; }
    virtual bool OnScenarioModified() { return false; }
@@ -152,7 +143,10 @@ class ScenarioManager
 public:
    ScenarioManager(central_pack*);
 public:
-   void Open(const wchar_t* name);
+   void CheckOpen(const wchar_t*, std::function<void(void)>);
+   void ProcessMap(std::function<void(void)>);
+   void ProcessPaths(std::function<void(void)>);
+   void ProcessOptPaths(std::function<void(void)>);
 
    void Run();
    void Pause();
@@ -172,7 +166,7 @@ public:
    }
    int GetTimeScale()const { return m_timeScale; }
 
-   std::wstring GetScenarioName() const { return m_scenarioFile; }
+   std::wstring GetScenarioName() const { return m_pathStorage.meta_path; }
 
    void ReSearch();
    void ReEstimate();
@@ -204,12 +198,12 @@ private:
    friend class Singleton< ScenarioManager, central_pack*>;
    friend class ScenarioDispather;
 
+   void processMapCommand();
+   void processPathCommand();
+   void processOptPathCommand();
+
    void save(const char* fileName = 0, bool focused = false);
    void setState(ColregSimulation::SCENARIO_STATUS state, bool force = false);
-
-   void printSolutuins();
-   void printEnentsAndSuggestions();
-   
 
    void createTransceiver();
    void initTransceiver();
@@ -223,8 +217,19 @@ private:
    bool m_debugMode = false;
    int m_timeScale = 10;
    bool m_recording = false;
-   std::wstring m_scenarioFile;
+
+   bool m_mapCommandProcessed = false;
+   bool m_pathCommandProcessed = false;
+   bool m_optPathCommandProcessed = false;
+
+   std::wstring m_databaseFolder;
+   std::wstring m_cacheFolder;
+
+   file_utils::global_path_storage m_pathStorage;
+
    colreg::ModuleGuard<transceiver::iTransceiver> m_transceiver;
    colreg::ModuleGuard<file_storage::iFileStorageManager> m_fsm;
+   colreg::ModuleGuard<surface_ordering::iOrderingWrapper, central_pack_ptr, const wchar_t*> m_orderingWrapper;
+   
    transceiver::transceiver_info m_info;
 };

@@ -81,36 +81,36 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
    // предотвращение фокусировки строки меню на активации 
    CMFCPopupMenu::SetForceMenuFocus(FALSE);
 
-   if (!m_wndScenarioToolBar.CreateEx(this, TBSTYLE_FLAT, WS_CHILD | WS_VISIBLE | CBRS_TOP | CBRS_GRIPPER | CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_SIZE_DYNAMIC) ||
-      !m_wndScenarioToolBar.LoadToolBar(IDR_EDIT_TOOLBAR))
+   if (!m_wndSimulationToolBar.CreateEx(this, TBSTYLE_FLAT, WS_CHILD | WS_VISIBLE | CBRS_TOP | CBRS_GRIPPER | CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_SIZE_DYNAMIC) ||
+      !m_wndSimulationToolBar.LoadToolBar(IDR_SIMULATION_TOOLBAR))
    {
       TRACE0("Failed to create toolbar\n");
       return -1;      // fail to create
    }
-   if (!m_wndToolBar.CreateEx(this, TBSTYLE_FLAT, WS_CHILD | WS_VISIBLE | CBRS_TOP | CBRS_GRIPPER | CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_SIZE_DYNAMIC) ||
-      !m_wndToolBar.LoadToolBar(theApp.m_bHiColorIcons ? IDR_MAINFRAME_256 : IDR_MAINFRAME))
+   if (!m_wndScenarioControlBar.CreateEx(this, TBSTYLE_FLAT, WS_CHILD | WS_VISIBLE | CBRS_TOP | CBRS_GRIPPER | CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_SIZE_DYNAMIC) ||
+      !m_wndScenarioControlBar.LoadToolBar(IDR_SCENARIO_CONTROL_TOOLBAR))
    {
       TRACE0("Не удалось создать панель инструментов\n");
       return -1;      // не удалось создать
    }
    if (!m_wndAppStatusToolBar.CreateEx(this, TBSTYLE_FLAT, WS_CHILD | WS_VISIBLE | CBRS_TOP | CBRS_GRIPPER | CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_SIZE_DYNAMIC) ||
-      !m_wndAppStatusToolBar.LoadToolBar(theApp.m_bHiColorIcons ? IDR_SERVICE_256 : IDR_SERVICE))
+      !m_wndAppStatusToolBar.LoadToolBar(IDR_SERVICE_256))
    {
       TRACE0("Не удалось создать панель инструментов\n");
       return -1;      // не удалось создать
    }
 
-   m_wndScenarioToolBar.SetWindowText(L"Simulation");
+   m_wndSimulationToolBar.SetWindowText(L"Simulation");
 
    CString strToolBarName;
    bNameValid = strToolBarName.LoadString(IDS_TOOLBAR_STANDARD);
    ASSERT(bNameValid);
-   m_wndToolBar.SetWindowText(strToolBarName);
+   m_wndScenarioControlBar.SetWindowText(strToolBarName);
 
-   CString strCustomize;
+   /*CString strCustomize;
    bNameValid = strCustomize.LoadString(IDS_TOOLBAR_CUSTOMIZE);
    ASSERT(bNameValid);
-   m_wndToolBar.EnableCustomizeButton(TRUE, ID_VIEW_CUSTOMIZE, strCustomize);
+   m_wndScenarioControlBar.EnableCustomizeButton(TRUE, ID_VIEW_CUSTOMIZE, strCustomize);*/
 
    // Разрешить операции с пользовательскими панелями инструментов:
    InitUserToolbars(nullptr, uiFirstUserToolBarId, uiLastUserToolBarId);
@@ -124,13 +124,13 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
    // TODO: удалите эти пять строк, если панель инструментов и строка меню не должны быть закрепляемыми
    m_wndMenuBar.EnableDocking(CBRS_ALIGN_ANY);
-   m_wndScenarioToolBar.EnableDocking(CBRS_ALIGN_ANY);
-   m_wndToolBar.EnableDocking(CBRS_ALIGN_ANY);
+   m_wndSimulationToolBar.EnableDocking(CBRS_ALIGN_ANY);
+   m_wndScenarioControlBar.EnableDocking(CBRS_ALIGN_ANY);
    m_wndAppStatusToolBar.EnableDocking(CBRS_ALIGN_ANY);
    EnableDocking(CBRS_ALIGN_ANY);
    DockPane(&m_wndMenuBar);
-   DockPane(&m_wndScenarioToolBar, AFX_IDW_DOCKBAR_TOP);
-   DockPane(&m_wndToolBar);
+   DockPane(&m_wndSimulationToolBar, AFX_IDW_DOCKBAR_TOP);
+   DockPane(&m_wndScenarioControlBar);
    DockPane(&m_wndAppStatusToolBar);
 
    // включить режим работы закрепляемых окон стилей Visual Studio 2005
@@ -175,7 +175,7 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
    m_wndStatuses.ShowPane(TRUE, FALSE, TRUE);
 
    // Включить функцию замены меню панелей инструментов и закрепляемых окон 
-   EnablePaneMenu(TRUE, ID_VIEW_CUSTOMIZE, strCustomize, ID_VIEW_TOOLBAR);
+   //EnablePaneMenu(TRUE, ID_VIEW_CUSTOMIZE, strCustomize, ID_VIEW_TOOLBAR);
 
    // включить быструю (Alt+перетаскивание) настройку панелей инструментов
    CMFCToolBar::EnableQuickCustomization();

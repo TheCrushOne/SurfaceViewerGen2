@@ -57,22 +57,19 @@ namespace simulator
    }
 
    // TODO: раскомментить, если понадобится
-   /*bool simulatorInit()
+   bool simulatorInit()
    {
-      if (!_simulator)
+      if (!_simMgr.IsValid())
          createSimulationManager();
-   }*/
+
+      _simulator = nullptr;
+      _simulator = _simMgr->Get();
+   }
 
    bool simulatorStart()
    {
-      if (!_simulator)
-         createSimulationManager();
-
+      ATLASSERT(_simMgr.IsValid());
       simulatorStop();
-
-      _simulator = nullptr;
-
-      _simulator = _simMgr->Get();
 
       ATLASSERT(_simulator);
 

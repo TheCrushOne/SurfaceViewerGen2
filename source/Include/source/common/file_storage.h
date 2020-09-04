@@ -4,6 +4,11 @@
 
 namespace file_utils
 {
+   inline void replaceExtension(std::string& data, const char* base, const char* nw)
+   {
+      data.replace(data.find(base), data.length(), nw);
+   }
+
    inline void replaceExtension(std::wstring& data, const wchar_t* base, const wchar_t* nw)
    {
       data.replace(data.find(base), data.length(), nw);
@@ -13,6 +18,14 @@ namespace file_utils
    {
       data.replace(data.find_last_of(L"\\\\"), data.length(), L"");
       //data.replace(data.find_last_of(L"//"), sizeof(data) - 1, nw);
+   }
+
+   inline std::wstring getFileName(const std::wstring& data)
+   {
+      auto result = data;
+      result.replace(data.find_last_of(L"."), data.length(), L"");
+      result.replace(0, data.find_last_of(L"\\\\"), L"");
+      return result;
    }
 
    struct global_path_storage
@@ -25,6 +38,8 @@ namespace file_utils
       std::wstring pathfinder_settings_path;
       std::wstring research_settings_path;
       std::wstring environment_settings_path;
+      std::wstring map_settings_path;
+      std::wstring simulation_settings_path;
       std::wstring unit_data_path;
       std::wstring map_path;
 
@@ -54,6 +69,8 @@ namespace file_utils
          pathfinder_settings_path = metaFileName;
          research_settings_path = metaFileName;
          environment_settings_path = metaFileName;
+         map_settings_path = metaFileName;
+         simulation_settings_path = metaFileName;
          map_path = metaFileName;
          unit_data_path = metaFileName;
          coordinate_map_path = metaFileName;
@@ -64,6 +81,8 @@ namespace file_utils
          replaceExtension(pathfinder_settings_path, L".meta", L".ps");
          replaceExtension(research_settings_path, L".meta", L".rs");
          replaceExtension(environment_settings_path, L".meta", L".es");
+         replaceExtension(map_settings_path, L".meta", L".ms");
+         replaceExtension(simulation_settings_path, L".meta", L".ss");
          replaceExtension(map_path, L".meta", L".png");
          replaceExtension(unit_data_path, L".meta", L".udp");
 

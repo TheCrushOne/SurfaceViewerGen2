@@ -53,7 +53,7 @@ ColregSimulation::iSimulator* CProgressViewWnd::getSimulator()
    return sim;
 }
 
-bool CProgressViewWnd::OnScenarioLoad()
+bool CProgressViewWnd::OnScenarioCheckOpened()
 {
    active = true;//getSimulator()->GetSimulationType() == ColregSimulation::SIMULATION_PLAYER_TYPE::SPT_LOG;
    if (active)

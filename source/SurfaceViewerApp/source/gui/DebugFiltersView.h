@@ -40,7 +40,12 @@ protected:
       return true;
    }
 
-   bool OnScenarioLoad() override { m_treeFilters.DeleteAllItems(); fillClassView(); return true; }
+   bool OnScenarioCheckOpened() override
+   {
+      m_treeFilters.DeleteAllItems();
+      fillClassView();
+      return true;
+   }
 
    // Overrides
 public:

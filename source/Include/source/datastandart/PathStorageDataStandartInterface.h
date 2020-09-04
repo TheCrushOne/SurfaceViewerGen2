@@ -8,6 +8,7 @@ namespace data_standart
    struct iPathStorageDataStandart : public iDataStandart
    {
       virtual void SetData(const pathfinder::route_data& paths) = 0;
+      virtual const pathfinder::route_data& GetData() = 0;
    };
 }
 

@@ -38,8 +38,7 @@ void NetLayer::createCells(render::iRender* renderer)
       return;
    const auto& simulationState = sim->GetState();
    ATLASSERT(false);
-   settings::environment_settings env_stt;
-   const auto& envStt = /*sim->GetAppSettings()->*/env_stt;
+   const auto& envStt = sim->GetAppSettings().env_stt;
    auto& meta = simulationState.GetChartGridMeta();
    auto gridLight = RGB(200, 200, 200);
 

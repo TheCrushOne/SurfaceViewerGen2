@@ -269,14 +269,12 @@ void ScenarioView::OnRButtonUp(UINT /* nFlags */, CPoint point)
 }
 
 
-bool ScenarioView::OnScenarioLoad()
+bool ScenarioView::OnScenarioCheckOpened()
 {
    _renderer->Clear();
    math::geo_point center = simulator::getCenter();
    if (!center.lat && !center.lon)
-   {
       _needResetCenter = true;
-   }
    else
    {
       _needResetCenter = false;
@@ -287,10 +285,19 @@ bool ScenarioView::OnScenarioLoad()
    return true;
 }
 
-bool ScenarioView::OnScenarioModified()
+bool ScenarioView::OnScenarioMapProcessed()
 {
-   _renderer->Clear();
-   return true;
+
+}
+
+bool ScenarioView::OnScenarioPathFound()
+{
+
+}
+
+bool ScenarioView::OnScenarioOptPathFound()
+{
+
 }
 
 void ScenarioView::setTimer()

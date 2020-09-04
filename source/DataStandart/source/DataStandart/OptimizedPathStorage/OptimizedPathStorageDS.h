@@ -37,9 +37,11 @@ namespace data_standart
       // Read
       // Write
       void SetData(const pathfinder::route_data& paths) override final;
+      const pathfinder::route_data& GetData() override final;
    private:
       void resolvePathDee();
       LPCSTR getPath() override final { return m_dataStandartData.folder.c_str(); }
    private:
+      pathfinder::route_data m_paths;
    };
 }

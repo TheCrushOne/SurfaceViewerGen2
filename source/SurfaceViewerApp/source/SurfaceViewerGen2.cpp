@@ -60,23 +60,34 @@ BEGIN_MESSAGE_MAP(CSurfaceViewerGen2App, CWinAppEx)
    ON_COMMAND(ID_SIM_STEP, &CSurfaceViewerGen2App::OnRunStep)
    ON_COMMAND(ID_EDIT_PAUSE, &CSurfaceViewerGen2App::OnPause)
    ON_COMMAND(ID_EDIT_STOP, &CSurfaceViewerGen2App::OnStop)
-   //ON_COMMAND(ID_EDIT_RULER, &CSurfaceViewerGen2App::OnRuler)
-   //ON_COMMAND(ID_EDIT_SELECT, &CSurfaceViewerGen2App::OnSelect)
-   //ON_COMMAND(ID_TOOL_CREATE, &CSurfaceViewerGen2App::OnCreate)
-   //ON_COMMAND(ID_TOOL_EDIT, &CSurfaceViewerGen2App::OnEdit)
+
    ON_COMMAND(ID_SIM_TIME_SCALE_1X, &CSurfaceViewerGen2App::OnTimeScale1X)
    ON_COMMAND(ID_SIM_TIME_SCALE_10X, &CSurfaceViewerGen2App::OnTimeScale10X)
    ON_COMMAND(ID_SIM_TIME_SCALE_100X, &CSurfaceViewerGen2App::OnTimeScale100X)
-   //ON_COMMAND(ID_TRAFFIC_STATISTIC, &CSurfaceViewerGen2App::OnEnableTrafficStatistic)
-   ON_COMMAND(ID_AUTOPAUSE, &CSurfaceViewerGen2App::OnAutoPause)
-   ON_COMMAND(ID_EDIT_DELETE, &CSurfaceViewerGen2App::OnDelete)
-   ON_COMMAND(ID_GEN2UT_RECORD, &CSurfaceViewerGen2App::OnRecord)
-   ON_COMMAND(ID_SHOW_RELATIONS, &CSurfaceViewerGen2App::OnShowRelations)
-   ON_COMMAND(ID_BUTTON_DNGRSTAT, &CSurfaceViewerGen2App::OnUploadDangerStatistic)
+
+   ON_COMMAND(ID_SC_CHOOSESCENARIO, &CSurfaceViewerGen2App::OnChooseScenario)
+   ON_COMMAND(ID_SC_PROCESSMAP, &CSurfaceViewerGen2App::OnProcessMap)
+   ON_COMMAND(ID_SC_PROCESSSIMPLEPATHS, &CSurfaceViewerGen2App::OnProcessSimplePaths)
+   ON_COMMAND(ID_SC_PROCESSOPTIMIZEDPATHS, &CSurfaceViewerGen2App::OnProcessOptimizedPaths)
+
+   //ON_COMMAND(ID_AUTOPAUSE, &CSurfaceViewerGen2App::OnAutoPause)
    //ON_COMMAND(ID_DEBUG, &CSurfaceViewerGen2App::OnDebug)
    ON_COMMAND(ID_DEPTH_AREA + 100, &CSurfaceViewerGen2App::OnFalse)
 
-   ON_UPDATE_COMMAND_UI(ID_EDIT_RUN/*IDR_EDIT_TOOLBAR*/, &CSurfaceViewerGen2App::OnRunUpdateCommandUI)
+   ON_UPDATE_COMMAND_UI(ID_EDIT_RUN, &CSurfaceViewerGen2App::OnRunUpdateCommandUI)
+   ON_UPDATE_COMMAND_UI(ID_SIM_STEP, &CSurfaceViewerGen2App::OnStepUpdateCommandUI)
+   ON_UPDATE_COMMAND_UI(ID_EDIT_PAUSE, &CSurfaceViewerGen2App::OnPauseUpdateCommandUI)
+   ON_UPDATE_COMMAND_UI(ID_EDIT_STOP, &CSurfaceViewerGen2App::OnStopUpdateCommandUI)
+
+   ON_UPDATE_COMMAND_UI(ID_SIM_TIME_SCALE_1X, &CSurfaceViewerGen2App::On1XUpdateCommandUI)
+   ON_UPDATE_COMMAND_UI(ID_SIM_TIME_SCALE_10X, &CSurfaceViewerGen2App::On10XUpdateCommandUI)
+   ON_UPDATE_COMMAND_UI(ID_SIM_TIME_SCALE_100X, &CSurfaceViewerGen2App::On100XUpdateCommandUI)
+
+   ON_UPDATE_COMMAND_UI(ID_SC_CHOOSESCENARIO, &CSurfaceViewerGen2App::OnChooseScenarioUpdateCommandUI)
+   ON_UPDATE_COMMAND_UI(ID_SC_PROCESSMAP, &CSurfaceViewerGen2App::OnProcessMapUpdateCommandUI)
+   ON_UPDATE_COMMAND_UI(ID_SC_PROCESSSIMPLEPATHS, &CSurfaceViewerGen2App::OnProcessSimplePathsUpdateCommandUI)
+   ON_UPDATE_COMMAND_UI(ID_SC_PROCESSOPTIMIZEDPATHS, &CSurfaceViewerGen2App::OnProcessOptimizedPathsUpdateCommandUI)
+
    ON_UPDATE_COMMAND_UI(ID_CHECK_ENGINE, &CSurfaceViewerGen2App::OnCheckEngineUpdateCommandUI)
 END_MESSAGE_MAP()
 
@@ -291,29 +302,6 @@ void CSurfaceViewerGen2App::OnStop()
    user_interface::SetOutputText(user_interface::OT_OUTPUT, "Restart scenario");
 }
 
-void CSurfaceViewerGen2App::OnRuler()
-{
-   // NOTE: Лишнее
-   //user_interface::SetEditMode(user_interface::EDIT_MODE::EM_MEASURMENT);
-}
-
-void CSurfaceViewerGen2App::OnSelect()
-{
-   user_interface::SetEditMode(user_interface::EDIT_MODE::EM_DRAG);
-}
-
-void CSurfaceViewerGen2App::OnCreate()
-{
-   // NOTE: Лишнее
-   //user_interface::SetEditMode(user_interface::EDIT_MODE::EM_CREATE);
-}
-
-void CSurfaceViewerGen2App::OnEdit()
-{
-   // NOTE: Лишнее
-   //user_interface::SetEditMode(user_interface::EDIT_MODE::EM_EDIT);
-}
-
 void CSurfaceViewerGen2App::OnTimeScale1X()
 {
    ScenarioManager::GetInstance(simulator::GetPack()).SetTimeScale(1);
@@ -332,57 +320,133 @@ void CSurfaceViewerGen2App::OnTimeScale100X()
    user_interface::SetOutputText(user_interface::OT_OUTPUT, "Set simulation time scale 1x100");
 }
 
-void CSurfaceViewerGen2App::OnEnableTrafficStatistic()
-{
-   // NOTE: Лишнее
-   //simulator::enableTrafficStatistic(!simulator::isTrafficStatisticEnabled());
-}
-
-void CSurfaceViewerGen2App::OnAutoPause()
+/*void CSurfaceViewerGen2App::OnAutoPause()
 {
    ScenarioManager::GetInstance(simulator::GetPack()).SetAutoPause(!ScenarioManager::GetInstance(simulator::GetPack()).GetAutoPause());
-}
+}*/
 
-void CSurfaceViewerGen2App::OnDelete()
-{
-   //SelectedObjectManager::GetInstance().Delete();
-}
-
-void CSurfaceViewerGen2App::OnRecord()
-{
-   // NOTE: временно используется как инициализатор пайплайна
-   //ScenarioManager::GetInstance().SetRecording(!ScenarioManager::GetInstance().GetRecording());
-}
-
-void CSurfaceViewerGen2App::OnShowRelations()
+/*void CSurfaceViewerGen2App::OnShowRelations()
 {
    // NOTE: временно отсюда запускается расчет путей
    ScenarioManager::GetInstance(simulator::GetPack()).ReEstimate();
    //ScenarioManager::GetInstance().SetShowRelations(!ScenarioManager::GetInstance().GetShowRelations());
    user_interface::InvalidateView();
-}
+}*/
 
-void CSurfaceViewerGen2App::OnUploadDangerStatistic()
+/*void CSurfaceViewerGen2App::OnUploadDangerStatistic()
 {
    // NOTE: временно отсюда запускаются исследования
    ScenarioManager::GetInstance(simulator::GetPack()).ReSearch();
    user_interface::InvalidateView();
+}*/
+
+void CSurfaceViewerGen2App::OnChooseScenario()
+{
+   CFileDialog fileDialog(TRUE, NULL, L"*.txt;*.crl;*.log;*.xml");
+   if (fileDialog.DoModal() == IDOK)
+   {
+      AddToRecentFileList(fileDialog.GetPathName());
+      ScenarioManager::GetInstance(simulator::GetPack()).CheckOpen(fileDialog.GetPathName(), [this]()
+         {
+            m_processMap = true;
+            activateSimulationControl(false);
+            activatePathComputeControl(false);
+            refresh();
+         });
+   }
+}
+
+void CSurfaceViewerGen2App::OnProcessMap()
+{
+   ScenarioManager::GetInstance(simulator::GetPack()).ProcessMap([this]()
+      {
+         activateSimulationControl(false);
+         activatePathComputeControl(true);
+         refresh();
+      });
+}
+
+void CSurfaceViewerGen2App::OnProcessSimplePaths()
+{
+   ScenarioManager::GetInstance(simulator::GetPack()).ProcessPaths([this]()
+      {
+         activateSimulationControl(true);
+         refresh();
+      });
+}
+
+void CSurfaceViewerGen2App::OnProcessOptimizedPaths()
+{
+   ScenarioManager::GetInstance(simulator::GetPack()).ProcessOptPaths([this]()
+      {
+         activateSimulationControl(true);
+         refresh();
+      });
 }
 
 void CSurfaceViewerGen2App::OnDebug()
 {
    // NOTE: резерв
+   // TODO: потом подключить
    ScenarioManager::GetInstance(simulator::GetPack()).SetDebugMode(!ScenarioManager::GetInstance(simulator::GetPack()).IsDebugMode());
 }
 
 void CSurfaceViewerGen2App::OnFalse()
-{
-
-}
+{}
 
 void CSurfaceViewerGen2App::OnRunUpdateCommandUI(CCmdUI* pCmdUI)
 {
    pCmdUI->Enable(m_runStatus);
+}
+
+void CSurfaceViewerGen2App::OnStepUpdateCommandUI(CCmdUI* pCmdUI)
+{
+   pCmdUI->Enable(m_runStepStatus);
+}
+
+void CSurfaceViewerGen2App::OnPauseUpdateCommandUI(CCmdUI* pCmdUI)
+{
+   pCmdUI->Enable(m_pauseStatus);
+}
+
+void CSurfaceViewerGen2App::OnStopUpdateCommandUI(CCmdUI* pCmdUI)
+{
+   pCmdUI->Enable(m_stopStatus);
+}
+
+void CSurfaceViewerGen2App::On1XUpdateCommandUI(CCmdUI* pCmdUI)
+{
+   pCmdUI->Enable(m_timeScale1XStatus);
+}
+
+void CSurfaceViewerGen2App::On10XUpdateCommandUI(CCmdUI* pCmdUI)
+{
+   pCmdUI->Enable(m_timeScale10XStatus);
+}
+
+void CSurfaceViewerGen2App::On100XUpdateCommandUI(CCmdUI* pCmdUI)
+{
+   pCmdUI->Enable(m_timeScale100XStatus);
+}
+
+void CSurfaceViewerGen2App::OnChooseScenarioUpdateCommandUI(CCmdUI* pCmdUI)
+{
+   pCmdUI->Enable(m_chooseScenario);
+}
+
+void CSurfaceViewerGen2App::OnProcessMapUpdateCommandUI(CCmdUI* pCmdUI)
+{
+   pCmdUI->Enable(m_processMap);
+}
+
+void CSurfaceViewerGen2App::OnProcessSimplePathsUpdateCommandUI(CCmdUI* pCmdUI)
+{
+   pCmdUI->Enable(m_simplePaths);
+}
+
+void CSurfaceViewerGen2App::OnProcessOptimizedPathsUpdateCommandUI(CCmdUI* pCmdUI)
+{
+   pCmdUI->Enable(m_optPaths);
 }
 
 void CSurfaceViewerGen2App::OnCheckEngineUpdateCommandUI(CCmdUI* pCmdUI)

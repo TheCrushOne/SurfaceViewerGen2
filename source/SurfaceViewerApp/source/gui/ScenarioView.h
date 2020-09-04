@@ -49,10 +49,13 @@ public:
    virtual ~ScenarioView();
 
 protected:
-   bool OnScenarioLoad() override;
-   bool OnScenarioModified() override;
+   bool OnScenarioCheckOpened() override;
+   bool OnScenarioMapProcessed() override;
+   bool OnScenarioPathFound() override;
+   bool OnScenarioOptPathFound() override;
    bool OnScenarioStatusChanged(ColregSimulation::SCENARIO_STATUS status) override;
    bool OnScenarioTimeChanged(double time) override { InvalidateView(); return true; }
+   bool OnScenarioModified() override { _renderer->Clear(); return true; }
 
    // Generated message map functions
 protected:

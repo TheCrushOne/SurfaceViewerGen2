@@ -38,8 +38,8 @@ void PathStorageDataStandart::savePathData()
       json pt;
       pt["col"] = point.col;
       pt["row"] = point.row;
-      pt["go"] = point.go;
-      pt["fly"] = point.fly;
+      pt["go"] = static_cast<unsigned short>(point.go);
+      pt["fly"] = static_cast<unsigned short>(point.fly);
       pt["height"] = point.height;
       pt["is_control"] = point.is_control;
       return pt;
@@ -69,6 +69,51 @@ void PathStorageDataStandart::savePathData()
    j["air_routes"] = pathListWriter(m_paths.air_routes);
    j["land_routes"] = pathListWriter(m_paths.land_routes);
    file << j;
+}
+
+const pathfinder::route_data& PathStorageDataStandart::GetData()
+{
+   readPathData();
+   return m_paths;
+}
+
+void PathStorageDataStandart::readPathData()
+{
+   m_paths.air_routes.clear();
+   m_paths.land_routes.clear();
+   std::string dataFilePath = getDataFilePath();
+   std::ifstream file(dataFilePath);
+   json j;
+   file >> j;
+   auto routePointRead = [](const json& j)->SVCG::route_point
+   {
+      SVCG::route_point point;
+      point.col = j["col"].get<int>();
+      point.row = j["row"].get<int>();
+      point.go = static_cast<pathfinder::GoZoneAffilation>(j["go"].get<unsigned short>());
+      point.fly = static_cast<pathfinder::FlyZoneAffilation>(j["fly"].get<unsigned short>());
+      point.height = j["height"].get<double>();
+      point.is_control = j["is_control"].get<bool>();
+      return point;
+   };
+   auto routeRead = [routePointRead](const json& jroute)->settings::route
+   {
+      settings::route route;
+      route.start = routePointRead(jroute[tag::start]);
+      route.finish = routePointRead(jroute[tag::finish]);
+      for (auto& jrp : jroute[tag::control_point_list])
+         route.control_point_list.emplace_back(routePointRead(jrp));
+      for (auto& jrp : jroute[tag::route_list])
+         route.route_list.emplace_back(routePointRead(jrp));
+      return route;
+   };
+   auto pathListRead = [routeRead](std::vector<settings::route>& route_list, const json& jroute_list)
+   {
+      for (auto& jroute : jroute_list)
+         route_list.emplace_back(routeRead(jroute));
+   };
+   pathListRead(m_paths.air_routes, j[tag::air_routes]);
+   pathListRead(m_paths.land_routes, j[tag::land_routes]);
 }
 
 iDataStandart* CreatePathStorageDataStandart(central_pack* pack, LPCWSTR base_folder, navigation_dispatcher::iComService* pService)

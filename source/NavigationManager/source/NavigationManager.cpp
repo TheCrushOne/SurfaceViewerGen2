@@ -23,7 +23,7 @@
 
 int print_help()
 {
-   _tprintf(_T("Usage: NavigationManager.exe [base folder] [config].xml [begin order name]\n"));
+   _tprintf(_T("Usage: NavigationManager.exe [config].xml [begin order name] [base folder]\n"));
    std::getchar();
    return 0;
 }

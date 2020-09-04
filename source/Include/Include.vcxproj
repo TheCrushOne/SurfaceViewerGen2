@@ -87,6 +87,7 @@
     <ClInclude Include="source\crossdllinterface\SettingsSerializerInterface.h" />
     <ClInclude Include="source\crossdllinterface\SimulationInterface.h" />
     <ClInclude Include="source\crossdllinterface\SurfaceInterfaces.h" />
+    <ClInclude Include="source\crossdllinterface\SurfaceViewerOrderingWrapperInterface.h" />
     <ClInclude Include="source\crossdllinterface\SVGMDatabaseInterface.h" />
     <ClInclude Include="source\crossdllinterface\TaskInterface.h" />
     <ClInclude Include="source\crossdllinterface\TransceiverInterface.h" />

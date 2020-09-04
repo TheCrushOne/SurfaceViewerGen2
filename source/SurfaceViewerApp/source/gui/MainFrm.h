@@ -43,8 +43,8 @@ public:
 
 protected:  // встроенные члены панели элементов управления
    CMFCMenuBar       m_wndMenuBar;
-   CMFCToolBar       m_wndScenarioToolBar;
-   CMFCToolBar       m_wndToolBar;
+   CMFCToolBar       m_wndSimulationToolBar;
+   CMFCToolBar       m_wndScenarioControlBar;
    CMFCToolBar       m_wndAppStatusToolBar;
    CMFCStatusBar     m_wndStatusBar;
    CMFCToolBarImages m_UserImages;

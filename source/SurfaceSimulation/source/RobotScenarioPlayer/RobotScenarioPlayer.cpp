@@ -452,12 +452,12 @@ void RobotScenarioPlayer::updateUnitsPath()
 
       ColregRoutePoints route;
       for (const auto& point : routeData.route_list)
-         route.emplace_back(SVCG::RoutePointToPositionPoint(point, /*GetSettings()->*/env_stt));
+         route.emplace_back(SVCG::RoutePointToPositionPoint(point, GetAppSettings().env_stt));
       unit->SetSrcRoute(std::forward<ColregRoutePoints>(route));
 
       ColregRoutePoints cplist;
       for (const auto& point : routeData.control_point_list)
-         cplist.emplace_back(SVCG::RoutePointToPositionPoint(point, /*GetSettings()->*/env_stt));
+         cplist.emplace_back(SVCG::RoutePointToPositionPoint(point, GetAppSettings().env_stt));
       unit->SetSrcContolPoints(std::forward<ColregRoutePoints>(cplist));
       //for (a)
       //ship.SetModelTrack(std::move(track), {},
@@ -472,12 +472,12 @@ void RobotScenarioPlayer::updateUnitsPath()
 
       ColregRoutePoints route;
       for (const auto& point : routeData.route_list)
-         route.emplace_back(SVCG::RoutePointToPositionPoint(point, /*GetSettings()->*/env_stt));
+         route.emplace_back(SVCG::RoutePointToPositionPoint(point, GetAppSettings().env_stt));
       unit->SetSrcRoute(std::forward<ColregRoutePoints>(route));
 
       ColregRoutePoints cplist;
       for (const auto& point : routeData.control_point_list)
-         cplist.emplace_back(SVCG::RoutePointToPositionPoint(point, /*GetSettings()->*/env_stt));
+         cplist.emplace_back(SVCG::RoutePointToPositionPoint(point, GetAppSettings().env_stt));
       unit->SetSrcContolPoints(std::forward<ColregRoutePoints>(cplist));
    }
    GetPack()->comm->UpdateUI();

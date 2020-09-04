@@ -8,6 +8,7 @@ namespace simulator
 {
    ColregSimulation::iSimulator* getSimulator();
 
+   bool simulatorInit();
    bool simulatorStep();
    bool simulatorStart();
    void simulatorStop(bool simulatorReset = false);

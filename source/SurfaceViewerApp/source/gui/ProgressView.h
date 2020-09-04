@@ -13,7 +13,7 @@ public:
 protected:
 
    bool OnScenarioTimeChanged(double time) override;
-   bool OnScenarioLoad() override;
+   bool OnScenarioCheckOpened() override;
    bool OnScenarioPathFound() override;
    void OnReleasedCaptureSlider(NMHDR* pNMHDR, LRESULT* pResult);
    void OnClickedSetButton();

@@ -6,11 +6,24 @@
 
 namespace data_standart
 {
+   
+
    //template<int DSType = DataStandartType::DST_PATHS, typename DSStruct = path_storage_data_standart>
    class PathStorageDataStandart
       : public iPathStorageDataStandart
       , public DataStandart<DataStandartType::DST_PATHS, path_storage_data_standart>
    {
+      struct tag
+      {
+         static constexpr char air_routes[] = "air_routes";
+         static constexpr char land_routes[] = "land_routes";
+
+         static constexpr char start[] = "start";
+         static constexpr char finish[] = "finish";
+
+         static constexpr char control_point_list[] = "control_point_list";
+         static constexpr char route_list[] = "route_list";
+      };
    public:
       PathStorageDataStandart(central_pack* pack, LPCWSTR base_folder, navigation_dispatcher::iComService* pService)
          : DataStandart(pack, base_folder, pService)
@@ -38,10 +51,12 @@ namespace data_standart
       // Read
       // Write
       void SetData(const pathfinder::route_data& paths) override final;
+      const pathfinder::route_data& GetData() override final;
    private:
       // Common
       std::string getDataFilePath() { return std::string(getPath()) + "\\pathdata.pl"; }
       // Read
+      void readPathData();
       // Write
       void savePathData();
    private:

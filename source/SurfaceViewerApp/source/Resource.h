@@ -148,6 +148,14 @@
 #define IDR_DOWNARROW                   5001
 #define IDR_UPARROW                     5002
 
+#define IDR_SCENARIO_CONTROL_TOOLBAR    6001
+#define IDR_SIMULATION_TOOLBAR          6002
+
+#define ID_SC_CHOOSESCENARIO            7001
+#define ID_SC_PROCESSMAP                7002
+#define ID_SC_PROCESSSIMPLEPATHS        7003
+#define ID_SC_PROCESSOPTIMIZEDPATHS     7004
+
 #define IDR_EDIT_TOOLBAR               10001
 
 #define ID_EDIT_RUN                    10002
@@ -159,16 +167,8 @@
 #define ID_SIM_TIME_SCALE_100X         10008
 #define ID_DEPTH_AREA                  10108
 #define ID_AUTOPAUSE                   10009
-#define ID_EDIT_SELECT                 10010
-#define ID_EDIT_RULER                  10011
-#define ID_TOOL_CREATE                 10012
-#define ID_TOOL_EDIT                   10013
-#define ID_EDIT_DELETE                 10014
-#define ID_TRAFFIC_STATISTIC           10015
-#define ID_GEN2UT_RECORD               10016
-#define ID_SHOW_RELATIONS              10017
+
 #define ID_DEBUG                       10018
-#define ID_BUTTON_DNGRSTAT             10019
 
 #define ID_NEW                         10020
 #define ID_OPEN                        10021

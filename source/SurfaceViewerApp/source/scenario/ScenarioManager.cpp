@@ -4,6 +4,11 @@
 #include "common/file_storage.h"
 #include "gui/user_interface.h"
 
+#include <filesystem>
+#include <fstream>
+#include <string>
+#include <regex>
+
 #define VALID_CHECK_DLL_LOAD(dllName, funcName, guard, ...) \
    guard.Create(SVGUtils::CurrentDllPath(dllName).c_str(), funcName, __VA_ARGS__); \
    if (!guard.IsValid()) \
@@ -19,34 +24,116 @@ ScenarioManager::ScenarioManager(central_pack* pack)
    : m_info({ "127.0.0.1", "8080", "27015", [this](const char* txt) { this->callback(txt); }})
 {
    m_info.data_callback_map[transceiver::JsonCommand::JC_NEWSURFACE] = [this](const char* txt) {};
+   m_cacheFolder = L"../../../cache/";
+   m_databaseFolder = L"../../../database";
    // TODO: включить, когда будет более ясная картина по протоколу обмена данными
    //createTransceiver();
    VALID_CHECK_DLL_LOAD("FileStorageManager", "CreateFileStorageManager", m_fsm);
+   VALID_CHECK_DLL_LOAD("SurfaceViewerOrderingWrapper", "CreateSurfaceViewerOrderingWrapper", m_orderingWrapper, pack, m_databaseFolder.c_str());
    //VALID_CHECK_DLL_LOAD("NavigationDispatcher", "CreateNavigationDispatcher", m_navigationDispatcher, pack);
 }
 
-void ScenarioManager::Open(const wchar_t* fileName)
+void ScenarioManager::CheckOpen(const wchar_t* fileName, std::function<void(void)> buttonEnableCallback)
 {
-   m_scenarioFile = fileName;
+   m_pathStorage = file_utils::global_path_storage(fileName);
+
    SelectedObjectManager::GetInstance().Unselect();
 
-   //m_fsm->PrepareStorage(fileName);
-
-   //m_converter->Run();
-   
-   //data_share::share_meta meta{L"file.bin"};
-
-   //m_shareProvider->Share(meta, m_rawdata);
-   //m_transceiver->Send(SVGUtils::wstringToString(meta.shared_filename).c_str());
-
-   simulator::simulatorStart();
-   //Dispatcher::GetInstance().LoadScenario(fileName);
-
-   if (ScenarioDispather::GetInstance().OnScenarioLoad())
+   // TODO: дописать чек
+   if (true)
    {
-      //setState(ColregSimulation::SCENARIO_STATUS::SS_PAUSE);
-      //SetDebugMode(_debugMode);
+      simulator::getSimulator()->CheckOpenScenario();
+      ScenarioDispather::GetInstance().OnScenarioCheckOpened();
+      buttonEnableCallback();
    }
+}
+
+void ScenarioManager::ProcessMap(std::function<void(void)> buttonEnableCallback)
+{
+   std::thread(&ScenarioManager::processMapCommand, this, [this, buttonEnableCallback]()
+      {
+         if (m_mapCommandProcessed)
+         {
+            simulator::getSimulator()->LoadProcessedMap();
+            ScenarioDispather::GetInstance().OnScenarioMapProcessed();
+            buttonEnableCallback();
+         }
+      });
+}
+
+void ScenarioManager::ProcessPaths(std::function<void(void)> buttonEnableCallback)
+{
+   std::thread(&ScenarioManager::processPathCommand, this, [this, buttonEnableCallback]
+      {
+         simulator::getSimulator()->LoadProcessedPaths();
+         ScenarioDispather::GetInstance().OnScenarioPathFound();
+         simulator::simulatorStart();
+         buttonEnableCallback();
+      });
+}
+
+void ScenarioManager::ProcessOptPaths(std::function<void(void)> buttonEnableCallback)
+{
+   std::thread(&ScenarioManager::processOptPathCommand, this, [this, buttonEnableCallback]
+      {
+         simulator::getSimulator()->LoadProcessedOptPaths();
+         ScenarioDispather::GetInstance().OnScenarioOptPathFound();
+         simulator::simulatorStart();
+         buttonEnableCallback();
+      });
+}
+
+void ScenarioManager::processMapCommand()
+{
+   auto wscen = file_utils::getFileName(m_pathStorage.map_object_path);
+   std::unordered_map<std::string, std::wstring> dict = {
+      { "PNG_SRC", m_pathStorage.map_object_path },
+      { "SVGM_FLDR", m_cacheFolder + wscen },
+      { "UNIT_DATA", m_pathStorage.unit_data_path },
+      { "ENV_STT", m_pathStorage.environment_settings_path },
+      { "MAP_STT", m_pathStorage.map_settings_path },
+      { "PTH_STT", m_pathStorage.pathfinder_settings_path },
+      { "RES_STT", m_pathStorage.research_settings_path },
+      { "SIM_STT", m_pathStorage.simulation_settings_path }
+   };
+
+   m_mapCommandProcessed = m_orderingWrapper->ProcessOrder(L"process_map.xml", NULL, dict);
+}
+
+void ScenarioManager::processPathCommand()
+{
+   auto wscen = file_utils::getFileName(m_pathStorage.map_object_path);
+   std::unordered_map<std::string, std::wstring> dict = {
+      { "PNG_SRC", m_pathStorage.map_object_path },
+      { "SVGM_FLDR", m_cacheFolder + wscen },
+      { "UNIT_DATA", m_pathStorage.unit_data_path },
+      { "ENV_STT", m_pathStorage.environment_settings_path },
+      { "MAP_STT", m_pathStorage.map_settings_path },
+      { "PTH_STT", m_pathStorage.pathfinder_settings_path },
+      { "RES_STT", m_pathStorage.research_settings_path },
+      { "SIM_STT", m_pathStorage.simulation_settings_path },
+      { "PATHS_DST", m_cacheFolder + wscen },
+   };
+
+   m_pathCommandProcessed = m_orderingWrapper->ProcessOrder(L"process_path_find.xml", NULL, dict);
+}
+
+void ScenarioManager::processOptPathCommand()
+{
+   auto wscen = file_utils::getFileName(m_pathStorage.map_object_path);
+   std::unordered_map<std::string, std::wstring> dict = {
+      { "PNG_SRC", m_pathStorage.map_object_path },
+      { "SVGM_FLDR", m_cacheFolder + wscen },
+      { "UNIT_DATA", m_pathStorage.unit_data_path },
+      { "ENV_STT", m_pathStorage.environment_settings_path },
+      { "MAP_STT", m_pathStorage.map_settings_path },
+      { "PTH_STT", m_pathStorage.pathfinder_settings_path },
+      { "RES_STT", m_pathStorage.research_settings_path },
+      { "SIM_STT", m_pathStorage.simulation_settings_path },
+      { "OPTPATHS_DST", m_cacheFolder + wscen },
+   };
+
+   m_optPathCommandProcessed = m_orderingWrapper->ProcessOrder(L"process_opt_path_find.xml", NULL, dict);
 }
 
 void ScenarioManager::setState(ColregSimulation::SCENARIO_STATUS state, bool force)

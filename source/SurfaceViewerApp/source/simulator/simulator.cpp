@@ -64,6 +64,8 @@ namespace simulator
 
       _simulator = nullptr;
       _simulator = _simMgr->Get();
+
+      return true;
    }
 
    bool simulatorStart()

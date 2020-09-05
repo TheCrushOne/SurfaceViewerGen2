@@ -23,7 +23,7 @@ OrderingWrapper::OrderingWrapper(central_pack_ptr pack, const wchar_t* databaseP
 {
    m_cacheFolder = L"../../../cache/";
    m_orderCacheFolder = m_cacheFolder + L"order_heap/";
-   m_orderHeapFolder = L"../../../heap/";
+   m_orderHeapFolder = L"../../../order_heap/";
 
    VALID_CHECK_DLL_LOAD("NavigationDispatcher", "CreateNavigationDispatcher", m_navigationDispatcher, pack);
 }

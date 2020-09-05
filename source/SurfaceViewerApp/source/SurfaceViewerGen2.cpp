@@ -9,6 +9,7 @@
 #include <vector>
 #include <algorithm>
 #include <numeric>
+#include <filesystem>
 
 #include "stdafx.h"
 #include "framework.h"
@@ -342,7 +343,19 @@ void CSurfaceViewerGen2App::OnTimeScale100X()
 
 void CSurfaceViewerGen2App::OnChooseScenario()
 {
-   CFileDialog fileDialog(TRUE, NULL, L"*.txt;*.crl;*.log;*.xml");
+   CFileDialog fileDialog(
+      TRUE,
+      L"meta",
+      NULL,
+      OFN_HIDEREADONLY,
+      L"Scenario Metadata Files (*.meta)|*.meta|",
+      AfxGetMainWnd()
+   );
+   std::wstring cPath = std::filesystem::current_path().c_str();
+   cPath += L"\\..\\..\\..\\scenarios";
+   // NOTE: CFileDialog почему-то не любит точки в путях...
+   auto fsPath = std::filesystem::absolute(cPath);
+   fileDialog.m_ofn.lpstrInitialDir = fsPath.c_str();
    if (fileDialog.DoModal() == IDOK)
    {
       AddToRecentFileList(fileDialog.GetPathName());
@@ -352,7 +365,8 @@ void CSurfaceViewerGen2App::OnChooseScenario()
             activateSimulationControl(false);
             activatePathComputeControl(false);
             refresh();
-         });
+         }
+      );
    }
 }
 

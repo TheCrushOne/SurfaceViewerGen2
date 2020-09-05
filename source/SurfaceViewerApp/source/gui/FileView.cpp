@@ -162,7 +162,8 @@ void CFileView::Simulate()
       const auto name = getFileName(hItemSel);
       if (name.find('.', 0) == std::string::npos)
          return;
-      ScenarioManager::GetInstance(simulator::GetPack()).Open(name.c_str());
+      // TODO: починить!!!
+      //ScenarioManager::GetInstance(simulator::GetPack()).CheckOpen(name.c_str());
    }
 }
 

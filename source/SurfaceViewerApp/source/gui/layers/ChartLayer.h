@@ -11,7 +11,12 @@ public:
    ChartLayer() { initObjInfo(); }
 
    void Render(render::iRender* renderer) override;
-   bool OnScenarioLoad() override { m_chartUSN = colreg::INVALID_ID; return true; }
+   bool OnScenarioCheckOpened() override { m_chartUSN = colreg::INVALID_ID; return true; }
+   bool OnScenarioMapProcessed() override { return true; }
+   bool OnScenarioPathFound() override { return true; }
+   bool OnScenarioOptPathFound() override { return true; }
+   bool OnScenarioStatusChanged(ColregSimulation::SCENARIO_STATUS status) override { return true; }
+   bool OnScenarioTimeChanged(double time) override { return true; }
    bool OnScenarioModified() { m_chartUSN = colreg::INVALID_ID; return true; }
 
    iProperty* GetProperties() override;

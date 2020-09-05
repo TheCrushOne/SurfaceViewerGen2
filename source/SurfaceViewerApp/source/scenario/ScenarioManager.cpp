@@ -42,6 +42,7 @@ void ScenarioManager::CheckOpen(const wchar_t* fileName, std::function<void(void
    // TODO: дописать чек
    if (true)
    {
+      simulator::simulatorInit();
       simulator::getSimulator()->CheckOpenScenario();
       ScenarioDispather::GetInstance().OnScenarioCheckOpened();
       buttonEnableCallback();
@@ -58,32 +59,35 @@ void ScenarioManager::ProcessMap(std::function<void(void)> buttonEnableCallback)
             ScenarioDispather::GetInstance().OnScenarioMapProcessed();
             buttonEnableCallback();
          }
-      });
+      }
+   ).detach();
 }
 
 void ScenarioManager::ProcessPaths(std::function<void(void)> buttonEnableCallback)
 {
-   std::thread(&ScenarioManager::processPathCommand, this, [this, buttonEnableCallback]
+   std::thread(&ScenarioManager::processPathCommand, this, [this, buttonEnableCallback]()
       {
          simulator::getSimulator()->LoadProcessedPaths();
          ScenarioDispather::GetInstance().OnScenarioPathFound();
          simulator::simulatorStart();
          buttonEnableCallback();
-      });
+      }
+   ).detach();
 }
 
 void ScenarioManager::ProcessOptPaths(std::function<void(void)> buttonEnableCallback)
 {
-   std::thread(&ScenarioManager::processOptPathCommand, this, [this, buttonEnableCallback]
+   std::thread(&ScenarioManager::processOptPathCommand, this, [this, buttonEnableCallback]()
       {
          simulator::getSimulator()->LoadProcessedOptPaths();
          ScenarioDispather::GetInstance().OnScenarioOptPathFound();
          simulator::simulatorStart();
          buttonEnableCallback();
-      });
+      }
+   ).detach();
 }
 
-void ScenarioManager::processMapCommand()
+void ScenarioManager::processMapCommand(std::function<void(void)> successCallback)
 {
    auto wscen = file_utils::getFileName(m_pathStorage.map_object_path);
    std::unordered_map<std::string, std::wstring> dict = {
@@ -98,9 +102,10 @@ void ScenarioManager::processMapCommand()
    };
 
    m_mapCommandProcessed = m_orderingWrapper->ProcessOrder(L"process_map.xml", NULL, dict);
+   successCallback();
 }
 
-void ScenarioManager::processPathCommand()
+void ScenarioManager::processPathCommand(std::function<void(void)> successCallback)
 {
    auto wscen = file_utils::getFileName(m_pathStorage.map_object_path);
    std::unordered_map<std::string, std::wstring> dict = {
@@ -116,9 +121,10 @@ void ScenarioManager::processPathCommand()
    };
 
    m_pathCommandProcessed = m_orderingWrapper->ProcessOrder(L"process_path_find.xml", NULL, dict);
+   successCallback();
 }
 
-void ScenarioManager::processOptPathCommand()
+void ScenarioManager::processOptPathCommand(std::function<void(void)> successCallback)
 {
    auto wscen = file_utils::getFileName(m_pathStorage.map_object_path);
    std::unordered_map<std::string, std::wstring> dict = {
@@ -134,6 +140,7 @@ void ScenarioManager::processOptPathCommand()
    };
 
    m_optPathCommandProcessed = m_orderingWrapper->ProcessOrder(L"process_opt_path_find.xml", NULL, dict);
+   successCallback();
 }
 
 void ScenarioManager::setState(ColregSimulation::SCENARIO_STATUS state, bool force)

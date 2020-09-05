@@ -287,17 +287,17 @@ bool ScenarioView::OnScenarioCheckOpened()
 
 bool ScenarioView::OnScenarioMapProcessed()
 {
-
+   return true;
 }
 
 bool ScenarioView::OnScenarioPathFound()
 {
-
+   return true;
 }
 
 bool ScenarioView::OnScenarioOptPathFound()
 {
-
+   return true;
 }
 
 void ScenarioView::setTimer()

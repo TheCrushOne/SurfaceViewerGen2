@@ -83,8 +83,7 @@ void RobotScenarioPlayer::step()
 
 void RobotScenarioPlayer::moveUnits()
 {
-   ATLASSERT(false);
-   settings::environment_settings env_stt;
+   const settings::environment_settings& env_stt = GetAppSettings().env_stt;
    if (m_currentIdx >= m_dronesIdxVct.size())
    {
       Stop();  // NOTE: остановка по окончании симуляции
@@ -101,10 +100,10 @@ void RobotScenarioPlayer::moveUnits()
       auto rlIdx = m_dronesIdxVct.at(m_currentIdx).at(idx);
       if (rlIdx < rl.size())
       {
-         pos.point.pos = SVCG::RoutePointToPositionPoint(rl.at(rlIdx), /*GetSettings()->*/env_stt);
+         pos.point.pos = SVCG::RoutePointToPositionPoint(rl.at(rlIdx), env_stt);
          if (rl.size() > rlIdx + 1)
          {
-            auto nextPoint = SVCG::RoutePointToPositionPoint(rl.at(rlIdx + 1), /*GetSettings()->*/env_stt);
+            auto nextPoint = SVCG::RoutePointToPositionPoint(rl.at(rlIdx + 1), env_stt);
             pos.point.heading = math::direction(pos.point.pos, static_cast<colreg::geo_point>(nextPoint));
             pos.point.course = pos.point.heading;
             pos.point.speed = m_defaultUnitSpeed;
@@ -123,10 +122,10 @@ void RobotScenarioPlayer::moveUnits()
       auto rlIdx = m_roversIdxVct.at(m_currentIdx).at(idx);
       if (rlIdx < rl.size())
       {
-         pos.point.pos = SVCG::RoutePointToPositionPoint(rl.at(rlIdx), /*GetSettings()->*/env_stt);
+         pos.point.pos = SVCG::RoutePointToPositionPoint(rl.at(rlIdx), env_stt);
          if (rl.size() > rlIdx + 1)
          {
-            auto nextPoint = SVCG::RoutePointToPositionPoint(rl.at(rlIdx + 1), /*GetSettings()->*/env_stt);
+            auto nextPoint = SVCG::RoutePointToPositionPoint(rl.at(rlIdx + 1), env_stt);
             pos.point.heading = math::direction(pos.point.pos, static_cast<colreg::geo_point>(nextPoint));
             pos.point.course = pos.point.heading;
             pos.point.speed = m_defaultUnitSpeed;
@@ -171,9 +170,8 @@ void RobotScenarioPlayer::RecountResearch()
 
 void RobotScenarioPlayer::LogResearchResult()
 {
-   ATLASSERT(false);
-   settings::research_settings res_stt;
-   switch (/*GetSettings()->*/res_stt.res_type)
+   const settings::research_settings& res_stt = GetAppSettings().res_stt;
+   switch (res_stt.res_type)
    {
    case settings::ResearchType::RT_TIME:
    {
@@ -237,10 +235,8 @@ double RobotScenarioPlayer::GetTime() const
 }
 
 const settings::map_settings& RobotScenarioPlayer::GetChartGridMeta() const
-{
-   ATLASSERT(false);
-   settings::map_settings map_stt;
-   return /*GetSettings()->*/map_stt;
+{   
+   return GetAppSettings().map_stt;
 }
 
 const colreg::chart_objects_ref& RobotScenarioPlayer::GetChartObjects() const
@@ -282,8 +278,7 @@ SimulationUnit* RobotScenarioPlayer::getUnitByIdx(UNIT_TYPE type, size_t idx)
 
 void RobotScenarioPlayer::addUnit(const settings::unit_data_element& setting, UNIT_TYPE type, size_t uid)
 {
-   ATLASSERT(false);
-   settings::environment_settings env_stt;
+   const settings::environment_settings& env_stt = GetAppSettings().env_stt;
    switch (type)
    {
    case UNIT_TYPE::UT_DRONE:
@@ -432,8 +427,7 @@ void RobotScenarioPlayer::createIndexMaps()
 
 void RobotScenarioPlayer::updateUnitsPath()
 {
-   ATLASSERT(false);
-   settings::environment_settings env_stt;
+   const settings::environment_settings& env_stt = GetAppSettings().env_stt;
    auto& paths = m_engine->GetLastProcessedPaths();
    if (GetUnitCount(UNIT_TYPE::UT_ROVER) != paths.land_routes.size()
       || GetUnitCount(UNIT_TYPE::UT_DRONE) != paths.air_routes.size())
@@ -452,12 +446,12 @@ void RobotScenarioPlayer::updateUnitsPath()
 
       ColregRoutePoints route;
       for (const auto& point : routeData.route_list)
-         route.emplace_back(SVCG::RoutePointToPositionPoint(point, GetAppSettings().env_stt));
+         route.emplace_back(SVCG::RoutePointToPositionPoint(point, env_stt));
       unit->SetSrcRoute(std::forward<ColregRoutePoints>(route));
 
       ColregRoutePoints cplist;
       for (const auto& point : routeData.control_point_list)
-         cplist.emplace_back(SVCG::RoutePointToPositionPoint(point, GetAppSettings().env_stt));
+         cplist.emplace_back(SVCG::RoutePointToPositionPoint(point, env_stt));
       unit->SetSrcContolPoints(std::forward<ColregRoutePoints>(cplist));
       //for (a)
       //ship.SetModelTrack(std::move(track), {},
@@ -472,12 +466,12 @@ void RobotScenarioPlayer::updateUnitsPath()
 
       ColregRoutePoints route;
       for (const auto& point : routeData.route_list)
-         route.emplace_back(SVCG::RoutePointToPositionPoint(point, GetAppSettings().env_stt));
+         route.emplace_back(SVCG::RoutePointToPositionPoint(point, env_stt));
       unit->SetSrcRoute(std::forward<ColregRoutePoints>(route));
 
       ColregRoutePoints cplist;
       for (const auto& point : routeData.control_point_list)
-         cplist.emplace_back(SVCG::RoutePointToPositionPoint(point, GetAppSettings().env_stt));
+         cplist.emplace_back(SVCG::RoutePointToPositionPoint(point, env_stt));
       unit->SetSrcContolPoints(std::forward<ColregRoutePoints>(cplist));
    }
    GetPack()->comm->UpdateUI();

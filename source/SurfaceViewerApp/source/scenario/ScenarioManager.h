@@ -50,14 +50,14 @@ public:
    {
       std::weak_ptr<T> wptr{ pObj };
 
-      OBSERVABLE_ATTACH(m_observableCheckOpened, OnScenarioCheckOpened);
-      OBSERVABLE_ATTACH(m_observableMapProcessed, OnScenarioMapProcessed);
-      OBSERVABLE_ATTACH(m_observablePathFound, OnScenarioPathFound);
-      OBSERVABLE_ATTACH(m_observableOptPathFound, OnScenarioOptPathFound);
-      OBSERVABLE_ATTACH(m_observableStatusChanged, OnScenarioStatusChanged, ColregSimulation::SCENARIO_STATUS);
-      OBSERVABLE_ATTACH(m_observableTimeChanged, OnScenarioTimeChanged, double);
-      OBSERVABLE_ATTACH(m_observableModified, OnScenarioModified);
-      OBSERVABLE_ATTACH(m_observableQuit, OnAppQuit);
+      OBSERVABLE_ATTACH_NO_ARGS(m_observableCheckOpened, OnScenarioCheckOpened);
+      OBSERVABLE_ATTACH_NO_ARGS(m_observableMapProcessed, OnScenarioMapProcessed);
+      OBSERVABLE_ATTACH_NO_ARGS(m_observablePathFound, OnScenarioPathFound);
+      OBSERVABLE_ATTACH_NO_ARGS(m_observableOptPathFound, OnScenarioOptPathFound);
+      OBSERVABLE_ATTACH_ARG(m_observableStatusChanged, OnScenarioStatusChanged, ColregSimulation::SCENARIO_STATUS);
+      OBSERVABLE_ATTACH_ARG(m_observableTimeChanged, OnScenarioTimeChanged, double);
+      OBSERVABLE_ATTACH_NO_ARGS(m_observableModified, OnScenarioModified);
+      OBSERVABLE_ATTACH_NO_ARGS(m_observableQuit, OnAppQuit);
    }
 
    bool OnScenarioCheckOpened() { return m_observableCheckOpened.Notify(false); }
@@ -198,9 +198,9 @@ private:
    friend class Singleton< ScenarioManager, central_pack*>;
    friend class ScenarioDispather;
 
-   void processMapCommand();
-   void processPathCommand();
-   void processOptPathCommand();
+   void processMapCommand(std::function<void(void)>);
+   void processPathCommand(std::function<void(void)>);
+   void processOptPathCommand(std::function<void(void)>);
 
    void save(const char* fileName = 0, bool focused = false);
    void setState(ColregSimulation::SCENARIO_STATUS state, bool force = false);

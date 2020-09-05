@@ -95,4 +95,6 @@ private:
    //settings properties
    std::vector<iPropertyPtr> m_prop_pathfinding_settings;
    std::vector<iPropertyPtr> m_prop_research_settings;
+
+   settings::application_settings m_settings;
 };

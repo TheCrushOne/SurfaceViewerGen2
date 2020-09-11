@@ -20,7 +20,7 @@ namespace ColregSimulation
    class SimulatorBase : public iSimulator, public Central
    {
    public:
-      SimulatorBase(central_pack*, iPropertyInterface*);
+      SimulatorBase(central_pack*, iPropertyInterface*, navigation_dispatcher::iComServicePtr);
 
       virtual ~SimulatorBase() {}
 
@@ -55,5 +55,6 @@ namespace ColregSimulation
       colreg::ModuleGuard<data_standart::iDataStandart, central_pack_ptr, LPCSTR, navigation_dispatcher::iComService*> m_optPathDS;
       SCENARIO_STATUS m_scenarioStatus = SCENARIO_STATUS::SS_NOT_LOADED;
       dbg::iDebugInfo* m_debugInfo = nullptr;
+      navigation_dispatcher::iComServicePtr m_service = nullptr;
    };
 }

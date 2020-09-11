@@ -7,10 +7,13 @@
 #include "ConfigDispatcher.h"
 #include "OrderProcessor.h"
 #include "crossdllinterface\SVGMDatabaseInterface.h"
+#include "crossdllinterface\ChecksumServiceInterface.h"
+#include "crossdllinterface\UnitDataSerializerInterface.h"
+#include "crossdllinterface\SettingsSerializerInterface.h"
 
 namespace navigation_dispatcher
 {
-   struct iComService
+   struct iComService : colreg::iReleasable
    {
       // NOTE: она дублируется с Communicator!!!
       //virtual ICommunicator* GetCommunicator() = 0;
@@ -21,5 +24,9 @@ namespace navigation_dispatcher
       virtual iOrderFactory* GetOrderFactory() = 0;
       virtual iOrderProcessor* GetOrderProcessor() = 0;
       virtual database::iSVGMDatabaseController* GetDatabaseController() = 0;
+      virtual checksum::iChecksumService* GetChecksumService() = 0;
+      virtual colreg::iUnitDataSerializer* GetUnitDataSerializer() = 0;
    };
+
+   using iComServicePtr = iComService*;
 }

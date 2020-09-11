@@ -21,6 +21,9 @@ namespace data_standart
       DataStandartType getType() const { return static_cast<DataStandartType>(data_standart_type); }
       
       virtual LPCSTR getPath() = 0;
+      // NOTE: לוים פאיכ
+      virtual std::string getDataFilePath() = 0;
+      virtual size_t getDataHash() { return atoi(m_service->GetChecksumService()->CalcHash(getDataFilePath().c_str())); }
       // Common
    protected:
       std::wstring m_baseFolder;

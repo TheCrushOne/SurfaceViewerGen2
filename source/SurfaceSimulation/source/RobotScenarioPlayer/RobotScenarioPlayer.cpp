@@ -7,8 +7,8 @@
 
 using namespace ColregSimulation;
 
-RobotScenarioPlayer::RobotScenarioPlayer(central_pack* pack, iPropertyInterface* prop)
-   : SimulatorBase(pack, prop)
+RobotScenarioPlayer::RobotScenarioPlayer(central_pack* pack, iPropertyInterface* prop, navigation_dispatcher::iComServicePtr service)
+   : SimulatorBase(pack, prop, service)
 {
    m_debugInfo = dbg::CreateDebugInfoManager();
 }

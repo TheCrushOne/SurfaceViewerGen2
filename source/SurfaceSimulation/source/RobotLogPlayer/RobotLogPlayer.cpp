@@ -3,8 +3,8 @@
 
 using namespace ColregSimulation;
 
-RobotLogPlayer::RobotLogPlayer(central_pack* pack, iPropertyInterface* prop)
-   : SimulatorBase(pack, prop)
+RobotLogPlayer::RobotLogPlayer(central_pack* pack, iPropertyInterface* prop, navigation_dispatcher::iComServicePtr service)
+   : SimulatorBase(pack, prop, service)
 {}
 
 void RobotLogPlayer::Start()

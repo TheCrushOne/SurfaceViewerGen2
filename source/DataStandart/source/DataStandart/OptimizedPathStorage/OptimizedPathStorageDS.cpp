@@ -8,11 +8,6 @@ void OptimizedPathStorageDataStandart::resolvePathDee()
 
 }
 
-size_t OptimizedPathStorageDataStandart::GetDataHash()
-{
-   return 1902;
-}
-
 void OptimizedPathStorageDataStandart::SetData(const pathfinder::route_data& paths)
 {
 

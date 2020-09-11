@@ -42,7 +42,7 @@ namespace data_standart
       LPCSTR GetPath() override { return getPath(); }
       DataStandartType GetType() const override { return getType(); }
       void Release() override final { delete this; }
-      size_t GetDataHash() override final;
+      size_t GetDataHash() override final { return getDataHash(); }
       // Read
       // Write
 

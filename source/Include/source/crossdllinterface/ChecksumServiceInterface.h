@@ -22,4 +22,4 @@ namespace checksum
 #define CHCKEXPRTIMPRT __declspec(dllimport) // import DLL information
 #endif
 
-extern "C" CHCKEXPRTIMPRT checksum::iChecksumService * CreateChecksumService(central_pack*);
+extern "C" CHCKEXPRTIMPRT checksum::iChecksumService * CreateChecksumService(central_pack_ptr);

@@ -57,13 +57,13 @@ namespace simulator
    }
 
    // TODO: раскомментить, если понадобится
-   bool simulatorInit()
+   bool simulatorInit(navigation_dispatcher::iComServicePtr service)
    {
       if (!_simMgr.IsValid())
          createSimulationManager();
 
       _simulator = nullptr;
-      _simulator = _simMgr->Get();
+      _simulator = _simMgr->Get(service);
 
       return true;
    }

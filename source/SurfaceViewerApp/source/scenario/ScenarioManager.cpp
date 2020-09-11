@@ -26,10 +26,12 @@ ScenarioManager::ScenarioManager(central_pack* pack)
    m_info.data_callback_map[transceiver::JsonCommand::JC_NEWSURFACE] = [this](const char* txt) {};
    m_cacheFolder = L"../../../cache/";
    m_databaseFolder = L"../../../database";
+   std::string strBaseFolder = SVGUtils::wstringToString(m_databaseFolder);
    // TODO: включить, когда будет более ясная картина по протоколу обмена данными
    //createTransceiver();
    VALID_CHECK_DLL_LOAD("FileStorageManager", "CreateFileStorageManager", m_fsm);
    VALID_CHECK_DLL_LOAD("SurfaceViewerOrderingWrapper", "CreateSurfaceViewerOrderingWrapper", m_orderingWrapper, pack, m_databaseFolder.c_str());
+   VALID_CHECK_DLL_LOAD("NavigationDispatcher", "CreateExternalComService", m_comService, pack, strBaseFolder.c_str());
    //VALID_CHECK_DLL_LOAD("NavigationDispatcher", "CreateNavigationDispatcher", m_navigationDispatcher, pack);
 }
 
@@ -38,11 +40,11 @@ void ScenarioManager::CheckOpen(const wchar_t* fileName, std::function<void(void
    m_pathStorage = file_utils::global_path_storage(fileName);
 
    SelectedObjectManager::GetInstance().Unselect();
-
    // TODO: дописать чек
    if (true)
    {
-      simulator::simulatorInit();
+      simulator::simulatorInit(m_comService.operator->());
+      simulator::getSimulator()->SetAppSettings(m_comService->GetSettingsSerializerHolder()->GetSettings());
       simulator::getSimulator()->CheckOpenScenario();
       ScenarioDispather::GetInstance().OnScenarioCheckOpened();
       buttonEnableCallback();
@@ -53,12 +55,10 @@ void ScenarioManager::ProcessMap(std::function<void(void)> buttonEnableCallback)
 {
    std::thread(&ScenarioManager::processMapCommand, this, [this, buttonEnableCallback]()
       {
-         if (m_mapCommandProcessed)
-         {
-            simulator::getSimulator()->LoadProcessedMap();
-            ScenarioDispather::GetInstance().OnScenarioMapProcessed();
-            buttonEnableCallback();
-         }
+         simulator::getSimulator()->SetAppSettings(m_comService->GetSettingsSerializerHolder()->GetSettings());
+         simulator::getSimulator()->LoadProcessedMap();
+         ScenarioDispather::GetInstance().OnScenarioMapProcessed();
+         buttonEnableCallback();
       }
    ).detach();
 }
@@ -67,6 +67,7 @@ void ScenarioManager::ProcessPaths(std::function<void(void)> buttonEnableCallbac
 {
    std::thread(&ScenarioManager::processPathCommand, this, [this, buttonEnableCallback]()
       {
+         simulator::getSimulator()->SetAppSettings(m_comService->GetSettingsSerializerHolder()->GetSettings());
          simulator::getSimulator()->LoadProcessedPaths();
          ScenarioDispather::GetInstance().OnScenarioPathFound();
          simulator::simulatorStart();
@@ -79,6 +80,7 @@ void ScenarioManager::ProcessOptPaths(std::function<void(void)> buttonEnableCall
 {
    std::thread(&ScenarioManager::processOptPathCommand, this, [this, buttonEnableCallback]()
       {
+         simulator::getSimulator()->SetAppSettings(m_comService->GetSettingsSerializerHolder()->GetSettings());
          simulator::getSimulator()->LoadProcessedOptPaths();
          ScenarioDispather::GetInstance().OnScenarioOptPathFound();
          simulator::simulatorStart();
@@ -102,7 +104,8 @@ void ScenarioManager::processMapCommand(std::function<void(void)> successCallbac
    };
 
    m_mapCommandProcessed = m_orderingWrapper->ProcessOrder(L"process_map.xml", NULL, dict);
-   successCallback();
+   if (m_mapCommandProcessed)
+      successCallback();
 }
 
 void ScenarioManager::processPathCommand(std::function<void(void)> successCallback)
@@ -121,7 +124,8 @@ void ScenarioManager::processPathCommand(std::function<void(void)> successCallba
    };
 
    m_pathCommandProcessed = m_orderingWrapper->ProcessOrder(L"process_path_find.xml", NULL, dict);
-   successCallback();
+   if (m_pathCommandProcessed)
+      successCallback();
 }
 
 void ScenarioManager::processOptPathCommand(std::function<void(void)> successCallback)
@@ -140,7 +144,8 @@ void ScenarioManager::processOptPathCommand(std::function<void(void)> successCal
    };
 
    m_optPathCommandProcessed = m_orderingWrapper->ProcessOrder(L"process_opt_path_find.xml", NULL, dict);
-   successCallback();
+   if (m_optPathCommandProcessed)
+      successCallback();
 }
 
 void ScenarioManager::setState(ColregSimulation::SCENARIO_STATUS state, bool force)

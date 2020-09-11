@@ -47,7 +47,7 @@ bool PathfinderExternal::readFromSource(data_standart::iSurfaceVieverGenMapDataS
 {
    m_data = src->GetData();
    m_scenarioData.unit_data = src->GetUnitData();
-   m_settings = std::make_shared<settings::application_settings>(src->GetSettings());
+   m_settings = std::make_shared<settings::application_settings>(m_pService->GetSettingsSerializerHolder()->GetSettings());
    return true;
 }
 

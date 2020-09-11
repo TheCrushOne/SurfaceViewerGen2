@@ -69,7 +69,7 @@ void Engine::convertMap(const pathfinder::GeoMatrix& rawdataSrc, std::shared_ptr
 pathfinder::check_fly_zone_result Engine::checkFlyZone(const pathfinder::GeoMatrix& rawdataSrc, int rowIdx, int colIdx)
 {
    auto& pth_stt = m_settings->pth_stt;
-   return { (rawdataSrc.Get(rowIdx, colIdx) > pth_stt.level_settings.max_air_height) ? pathfinder::FlyZoneAffilation::FZA_FORBIDDEN : pathfinder::FlyZoneAffilation::FZA_NORMAL };
+   return { (rawdataSrc.Get(rowIdx, colIdx) > pth_stt.lvl_stt.max_air_height) ? pathfinder::FlyZoneAffilation::FZA_FORBIDDEN : pathfinder::FlyZoneAffilation::FZA_NORMAL };
 }
 
 pathfinder::check_go_zone_result Engine::checkGoZone(const pathfinder::GeoMatrix& rawdataSrc, int rowIdx, int colIdx)
@@ -110,10 +110,10 @@ pathfinder::check_go_zone_result Engine::checkAngles(double center, double left,
    result.aswne = angleTRBL;
    result.asenw = angleTLBR;
 
-   auto minDA = pth_stt.level_settings.dangerous_land_angle;
-   auto maxDA = pth_stt.level_settings.max_land_angle;
-   auto minLH = pth_stt.level_settings.min_land_height;
-   auto maxLH = pth_stt.level_settings.max_land_height;
+   auto minDA = pth_stt.lvl_stt.dangerous_land_angle;
+   auto maxDA = pth_stt.lvl_stt.max_land_angle;
+   auto minLH = pth_stt.lvl_stt.min_land_height;
+   auto maxLH = pth_stt.lvl_stt.max_land_height;
    //qDebug() << "angles:" << fabs(angleUD) << fabs(angleLR);
    bool maxAngleExcess = (maxDA < fabs(angleTB)) || (maxDA < fabs(angleLR)) || (maxDA < fabs(angleTRBL)) || (maxDA < fabs(angleTLBR));
    bool minAngleExcess = (minDA < fabs(angleTB)) || (minDA < fabs(angleLR)) || (minDA < fabs(angleTRBL)) || (minDA < fabs(angleTLBR));

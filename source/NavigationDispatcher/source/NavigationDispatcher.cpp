@@ -27,12 +27,20 @@ NavigationDispatcher::NavigationDispatcher(central_pack * pack)
 NavigationDispatcher::~NavigationDispatcher()
 {}
 
-int NavigationDispatcher::ProcessCommand(const char* configFilePath, const char* begCommandName, const char* baseFolder)
+int NavigationDispatcher::ProcessCommand(const char* configFilePath, const char* begCommandName, const char* baseFolder, iComService* service)
 {
    //Logger logger(L"CommandServices.log");
-   ComServiceHolder service(GetPack(), baseFolder);
-   service.Get()->GetConfigDispatcher()->Dispatch(configFilePath);
-   service.Get()->GetOrderProcessor()->ProcessOrders(begCommandName);
+   if (service)
+   {
+      service->GetConfigDispatcher()->Dispatch(configFilePath);
+      service->GetOrderProcessor()->ProcessOrders(begCommandName);
+   }
+   else
+   {
+      ComServiceHolder mservice(GetPack(), baseFolder);
+      mservice.Get()->GetConfigDispatcher()->Dispatch(configFilePath);
+      mservice.Get()->GetOrderProcessor()->ProcessOrders(begCommandName);
+   }
    //data_standart::command_meta meta;
    //m_manager->DeserializeConfig(configFilePath, meta);
 

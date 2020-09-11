@@ -377,7 +377,8 @@ void CSurfaceViewerGen2App::OnProcessMap()
          activateSimulationControl(false);
          activatePathComputeControl(true);
          refresh();
-      });
+      }
+   );
 }
 
 void CSurfaceViewerGen2App::OnProcessSimplePaths()
@@ -386,7 +387,8 @@ void CSurfaceViewerGen2App::OnProcessSimplePaths()
       {
          activateSimulationControl(true);
          refresh();
-      });
+      }
+   );
 }
 
 void CSurfaceViewerGen2App::OnProcessOptimizedPaths()
@@ -395,7 +397,8 @@ void CSurfaceViewerGen2App::OnProcessOptimizedPaths()
       {
          activateSimulationControl(true);
          refresh();
-      });
+      }
+   );
 }
 
 void CSurfaceViewerGen2App::OnDebug()

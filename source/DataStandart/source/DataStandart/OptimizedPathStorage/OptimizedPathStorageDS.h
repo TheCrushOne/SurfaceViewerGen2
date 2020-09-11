@@ -28,7 +28,7 @@ namespace data_standart
       LPCSTR GetPath() override { return getPath(); }
       DataStandartType GetType() const override { return getType(); }
       void Release() override final { delete this; }
-      size_t GetDataHash() override final;
+      size_t GetDataHash() override final { return getDataHash(); }
       // Read
       // Write
 
@@ -38,6 +38,11 @@ namespace data_standart
       // Write
       void SetData(const pathfinder::route_data& paths) override final;
       const pathfinder::route_data& GetData() override final;
+   private:
+      // Common
+      std::string getDataFilePath() override final { return std::string(getPath()) + "\\optpathdata.pl"; }
+      // Read
+      // Write
    private:
       void resolvePathDee();
       LPCSTR getPath() override final { return m_dataStandartData.folder.c_str(); }

@@ -101,11 +101,11 @@ namespace colreg
       static bool settingsToJson(json& j, const settings::pathfinding_settings& data)
       {
          json ls;
-         ls["dangerous_land_angle"] = data.level_settings.dangerous_land_angle;
-         ls["max_air_height"] = data.level_settings.max_air_height;
-         ls["max_land_angle"] = data.level_settings.max_land_angle;
-         ls["max_land_height"] = data.level_settings.max_land_height;
-         ls["min_land_height"] = data.level_settings.min_land_height;
+         ls["dangerous_land_angle"] = data.lvl_stt.dangerous_land_angle;
+         ls["max_air_height"] = data.lvl_stt.max_air_height;
+         ls["max_land_angle"] = data.lvl_stt.max_land_angle;
+         ls["max_land_height"] = data.lvl_stt.max_land_height;
+         ls["min_land_height"] = data.lvl_stt.min_land_height;
          j["level_settings"] = ls;
          return true;
       }
@@ -182,11 +182,11 @@ namespace colreg
       static bool jsonToSettings(const json& j, settings::pathfinding_settings& data)
       {
          const json& ls = j["level_settings"];
-         data.level_settings.dangerous_land_angle = ls["dangerous_land_angle"].get<double>();
-         data.level_settings.max_air_height = ls["max_air_height"].get<double>();
-         data.level_settings.max_land_angle = ls["max_land_angle"].get<double>();
-         data.level_settings.max_land_height = ls["max_land_height"].get<double>();
-         data.level_settings.min_land_height = ls["min_land_height"].get<double>();
+         data.lvl_stt.dangerous_land_angle = ls["dangerous_land_angle"].get<double>();
+         data.lvl_stt.max_air_height = ls["max_air_height"].get<double>();
+         data.lvl_stt.max_land_angle = ls["max_land_angle"].get<double>();
+         data.lvl_stt.max_land_height = ls["max_land_height"].get<double>();
+         data.lvl_stt.min_land_height = ls["min_land_height"].get<double>();
          return true;
       }
 

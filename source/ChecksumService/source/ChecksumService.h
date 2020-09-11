@@ -11,6 +11,7 @@ namespace checksum
          : Central(pack)
       {}
       const char* CalcHash(const char* filename) override final;
+      void Release() override final { delete this; }
    private:
       MD5 m_md5hasher;
    };

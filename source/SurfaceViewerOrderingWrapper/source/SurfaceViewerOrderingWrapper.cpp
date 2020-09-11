@@ -21,16 +21,18 @@ OrderingWrapper::OrderingWrapper(central_pack_ptr pack, const wchar_t* databaseP
    : Central(pack)
    , m_hashDatabasePath(SVGUtils::wstringToString(databasePath))
 {
-   m_cacheFolder = L"../../../cache/";
-   m_orderCacheFolder = m_cacheFolder + L"order_heap/";
-   m_orderHeapFolder = L"../../../order_heap/";
+   m_cacheFolder = std::filesystem::absolute(std::filesystem::current_path().generic_wstring() + L"\\..\\..\\..\\cache\\");
+   m_orderCacheFolder = m_cacheFolder + L"order_heap\\";
+   m_orderHeapFolder = std::filesystem::absolute(std::filesystem::current_path().generic_wstring() + L"\\..\\..\\..\\order_heap\\");
 
    VALID_CHECK_DLL_LOAD("NavigationDispatcher", "CreateNavigationDispatcher", m_navigationDispatcher, pack);
 }
 
 void OrderingWrapper::prepareCommandFromTemplate(std::wstring sourcePath, std::wstring dstPath, std::unordered_map<std::string, std::wstring> dict)
 {
-   std::filesystem::copy_file(sourcePath, dstPath);
+   std::filesystem::path dPath(dstPath);
+   std::filesystem::create_directories(dPath.parent_path());
+   std::filesystem::copy_file(sourcePath, dstPath, std::filesystem::copy_options::overwrite_existing);
    std::ifstream file(dstPath, std::ios::in);
    std::ostringstream out;
    std::string fileData;
@@ -42,7 +44,7 @@ void OrderingWrapper::prepareCommandFromTemplate(std::wstring sourcePath, std::w
    };
    for (auto& dictPair : dict)
    {
-      std::string token = "$(" + dictPair.first + ")";
+      std::string token = "\\$\\(" + dictPair.first + "\\)";
       replace(fileData, token, SVGUtils::wstringToString(dictPair.second));
    }
    file.close();
@@ -56,7 +58,12 @@ bool OrderingWrapper::ProcessOrder(const wchar_t* orderFileName, const wchar_t* 
    std::wstring srcOrderPath = m_orderHeapFolder + orderFileName;
    std::wstring dstOrderPath = m_orderCacheFolder + orderFileName;
    prepareCommandFromTemplate(srcOrderPath, dstOrderPath, dict);
-   return m_navigationDispatcher->ProcessCommand(SVGUtils::wstringToString(dstOrderPath).c_str(), begCommand ? SVGUtils::wstringToString(begCommand).c_str() : NULL, m_hashDatabasePath.c_str());
+   return m_navigationDispatcher->ProcessCommand(
+      SVGUtils::wstringToString(dstOrderPath).c_str(),
+      begCommand ? SVGUtils::wstringToString(begCommand).c_str() : NULL,
+      m_hashDatabasePath.c_str(),
+      nullptr
+   );
 }
 
 surface_ordering::iOrderingWrapper * CreateSurfaceViewerOrderingWrapper(central_pack_ptr pack, const wchar_t* basePath)

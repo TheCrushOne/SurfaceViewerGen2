@@ -230,6 +230,7 @@ private:
    colreg::ModuleGuard<transceiver::iTransceiver> m_transceiver;
    colreg::ModuleGuard<file_storage::iFileStorageManager> m_fsm;
    colreg::ModuleGuard<surface_ordering::iOrderingWrapper, central_pack_ptr, const wchar_t*> m_orderingWrapper;
-   
+   colreg::ModuleGuard<navigation_dispatcher::iComService, central_pack_ptr, const char*> m_comService;
+
    transceiver::transceiver_info m_info;
 };

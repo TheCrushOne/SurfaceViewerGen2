@@ -13,11 +13,6 @@ void ChartObjectDataStandart::SaveData()
 
 }
 
-size_t ChartObjectDataStandart::GetDataHash()
-{
-   return 1901;
-}
-
 iDataStandart* CreateChartObjectDataStandart(central_pack* pack, LPCWSTR base_folder, navigation_dispatcher::iComService* pService)
 {
    return new ChartObjectDataStandart(pack, base_folder, pService);

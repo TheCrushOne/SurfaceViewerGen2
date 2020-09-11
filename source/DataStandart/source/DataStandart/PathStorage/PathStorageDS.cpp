@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "PathStorageDS.h"
+#include "crossdllinterface\ChecksumServiceInterface.h"
 
 #include <filesystem>
 #include <fstream>
@@ -13,12 +14,6 @@ void PathStorageDataStandart::resolvePathDee()
 {
 
 }
-
-size_t PathStorageDataStandart::GetDataHash()
-{
-   return 1903;
-}
-
 
 void PathStorageDataStandart::SetData(const pathfinder::route_data& paths)
 {

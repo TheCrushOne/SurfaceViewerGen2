@@ -21,8 +21,7 @@ using namespace data_standart;
 SurfaceViewerGenMapDataStandart::SurfaceViewerGenMapDataStandart(central_pack * pack, LPCWSTR base_folder, navigation_dispatcher::iComService * pService)
    : DataStandart(pack, base_folder, pService)
 {
-   VALID_CHECK_DLL_LOAD("SettingsHandler", "CreateUnitDataSerializer", m_unitDataSerializer);
-   VALID_CHECK_DLL_LOAD("SettingsHandler", "CreateJsonSettingsSerializer", m_settingsSerializer);
+   
 }
 
 void SurfaceViewerGenMapDataStandart::resolvePathDee()
@@ -56,12 +55,6 @@ settings::unit_source_data& SurfaceViewerGenMapDataStandart::GetUnitData()
    return m_unitData;
 }
 
-settings::application_settings& SurfaceViewerGenMapDataStandart::GetSettings()
-{
-   readSettings();
-   return m_settings;
-}
-
 void SurfaceViewerGenMapDataStandart::readMetaData()
 {
    std::string metaDataPath = getMetaFilePath();
@@ -93,25 +86,8 @@ void SurfaceViewerGenMapDataStandart::readHeightData()
 
 void SurfaceViewerGenMapDataStandart::readUnitData()
 {
-   m_unitDataSerializer->Deserialize(m_dataStandartData.unit_data.c_str(), m_unitData);
+   m_service->GetUnitDataSerializer()->Deserialize(m_dataStandartData.unit_data.c_str(), m_unitData);
 }
-
-#define STT_DESERIALIZE(type, msg_part) \
-   if (!m_dataStandartData.type.empty()) \
-      m_settingsSerializer->Deserialize(m_dataStandartData.type.c_str(), m_settings.type); \
-   else \
-      GetPack()->comm->Message(ICommunicator::MessageType::MT_INFO, "type settings skipped to default");
-
-void SurfaceViewerGenMapDataStandart::readSettings()
-{
-   STT_DESERIALIZE(env_stt, "Environment");
-   STT_DESERIALIZE(map_stt, "Map");
-   STT_DESERIALIZE(pth_stt, "Pathfinding");
-   STT_DESERIALIZE(res_stt, "Research");
-   STT_DESERIALIZE(sim_stt, "Simulation");
-}
-
-#undef STT_DESERIALIZE
 
 void SurfaceViewerGenMapDataStandart::saveMetaData()
 {
@@ -136,11 +112,6 @@ void SurfaceViewerGenMapDataStandart::saveHeightData()
       }
    }
    file.close();
-}
-
-size_t SurfaceViewerGenMapDataStandart::GetDataHash()
-{
-   return 1907;
 }
 
 iDataStandart* CreateSurfaceViewerGenMapDataStandart(central_pack* pack, LPCWSTR base_folder, navigation_dispatcher::iComService* pService)

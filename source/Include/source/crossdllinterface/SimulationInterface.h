@@ -2,6 +2,7 @@
 
 #include "colreg/ColregSimulation.h"
 #include "common/central_class.h"
+#include "navdisp\ComService.h"
 
 namespace ColregSimulation
 {
@@ -11,7 +12,7 @@ namespace ColregSimulation
       virtual void SetPropertyInterface(iPropertyInterface*) = 0;
 
       //! Получение симулятора в зависимости от расширения сценария и загрузка сценария
-      virtual iSimulator* Get() = 0;
+      virtual iSimulator* Get(navigation_dispatcher::iComServicePtr) = 0;
    };
 }
 

@@ -32,7 +32,7 @@ namespace data_standart
       LPCSTR GetPath() override { return getPath(); }
       DataStandartType GetType() const override { return getType(); }
       void Release() override final { delete this; }
-      size_t GetDataHash() override final;
+      size_t GetDataHash() override final { return getDataHash(); }
       // Read
       // Write
 
@@ -41,6 +41,11 @@ namespace data_standart
       void ReleasePngData() override final;
       // Read
       const png_data& GetPngData() const override final;
+      // Write
+   private:
+      // Common
+      std::string getDataFilePath() override final { return getPath(); }
+      // Read
       // Write
    private:
       void resolvePathDee();

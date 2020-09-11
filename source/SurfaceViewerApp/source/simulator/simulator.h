@@ -3,12 +3,13 @@
 #include "colreg/ColregSimulation.h"
 #include "common/file_storage.h"
 #include "common/central_class.h"
+#include "navdisp/ComService.h"
 
 namespace simulator
 {
    ColregSimulation::iSimulator* getSimulator();
 
-   bool simulatorInit();
+   bool simulatorInit(navigation_dispatcher::iComServicePtr);
    bool simulatorStep();
    bool simulatorStart();
    void simulatorStop(bool simulatorReset = false);

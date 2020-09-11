@@ -87,7 +87,7 @@ namespace file_utils
          replaceExtension(unit_data_path, L".meta", L".udp");
 
          replaceExtension(coordinate_map_path, L".meta", L".dat");
-         replaceExtension(map_object_path, L".meta", L".xml");
+         replaceExtension(map_object_path, L".meta", L".png");
 
          replaceExtension(database_path, L".meta", L".db3");
 

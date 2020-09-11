@@ -25,11 +25,11 @@ void ScenarioProperties::prepareScenarioPathfindingSettingsFolder()
    m_prop_pathfinding_settings.resize(ScenarioPathfindingSettingsFieldIndex::SPSFI_END);
 
    m_scenario_pathfinding_settings_level_folder = std::make_unique<FolderProperty>("Level settings");
-   CRSCENPATHSTT(settings::level_settings, m_settings.pth_stt.level_settings, max_air_height, ScenarioPathfindingSettingsFieldIndex::SPSFI_MAXAIRHEIGHT);
-   CRSCENPATHSTT(settings::level_settings, m_settings.pth_stt.level_settings, max_land_height, ScenarioPathfindingSettingsFieldIndex::SPSFI_MAXLANDHEIGHT);
-   CRSCENPATHSTT(settings::level_settings, m_settings.pth_stt.level_settings, min_land_height, ScenarioPathfindingSettingsFieldIndex::SPSFI_MINLANDHEIGHT);
-   CRSCENPATHSTT(settings::level_settings, m_settings.pth_stt.level_settings, max_land_angle, ScenarioPathfindingSettingsFieldIndex::SPSFI_MAXLANDANGLE);
-   CRSCENPATHSTT(settings::level_settings, m_settings.pth_stt.level_settings, dangerous_land_angle, ScenarioPathfindingSettingsFieldIndex::SPSFI_DANGEROUSLANDANGLE);
+   CRSCENPATHSTT(settings::level_settings, m_settings.pth_stt.lvl_stt, max_air_height, ScenarioPathfindingSettingsFieldIndex::SPSFI_MAXAIRHEIGHT);
+   CRSCENPATHSTT(settings::level_settings, m_settings.pth_stt.lvl_stt, max_land_height, ScenarioPathfindingSettingsFieldIndex::SPSFI_MAXLANDHEIGHT);
+   CRSCENPATHSTT(settings::level_settings, m_settings.pth_stt.lvl_stt, min_land_height, ScenarioPathfindingSettingsFieldIndex::SPSFI_MINLANDHEIGHT);
+   CRSCENPATHSTT(settings::level_settings, m_settings.pth_stt.lvl_stt, max_land_angle, ScenarioPathfindingSettingsFieldIndex::SPSFI_MAXLANDANGLE);
+   CRSCENPATHSTT(settings::level_settings, m_settings.pth_stt.lvl_stt, dangerous_land_angle, ScenarioPathfindingSettingsFieldIndex::SPSFI_DANGEROUSLANDANGLE);
 
    //_prop_settings[ScenarioSettingsFieldIndex::SSFI_ROUTEUPDATESPEEDSTRATEGY]->set_list(routeSpeedUpdateStrategies);
 

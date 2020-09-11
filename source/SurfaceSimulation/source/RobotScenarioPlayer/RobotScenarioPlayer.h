@@ -12,7 +12,7 @@ namespace ColregSimulation
       , public SimulatorBase
    {
    public:
-      RobotScenarioPlayer(central_pack* pack, iPropertyInterface* prop);
+      RobotScenarioPlayer(central_pack*, iPropertyInterface*, navigation_dispatcher::iComServicePtr);
       ~RobotScenarioPlayer() = default;
 
       // iSimulator impl

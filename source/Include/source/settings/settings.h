@@ -17,6 +17,7 @@ namespace settings
       SVCG::route_point finish;
       std::vector<SVCG::route_point> control_point_list;
       std::vector<SVCG::route_point> route_list;
+
       route() {}
       route(const SVCG::route_point& start, const SVCG::route_point& finish)
          : start(start)
@@ -41,6 +42,7 @@ namespace settings
    struct unit_data_element : public route
    {
       std::string name;
+
       unit_data_element()
          : route()
       {}
@@ -66,6 +68,11 @@ namespace settings
    {
       std::vector<unit_data_element> land_units;
       std::vector<unit_data_element> air_units;
+
+      unit_source_data()
+         : land_units({})
+         , air_units({})
+      {}
    };
 
    struct level_settings
@@ -75,6 +82,7 @@ namespace settings
       double min_land_height;
       double max_land_angle;
       double dangerous_land_angle;
+
       level_settings()
          : max_air_height(0.f)
          , max_land_height(0.f)
@@ -86,7 +94,11 @@ namespace settings
 
    struct pathfinding_settings
    {
-      level_settings level_settings;
+      level_settings lvl_stt;
+
+      pathfinding_settings()
+         : lvl_stt(level_settings())
+      {}
    };
 
    // NOTE: min, max, step формируют наборные значения, если вектор пустой в исходных
@@ -98,10 +110,17 @@ namespace settings
       T step;
       std::vector<T> values;
 
+      range_data()
+         : min(static_cast<T>(0))
+         , max(static_cast<T>(0))
+         , step(static_cast<T>(0))
+         , values(std::vector<T>{})
+      {}
+
       // TODO: сделать безопасность!!!
       void apply()
       {
-         if (!values.empty())
+         if (!values.empty() || step == 0)
             return;
          T cur = min;
          while (cur <= max)
@@ -124,6 +143,15 @@ namespace settings
       bool multi_thread_test;
       bool single_thread_test;
       size_t debug_level;   // TODO: подкорректировать
+
+      research_settings()
+         : res_type(ResearchType::RT_TIME)
+         , iter_count(0)
+         , map_size(0)
+         , multi_thread_test(false)
+         , single_thread_test(false)
+         , debug_level(0)
+      {}
    };
 
    struct simulation_settings
@@ -133,8 +161,15 @@ namespace settings
    {
       double angle = 0.; // угол между x и ординатой этой СК
       double scale = 1.; // относительный масштаб(т.е. 1к[scale])
-      double ordinate_bias;  // смещение по ординате
-      double abscissa_bias;  // смещение по абсциссе
+      double ordinate_bias = 0.;  // смещение по ординате
+      double abscissa_bias = 0.;  // смещение по абсциссе
+
+      coordinate_system_info()
+         : angle(0.)
+         , scale(0.)
+         , ordinate_bias(0.)
+         , abscissa_bias(0.)
+      {}
    };
 
    struct environment_settings
@@ -143,12 +178,22 @@ namespace settings
       // т.к. экран привязан именно к ним
       coordinate_system_info gcs_info;   // geographical coordinate system
       coordinate_system_info mtx_info;   // matrix coordinate system
+
+      environment_settings()
+         : gcs_info(coordinate_system_info())
+         , mtx_info(coordinate_system_info())
+      {}
    };
 
    struct map_settings
    {
-      size_t row_count;
-      size_t col_count;
+      size_t row_count = 0;
+      size_t col_count = 0;
+
+      map_settings()
+         : row_count(0)
+         , col_count(0)
+      {}
    };
 
    struct application_settings
@@ -159,7 +204,13 @@ namespace settings
       simulation_settings sim_stt;
       map_settings map_stt;
 
-      application_settings() = default;
+      application_settings()
+         : pth_stt(pathfinding_settings())
+         , res_stt(research_settings())
+         , env_stt(environment_settings())
+         , sim_stt(simulation_settings())
+         , map_stt(map_settings())
+      {}
 
       application_settings(const pathfinding_settings& pthStt, const research_settings& resStt, const environment_settings& envStt, const simulation_settings& simStt, const map_settings& mapStt)
          : pth_stt(pthStt)

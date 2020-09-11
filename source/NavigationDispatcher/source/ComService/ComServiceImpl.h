@@ -7,15 +7,6 @@
 #include "OrderProcessorImpl.h"
 #include "ConfigDispatcherImpl.h"
 #include "SettingsSerializerHolderImpl.h"
-#include "crossdllinterface\SVGMDatabaseInterface.h"
-/*#include "FilterFactoryImpl.h"
-#include "DataSerializerImpl.h"
-#include "DataSourceFactoryImpl.h"
-#include "CommandFactoryImpl.h"
-#include "CommandProcessorImpl.h"
-#include "MetadataAccessorImpl.h"
-#include "CommonBuildParamsHolderImpl.h"*/
-
 
 #define VALID_CHECK_DLL_LOAD(dllName, funcName, guard, ...) \
    guard.Create(SVGUtils::CurrentDllPath(dllName).c_str(), funcName, __VA_ARGS__); \
@@ -39,13 +30,9 @@ namespace navigation_dispatcher
          , m_configDispatcher(std::make_shared<ConfigDispatcherImpl>(pack, this))
          , m_settingsSerializer(std::make_shared<SettingsSerializerHolderImpl>(pack, this))
          , m_orderProcessor(std::make_shared<OrderProcessorImpl>(pack, this))
-         /*: m_filterFactory(this)
-         , m_dataSerializer(comm)
-         , m_dataSourceFactory(this)
-         , m_commandFactoryImpl(this)
-         , m_commandProcessor(this)
-         , m_metadataAccessor(this)*/
       {
+         VALID_CHECK_DLL_LOAD("SettingsHandler", "CreateUnitDataSerializer", m_unitDataSerializer);
+         VALID_CHECK_DLL_LOAD("ChecksumService", "CreateChecksumService", m_checksumService, pack);
          VALID_CHECK_DLL_LOAD("SQLiteController", "CreateSQLiteDatabaseController", m_databaseController, pack);
          auto pathToDb = std::string(baseFolder) + "\\svgm.db";
          m_databaseController->Connect(pathToDb.c_str());
@@ -74,50 +61,24 @@ namespace navigation_dispatcher
       {
          return m_databaseController;
       }
-      //iCommandService
-      /*iFilterFactory* GetFilterFactory() final
+      checksum::iChecksumService* GetChecksumService() override final
       {
-         return &m_filterFactory;
+         return m_checksumService;
       }
-      iDataSerializer* GetDataSerializer() final
+      colreg::iUnitDataSerializer* GetUnitDataSerializer() override final
       {
-         return &m_dataSerializer;
+         return m_unitDataSerializer;
       }
-      iDataSourceFactory* GetDataSourceFactory() final
-      {
-         return &m_dataSourceFactory;
-      }
-      iCommandFactory* GetCommandFactory() final
-      {
-         return &m_commandFactoryImpl;
-      }
-      iCommandProcessor* GetCommandProcessor() final
-      {
-         return &m_commandProcessor;
-      }
-      iCommonBuildParamsHolder* GetCommonBuildParamsHolder() final
-      {
-         return &m_commonBuildParamsHolder;
-      }
-      iMetadataAccessor* GetMetadataAccessor() final
-      {
-         return &m_metadataAccessor;
-      }*/
-
+      void Release() override final { delete this; }
    private:
-      std::shared_ptr<DataStandartFactoryImpl>                 m_dataStandartFactory;
-      std::shared_ptr<OrderFactoryImpl>                        m_orderFactory;
-      std::shared_ptr<ConfigDispatcherImpl>                    m_configDispatcher;
-      std::shared_ptr<SettingsSerializerHolderImpl>            m_settingsSerializer;
-      std::shared_ptr<OrderProcessorImpl>                      m_orderProcessor;
-      colreg::ModuleGuard<database::iSVGMDatabaseController, central_pack*>   m_databaseController;
-      /*FilterFactoryImpl           m_filterFactory;
-      DataSerializerImpl          m_dataSerializer;
-      DataSourceFactoryImpl       m_dataSourceFactory;
-      CommandFactoryImpl          m_commandFactoryImpl;
-      CommandProcessorImpl        m_commandProcessor;
-      MetadataAccessorImpl        m_metadataAccessor;
-      CommonBuildParamsHolderImpl m_commonBuildParamsHolder;*/
+      std::shared_ptr<DataStandartFactoryImpl>                                   m_dataStandartFactory;
+      std::shared_ptr<OrderFactoryImpl>                                          m_orderFactory;
+      std::shared_ptr<ConfigDispatcherImpl>                                      m_configDispatcher;
+      std::shared_ptr<SettingsSerializerHolderImpl>                              m_settingsSerializer;
+      std::shared_ptr<OrderProcessorImpl>                                        m_orderProcessor;
+      colreg::ModuleGuard<database::iSVGMDatabaseController, central_pack_ptr>   m_databaseController;
+      colreg::ModuleGuard<checksum::iChecksumService, central_pack_ptr>          m_checksumService;
+      colreg::ModuleGuard<colreg::iUnitDataSerializer>                           m_unitDataSerializer;
    };
 
    // extern functions implementation
@@ -133,4 +94,9 @@ namespace navigation_dispatcher
       _ASSERT(commandServicesImpl != NULL);
       delete commandServicesImpl;
    }
+}
+
+extern "C" NDEXPRTIMPRT navigation_dispatcher::iComService * CreateExternalComService(central_pack* pack, const char* baseFolder)
+{
+   return new navigation_dispatcher::CommandServicesImpl(pack, baseFolder);
 }

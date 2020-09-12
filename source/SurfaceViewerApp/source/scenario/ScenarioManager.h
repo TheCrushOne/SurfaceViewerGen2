@@ -145,6 +145,7 @@ public:
 public:
    void CheckOpen(const wchar_t*, std::function<void(void)>);
    void ProcessMap(std::function<void(void)>);
+   void ProcessMapObjects(std::function<void(void)>);
    void ProcessPaths(std::function<void(void)>);
    void ProcessOptPaths(std::function<void(void)>);
 

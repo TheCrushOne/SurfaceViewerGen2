@@ -16,13 +16,13 @@ using namespace chart_object;
 IsolineGenerator::IsolineGenerator(central_pack* pack)
    : ModuleBase(pack)
 {
-   auto adder = [this](const std::vector<math::geo_points>& obj, double H, int height) { addChartObjectSet(obj, H, height); };
+   auto adder = [this](const std::vector<math::geo_points>& obj, double H, int height) { /*addChartObjectSet(obj, H, height);*/ };
    m_labirinthTraverseAlgorithm = std::make_unique<LabirinthTraverse>(pack, adder);
    m_segmentCollectorAlgorithm = std::make_unique<SegmentCollector>(pack, adder);
    m_waveFrontlineAlgortihm = std::make_unique<WaveFrontline>(pack, adder);
 }
 
-void IsolineGenerator::GenerateIsolines(const pathfinder::GeoMatrix* rawdata)
+void IsolineGenerator::GenerateIsolines(const pathfinder::GeoMatrix* rawdata, std::vector<geometry_chart_object>& staticStorage)
 {
    size_t levelCount = 10;
    double min = rawdata->Min(), max = rawdata->Max();
@@ -37,7 +37,7 @@ void IsolineGenerator::GenerateIsolines(const pathfinder::GeoMatrix* rawdata)
    std::vector<std::future<void>> futures;
    // NOTE: менять тип алгоритма тут
    for (size_t levelIdx = 0; levelIdx < levelCount; levelIdx++)
-      futures.push_back(std::async(&IsolineGenerator::generateIsolineLevel, this, type, rawdata, min + step * static_cast<double>(levelIdx), 360. / static_cast<double>(levelCount)* static_cast<double>(levelIdx)));
+      futures.push_back(std::async(&IsolineGenerator::generateIsolineLevel, this, type, staticStorage, rawdata, min + step * static_cast<double>(levelIdx), 360. / static_cast<double>(levelCount)* static_cast<double>(levelIdx)));
 
    for (auto& future : futures)
       future.get();
@@ -51,18 +51,18 @@ void IsolineGenerator::GenerateIsolines(const pathfinder::GeoMatrix* rawdata)
    GetPack()->comm->Message(ICommunicator::MessageType::MT_PERFORMANCE, (std::string("Isoline build time: ") + std::to_string(finish - start) + " ms.").c_str());
 }
 
-void IsolineGenerator::generateIsolineLevel(AlgorithmType type, const pathfinder::GeoMatrix* rawdata, double height, int H)
+void IsolineGenerator::generateIsolineLevel(AlgorithmType type, std::vector<geometry_chart_object>& staticStorage, const pathfinder::GeoMatrix* rawdata, double height, int H)
 {
    switch(type)
    {
       case AlgorithmType::AT_LABTRV:
-         m_labirinthTraverseAlgorithm->GenerateIsolineLevel(rawdata, height, H);
+         m_labirinthTraverseAlgorithm->GenerateIsolineLevel(staticStorage, rawdata, height, H);
          break;
       case AlgorithmType::AT_SEGCOL:
-         m_segmentCollectorAlgorithm->GenerateIsolineLevel(rawdata, height, H);
+         m_segmentCollectorAlgorithm->GenerateIsolineLevel(staticStorage, rawdata, height, H);
          break;
       case AlgorithmType::AT_WAVEFL:
-         m_waveFrontlineAlgortihm->GenerateIsolineLevel(rawdata, height, H);
+         m_waveFrontlineAlgortihm->GenerateIsolineLevel(staticStorage, rawdata, height, H);
          break;
       default:
          ATLASSERT(false);
@@ -73,7 +73,7 @@ void IsolineGenerator::addChartObjectSet(const std::vector<math::geo_points>& da
 {
    for (auto& isoLine : data)
    {
-      chart_storage& isoLineStorageCell = m_genNewObjectRef();
+      geometry_chart_object& isoLineStorageCell = m_genNewObjectRef();
       isoLineStorageCell.type = colreg::OBJECT_TYPE::OT_ISOLINE;
       isoLineStorageCell.geom_contour_vct.emplace_back();
       // TODO: подкорректировать цвет

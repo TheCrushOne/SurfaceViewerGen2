@@ -41,19 +41,6 @@ int NavigationDispatcher::ProcessCommand(const char* configFilePath, const char*
       mservice.Get()->GetConfigDispatcher()->Dispatch(configFilePath);
       mservice.Get()->GetOrderProcessor()->ProcessOrders(begCommandName);
    }
-   //data_standart::command_meta meta;
-   //m_manager->DeserializeConfig(configFilePath, meta);
-
-   //service.Get()->GetDataStandartFactory()->SetScriptFolder(fpath(configFilePath).folder().get());
-
-   //service.Get()->()->;
-
-   //if (service.Get()->GetSettingsSerializerHolder())
-      //return 1;
-   //if (!m_manager->CheckMeta(meta))
-      //return 1;
-   //if (!m_manager->RunCommand(meta))
-      //return 1;
 
    return 1;
 }

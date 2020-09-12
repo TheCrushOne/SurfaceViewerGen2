@@ -45,8 +45,8 @@ bool ChartObjectGenerator::processCommand()
 
 void ChartObjectGenerator::init()
 {
-   auto creator = [this]()->chart_storage& { return generateNew(); };
-   auto adder = [this](chart_storage& storage) { addChartObject(storage); };
+   auto creator = [this]()->geometry_chart_object& { return generateNew(); };
+   auto adder = [this](geometry_chart_object& storage) { addChartObject(storage); };
    m_isolineGenerator.SetAdder(creator, adder);
    m_coverageGenerator.SetAdder(creator, adder);
    m_zoneGenerator.SetAdder(creator, adder);
@@ -62,6 +62,7 @@ bool ChartObjectGenerator::readFromSource(data_standart::iSurfaceVieverGenMapDat
 bool ChartObjectGenerator::writeToDestination(data_standart::iChartObjectDataStandart* dst)
 {
    dst->SaveData();
+   colreg::chart_objects_ref(m_chartObjVct.data(), m_chartObjVct.size());
    return true;
 }
 
@@ -69,9 +70,10 @@ bool ChartObjectGenerator::generateStatic()
 {
    if (m_lock)
       return false;
-   prepareLocalStorage();
-   m_coverageGenerator.GenerateChartBorder(m_rawDataPtr);
-   m_isolineGenerator.GenerateIsolines(m_rawDataPtr);
+   m_staticObjectStorage.clear();
+   m_staticObjectStorage.emplace_back();
+   m_coverageGenerator.GenerateChartBorder(m_rawDataPtr, m_staticObjectStorage.back());
+   m_isolineGenerator.GenerateIsolines(m_rawDataPtr, m_staticObjectStorage);
    return true;
 }
 
@@ -93,7 +95,7 @@ void ChartObjectGenerator::prepareLocalStorage()
    m_chartStorage.clear();
 }
 
-void ChartObjectGenerator::addChartObject(chart_storage& storage)
+void ChartObjectGenerator::addChartObject(geometry_chart_object& storage)
 {
    // NOTE: вроде как устарело
    ATLASSERT(false);
@@ -105,5 +107,5 @@ void ChartObjectGenerator::addChartObject(chart_storage& storage)
 
 navigation_dispatcher::iOrderPtr CreateObjectListGenerator(central_pack * pack, navigation_dispatcher::iComService* pService)
 {
-   return std::make_shared<chart_object::ChartObjectGenerator>(pack, pService);
+   return std::make_shared<geometry_chart_object::ChartObjectGenerator>(pack, pService);
 }

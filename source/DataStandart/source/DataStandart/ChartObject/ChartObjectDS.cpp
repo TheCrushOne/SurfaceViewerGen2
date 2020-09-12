@@ -1,11 +1,15 @@
 #include "stdafx.h"
 #include "ChartObjectDS.h"
 
+#include <filesystem>
+
 using namespace data_standart;
 
 void ChartObjectDataStandart::resolvePathDee()
 {
-
+   std::filesystem::path filePath(m_dataStandartData.folder);
+   if (filePath.is_relative())
+      m_dataStandartData.folder = (std::filesystem::path(m_baseFolder) / filePath).generic_string().c_str();
 }
 
 void ChartObjectDataStandart::SaveData()

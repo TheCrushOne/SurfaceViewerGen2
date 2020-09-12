@@ -1,7 +1,7 @@
 #pragma once
 
 #include "common/central_class.h"
-#include "chart_storage.h"
+#include "common/chart_object.h"
 #include "ModuleBase.h"
 #include "math/math_utils.h"
 #include "IsolineAlgorithms\LabirinthTraverse.h"
@@ -21,7 +21,7 @@ namespace chart_object
    {
    public:
       IsolineGenerator(central_pack* pack);
-      void GenerateIsolines(const pathfinder::GeoMatrix* rawdata);
+      void GenerateIsolines(const pathfinder::GeoMatrix*, std::vector<geometry_chart_object>&);
    private:
       void generateIsolineLevel(AlgorithmType type, const pathfinder::GeoMatrix* rawdata, double height, int H);
 

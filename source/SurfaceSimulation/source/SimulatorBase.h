@@ -12,6 +12,7 @@
 #include "datastandart/SVGenMapDataStandartInterface.h"
 #include "datastandart/PathStorageDataStandartInterface.h"
 #include "datastandart/OptimizedPathStorageDataStandartInterface.h"
+#include "datastandart/ChartObjectDataStandartInterface.h"
 
 #include "navdisp\OrderBase.h"
 
@@ -29,6 +30,7 @@ namespace ColregSimulation
       dbg::iDebugInfo* GetDebugInfo() const override final { return m_debugInfo; }
       bool CheckOpenScenario() override;
       bool LoadProcessedMap() override;
+      bool LoadProcessedMapObjects() override;
       bool LoadProcessedPaths() override;
       bool LoadProcessedOptPaths() override;
       //virtual const std::shared_ptr<settings::application_settings>& GetAppSettings() const override final { return GetSettings(); }
@@ -40,9 +42,12 @@ namespace ColregSimulation
       virtual SCENARIO_STATUS GetSimulatorScenarioState() const override final { return m_scenarioStatus; }
       virtual void SetSimulatorScenarioState(SCENARIO_STATUS status) override final { m_scenarioStatus = status; }
    protected:
+      //void deserializeStandartAttrs()
+   protected:
       settings::application_settings m_settings;
       std::shared_ptr<file_utils::global_path_storage> m_paths;
       iPropertyInterface* m_prop;
+      std::wstring m_orderCacheFolder, m_currentConfig;
 
       ColregSimulation::SIMULATION_PLAYER_TYPE m_simulationType = ColregSimulation::SIMULATION_PLAYER_TYPE::SPT_SIZE;
       scenario_data m_data;
@@ -51,6 +56,7 @@ namespace ColregSimulation
       colreg::ModuleGuard<logger::iUniversalLogger, central_pack*> m_logger;
 
       colreg::ModuleGuard<data_standart::iDataStandart, central_pack_ptr, LPCSTR, navigation_dispatcher::iComService*> m_mapDS;
+      colreg::ModuleGuard<data_standart::iDataStandart, central_pack_ptr, LPCSTR, navigation_dispatcher::iComService*> m_mapObjDS;
       colreg::ModuleGuard<data_standart::iDataStandart, central_pack_ptr, LPCSTR, navigation_dispatcher::iComService*> m_pathDS;
       colreg::ModuleGuard<data_standart::iDataStandart, central_pack_ptr, LPCSTR, navigation_dispatcher::iComService*> m_optPathDS;
       SCENARIO_STATUS m_scenarioStatus = SCENARIO_STATUS::SS_NOT_LOADED;

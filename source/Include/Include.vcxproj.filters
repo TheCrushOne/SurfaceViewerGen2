@@ -363,6 +363,9 @@
     <ClInclude Include="source\crossdllinterface\SurfaceViewerOrderingWrapperInterface.h">
       <Filter>crossdllinterface</Filter>
     </ClInclude>
+    <ClInclude Include="source\common\chart_object.h">
+      <Filter>common</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\colreg\ThirdParty\tinyxml2\tinyxml2.cpp">

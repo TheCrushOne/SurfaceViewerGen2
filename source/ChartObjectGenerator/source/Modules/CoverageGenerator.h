@@ -2,7 +2,7 @@
 
 #include "common/central_class.h"
 #include "common/pathfinder_structs.h"
-#include "chart_storage.h"
+#include "comnon/chart_object.h"
 #include "ModuleBase.h"
 
 namespace chart_object
@@ -14,7 +14,7 @@ namespace chart_object
          : ModuleBase(pack)
       {}
 
-      void GenerateChartBorder(const pathfinder::GeoMatrix* rawdata);
+      void GenerateChartBorder(const pathfinder::GeoMatrix*, geometry_chart_object&);
    private:
    };
 }

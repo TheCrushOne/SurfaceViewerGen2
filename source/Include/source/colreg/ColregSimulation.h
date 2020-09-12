@@ -214,6 +214,9 @@ namespace ColregSimulation
       //! Загрузить обработанную карту высот
       virtual bool LoadProcessedMap() = 0;
 
+      //! Загрузить сгенерированные объекты карты
+      virtual bool LoadProcessedMapObjects() = 0;
+
       //! Загрузить рассчитанный стандартный путь
       virtual bool LoadProcessedPaths() = 0;
 

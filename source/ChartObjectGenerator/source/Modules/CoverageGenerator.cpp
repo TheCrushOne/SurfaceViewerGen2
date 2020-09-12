@@ -5,11 +5,10 @@
 
 using namespace chart_object;
 
-void CoverageGenerator::GenerateChartBorder(const pathfinder::GeoMatrix* rawdata)
+void CoverageGenerator::GenerateChartBorder(const pathfinder::GeoMatrix* rawdata, chart_storage& border)
 {
    //const auto& envstt = GetPack()->settings->env_stt;
    settings::environment_settings envstt;
-   chart_storage& border = m_genNewObjectRef();
    border.type = colreg::OBJECT_TYPE::OT_BORDER_AREA;
    int rowCount = rawdata->GetRowCount(), colCount = rawdata->GetColCount();
    border.geom_contour_vct.emplace_back();

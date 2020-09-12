@@ -10,7 +10,7 @@ namespace data_standart
       // Common
       // Read
       // Write
-      virtual void SaveData() = 0;
+      virtual void SetData(std::vector<chart_storage>) = 0;
    };
 }
 

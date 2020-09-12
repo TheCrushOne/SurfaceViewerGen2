@@ -20,7 +20,7 @@ public:
    CSurfaceViewerGen2App() noexcept;
 protected:
    void createDirectXApp();
-   void refresh() { this->OnIdle(-1); }
+   void refresh() { /*this->OnIdle(-1);*/ }
    void activateSimulationControl(bool flag)
    {
       m_runStatus = flag;

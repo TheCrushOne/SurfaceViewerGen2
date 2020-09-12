@@ -63,6 +63,18 @@ void ScenarioManager::ProcessMap(std::function<void(void)> buttonEnableCallback)
    ).detach();
 }
 
+void ScenarioManager::ProcessMapObjects(std::function<void(void)> buttonEnableCallback)
+{
+   std::thread(&ScenarioManager::processMapCommand, this, [this, buttonEnableCallback]()
+      {
+         simulator::getSimulator()->SetAppSettings(m_comService->GetSettingsSerializerHolder()->GetSettings());
+         simulator::getSimulator()->();
+         ScenarioDispather::GetInstance().OnScenarioMapProcessed();
+         buttonEnableCallback();
+      }
+   ).detach();
+}
+
 void ScenarioManager::ProcessPaths(std::function<void(void)> buttonEnableCallback)
 {
    std::thread(&ScenarioManager::processPathCommand, this, [this, buttonEnableCallback]()

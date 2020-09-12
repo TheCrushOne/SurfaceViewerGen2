@@ -57,6 +57,7 @@
     <ClInclude Include="source\colreg\XMLSettingsSerializer.h" />
     <ClInclude Include="source\common\base_class.h" />
     <ClInclude Include="source\common\central_class.h" />
+    <ClInclude Include="source\common\chart_object.h" />
     <ClInclude Include="source\common\communicator.h" />
     <ClInclude Include="source\common\converter_structs.h" />
     <ClInclude Include="source\common\coordinates.h" />

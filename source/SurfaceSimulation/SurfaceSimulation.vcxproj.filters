@@ -13,6 +13,12 @@
     <Filter Include="Debug">
       <UniqueIdentifier>{b950733c-d050-494f-9440-669daed16978}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ThirdParty">
+      <UniqueIdentifier>{ef440726-ccd3-4559-b1c1-8e4b40154c3b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ThirdParty\tinyxml2">
+      <UniqueIdentifier>{edda09a4-b45d-42a2-94d2-85eb3364b9d9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\RobotScenarioPlayer\RobotScenarioPlayer.cpp">
@@ -30,6 +36,9 @@
     <ClCompile Include="source\Debug\DebugInfoImpl.cpp">
       <Filter>Debug</Filter>
     </ClCompile>
+    <ClCompile Include="..\Include\source\colreg\ThirdParty\tinyxml2\tinyxml2.cpp">
+      <Filter>ThirdParty\tinyxml2</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\RobotScenarioPlayer\RobotScenarioPlayer.h">
@@ -46,6 +55,9 @@
     </ClInclude>
     <ClInclude Include="source\Debug\DebugInfoImpl.h">
       <Filter>Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\source\colreg\ThirdParty\tinyxml2\tinyxml2.h">
+      <Filter>ThirdParty\tinyxml2</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

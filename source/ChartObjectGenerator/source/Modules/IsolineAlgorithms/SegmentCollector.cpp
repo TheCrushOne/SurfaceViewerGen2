@@ -6,7 +6,7 @@ using namespace chart_object;
 std::recursive_mutex g_segmentCollectorMutex;
 
 // NOTE: минимальное покрытие скипает очень много точек...
-void SegmentCollector::GenerateIsolineLevel(const pathfinder::GeoMatrix* rawdata, double height, int H)
+std::vector<geometry_chart_object> SegmentCollector::generateIsolineLevel(const pathfinder::GeoMatrix* rawdata, double height, int H)
 {
    ATLASSERT(false);
    settings::environment_settings env_stt;
@@ -388,6 +388,16 @@ void SegmentCollector::GenerateIsolineLevel(const pathfinder::GeoMatrix* rawdata
    //   }
    //}
 
+   settings::application_settings& app_stt = GetService()->GetSettingsSerializerHolder()->GetSettings();
+   std::vector<geometry_chart_object> res;
+   auto& gcBack = res.emplace_back();
+   for (auto& line : isoLineVct)
+   {
+      auto& cBack = gcBack.geom_contour_vct.emplace_back();
+      for (auto& point : line)
+         cBack.emplace_back(static_cast<colreg::geo_point>(point));
+   }
+
    std::lock_guard<std::recursive_mutex> guard(g_segmentCollectorMutex);
-   m_chartObjectSetAdder(isoLineVct, height, H);
+   return res;
 }

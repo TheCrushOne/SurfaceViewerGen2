@@ -34,8 +34,8 @@ bool HeightMapConverter::processCommand()
    if (m_lock)
       return false;
 
-   auto* src = m_pService->GetDataStandartFactory()->GetDataStandart(m_commandData.source.AsString());
-   auto* dst = m_pService->GetDataStandartFactory()->GetDataStandart(m_commandData.destination.AsString());
+   auto* src = GetService()->GetDataStandartFactory()->GetDataStandart(m_commandData.source.AsString());
+   auto* dst = GetService()->GetDataStandartFactory()->GetDataStandart(m_commandData.destination.AsString());
 
    if (!needToProcess())
       return true;
@@ -94,3 +94,5 @@ navigation_dispatcher::iOrder* CreatePngHeightmapConverter(central_pack* pack, n
 {
    return new HeightMapConverter(pack, pService);
 }
+
+#undef VALID_CHECK_DLL_LOAD

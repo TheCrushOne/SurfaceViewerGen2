@@ -9,6 +9,8 @@
 
 #include "resource.h"       // основные символы
 #include "colreg\ModuleGuard.h"
+#include "colreg/ColregSimulation.h"
+#include "scenario/ScenarioManager.h"
 
 // CSurfaceViewerGen2App:
 // Сведения о реализации этого класса: SurfaceViewerGen2.cpp
@@ -21,17 +23,18 @@ public:
 protected:
    void createDirectXApp();
    void refresh() { /*this->OnIdle(-1);*/ }
-   void activateSimulationControl(bool flag)
+   void recountSimulationControlStatus(ColregSimulation::SCENARIO_STATUS status)
    {
-      m_runStatus = flag;
-      m_runStepStatus = flag;
-      m_pauseStatus = flag;
-      m_stopStatus = flag;
-   }
-   void activatePathComputeControl(bool flag)
-   {
-      m_simplePaths = flag;
-      m_optPaths = flag;
+      ScenarioDispather::GetInstance().OnScenarioScenarioStatusChanged(status);
+      m_runStatus = status >= ColregSimulation::SCENARIO_STATUS::SS_PATHS_COUNTED;
+      m_runStepStatus = status >= ColregSimulation::SCENARIO_STATUS::SS_PATHS_COUNTED;
+      m_pauseStatus = status >= ColregSimulation::SCENARIO_STATUS::SS_PATHS_COUNTED;
+      m_stopStatus = status >= ColregSimulation::SCENARIO_STATUS::SS_PATHS_COUNTED;
+      m_chooseScenario = true;
+      m_processMap = status >= ColregSimulation::SCENARIO_STATUS::SS_MAP_CHECKOPENED;
+      m_processMapObj = status >= ColregSimulation::SCENARIO_STATUS::SS_MAP_PROCESSED;
+      m_simplePaths = status >= ColregSimulation::SCENARIO_STATUS::SS_MAPOBJ_PROCESSED;
+      m_optPaths = status >= ColregSimulation::SCENARIO_STATUS::SS_MAPOBJ_PROCESSED;
    }
 // Переопределение
 public:
@@ -57,6 +60,7 @@ public:
 
    bool m_chooseScenario = true;
    bool m_processMap = false;
+   bool m_processMapObj = false;
    bool m_simplePaths = false;
    bool m_optPaths = false;
 
@@ -89,6 +93,7 @@ public:
    //afx_msg void OnAutoPause();
    afx_msg void OnChooseScenario();
    afx_msg void OnProcessMap();
+   afx_msg void OnProcessMapObj();
    afx_msg void OnProcessSimplePaths();
    afx_msg void OnProcessOptimizedPaths();
    afx_msg void OnDebug();
@@ -105,6 +110,7 @@ public:
 
    afx_msg void OnChooseScenarioUpdateCommandUI(CCmdUI* pCmdUI);
    afx_msg void OnProcessMapUpdateCommandUI(CCmdUI* pCmdUI);
+   afx_msg void OnProcessMapObjUpdateCommandUI(CCmdUI* pCmdUI);
    afx_msg void OnProcessSimplePathsUpdateCommandUI(CCmdUI* pCmdUI);
    afx_msg void OnProcessOptimizedPathsUpdateCommandUI(CCmdUI* pCmdUI);
 

@@ -1,6 +1,7 @@
 #pragma once
 #include "common/converter_structs.h"
 #include "common/central_class.h"
+#include "common/servicable.h"
 #include "common/chart_object.h"
 #include "common/pathfinder_structs.h"
 #include "math/math_utils.h"
@@ -14,11 +15,11 @@ namespace chart_object
       virtual std::vector<geometry_chart_object> generateIsolineLevel(const pathfinder::GeoMatrix* rawdata, double height, int H) = 0;
    };
 
-   struct AlgorithmBase : public Central, public iAlgorithm
+   struct AlgorithmBase : public Central, public Servicable, public iAlgorithm
    {
-      AlgorithmBase(central_pack* pack, std::function<void(const std::vector<math::geo_points>&, double, int)> adder)
+      AlgorithmBase(central_pack* pack, navigation_dispatcher::iComService* service)
          : Central(pack)
-         , m_chartObjectSetAdder(adder)
+         , Servicable(service)
       {}
 
       std::vector<geometry_chart_object> GenerateIsolineLevel(const pathfinder::GeoMatrix* rawdata, double height, int H) override final
@@ -26,6 +27,5 @@ namespace chart_object
          return generateIsolineLevel(rawdata, height, H);
       }
    protected:
-      std::function<void(const std::vector<math::geo_points>&, double, int)> m_chartObjectSetAdder;
    };
 }

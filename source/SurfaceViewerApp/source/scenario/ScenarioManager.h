@@ -50,21 +50,23 @@ public:
    {
       std::weak_ptr<T> wptr{ pObj };
 
-      OBSERVABLE_ATTACH_NO_ARGS(m_observableCheckOpened, OnScenarioCheckOpened);
-      OBSERVABLE_ATTACH_NO_ARGS(m_observableMapProcessed, OnScenarioMapProcessed);
-      OBSERVABLE_ATTACH_NO_ARGS(m_observablePathFound, OnScenarioPathFound);
-      OBSERVABLE_ATTACH_NO_ARGS(m_observableOptPathFound, OnScenarioOptPathFound);
-      OBSERVABLE_ATTACH_ARG(m_observableStatusChanged, OnScenarioStatusChanged, ColregSimulation::SCENARIO_STATUS);
+      //OBSERVABLE_ATTACH_NO_ARGS(m_observableCheckOpened, OnScenarioCheckOpened);
+      //OBSERVABLE_ATTACH_NO_ARGS(m_observableMapProcessed, OnScenarioMapProcessed);
+      //OBSERVABLE_ATTACH_NO_ARGS(m_observablePathFound, OnScenarioPathFound);
+      //OBSERVABLE_ATTACH_NO_ARGS(m_observableOptPathFound, OnScenarioOptPathFound);
+      OBSERVABLE_ATTACH_ARG(m_observableSimulationStatusChanged, OnScenarioSimulationStatusChanged, ColregSimulation::SIMULATION_STATUS);
+      OBSERVABLE_ATTACH_ARG(m_observableScenarioStatusChanged, OnScenarioScenarioStatusChanged, ColregSimulation::SCENARIO_STATUS);
       OBSERVABLE_ATTACH_ARG(m_observableTimeChanged, OnScenarioTimeChanged, double);
       OBSERVABLE_ATTACH_NO_ARGS(m_observableModified, OnScenarioModified);
       OBSERVABLE_ATTACH_NO_ARGS(m_observableQuit, OnAppQuit);
    }
 
-   bool OnScenarioCheckOpened() { return m_observableCheckOpened.Notify(false); }
-   bool OnScenarioMapProcessed() { return m_observableMapProcessed.Notify(false); }
-   bool OnScenarioPathFound() { return m_observablePathFound.Notify(false); }
-   bool OnScenarioOptPathFound() { return m_observableOptPathFound.Notify(false); }
-   bool OnScenarioStatusChanged(ColregSimulation::SCENARIO_STATUS status) { return m_observableStatusChanged.Notify(false, status); }
+   //bool OnScenarioCheckOpened() { return m_observableCheckOpened.Notify(false); }
+   //bool OnScenarioMapProcessed() { return m_observableMapProcessed.Notify(false); }
+   //bool OnScenarioPathFound() { return m_observablePathFound.Notify(false); }
+   //bool OnScenarioOptPathFound() { return m_observableOptPathFound.Notify(false); }
+   bool OnScenarioSimulationStatusChanged(ColregSimulation::SIMULATION_STATUS status) { return m_observableSimulationStatusChanged.Notify(false, status); }
+   bool OnScenarioScenarioStatusChanged(ColregSimulation::SCENARIO_STATUS status) { return m_observableScenarioStatusChanged.Notify(false, status); }
    bool OnScenarioTimeChanged(double time) { return m_observableTimeChanged.Notify(false, time); }
    bool OnScenarioModified() { return m_observableModified.Notify(false); }
    bool OnAppQuit() { return m_observableQuit.Notify(false); }
@@ -73,11 +75,12 @@ private:
    ScenarioDispather() = default;
    ScenarioDispather(const ScenarioDispather&) = delete;
    ScenarioDispather& operator=(const ScenarioDispather&) = delete;
-   Observable<NoLock, bool> m_observableCheckOpened;
-   Observable<NoLock, bool> m_observableMapProcessed;
-   Observable<NoLock, bool> m_observablePathFound;
-   Observable<NoLock, bool> m_observableOptPathFound;
-   Observable<NoLock, bool, ColregSimulation::SCENARIO_STATUS> m_observableStatusChanged;
+   //Observable<NoLock, bool> m_observableCheckOpened;
+   //Observable<NoLock, bool> m_observableMapProcessed;
+   //Observable<NoLock, bool> m_observablePathFound;
+   //Observable<NoLock, bool> m_observableOptPathFound;
+   Observable<NoLock, bool, ColregSimulation::SIMULATION_STATUS> m_observableSimulationStatusChanged;
+   Observable<NoLock, bool, ColregSimulation::SCENARIO_STATUS> m_observableScenarioStatusChanged;
    Observable<NoLock, bool, double> m_observableTimeChanged;
    Observable<NoLock, bool> m_observableModified;
    Observable<NoLock, bool> m_observableQuit;
@@ -96,11 +99,12 @@ public:
       m_pHolder = pHolder;
       ScenarioDispather::GetInstance().AddReciever(shared_from_this());
    }
-   bool OnScenarioCheckOpened() { return m_pHolder->OnScenarioCheckOpened(); }
-   bool OnScenarioMapProcessed() { return m_pHolder->OnScenarioMapProcessed(); }
-   bool OnScenarioPathFound() { return m_pHolder->OnScenarioPathFound(); }
-   bool OnScenarioOptPathFound() { return m_pHolder->OnScenarioOptPathFound(); }
-   bool OnScenarioStatusChanged(ColregSimulation::SCENARIO_STATUS status) { return m_pHolder->OnScenarioStatusChanged(status); }
+   //bool OnScenarioCheckOpened() { return m_pHolder->OnScenarioCheckOpened(); }
+   //bool OnScenarioMapProcessed() { return m_pHolder->OnScenarioMapProcessed(); }
+   //bool OnScenarioPathFound() { return m_pHolder->OnScenarioPathFound(); }
+   //bool OnScenarioOptPathFound() { return m_pHolder->OnScenarioOptPathFound(); }
+   bool OnScenarioSimulationStatusChanged(ColregSimulation::SIMULATION_STATUS status) { return m_pHolder->OnScenarioSimulationStatusChanged(status); }
+   bool OnScenarioScenarioStatusChanged(ColregSimulation::SCENARIO_STATUS status) { return m_pHolder->OnScenarioScenarioStatusChanged(status); }
    bool OnScenarioTimeChanged(double time) { return m_pHolder->OnScenarioTimeChanged(time); }
    bool OnScenarioModified() { return m_pHolder->OnScenarioModified(); }
    bool OnAppQuit() { return m_pHolder->OnAppQuit(); };
@@ -122,11 +126,12 @@ protected:
       m_spObserver = ScenarioObserver< ScenarioObserverBase >::Create();
       m_spObserver->Init(this);
    }
-   virtual bool OnScenarioCheckOpened() { return false; }
-   virtual bool OnScenarioMapProcessed() { return false; }
-   virtual bool OnScenarioPathFound() { return false; }
-   virtual bool OnScenarioOptPathFound() { return false; }
-   virtual bool OnScenarioStatusChanged(ColregSimulation::SCENARIO_STATUS status) { return false; }
+   //virtual bool OnScenarioCheckOpened() { return false; }
+   //virtual bool OnScenarioMapProcessed() { return false; }
+   //virtual bool OnScenarioPathFound() { return false; }
+   //virtual bool OnScenarioOptPathFound() { return false; }
+   virtual bool OnScenarioSimulationStatusChanged(ColregSimulation::SIMULATION_STATUS status) { return false; }
+   virtual bool OnScenarioScenarioStatusChanged(ColregSimulation::SCENARIO_STATUS status) { return false; }
    virtual bool OnScenarioTimeChanged(double time) { return false; }
    virtual bool OnScenarioModified() { return false; }
    virtual bool OnAppQuit() { return false; };
@@ -162,8 +167,8 @@ public:
       auto sim = simulator::getSimulator();
       if (!sim)
          return;
-      if (sim->GetSimulatorScenarioState() == ColregSimulation::SCENARIO_STATUS::SS_RUN)
-         setState(ColregSimulation::SCENARIO_STATUS::SS_RUN, true);
+      if (sim->GetSimulatorSimulationState() == ColregSimulation::SIMULATION_STATUS::SS_RUN)
+         setState(ColregSimulation::SIMULATION_STATUS::SS_RUN, true);
    }
    int GetTimeScale()const { return m_timeScale; }
 
@@ -172,14 +177,21 @@ public:
    void ReSearch();
    void ReEstimate();
    void LogResearchResult();
-   bool OnScenarioPathFound() { return ScenarioDispather::GetInstance().OnScenarioPathFound(); }
+   //bool OnScenarioPathFound() { return ScenarioDispather::GetInstance().OnScenarioPathFound(); }
 
-   ColregSimulation::SCENARIO_STATUS GetState()
+   ColregSimulation::SCENARIO_STATUS GetScenarionState()
    {
       auto sim = simulator::getSimulator();
       if (!sim)
          return ColregSimulation::SCENARIO_STATUS::SS_NOT_LOADED;
       return sim->GetSimulatorScenarioState();
+   }
+   ColregSimulation::SIMULATION_STATUS GetSimulationState()
+   {
+      auto sim = simulator::getSimulator();
+      if (!sim)
+         return ColregSimulation::SIMULATION_STATUS::SS_STOP;
+      return sim->GetSimulatorSimulationState();
    }
 
    bool GetAutoPause() const { return m_autoPause; }
@@ -204,7 +216,7 @@ private:
    void processOptPathCommand(std::function<void(void)>);
 
    void save(const char* fileName = 0, bool focused = false);
-   void setState(ColregSimulation::SCENARIO_STATUS state, bool force = false);
+   void setState(ColregSimulation::SIMULATION_STATUS state, bool force = false);
 
    void createTransceiver();
    void initTransceiver();

@@ -4,17 +4,19 @@
 #include "OrderFactory.h"
 #include "ComService.h"
 #include "common/data_hash.h"
+#include "common/central_class.h"
+#include "common/servicable.h"
 
 namespace navigation_dispatcher
 {
    template <int TOrderType, typename TOrderData>
-   class OrderBase : public iOrder, public Central
+   class OrderBase : public iOrder, public Central, public Servicable
    {
       enum { command_type = TOrderType };
    public:
       OrderBase(central_pack* pack, iComService* service)
          : Central(pack)
-         , m_pService(service)
+         , Servicable(service)
       {}
    protected:
       OrderType GetType() const override { return static_cast<OrderType>(command_type); }
@@ -29,7 +31,7 @@ namespace navigation_dispatcher
          if (m_commandData.rewrite_dst.AsBoolean())
             return true;
          auto hash = getHashData();
-         m_pService->GetDatabaseController()->SaveDataStandartHashJunction(hash);
+         GetService()->GetDatabaseController()->SaveDataStandartHashJunction(hash);
          return true;
       }
       bool needToProcess()
@@ -40,7 +42,7 @@ namespace navigation_dispatcher
          ATLASSERT(hash.source != data_hash::INVALID_HASH);
          if (hash.destination == data_hash::INVALID_HASH)
             return true;   // NOTE: случай, когда дест пустой
-         bool result = m_pService->GetDatabaseController()->CheckDataStandartHashJunction(hash);
+         bool result = GetService()->GetDatabaseController()->CheckDataStandartHashJunction(hash);
          if (result)
             GetCommunicator()->Message(ICommunicator::MessageType::MT_INFO, "Command skipped by hash junction control");
          return !result;
@@ -48,16 +50,13 @@ namespace navigation_dispatcher
    private:
       data_hash::hash_junction getHashData()
       {
-         auto* src = m_pService->GetDataStandartFactory()->GetDataStandart(m_commandData.source.AsString());
-         auto* dst = m_pService->GetDataStandartFactory()->GetDataStandart(m_commandData.destination.AsString());
+         auto* src = GetService()->GetDataStandartFactory()->GetDataStandart(m_commandData.source.AsString());
+         auto* dst = GetService()->GetDataStandartFactory()->GetDataStandart(m_commandData.destination.AsString());
          return data_hash::hash_junction{ src->GetDataHash(), dst->GetDataHash() };
       }
       virtual bool processCommand() = 0;
    protected:
       TOrderData m_commandData;
-      iComService* m_pService;
       // NOTE: ThreadJobsManager -> check unidata
    };
 }
-
-#undef VALID_CHECK_DLL_LOAD

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "common/central_class.h"
+#include "common/servicable.h"
 #include "common/chart_object.h"
 #include "ModuleBase.h"
 #include "math/math_utils.h"
@@ -20,7 +21,7 @@ namespace chart_object
    class IsolineGenerator : public ModuleBase
    {
    public:
-      IsolineGenerator(central_pack* pack);
+      IsolineGenerator(central_pack* pack, navigation_dispatcher::iComService* service);
       void GenerateIsolines(const pathfinder::GeoMatrix*, std::vector<geometry_chart_object>&);
    private:
       std::vector<geometry_chart_object> generateIsolineLevel(AlgorithmType type, const pathfinder::GeoMatrix* rawdata, double height, int H);

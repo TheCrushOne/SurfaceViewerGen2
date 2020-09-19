@@ -53,7 +53,34 @@ ColregSimulation::iSimulator* CProgressViewWnd::getSimulator()
    return sim;
 }
 
-bool CProgressViewWnd::OnScenarioCheckOpened()
+bool CProgressViewWnd::OnScenarioScenarioStatusChanged(ColregSimulation::SCENARIO_STATUS status)
+{
+   bool res = true;
+   switch (status)
+   {
+   case ColregSimulation::SCENARIO_STATUS::SS_MAP_CHECKOPENED:
+      res &= onScenarioCheckOpened();
+      break;
+   case ColregSimulation::SCENARIO_STATUS::SS_MAP_PROCESSED:
+      res &= onScenarioMapProcessed();
+      break;
+   case ColregSimulation::SCENARIO_STATUS::SS_MAPOBJ_PROCESSED:
+      res &= onScenarioMapObjProcessed();
+      break;
+   case ColregSimulation::SCENARIO_STATUS::SS_PATHS_COUNTED:
+      res &= onScenarioPathFound();
+      break;
+   case ColregSimulation::SCENARIO_STATUS::SS_OPT_PATHS_COUNTED:
+      res &= onScenarioOptPathFound();
+      break;
+   case ColregSimulation::SCENARIO_STATUS::SS_NOT_LOADED:
+   default:
+      break;
+   }
+   return res;
+}
+
+bool CProgressViewWnd::onScenarioCheckOpened()
 {
    active = true;//getSimulator()->GetSimulationType() == ColregSimulation::SIMULATION_PLAYER_TYPE::SPT_LOG;
    if (active)
@@ -70,7 +97,17 @@ bool CProgressViewWnd::OnScenarioCheckOpened()
    return true;
 }
 
-bool CProgressViewWnd::OnScenarioPathFound()
+bool CProgressViewWnd::onScenarioMapProcessed()
+{
+   return true;
+}
+
+bool CProgressViewWnd::onScenarioMapObjProcessed()
+{
+   return true;
+}
+
+bool CProgressViewWnd::onScenarioPathFound()
 {
    if (active)
    {
@@ -82,6 +119,10 @@ bool CProgressViewWnd::OnScenarioPathFound()
    return true;
 }
 
+bool CProgressViewWnd::onScenarioOptPathFound()
+{
+   return true;
+}
 
 bool CProgressViewWnd::OnScenarioTimeChanged(double time)
 {

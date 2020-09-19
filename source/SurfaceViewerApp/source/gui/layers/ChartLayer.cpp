@@ -18,7 +18,7 @@ void ChartLayer::Render(render::iRender* renderer)
       return;
    }
    const auto* sim = simulator::getSimulator();
-   if (!sim || sim->GetSimulatorScenarioState() == ColregSimulation::SCENARIO_STATUS::SS_NOT_LOADED)
+   if (!sim || sim->GetSimulatorScenarioState() < ColregSimulation::SCENARIO_STATUS::SS_MAPOBJ_PROCESSED)
       return;
    const auto& simulationState = sim->GetState();
 
@@ -132,8 +132,60 @@ iProperty* ChartLayer::GetProperties()
       _props = std::move(folderProps);
    }
 
-
    return _props.get();
+}
+
+bool ChartLayer::OnScenarioScenarioStatusChanged(ColregSimulation::SCENARIO_STATUS status)
+{
+   bool res = true;
+   switch (status)
+   {
+   case ColregSimulation::SCENARIO_STATUS::SS_MAP_CHECKOPENED:
+      res &= onScenarioCheckOpened();
+      break;
+   case ColregSimulation::SCENARIO_STATUS::SS_MAP_PROCESSED:
+      res &= onScenarioMapProcessed();
+      break;
+   case ColregSimulation::SCENARIO_STATUS::SS_MAPOBJ_PROCESSED:
+      res &= onScenarioMapObjProcessed();
+      break;
+   case ColregSimulation::SCENARIO_STATUS::SS_PATHS_COUNTED:
+      res &= onScenarioPathFound();
+      break;
+   case ColregSimulation::SCENARIO_STATUS::SS_OPT_PATHS_COUNTED:
+      res &= onScenarioOptPathFound();
+      break;
+   case ColregSimulation::SCENARIO_STATUS::SS_NOT_LOADED:
+   default:
+      break;
+   }
+   return res;
+}
+
+bool ChartLayer::onScenarioCheckOpened()
+{
+   m_chartUSN = colreg::INVALID_ID;
+   return true;
+}
+
+bool ChartLayer::onScenarioMapProcessed()
+{
+   return true;
+}
+
+bool ChartLayer::onScenarioMapObjProcessed()
+{
+   return true;
+}
+
+bool ChartLayer::onScenarioPathFound()
+{
+   return true;
+}
+
+bool ChartLayer::onScenarioOptPathFound()
+{
+   return true;
 }
 
 void ChartLayer::initObjInfo()

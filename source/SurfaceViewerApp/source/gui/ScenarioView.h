@@ -49,11 +49,8 @@ public:
    virtual ~ScenarioView();
 
 protected:
-   bool OnScenarioCheckOpened() override;
-   bool OnScenarioMapProcessed() override;
-   bool OnScenarioPathFound() override;
-   bool OnScenarioOptPathFound() override;
-   bool OnScenarioStatusChanged(ColregSimulation::SCENARIO_STATUS status) override;
+   bool OnScenarioScenarioStatusChanged(ColregSimulation::SCENARIO_STATUS status) override;
+   bool OnScenarioSimulationStatusChanged(ColregSimulation::SIMULATION_STATUS status) override;
    bool OnScenarioTimeChanged(double time) override { InvalidateView(); return true; }
    bool OnScenarioModified() override { _renderer->Clear(); return true; }
 
@@ -75,6 +72,12 @@ protected:
 
 private:
    void setTimer();
+
+   bool onScenarioCheckOpened();
+   bool onScenarioMapProcessed();
+   bool onScenarioMapObjProcessed();
+   bool onScenarioPathFound();
+   bool onScenarioOptPathFound();
 private:
    std::unique_ptr<render::iRender> _renderer;
    std::unique_ptr<LayersContainer> _layers;

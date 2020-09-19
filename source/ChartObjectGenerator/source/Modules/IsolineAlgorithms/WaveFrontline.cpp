@@ -66,7 +66,7 @@ inline frontlineType checkAddSurrondPoints(const std::shared_ptr<pathfinder::Mat
 std::vector<geometry_chart_object> WaveFrontline::generateIsolineLevel(const pathfinder::GeoMatrix* rawdata, double height, int H)
 {
    if (!rawdata->GetRowCount())
-      return;
+      return std::vector<geometry_chart_object>();
 
    auto actValMtx = std::make_shared<pathfinder::Matrix<bool>>(rawdata->GetRowCount(), rawdata->GetColCount(), false);
    auto inLineFlagMtx = std::make_shared<pathfinder::Matrix<bool>>(rawdata->GetRowCount(), rawdata->GetColCount(), false);
@@ -122,15 +122,14 @@ std::vector<geometry_chart_object> WaveFrontline::generateIsolineLevel(const pat
       }
    }
 
-   ATLASSERT(false);
-   settings::environment_settings env_stt;
-   //const auto& envstt = GetPack()->comm->settings->env_stt;
+   settings::environment_settings& env_stt = GetService()->GetSettingsSerializerHolder()->GetSettings().env_stt;
    std::vector<geometry_chart_object> res;
+   auto& gcBack = res.emplace_back();
    for (auto& line : isoLineVct)
    {
-      res.emplace_back();
+      auto& cBack = gcBack.geom_contour_vct.emplace_back();
       for (auto& point : line)
-         res.back().geom_contour_vct.emplace_back(SVCG::RoutePointToPositionPoint(point, env_stt));
+         cBack.emplace_back(static_cast<math::geo_point>(SVCG::RoutePointToPositionPoint(point, env_stt)));
    }
 
    std::lock_guard<std::recursive_mutex> guard(g_waveFrontlineMutex);

@@ -75,6 +75,7 @@
     <ClInclude Include="source\common\pathfinder_types.h" />
     <ClInclude Include="source\common\research_structs.h" />
     <ClInclude Include="source\common\research_types.h" />
+    <ClInclude Include="source\common\servicable.h" />
     <ClInclude Include="source\common\simulation_structs.h" />
     <ClInclude Include="source\common\transceiver_types.h" />
     <ClInclude Include="source\common\utils.h" />

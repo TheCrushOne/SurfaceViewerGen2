@@ -12,6 +12,11 @@ namespace data_standart
       : public iSurfaceVieverGenMapDataStandart
       , public DataStandart<DataStandartType::DST_SVGM, svgm_data_standart>
    {
+      struct tag
+      {
+         static constexpr char row_count[] = "row_count";
+         static constexpr char col_count[] = "col_count";
+      };
    public:
       SurfaceViewerGenMapDataStandart(central_pack*, LPCWSTR, navigation_dispatcher::iComService*);
       // iDataStandart

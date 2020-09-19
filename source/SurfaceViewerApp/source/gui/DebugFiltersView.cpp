@@ -181,6 +181,68 @@ void DebugFiltersView::fillClassView()
 	m_treeFilters.UnlockWindowUpdate();
 }
 
+bool DebugFiltersView::OnScenarioScenarioStatusChanged(ColregSimulation::SCENARIO_STATUS status)
+{
+	bool res = true;
+	switch (status)
+	{
+	case ColregSimulation::SCENARIO_STATUS::SS_MAP_CHECKOPENED:
+		res &= onScenarioCheckOpened();
+		break;
+	case ColregSimulation::SCENARIO_STATUS::SS_MAP_PROCESSED:
+		res &= onScenarioMapProcessed();
+		break;
+	case ColregSimulation::SCENARIO_STATUS::SS_MAPOBJ_PROCESSED:
+		res &= onScenarioMapObjProcessed();
+		break;
+	case ColregSimulation::SCENARIO_STATUS::SS_PATHS_COUNTED:
+		res &= onScenarioPathFound();
+		break;
+	case ColregSimulation::SCENARIO_STATUS::SS_OPT_PATHS_COUNTED:
+		res &= onScenarioOptPathFound();
+		break;
+	case ColregSimulation::SCENARIO_STATUS::SS_NOT_LOADED:
+	default:
+		break;
+	}
+	return res;
+}
+
+bool DebugFiltersView::OnScenarioTimeChanged(double time)
+{
+	CMFCToolBarButton* button = DYNAMIC_DOWNCAST(CMFCToolBarButton, m_wndToolBar.GetButton(2));
+	if (_autoUpdate)
+		fillClassView();
+	return true;
+}
+
+bool DebugFiltersView::onScenarioCheckOpened()
+{
+	m_treeFilters.DeleteAllItems();
+	fillClassView();
+	return true;
+}
+
+bool DebugFiltersView::onScenarioMapProcessed()
+{
+	return true;
+}
+
+bool DebugFiltersView::onScenarioMapObjProcessed()
+{
+	return true;
+}
+
+bool DebugFiltersView::onScenarioPathFound()
+{
+	return true;
+}
+
+bool DebugFiltersView::onScenarioOptPathFound()
+{
+	return true;
+}
+
 void DebugFiltersView::OnContextMenu(CWnd* pWnd, CPoint point)
 {
 	CTreeCtrl* pWndTree = (CTreeCtrl*)&m_treeFilters;

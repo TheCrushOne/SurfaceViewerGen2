@@ -13,13 +13,13 @@
 
 using namespace chart_object;
 
-IsolineGenerator::IsolineGenerator(central_pack* pack)
-   : ModuleBase(pack)
+IsolineGenerator::IsolineGenerator(central_pack* pack, navigation_dispatcher::iComService* service)
+   : ModuleBase(pack, service)
 {
-   auto adder = [this](const std::vector<math::geo_points>& obj, double H, int height) { /*addChartObjectSet(obj, H, height);*/ };
-   m_labirinthTraverseAlgorithm = std::make_unique<LabirinthTraverse>(pack, adder);
-   m_segmentCollectorAlgorithm = std::make_unique<SegmentCollector>(pack, adder);
-   m_waveFrontlineAlgortihm = std::make_unique<WaveFrontline>(pack, adder);
+   //auto adder = [this](const std::vector<math::geo_points>& obj, double H, int height) { /*addChartObjectSet(obj, H, height);*/ };
+   m_labirinthTraverseAlgorithm = std::make_unique<LabirinthTraverse>(pack, service);
+   m_segmentCollectorAlgorithm = std::make_unique<SegmentCollector>(pack, service);
+   m_waveFrontlineAlgortihm = std::make_unique<WaveFrontline>(pack, service);
 }
 
 void IsolineGenerator::GenerateIsolines(const pathfinder::GeoMatrix* rawdata, std::vector<geometry_chart_object>& staticStorage)
@@ -34,13 +34,16 @@ void IsolineGenerator::GenerateIsolines(const pathfinder::GeoMatrix* rawdata, st
    __int64 start;
    CURTIME_MS(start);
 #ifdef LOCALMULTITHREAD
-   std::vector<std::future<void>> futures;
+   std::vector<std::future<std::vector<geometry_chart_object>>> futures;
    // NOTE: менять тип алгоритма тут
    for (size_t levelIdx = 0; levelIdx < levelCount; levelIdx++)
-      futures.push_back(std::async(&IsolineGenerator::generateIsolineLevel, this, type, staticStorage, rawdata, min + step * static_cast<double>(levelIdx), 360. / static_cast<double>(levelCount)* static_cast<double>(levelIdx)));
+      futures.push_back(std::async(&IsolineGenerator::generateIsolineLevel, this, type, rawdata, min + step * static_cast<double>(levelIdx), 360. / static_cast<double>(levelCount)* static_cast<double>(levelIdx)));
 
    for (auto& future : futures)
-      future.get();
+   {
+      auto& res = future.get();
+      staticStorage.insert(staticStorage.end(), res.begin(), res.end());
+   }
 #else
    //size_t levelIdx = 3;
    for (size_t levelIdx = 0; levelIdx < levelCount; levelIdx++)
@@ -56,11 +59,11 @@ std::vector<geometry_chart_object> IsolineGenerator::generateIsolineLevel(Algori
    switch(type)
    {
       case AlgorithmType::AT_LABTRV:
-         return m_labirinthTraverseAlgorithm->GenerateIsolineLevel(staticStorage, rawdata, height, H);
+         return m_labirinthTraverseAlgorithm->GenerateIsolineLevel(rawdata, height, H);
       case AlgorithmType::AT_SEGCOL:
-         return m_segmentCollectorAlgorithm->GenerateIsolineLevel(staticStorage, rawdata, height, H);
+         return m_segmentCollectorAlgorithm->GenerateIsolineLevel(rawdata, height, H);
       case AlgorithmType::AT_WAVEFL:
-         return m_waveFrontlineAlgortihm->GenerateIsolineLevel(staticStorage, rawdata, height, H);
+         return m_waveFrontlineAlgortihm->GenerateIsolineLevel(rawdata, height, H);
       default:
          ATLASSERT(false);
          return std::vector<geometry_chart_object>();
@@ -69,7 +72,7 @@ std::vector<geometry_chart_object> IsolineGenerator::generateIsolineLevel(Algori
 
 void IsolineGenerator::addChartObjectSet(const std::vector<math::geo_points>& data, double height, int H)
 {
-   for (auto& isoLine : data)
+   /*for (auto& isoLine : data)
    {
       geometry_chart_object& isoLineStorageCell = m_genNewObjectRef();
       isoLineStorageCell.type = colreg::OBJECT_TYPE::OT_ISOLINE;
@@ -81,13 +84,11 @@ void IsolineGenerator::addChartObjectSet(const std::vector<math::geo_points>& da
       sprintf(color, "%i %i %i", rgb[0], rgb[1], rgb[2]);
       isoLineStorageCell.prop_vct.emplace_back("Color", color);
       isoLineStorageCell.prop_vct.emplace_back("Depth", std::to_string(height).c_str());
-      /*for (auto& elem : isoLineStorageCell.prop_holder_vct)
-         isoLineStorageCell.prop_vct.emplace_back(elem.key.c_str(), elem.val.c_str());*/
       auto& isoLineGeom = isoLineStorageCell.geom_contour_vct.back();
       for (auto& point : isoLine)
          isoLineGeom.emplace_back(point);
       //isoLineStorageCell.Commit();
 
       m_addObject(isoLineStorageCell);
-   }
+   }*/
 }

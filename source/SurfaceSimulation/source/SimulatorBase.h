@@ -40,7 +40,9 @@ namespace ColregSimulation
       const settings::application_settings& GetAppSettings() const override final { return m_settings; }
 
       virtual SCENARIO_STATUS GetSimulatorScenarioState() const override final { return m_scenarioStatus; }
+      virtual SIMULATION_STATUS GetSimulatorSimulationState() const override final { return m_simulationStatus; }
       virtual void SetSimulatorScenarioState(SCENARIO_STATUS status) override final { m_scenarioStatus = status; }
+      virtual void SetSimulatorSimulationState(SIMULATION_STATUS status) override final { m_simulationStatus = status; }
    protected:
       //void deserializeStandartAttrs()
    protected:
@@ -60,6 +62,7 @@ namespace ColregSimulation
       colreg::ModuleGuard<data_standart::iDataStandart, central_pack_ptr, LPCSTR, navigation_dispatcher::iComService*> m_pathDS;
       colreg::ModuleGuard<data_standart::iDataStandart, central_pack_ptr, LPCSTR, navigation_dispatcher::iComService*> m_optPathDS;
       SCENARIO_STATUS m_scenarioStatus = SCENARIO_STATUS::SS_NOT_LOADED;
+      SIMULATION_STATUS m_simulationStatus = SIMULATION_STATUS::SS_STOP;
       dbg::iDebugInfo* m_debugInfo = nullptr;
       navigation_dispatcher::iComServicePtr m_service = nullptr;
    };

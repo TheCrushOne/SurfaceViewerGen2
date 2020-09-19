@@ -7,11 +7,11 @@
 
 using namespace chart_object;
 
-ChartObjectGenerator::ChartObjectGenerator(central_pack *pack, navigation_dispatcher::iComService* pService)
-   : OrderBase(pack, pService)
-   , m_isolineGenerator(pack)
-   , m_coverageGenerator(pack)
-   , m_zoneGenerator(pack)
+ChartObjectGenerator::ChartObjectGenerator(central_pack *pack, navigation_dispatcher::iComService* service)
+   : OrderBase(pack, service)
+   , m_isolineGenerator(pack, service)
+   , m_coverageGenerator(pack, service)
+   , m_zoneGenerator(pack, service)
    , m_lock(false)
 {
    init();
@@ -22,8 +22,8 @@ bool ChartObjectGenerator::processCommand()
    if (m_lock)
       return false;
 
-   auto* src = m_pService->GetDataStandartFactory()->GetDataStandart(m_commandData.source.AsString());
-   auto* dst = m_pService->GetDataStandartFactory()->GetDataStandart(m_commandData.destination.AsString());   
+   auto* src = GetService()->GetDataStandartFactory()->GetDataStandart(m_commandData.source.AsString());
+   auto* dst = GetService()->GetDataStandartFactory()->GetDataStandart(m_commandData.destination.AsString());
 
    if (!needToProcess())
       return true;
@@ -45,11 +45,11 @@ bool ChartObjectGenerator::processCommand()
 
 void ChartObjectGenerator::init()
 {
-   auto creator = [this]()->geometry_chart_object& { return generateNew(); };
+   /*auto creator = [this]()->geometry_chart_object& { return generateNew(); };
    auto adder = [this](geometry_chart_object& storage) { addChartObject(storage); };
    m_isolineGenerator.SetAdder(creator, adder);
    m_coverageGenerator.SetAdder(creator, adder);
-   m_zoneGenerator.SetAdder(creator, adder);
+   m_zoneGenerator.SetAdder(creator, adder);*/
 }
 
 bool ChartObjectGenerator::readFromSource(data_standart::iSurfaceVieverGenMapDataStandart* src)
@@ -106,5 +106,5 @@ void ChartObjectGenerator::addChartObject(geometry_chart_object& storage)
 
 navigation_dispatcher::iOrderPtr CreateObjectListGenerator(central_pack * pack, navigation_dispatcher::iComService* pService)
 {
-   return std::make_shared<geometry_chart_object::ChartObjectGenerator>(pack, pService);
+   return std::make_shared<chart_object::ChartObjectGenerator>(pack, pService);
 }

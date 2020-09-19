@@ -31,12 +31,12 @@ inline bool pointCheck(const std::shared_ptr<pathfinder::Matrix<bool>>& actValMt
    return false;
 }
 
-void LabirinthTraverse::GenerateIsolineLevel(const pathfinder::GeoMatrix* rawdata, double height, int H)
+std::vector<geometry_chart_object> LabirinthTraverse::generateIsolineLevel(const pathfinder::GeoMatrix* rawdata, double height, int H)
 {
    auto rawRowCount = rawdata->GetRowCount(), rawColCount = rawdata->GetColCount();
    // TODO: установить минимальные ограничения
    if (!rawRowCount || !rawColCount)
-      return;
+      return std::vector<geometry_chart_object>();
    auto actValMtx = std::make_shared<pathfinder::Matrix<bool>>(rawRowCount, rawColCount, false);
    auto inLineFlagMtx = std::make_shared<pathfinder::Matrix<bool>>(rawRowCount, rawColCount, false);
    auto passedFlagMtx = std::make_shared<pathfinder::Matrix<bool>>(rawRowCount, rawColCount, false);
@@ -109,17 +109,16 @@ void LabirinthTraverse::GenerateIsolineLevel(const pathfinder::GeoMatrix* rawdat
       }
    }
 
-   ATLASSERT(false); // TODO: убрать, когда появится норм проброс настроек
-   settings::environment_settings envstt;// = GetPack()->settings->env_stt;
-   std::vector<math::geo_points> isoLineGeoVct;
+   settings::environment_settings& env_stt = GetService()->GetSettingsSerializerHolder()->GetSettings().env_stt;
+   std::vector<geometry_chart_object> res;
+   auto& gcBack = res.emplace_back();
    for (auto& line : isoLineVct)
    {
-      math::geo_points geoline;
+      auto& cBack = gcBack.geom_contour_vct.emplace_back();
       for (auto& point : line)
-         geoline.emplace_back(SVCG::RoutePointToPositionPoint(point, envstt));
-      isoLineGeoVct.emplace_back(geoline);
+         cBack.emplace_back(static_cast<colreg::geo_point>(SVCG::RoutePointToPositionPoint(point, env_stt)));
    }
 
    std::lock_guard<std::recursive_mutex> guard(g_labirinthTraverseMutex);
-   m_chartObjectSetAdder(isoLineGeoVct, height, H);
+   return res;
 }

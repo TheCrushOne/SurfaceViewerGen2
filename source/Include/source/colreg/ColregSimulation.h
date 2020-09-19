@@ -31,11 +31,19 @@ namespace ColregSimulation
 
    enum class SCENARIO_STATUS : char
    {
+      SS_NOT_LOADED = 0,
+      SS_MAP_CHECKOPENED,
+      SS_MAP_PROCESSED,
+      SS_MAPOBJ_PROCESSED,
+      SS_PATHS_COUNTED,
+      SS_OPT_PATHS_COUNTED,
+   };
+
+   enum class SIMULATION_STATUS : char
+   {
       SS_RUN = 0,
       SS_PAUSE,
       SS_STOP,
-      SS_NOT_LOADED,
-      SS_UPDATE
    };
 
    struct control_point_info
@@ -280,8 +288,14 @@ namespace ColregSimulation
       //! Статус сценария
       virtual SCENARIO_STATUS GetSimulatorScenarioState() const = 0;
 
+      //! Статус симуляции
+      virtual SIMULATION_STATUS GetSimulatorSimulationState() const = 0;
+
       //! Установка статуса сценария
       virtual void SetSimulatorScenarioState(SCENARIO_STATUS) = 0;
+
+      //! Установка статуса симуляции
+      virtual void SetSimulatorSimulationState(SIMULATION_STATUS) = 0;
 
       /*!
       \brief Добавить динамические объекты карты в симуляцию

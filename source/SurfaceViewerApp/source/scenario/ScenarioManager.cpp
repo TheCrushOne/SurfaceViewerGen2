@@ -46,7 +46,7 @@ void ScenarioManager::CheckOpen(const wchar_t* fileName, std::function<void(void
       simulator::simulatorInit(m_comService.operator->());
       simulator::getSimulator()->SetAppSettings(m_comService->GetSettingsSerializerHolder()->GetSettings());
       simulator::getSimulator()->CheckOpenScenario();
-      ScenarioDispather::GetInstance().OnScenarioCheckOpened();
+      ScenarioDispather::GetInstance().OnScenarioScenarioStatusChanged(ColregSimulation::SCENARIO_STATUS::SS_MAP_CHECKOPENED);
       buttonEnableCallback();
    }
 }
@@ -57,7 +57,7 @@ void ScenarioManager::ProcessMap(std::function<void(void)> buttonEnableCallback)
       {
          simulator::getSimulator()->SetAppSettings(m_comService->GetSettingsSerializerHolder()->GetSettings());
          simulator::getSimulator()->LoadProcessedMap();
-         ScenarioDispather::GetInstance().OnScenarioMapProcessed();
+         ScenarioDispather::GetInstance().OnScenarioScenarioStatusChanged(ColregSimulation::SCENARIO_STATUS::SS_MAP_PROCESSED);
          buttonEnableCallback();
       }
    ).detach();
@@ -69,7 +69,7 @@ void ScenarioManager::ProcessMapObjects(std::function<void(void)> buttonEnableCa
       {
          simulator::getSimulator()->SetAppSettings(m_comService->GetSettingsSerializerHolder()->GetSettings());
          simulator::getSimulator()->LoadProcessedMapObjects();
-         ScenarioDispather::GetInstance().OnScenarioMapProcessed();
+         ScenarioDispather::GetInstance().OnScenarioScenarioStatusChanged(ColregSimulation::SCENARIO_STATUS::SS_MAPOBJ_PROCESSED);
          buttonEnableCallback();
       }
    ).detach();
@@ -81,7 +81,7 @@ void ScenarioManager::ProcessPaths(std::function<void(void)> buttonEnableCallbac
       {
          simulator::getSimulator()->SetAppSettings(m_comService->GetSettingsSerializerHolder()->GetSettings());
          simulator::getSimulator()->LoadProcessedPaths();
-         ScenarioDispather::GetInstance().OnScenarioPathFound();
+         ScenarioDispather::GetInstance().OnScenarioScenarioStatusChanged(ColregSimulation::SCENARIO_STATUS::SS_PATHS_COUNTED);
          simulator::simulatorStart();
          buttonEnableCallback();
       }
@@ -94,7 +94,7 @@ void ScenarioManager::ProcessOptPaths(std::function<void(void)> buttonEnableCall
       {
          simulator::getSimulator()->SetAppSettings(m_comService->GetSettingsSerializerHolder()->GetSettings());
          simulator::getSimulator()->LoadProcessedOptPaths();
-         ScenarioDispather::GetInstance().OnScenarioOptPathFound();
+         ScenarioDispather::GetInstance().OnScenarioScenarioStatusChanged(ColregSimulation::SCENARIO_STATUS::SS_OPT_PATHS_COUNTED);
          simulator::simulatorStart();
          buttonEnableCallback();
       }
@@ -160,23 +160,23 @@ void ScenarioManager::processOptPathCommand(std::function<void(void)> successCal
       successCallback();
 }
 
-void ScenarioManager::setState(ColregSimulation::SCENARIO_STATUS state, bool force)
+void ScenarioManager::setState(ColregSimulation::SIMULATION_STATUS state, bool force)
 {
    // TODO: разобраться с force
    if (!simulator::getSimulator())
       return;
-   simulator::getSimulator()->SetSimulatorScenarioState(state);
-   ScenarioDispather::GetInstance().OnScenarioStatusChanged(state);
+   simulator::getSimulator()->SetSimulatorSimulationState(state);
+   ScenarioDispather::GetInstance().OnScenarioSimulationStatusChanged(state);
 }
 
 void ScenarioManager::Run()
 {
-   setState(ColregSimulation::SCENARIO_STATUS::SS_RUN);
+   setState(ColregSimulation::SIMULATION_STATUS::SS_RUN);
 }
 
 void ScenarioManager::Pause()
 {
-   setState(ColregSimulation::SCENARIO_STATUS::SS_PAUSE);
+   setState(ColregSimulation::SIMULATION_STATUS::SS_PAUSE);
 }
 
 void ScenarioManager::Restart()
@@ -186,7 +186,7 @@ void ScenarioManager::Restart()
       return;
    sim->Stop();
    sim->Start();
-   setState(ColregSimulation::SCENARIO_STATUS::SS_PAUSE, true);
+   setState(ColregSimulation::SIMULATION_STATUS::SS_PAUSE, true);
    ScenarioDispather::GetInstance().OnScenarioTimeChanged(sim->GetState().GetTime());
    SetDebugMode(m_debugMode);
 }
@@ -197,7 +197,7 @@ void ScenarioManager::Stop()
    if (!sim)
       return;
    sim->Reset();
-   setState(ColregSimulation::SCENARIO_STATUS::SS_NOT_LOADED, true);
+   setState(ColregSimulation::SIMULATION_STATUS::SS_STOP, true);
 }
 
 void ScenarioManager::Step()

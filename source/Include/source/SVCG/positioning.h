@@ -8,10 +8,10 @@
 // TODO: пофиксить преобразования координат
 namespace SVCG
 {
-   inline route_point PositionPointToRoutePoint(const position_point& pPoint, const settings::environment_settings settings = settings::environment_settings())
+   /*inline route_point PositionPointToRoutePoint(const position_point& pPoint, const settings::environment_settings settings = settings::environment_settings())
    {
       return route_point{};
-   }
+   }*/
 
    inline math::point PositionPointToMathPoint(const position_point& pPoint, const settings::environment_settings settings = settings::environment_settings())
    {

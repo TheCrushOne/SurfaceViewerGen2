@@ -17,8 +17,8 @@ OptPathfinderExternal::OptPathfinderExternal(central_pack* pack, navigation_disp
 
 bool OptPathfinderExternal::processCommand()
 {
-   auto* src = m_pService->GetDataStandartFactory()->GetDataStandart(m_commandData.source.AsString());
-   auto* dst = m_pService->GetDataStandartFactory()->GetDataStandart(m_commandData.destination.AsString());
+   auto* src = GetService()->GetDataStandartFactory()->GetDataStandart(m_commandData.source.AsString());
+   auto* dst = GetService()->GetDataStandartFactory()->GetDataStandart(m_commandData.destination.AsString());
 
    if (!needToProcess())
       return true;
@@ -47,7 +47,7 @@ bool OptPathfinderExternal::readFromSource(data_standart::iSurfaceVieverGenMapDa
 {
    m_data = src->GetData();
    m_scenarioData.unit_data = src->GetUnitData();
-   m_settings = std::make_shared<settings::application_settings>(m_pService->GetSettingsSerializerHolder()->GetSettings());
+   m_settings = std::make_shared<settings::application_settings>(GetService()->GetSettingsSerializerHolder()->GetSettings());
    return true;
 }
 

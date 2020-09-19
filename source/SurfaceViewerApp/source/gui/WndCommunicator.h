@@ -42,6 +42,6 @@ public:
 
    bool stdCallConv OnPathFound() override final
    {
-      return ScenarioManager::GetInstance(simulator::GetPack()).OnScenarioPathFound();
+      return true;
    }
 };

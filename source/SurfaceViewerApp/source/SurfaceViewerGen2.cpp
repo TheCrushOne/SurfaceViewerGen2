@@ -68,6 +68,7 @@ BEGIN_MESSAGE_MAP(CSurfaceViewerGen2App, CWinAppEx)
 
    ON_COMMAND(ID_SC_CHOOSESCENARIO, &CSurfaceViewerGen2App::OnChooseScenario)
    ON_COMMAND(ID_SC_PROCESSMAP, &CSurfaceViewerGen2App::OnProcessMap)
+   ON_COMMAND(ID_SC_PROCESSMAPOBJ, &CSurfaceViewerGen2App::OnProcessMapObj)
    ON_COMMAND(ID_SC_PROCESSSIMPLEPATHS, &CSurfaceViewerGen2App::OnProcessSimplePaths)
    ON_COMMAND(ID_SC_PROCESSOPTIMIZEDPATHS, &CSurfaceViewerGen2App::OnProcessOptimizedPaths)
 
@@ -282,7 +283,8 @@ void CSurfaceViewerGen2App::OnRename()
 
 void CSurfaceViewerGen2App::OnRun()
 {
-   ScenarioManager::GetInstance(simulator::GetPack()).GetState() == ColregSimulation::SCENARIO_STATUS::SS_RUN ? ScenarioManager::GetInstance(simulator::GetPack()).Pause()
+   ScenarioManager::GetInstance(simulator::GetPack()).GetSimulationState() == ColregSimulation::SIMULATION_STATUS::SS_RUN
+      ? ScenarioManager::GetInstance(simulator::GetPack()).Pause()
       : ScenarioManager::GetInstance(simulator::GetPack()).Run();
 }
 
@@ -361,9 +363,7 @@ void CSurfaceViewerGen2App::OnChooseScenario()
       AddToRecentFileList(fileDialog.GetPathName());
       ScenarioManager::GetInstance(simulator::GetPack()).CheckOpen(fileDialog.GetPathName(), [this]()
          {
-            m_processMap = true;
-            activateSimulationControl(false);
-            activatePathComputeControl(false);
+            recountSimulationControlStatus(ColregSimulation::SCENARIO_STATUS::SS_MAP_CHECKOPENED);
             refresh();
          }
       );
@@ -374,8 +374,17 @@ void CSurfaceViewerGen2App::OnProcessMap()
 {
    ScenarioManager::GetInstance(simulator::GetPack()).ProcessMap([this]()
       {
-         activateSimulationControl(false);
-         activatePathComputeControl(true);
+         recountSimulationControlStatus(ColregSimulation::SCENARIO_STATUS::SS_MAP_PROCESSED);
+         refresh();
+      }
+   );
+}
+
+void CSurfaceViewerGen2App::OnProcessMapObj()
+{
+   ScenarioManager::GetInstance(simulator::GetPack()).ProcessMapObjects([this]()
+      {
+         recountSimulationControlStatus(ColregSimulation::SCENARIO_STATUS::SS_MAPOBJ_PROCESSED);
          refresh();
       }
    );
@@ -385,7 +394,7 @@ void CSurfaceViewerGen2App::OnProcessSimplePaths()
 {
    ScenarioManager::GetInstance(simulator::GetPack()).ProcessPaths([this]()
       {
-         activateSimulationControl(true);
+         recountSimulationControlStatus(ColregSimulation::SCENARIO_STATUS::SS_PATHS_COUNTED);
          refresh();
       }
    );
@@ -395,7 +404,7 @@ void CSurfaceViewerGen2App::OnProcessOptimizedPaths()
 {
    ScenarioManager::GetInstance(simulator::GetPack()).ProcessOptPaths([this]()
       {
-         activateSimulationControl(true);
+         recountSimulationControlStatus(ColregSimulation::SCENARIO_STATUS::SS_OPT_PATHS_COUNTED);
          refresh();
       }
    );
@@ -454,6 +463,11 @@ void CSurfaceViewerGen2App::OnChooseScenarioUpdateCommandUI(CCmdUI* pCmdUI)
 void CSurfaceViewerGen2App::OnProcessMapUpdateCommandUI(CCmdUI* pCmdUI)
 {
    pCmdUI->Enable(m_processMap);
+}
+
+void CSurfaceViewerGen2App::OnProcessMapObjUpdateCommandUI(CCmdUI* pCmdUI)
+{
+   pCmdUI->Enable(m_processMapObj);
 }
 
 void CSurfaceViewerGen2App::OnProcessSimplePathsUpdateCommandUI(CCmdUI* pCmdUI)

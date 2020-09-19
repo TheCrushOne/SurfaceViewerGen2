@@ -268,8 +268,35 @@ void ScenarioView::OnRButtonUp(UINT /* nFlags */, CPoint point)
    OnContextMenu(this, point);
 }
 
+bool ScenarioView::OnScenarioScenarioStatusChanged(ColregSimulation::SCENARIO_STATUS status)
+{
+   bool res = true;
+   switch (status)
+   {
+   case ColregSimulation::SCENARIO_STATUS::SS_MAP_CHECKOPENED:
+      res &= onScenarioCheckOpened();
+      break;
+   case ColregSimulation::SCENARIO_STATUS::SS_MAP_PROCESSED:
+      res &= onScenarioMapProcessed();
+      break;
+   case ColregSimulation::SCENARIO_STATUS::SS_MAPOBJ_PROCESSED:
+      res &= onScenarioMapObjProcessed();
+      break;
+   case ColregSimulation::SCENARIO_STATUS::SS_PATHS_COUNTED:
+      res &= onScenarioPathFound();
+      break;
+   case ColregSimulation::SCENARIO_STATUS::SS_OPT_PATHS_COUNTED:
+      res &= onScenarioOptPathFound();
+      break;
+   case ColregSimulation::SCENARIO_STATUS::SS_NOT_LOADED:
+   default:
+      break;
+   }
+   InvalidateView();
+   return res;
+}
 
-bool ScenarioView::OnScenarioCheckOpened()
+bool ScenarioView::onScenarioCheckOpened()
 {
    _renderer->Clear();
    math::geo_point center = simulator::getCenter();
@@ -285,17 +312,22 @@ bool ScenarioView::OnScenarioCheckOpened()
    return true;
 }
 
-bool ScenarioView::OnScenarioMapProcessed()
+bool ScenarioView::onScenarioMapProcessed()
 {
    return true;
 }
 
-bool ScenarioView::OnScenarioPathFound()
+bool ScenarioView::onScenarioMapObjProcessed()
 {
    return true;
 }
 
-bool ScenarioView::OnScenarioOptPathFound()
+bool ScenarioView::onScenarioPathFound()
+{
+   return true;
+}
+
+bool ScenarioView::onScenarioOptPathFound()
 {
    return true;
 }
@@ -305,17 +337,17 @@ void ScenarioView::setTimer()
    SetTimer(0, 1000 / ScenarioManager::GetInstance(simulator::GetPack()).GetTimeScale(), NULL);
 }
 
-bool ScenarioView::OnScenarioStatusChanged(ColregSimulation::SCENARIO_STATUS status)
+bool ScenarioView::OnScenarioSimulationStatusChanged(ColregSimulation::SIMULATION_STATUS status)
 {
    switch (status)
    {
-   case ColregSimulation::SCENARIO_STATUS::SS_RUN:
+   case ColregSimulation::SIMULATION_STATUS::SS_RUN:
       setTimer();
       break;
-   case ColregSimulation::SCENARIO_STATUS::SS_PAUSE:
+   case ColregSimulation::SIMULATION_STATUS::SS_PAUSE:
       KillTimer(0);
       break;
-   case ColregSimulation::SCENARIO_STATUS::SS_STOP:
+   case ColregSimulation::SIMULATION_STATUS::SS_STOP:
       KillTimer(0);
       break;
    }
@@ -350,17 +382,11 @@ void ScenarioView::OnTimer(UINT_PTR nIDEvent)
    }
 }
 
-
 void ScenarioView::OnContextMenu(CWnd* /* pWnd */, CPoint point)
-{
-
-}
-
+{}
 
 void ScenarioView::OnFilePrintPreview()
-{
-
-}
+{}
 
 BOOL ScenarioView::OnPreparePrinting(CPrintInfo* pInfo)
 {

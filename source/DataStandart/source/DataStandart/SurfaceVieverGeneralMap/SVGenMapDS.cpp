@@ -20,9 +20,7 @@ using namespace data_standart;
 
 SurfaceViewerGenMapDataStandart::SurfaceViewerGenMapDataStandart(central_pack * pack, LPCWSTR base_folder, navigation_dispatcher::iComService * pService)
    : DataStandart(pack, base_folder, pService)
-{
-   
-}
+{}
 
 void SurfaceViewerGenMapDataStandart::resolvePathDee()
 {
@@ -61,8 +59,8 @@ void SurfaceViewerGenMapDataStandart::readMetaData()
    std::ifstream i(metaDataPath, std::ios_base::in | std::ios::binary);
    json j;
    i >> j;
-   m_rowCount = j["row_count"].get<size_t>();
-   m_colCount = j["col_count"].get<size_t>();
+   m_rowCount = j[tag::row_count].get<size_t>();
+   m_colCount = j[tag::col_count].get<size_t>();
 }
 
 void SurfaceViewerGenMapDataStandart::readHeightData()
@@ -94,8 +92,8 @@ void SurfaceViewerGenMapDataStandart::saveMetaData()
    std::string metaDataPath = getMetaFilePath();
    std::ofstream o(metaDataPath);
    json j;
-   j["row_count"] = m_rowCount;
-   j["col_count"] = m_colCount;
+   j[tag::row_count] = m_rowCount;
+   j[tag::col_count] = m_colCount;
    o << j;
 }
 

@@ -16,7 +16,7 @@ namespace chart_object
       : public navigation_dispatcher::OrderBase<navigation_dispatcher::OrderType::OT_GENOBJLIST, navigation_dispatcher::chart_object_gen_order>
    {
    public:
-      ChartObjectGenerator(central_pack *pack, navigation_dispatcher::iComService* pService);
+      ChartObjectGenerator(central_pack *pack, navigation_dispatcher::iComService* service);
       void Release() override final { delete this; }
    private:
       virtual bool processCommand() override final;

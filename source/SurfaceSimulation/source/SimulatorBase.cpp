@@ -33,6 +33,9 @@ SimulatorBase::SimulatorBase(central_pack * pack, iPropertyInterface * prop, nav
 
 bool SimulatorBase::CheckOpenScenario()
 {
+   // TODO: check!!! а то я чет не уверен, что тут всё верно
+   SetSimulatorScenarioState(ColregSimulation::SCENARIO_STATUS::SS_MAP_CHECKOPENED);
+   SetSimulatorSimulationState(ColregSimulation::SIMULATION_STATUS::SS_STOP);
    return true;
 }
 
@@ -74,15 +77,18 @@ bool SimulatorBase::LoadProcessedMap()
    auto* mapDS = reinterpret_cast<data_standart::iSurfaceVieverGenMapDataStandart*>(m_mapDS.operator->());
    m_currentConfig = m_orderCacheFolder + L"process_map.xml";
    deserializeStandartAttrs(mapDS, SVGUtils::wstringToString(m_currentConfig).c_str(), data_standart::DataStandartType::DST_SVGM);
+   SetSimulatorScenarioState(ColregSimulation::SCENARIO_STATUS::SS_MAP_PROCESSED);
+   SetSimulatorSimulationState(ColregSimulation::SIMULATION_STATUS::SS_STOP);
    return true;
 }
 
 bool SimulatorBase::LoadProcessedMapObjects()
 {
    auto* mapObjDS = reinterpret_cast<data_standart::iChartObjectDataStandart*>(m_mapObjDS.operator->());
-   m_currentConfig = m_orderCacheFolder + L"process_map_object_build.xml";
+   m_currentConfig = m_orderCacheFolder + L"process_map_object.xml";
    deserializeStandartAttrs(mapObjDS, SVGUtils::wstringToString(m_currentConfig).c_str(), data_standart::DataStandartType::DST_OBJ);
-   SetSimulatorScenarioState(ColregSimulation::SCENARIO_STATUS::SS_PAUSE);
+   SetSimulatorScenarioState(ColregSimulation::SCENARIO_STATUS::SS_MAPOBJ_PROCESSED);
+   SetSimulatorSimulationState(ColregSimulation::SIMULATION_STATUS::SS_STOP);
    return true;
 }
 
@@ -99,11 +105,15 @@ bool SimulatorBase::LoadProcessedPaths()
    };
    routeMover(rt.air_routes, m_data.unit_data.air_units);
    routeMover(rt.land_routes, m_data.unit_data.land_units);
+   SetSimulatorScenarioState(ColregSimulation::SCENARIO_STATUS::SS_PATHS_COUNTED);
+   SetSimulatorSimulationState(ColregSimulation::SIMULATION_STATUS::SS_STOP);
    return true;
 }
 
 bool SimulatorBase::LoadProcessedOptPaths()
 {
    auto* optPathDS = reinterpret_cast<data_standart::iOptimizedPathStorageDataStandart*>(m_mapDS.operator->());
+   SetSimulatorScenarioState(ColregSimulation::SCENARIO_STATUS::SS_OPT_PATHS_COUNTED);
+   SetSimulatorSimulationState(ColregSimulation::SIMULATION_STATUS::SS_STOP);
    return true;
 }

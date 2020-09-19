@@ -13,8 +13,6 @@ public:
 protected:
 
    bool OnScenarioTimeChanged(double time) override;
-   bool OnScenarioCheckOpened() override;
-   bool OnScenarioPathFound() override;
    void OnReleasedCaptureSlider(NMHDR* pNMHDR, LRESULT* pResult);
    void OnClickedSetButton();
    void OnUpdateSetButton(CCmdUI* pCmdUI);
@@ -28,7 +26,15 @@ public:
    // lock drag&drop feature
    virtual BOOL OnBeforeFloat(CRect& /*rectFloat*/, AFX_DOCK_METHOD/*dockMethod*/) { return false; }
    virtual BOOL CanAcceptPane(const CBasePane* pBar) const { return false; }
+   bool OnScenarioScenarioStatusChanged(ColregSimulation::SCENARIO_STATUS status) override;
+   bool OnScenarioSimulationStatusChanged(ColregSimulation::SIMULATION_STATUS status) override { return true; }
 private:
+   bool onScenarioCheckOpened();
+   bool onScenarioMapProcessed();
+   bool onScenarioMapObjProcessed();
+   bool onScenarioPathFound();
+   bool onScenarioOptPathFound();
+
    void AdjustLayout();
    void adjustElementLayout();
    inline ColregSimulation::iSimulator* getSimulator();

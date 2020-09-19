@@ -11,9 +11,7 @@ using namespace nlohmann;
 using namespace data_standart;
 
 void PathStorageDataStandart::resolvePathDee()
-{
-
-}
+{}
 
 void PathStorageDataStandart::SetData(const pathfinder::route_data& paths)
 {
@@ -31,27 +29,27 @@ void PathStorageDataStandart::savePathData()
    auto routePointWrite = [](const SVCG::route_point& point)->json
    {
       json pt;
-      pt["col"] = point.col;
-      pt["row"] = point.row;
-      pt["go"] = static_cast<unsigned short>(point.go);
-      pt["fly"] = static_cast<unsigned short>(point.fly);
-      pt["height"] = point.height;
-      pt["is_control"] = point.is_control;
+      pt[tag::col] = point.col;
+      pt[tag::row] = point.row;
+      pt[tag::go] = static_cast<unsigned short>(point.go);
+      pt[tag::fly] = static_cast<unsigned short>(point.fly);
+      pt[tag::height] = point.height;
+      pt[tag::is_control] = point.is_control;
       return pt;
    };
    auto routeWrite = [routePointWrite](const settings::route& route)->json
    {
       json rt;
-      rt["start"] = routePointWrite(route.start);
-      rt["finish"] = routePointWrite(route.finish);
+      rt[tag::start] = routePointWrite(route.start);
+      rt[tag::finish] = routePointWrite(route.finish);
       json cpl;
       for (auto& rp : route.control_point_list)
          cpl.emplace_back(routePointWrite(rp));
-      rt["control_point_list"] = cpl;
+      rt[tag::control_point_list] = cpl;
       json rl;
       for (auto& rp : route.route_list)
          rl.emplace_back(routePointWrite(rp));
-      rt["route_list"] = cpl;
+      rt[tag::route_list] = cpl;
       return rt;
    };
    auto pathListWriter = [routeWrite](const std::vector<settings::route>& route_list)->json
@@ -61,8 +59,8 @@ void PathStorageDataStandart::savePathData()
          routes.emplace_back(routeWrite(route));
       return routes;
    };
-   j["air_routes"] = pathListWriter(m_paths.air_routes);
-   j["land_routes"] = pathListWriter(m_paths.land_routes);
+   j[tag::air_routes] = pathListWriter(m_paths.air_routes);
+   j[tag::land_routes] = pathListWriter(m_paths.land_routes);
    file << j;
 }
 
@@ -83,12 +81,12 @@ void PathStorageDataStandart::readPathData()
    auto routePointRead = [](const json& j)->SVCG::route_point
    {
       SVCG::route_point point;
-      point.col = j["col"].get<int>();
-      point.row = j["row"].get<int>();
-      point.go = static_cast<pathfinder::GoZoneAffilation>(j["go"].get<unsigned short>());
-      point.fly = static_cast<pathfinder::FlyZoneAffilation>(j["fly"].get<unsigned short>());
-      point.height = j["height"].get<double>();
-      point.is_control = j["is_control"].get<bool>();
+      point.col = j[tag::col].get<int>();
+      point.row = j[tag::row].get<int>();
+      point.go = static_cast<pathfinder::GoZoneAffilation>(j[tag::go].get<unsigned short>());
+      point.fly = static_cast<pathfinder::FlyZoneAffilation>(j[tag::fly].get<unsigned short>());
+      point.height = j[tag::height].get<double>();
+      point.is_control = j[tag::is_control].get<bool>();
       return point;
    };
    auto routeRead = [routePointRead](const json& jroute)->settings::route

@@ -61,8 +61,7 @@ bool ChartObjectGenerator::readFromSource(data_standart::iSurfaceVieverGenMapDat
 
 bool ChartObjectGenerator::writeToDestination(data_standart::iChartObjectDataStandart* dst)
 {
-   dst->SaveData();
-   colreg::chart_objects_ref(m_chartObjVct.data(), m_chartObjVct.size());
+   dst->SetData(m_staticObjectStorage, m_dynamicObjectStorage);
    return true;
 }
 

@@ -68,7 +68,7 @@ void ScenarioManager::ProcessMapObjects(std::function<void(void)> buttonEnableCa
    std::thread(&ScenarioManager::processMapCommand, this, [this, buttonEnableCallback]()
       {
          simulator::getSimulator()->SetAppSettings(m_comService->GetSettingsSerializerHolder()->GetSettings());
-         simulator::getSimulator()->();
+         simulator::getSimulator()->LoadProcessedMapObjects();
          ScenarioDispather::GetInstance().OnScenarioMapProcessed();
          buttonEnableCallback();
       }

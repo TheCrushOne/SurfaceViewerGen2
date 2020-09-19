@@ -6,8 +6,6 @@
 
 namespace data_standart
 {
-   
-
    //template<int DSType = DataStandartType::DST_PATHS, typename DSStruct = path_storage_data_standart>
    class PathStorageDataStandart
       : public iPathStorageDataStandart
@@ -23,6 +21,13 @@ namespace data_standart
 
          static constexpr char control_point_list[] = "control_point_list";
          static constexpr char route_list[] = "route_list";
+
+         static constexpr char col[] = "col";
+         static constexpr char row[] = "row";
+         static constexpr char go[] = "go";
+         static constexpr char fly[] = "fly";
+         static constexpr char height[] = "height";
+         static constexpr char is_control[] = "is_control";
       };
    public:
       PathStorageDataStandart(central_pack* pack, LPCWSTR base_folder, navigation_dispatcher::iComService* pService)
@@ -49,9 +54,9 @@ namespace data_standart
       // iSurfaceViewerGenMapDataStandart
       // Common
       // Read
+      const pathfinder::route_data& GetData() override final;
       // Write
       void SetData(const pathfinder::route_data& paths) override final;
-      const pathfinder::route_data& GetData() override final;
    private:
       // Common
       std::string getDataFilePath() { return std::string(getPath()) + "\\pathdata.pl"; }

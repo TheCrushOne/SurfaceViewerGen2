@@ -1,7 +1,7 @@
 #pragma once
 
 #include "common/central_class.h"
-#include "chart_storage.h"
+#include "common/chart_object.h"
 #include "GeneratorModuleInterface.h"
 #include "common/converter_structs.h"
 
@@ -14,14 +14,14 @@ namespace chart_object
          : Central(pack)
       {}
    public:
-      bool SetAdder(std::function<chart_storage&()> crMtd, std::function<void(chart_storage&)> addMtd) override final
+      bool SetAdder(std::function<geometry_chart_object&()> crMtd, std::function<void(geometry_chart_object&)> addMtd) override final
       {
          m_addObject = addMtd;
          m_genNewObjectRef = crMtd;
          return true;
       }
    protected:
-      std::function<void(chart_storage&)> m_addObject;
-      std::function<chart_storage&()> m_genNewObjectRef;
+      std::function<void(geometry_chart_object&)> m_addObject;
+      std::function<geometry_chart_object&()> m_genNewObjectRef;
    };
 }

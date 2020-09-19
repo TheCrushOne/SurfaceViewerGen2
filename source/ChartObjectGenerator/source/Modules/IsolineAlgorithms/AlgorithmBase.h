@@ -9,9 +9,9 @@ namespace chart_object
 {
    struct iAlgorithm
    {
-      virtual void GenerateIsolineLevel(std::vector<geometry_chart_object>& staticStorage, const pathfinder::GeoMatrix* rawdata, double height, int H) = 0;
+      virtual std::vector<geometry_chart_object> GenerateIsolineLevel(const pathfinder::GeoMatrix* rawdata, double height, int H) = 0;
    protected:
-      virtual void generateIsolineLevel(const pathfinder::GeoMatrix* rawdata, double height, int H) = 0;
+      virtual std::vector<geometry_chart_object> generateIsolineLevel(const pathfinder::GeoMatrix* rawdata, double height, int H) = 0;
    };
 
    struct AlgorithmBase : public Central, public iAlgorithm
@@ -21,9 +21,9 @@ namespace chart_object
          , m_chartObjectSetAdder(adder)
       {}
 
-      void GenerateIsolineLevel(std::vector<geometry_chart_object>& staticStorage, const pathfinder::GeoMatrix* rawdata, double height, int H) override final
+      std::vector<geometry_chart_object> GenerateIsolineLevel(const pathfinder::GeoMatrix* rawdata, double height, int H) override final
       {
-
+         return generateIsolineLevel(rawdata, height, H);
       }
    protected:
       std::function<void(const std::vector<math::geo_points>&, double, int)> m_chartObjectSetAdder;

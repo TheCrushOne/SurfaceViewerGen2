@@ -40,6 +40,6 @@ namespace chart_object
          : AlgorithmBase(pack, adder)
       {}
 
-      void GenerateIsolineLevel(const pathfinder::GeoMatrix* rawdata, double height, int H) override final;
+      std::vector<geometry_chart_object> generateIsolineLevel(const pathfinder::GeoMatrix* rawdata, double height, int H) override final;
    };
 }

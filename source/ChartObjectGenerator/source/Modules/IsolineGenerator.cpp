@@ -51,21 +51,19 @@ void IsolineGenerator::GenerateIsolines(const pathfinder::GeoMatrix* rawdata, st
    GetPack()->comm->Message(ICommunicator::MessageType::MT_PERFORMANCE, (std::string("Isoline build time: ") + std::to_string(finish - start) + " ms.").c_str());
 }
 
-void IsolineGenerator::generateIsolineLevel(AlgorithmType type, std::vector<geometry_chart_object>& staticStorage, const pathfinder::GeoMatrix* rawdata, double height, int H)
+std::vector<geometry_chart_object> IsolineGenerator::generateIsolineLevel(AlgorithmType type, const pathfinder::GeoMatrix* rawdata, double height, int H)
 {
    switch(type)
    {
       case AlgorithmType::AT_LABTRV:
-         m_labirinthTraverseAlgorithm->GenerateIsolineLevel(staticStorage, rawdata, height, H);
-         break;
+         return m_labirinthTraverseAlgorithm->GenerateIsolineLevel(staticStorage, rawdata, height, H);
       case AlgorithmType::AT_SEGCOL:
-         m_segmentCollectorAlgorithm->GenerateIsolineLevel(staticStorage, rawdata, height, H);
-         break;
+         return m_segmentCollectorAlgorithm->GenerateIsolineLevel(staticStorage, rawdata, height, H);
       case AlgorithmType::AT_WAVEFL:
-         m_waveFrontlineAlgortihm->GenerateIsolineLevel(staticStorage, rawdata, height, H);
-         break;
+         return m_waveFrontlineAlgortihm->GenerateIsolineLevel(staticStorage, rawdata, height, H);
       default:
          ATLASSERT(false);
+         return std::vector<geometry_chart_object>();
    }
 }
 

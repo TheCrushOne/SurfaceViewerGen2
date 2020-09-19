@@ -23,7 +23,7 @@ namespace chart_object
       IsolineGenerator(central_pack* pack);
       void GenerateIsolines(const pathfinder::GeoMatrix*, std::vector<geometry_chart_object>&);
    private:
-      void generateIsolineLevel(AlgorithmType type, const pathfinder::GeoMatrix* rawdata, double height, int H);
+      std::vector<geometry_chart_object> generateIsolineLevel(AlgorithmType type, const pathfinder::GeoMatrix* rawdata, double height, int H);
 
       void addChartObjectSet(const std::vector<math::geo_points>& data, double height, int H);
    private:

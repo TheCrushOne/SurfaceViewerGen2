@@ -39,13 +39,6 @@ bool SimulatorBase::CheckOpenScenario()
    return true;
 }
 
-// TODO: запаковать в одно место(дублируется с ConfigDispatcherImpl.h)
-constexpr char tag_root[] = "root";
-constexpr char tag_standarts[] = "data_standarts";
-constexpr char tag_standart[] = "data_standart";
-constexpr char tag_type[] = "type";
-constexpr char tag_params[] = "params";
-
 template<typename Standart>
 void deserializeStandartAttrs(Standart* standart, const char* configPath, data_standart::DataStandartType expected)
 {
@@ -60,14 +53,14 @@ void deserializeStandartAttrs(Standart* standart, const char* configPath, data_s
    {
       std::string type;
       std::wstring wtype;
-      properties[tag_type].Get(type);
+      properties[tag::type].Get(type);
       wtype = SVGUtils::stringToWstring(type);
       if (data_standart::convert_datastandart_name(wtype.c_str()) == expected)
-         ds->DeserializeAttrs(properties[tag_params]);
+         ds->DeserializeAttrs(properties[tag::params]);
    };
 
    const auto standarts = root->GetChild(tag_standarts);
-   const auto& standartList = standarts->GetChildren().equal_range(tag_standart);
+   const auto& standartList = standarts->GetChildren().equal_range(tag::standart);
    for (auto iter = standartList.first; iter != standartList.second; ++iter)
      checkDataStandart(iter->second, standart, expected);
 }

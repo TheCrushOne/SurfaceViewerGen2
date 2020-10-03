@@ -1,11 +1,11 @@
 #include "stdafx.h"
 #include "SVGenMapDS.h"
 #include <fstream>
-#include <nlohmann/json.hpp>
+
+#include "json/json_wrapper.h"
 
 #include <filesystem>
 
-using namespace nlohmann;
 using namespace data_standart;
 
 #define VALID_CHECK_DLL_LOAD(dllName, funcName, guard) \
@@ -57,10 +57,10 @@ void SurfaceViewerGenMapDataStandart::readMetaData()
 {
    std::string metaDataPath = getMetaFilePath();
    std::ifstream i(metaDataPath, std::ios_base::in | std::ios::binary);
-   json j;
+   Json::Value j;
    i >> j;
-   m_rowCount = j[tag::row_count].get<size_t>();
-   m_colCount = j[tag::col_count].get<size_t>();
+   m_rowCount = j[tag::row_count].asUInt();
+   m_colCount = j[tag::col_count].asUInt();
 }
 
 void SurfaceViewerGenMapDataStandart::readHeightData()
@@ -91,7 +91,7 @@ void SurfaceViewerGenMapDataStandart::saveMetaData()
 {
    std::string metaDataPath = getMetaFilePath();
    std::ofstream o(metaDataPath);
-   json j;
+   Json::Value j;
    j[tag::row_count] = m_rowCount;
    j[tag::col_count] = m_colCount;
    o << j;

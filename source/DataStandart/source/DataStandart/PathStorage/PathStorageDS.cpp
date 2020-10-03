@@ -2,12 +2,11 @@
 #include "PathStorageDS.h"
 #include "crossdllinterface\ChecksumServiceInterface.h"
 
+#include "json/json_wrapper.h"
+
 #include <filesystem>
 #include <fstream>
 
-#include <nlohmann/json.hpp>
-
-using namespace nlohmann;
 using namespace data_standart;
 
 void PathStorageDataStandart::resolvePathDee()
@@ -25,10 +24,10 @@ void PathStorageDataStandart::savePathData()
 {
    std::string dataFilePath = getDataFilePath();
    std::ofstream file(dataFilePath);
-   json j;
-   auto routePointWrite = [](const SVCG::route_point& point)->json
+   Json::Value j;
+   auto routePointWrite = [](const SVCG::route_point& point)->Json::Value
    {
-      json pt;
+      Json::Value pt;
       pt[tag::col] = point.col;
       pt[tag::row] = point.row;
       pt[tag::go] = static_cast<unsigned short>(point.go);
@@ -37,26 +36,28 @@ void PathStorageDataStandart::savePathData()
       pt[tag::is_control] = point.is_control;
       return pt;
    };
-   auto routeWrite = [routePointWrite](const settings::route& route)->json
+   auto routeWrite = [routePointWrite](const settings::route& route)->Json::Value
    {
-      json rt;
+      Json::Value rt;
       rt[tag::start] = routePointWrite(route.start);
       rt[tag::finish] = routePointWrite(route.finish);
-      json cpl;
-      for (auto& rp : route.control_point_list)
-         cpl.emplace_back(routePointWrite(rp));
+      Json::Value cpl;
+      cpl.resize(route.control_point_list.size());
+      for (size_t idx = 0; idx < route.control_point_list.size(); idx++)
+         cpl[idx] = routePointWrite(route.control_point_list.at(idx));
       rt[tag::control_point_list] = cpl;
-      json rl;
-      for (auto& rp : route.route_list)
-         rl.emplace_back(routePointWrite(rp));
+      Json::Value rl;
+      for (size_t idx = 0; idx < route.route_list.size(); idx++)
+         rl[idx] = routePointWrite(route.route_list.at(idx));
       rt[tag::route_list] = cpl;
       return rt;
    };
-   auto pathListWriter = [routeWrite](const std::vector<settings::route>& route_list)->json
+   auto pathListWriter = [routeWrite](const std::vector<settings::route>& route_list)->Json::Value
    {
-      json routes;
-      for (auto& route : route_list)
-         routes.emplace_back(routeWrite(route));
+      Json::Value routes;
+      routes.resize(route_list.size());
+      for (size_t idx = 0; idx < route_list.size(); idx++)
+         routes[idx] = routeWrite(route_list.at(idx));
       return routes;
    };
    j[tag::air_routes] = pathListWriter(m_paths.air_routes);
@@ -76,20 +77,20 @@ void PathStorageDataStandart::readPathData()
    m_paths.land_routes.clear();
    std::string dataFilePath = getDataFilePath();
    std::ifstream file(dataFilePath);
-   json j;
+   Json::Value j;
    file >> j;
-   auto routePointRead = [](const json& j)->SVCG::route_point
+   auto routePointRead = [](const Json::Value& j)->SVCG::route_point
    {
       SVCG::route_point point;
-      point.col = j[tag::col].get<int>();
-      point.row = j[tag::row].get<int>();
-      point.go = static_cast<pathfinder::GoZoneAffilation>(j[tag::go].get<unsigned short>());
-      point.fly = static_cast<pathfinder::FlyZoneAffilation>(j[tag::fly].get<unsigned short>());
-      point.height = j[tag::height].get<double>();
-      point.is_control = j[tag::is_control].get<bool>();
+      point.col = j[tag::col].asInt();
+      point.row = j[tag::row].asInt();
+      point.go = static_cast<pathfinder::GoZoneAffilation>(j[tag::go].asUInt());
+      point.fly = static_cast<pathfinder::FlyZoneAffilation>(j[tag::fly].asUInt());
+      point.height = j[tag::height].asDouble();
+      point.is_control = j[tag::is_control].asBool();
       return point;
    };
-   auto routeRead = [routePointRead](const json& jroute)->settings::route
+   auto routeRead = [routePointRead](const Json::Value& jroute)->settings::route
    {
       settings::route route;
       route.start = routePointRead(jroute[tag::start]);
@@ -100,7 +101,7 @@ void PathStorageDataStandart::readPathData()
          route.route_list.emplace_back(routePointRead(jrp));
       return route;
    };
-   auto pathListRead = [routeRead](std::vector<settings::route>& route_list, const json& jroute_list)
+   auto pathListRead = [routeRead](std::vector<settings::route>& route_list, const Json::Value& jroute_list)
    {
       for (auto& jroute : jroute_list)
          route_list.emplace_back(routeRead(jroute));

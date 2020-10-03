@@ -38,7 +38,7 @@ namespace colreg
       static bool serialize(const char* filename, const settings& data)
       {
          std::ofstream o(filename);
-         json j;
+         Json::Value j;
          settingsToJson(j, data);
          o << j;
 
@@ -51,7 +51,7 @@ namespace colreg
          std::ifstream i(filename, std::ios_base::in | std::ios::binary);
          if (!i.is_open())
             return false;
-         json j;
+         Json::Value j;
          i >> j;
          jsonToSettings(j, data);
 
@@ -62,7 +62,7 @@ namespace colreg
       static const char* toString(const settings& data)
       {
          static std::string staticBuffer;
-         json j;
+         Json::Value j;
          settingsToJson(j, data);
          staticBuffer = j.dump();
          return staticBuffer.c_str();
@@ -72,7 +72,7 @@ namespace colreg
       static bool fromString(const char* src, settings& data)
       {
          std::stringstream i(src, std::ios_base::in | std::ios::binary);
-         json j;
+         Json::Value j;
          i >> j;
          jsonToSettings(j, data);
 
@@ -152,8 +152,8 @@ namespace colreg
       template<>
       static bool settingsToJson(Json::Value& j, const settings::map_settings& data)
       {
-         j["col_count"] = data.col_count;
-         j["row_count"] = data.row_count;
+         j[tag::col_count] = data.col_count;
+         j[tag::row_count] = data.row_count;
          return true;
       }
 
@@ -164,14 +164,38 @@ namespace colreg
       }
 
       template<typename T>
+      T valGetter(const Json::Value& j) { return T(); }
+
+      template<>
+      double valGetter(const Json::Value& j) { return j.asDouble(); }
+
+      template<>
+      int valGetter(const Json::Value& j) { return j.asInt(); }
+
+      template<>
+      unsigned int valGetter(const Json::Value& j) { return j.asUInt(); }
+
+      template<typename T>
+      std::vector<T> valVectorGetter(const Json::Value& j) { return std::vector<T>(); }
+
+      template<>
+      std::vector<double> valVectorGetter(const Json::Value& j) { return std::vector<double>{ j.begin(), j.end() }; }
+
+      template<>
+      std::vector<int> valVectorGetter(const Json::Value& j) { return std::vector<int>{ j.begin(), j.end() }; }
+
+      template<>
+      std::vector<unsigned int> valVectorGetter(const Json::Value& j) { return std::vector<unsigned int>{ j.begin(), j.end() }; }
+
+      template<typename T>
       static settings::range_data<T> rangeReader(const Json::Value& j)
       {
          settings::range_data<T> range;
-         range.max = j[tag::max].get<T>();
-         range.min = j[tag::min].get<T>();
-         range.step = j[tag::step].get<T>();
+         range.max = valGetter<T>(j[tag::max]);
+         range.min = valGetter<T>(j[tag::min]);
+         range.step = valGetter<T>(j[tag::step]);
          if (j.find(tag::values) != j.end())
-            range.values = j[tag::values].get<std::vector<T>>();
+            range.values = valVectorGetter<T>(j[tag::values]);
 
          range.apply();
          return range;
@@ -192,16 +216,16 @@ namespace colreg
       template<>
       static bool jsonToSettings(const Json::Value& j, settings::research_settings& data)
       {
-         data.debug_level = j["debug_level"].asInt();
-         data.fly_count_range = rangeReader<size_t>(j["fly_count_range"]);
-         data.iter_count = j["iter_count"].asInt();
-         data.length_range = rangeReader<double>(j["length_range"]);
-         data.map_size = j["map_size"].asInt();
-         data.multi_thread_test = j["multi_thread_test"].asBool();
-         data.res_type = static_cast<settings::ResearchType>(j["res_type"].asInt());
-         data.single_thread_test = j["single_thread_test"].asBool();
-         data.task_pool_range = rangeReader<size_t>(j["task_pool_range"]);
-         data.thread_pool_range = rangeReader<size_t>(j["thread_pool_range"]);
+         data.debug_level = j[tag::debug_level].asInt();
+         data.fly_count_range = rangeReader<size_t>(j[tag::fly_count_range]);
+         data.iter_count = j[tag::iter_count].asInt();
+         data.length_range = rangeReader<double>(j[tag::length_range]);
+         data.map_size = j[tag::map_size].asInt();
+         data.multi_thread_test = j[tag::multi_thread_test].asBool();
+         data.res_type = static_cast<settings::ResearchType>(j[tag::res_type].asInt());
+         data.single_thread_test = j[tag::single_thread_test].asBool();
+         data.task_pool_range = rangeReader<size_t>(j[tag::task_pool_range]);
+         data.thread_pool_range = rangeReader<size_t>(j[tag::thread_pool_range]);
          return true;
       }
 
@@ -211,14 +235,14 @@ namespace colreg
          auto infoReader = [](const Json::Value& j)->settings::coordinate_system_info
          {
             settings::coordinate_system_info info;
-            info.angle = j["angle"].asDouble();
-            info.scale = j["scale"].asDouble();
-            info.ordinate_bias = j["ordinate_bias"].asDouble();
-            info.abscissa_bias = j["abscissa_bias"].asDouble();
+            info.angle = j[tag::angle].asDouble();
+            info.scale = j[tag::scale].asDouble();
+            info.ordinate_bias = j[tag::ordinate_bias].asDouble();
+            info.abscissa_bias = j[tag::abscissa_bias].asDouble();
             return info;
          };
-         data.gcs_info = infoReader(j["gcs_info"]);
-         data.mtx_info = infoReader(j["mtx_info"]);
+         data.gcs_info = infoReader(j[tag::gcs_info]);
+         data.mtx_info = infoReader(j[tag::mtx_info]);
          return true;
       }
 

@@ -4,7 +4,7 @@
 #include <fstream>
 #include <filesystem>
 
-#include "ThirdParty/json/json.h"
+#include "json/json_wrapper.h"
 
 #include "Common\GeoJsonLoadHelper.h"
 #include "Common\GeoJsonSaveHelper.h"

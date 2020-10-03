@@ -107,6 +107,7 @@
     <ClInclude Include="source\datastandart\PathStorageDataStandartInterface.h" />
     <ClInclude Include="source\datastandart\PngHeightMapDataStandartInterface.h" />
     <ClInclude Include="source\datastandart\SVGenMapDataStandartInterface.h" />
+    <ClInclude Include="source\json\json_wrapper.h" />
     <ClInclude Include="source\math\ellipse.h" />
     <ClInclude Include="source\math\intersect.h" />
     <ClInclude Include="source\math\math_utils.h" />
@@ -129,6 +130,9 @@
     <ClInclude Include="source\SVCG\math_base_types.h" />
     <ClInclude Include="source\SVCG\positioning.h" />
     <ClInclude Include="source\SVCG\route_point.h" />
+    <ClInclude Include="source\ThirdParty\json\json-forwards.h" />
+    <ClInclude Include="source\ThirdParty\json\json.h" />
+    <ClInclude Include="source\ThirdParty\json\jsoncpp.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\colreg\ThirdParty\tinyxml2\tinyxml2.cpp" />

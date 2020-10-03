@@ -2,6 +2,9 @@
 #include "ChartObjectGenerator.h"
 #include "SVCG/positioning.h"
 #include "math/math_utils.h"
+#include "navdisp\ComService.h"
+#include "navdisp\OrderCreation.h"
+
 #include <algorithm>
 #include <limits>
 
@@ -54,8 +57,7 @@ void ChartObjectGenerator::init()
 
 bool ChartObjectGenerator::readFromSource(data_standart::iSurfaceVieverGenMapDataStandart* src)
 {
-   //src->ReadFromSource();
-   //m_rawDataPtr = src->GetData();
+   m_rawDataPtr = src->GetData();
    return true;
 }
 
@@ -72,7 +74,7 @@ bool ChartObjectGenerator::generateStatic()
    m_staticObjectStorage.clear();
    m_staticObjectStorage.emplace_back();
    m_coverageGenerator.GenerateChartBorder(m_rawDataPtr, m_staticObjectStorage.back());
-   m_isolineGenerator.GenerateIsolines(m_rawDataPtr, m_staticObjectStorage);
+   //m_isolineGenerator.GenerateIsolines(m_rawDataPtr, m_staticObjectStorage);
    return true;
 }
 
@@ -94,7 +96,7 @@ void ChartObjectGenerator::prepareLocalStorage()
    m_chartStorage.clear();
 }
 
-void ChartObjectGenerator::addChartObject(geometry_chart_object& storage)
+void ChartObjectGenerator::addChartObject(chart_object::chart_object_unit& storage)
 {
    // NOTE: вроде как устарело
    ATLASSERT(false);
@@ -104,7 +106,7 @@ void ChartObjectGenerator::addChartObject(geometry_chart_object& storage)
    //m_chartObjVct.emplace_back(colreg::chart_object(id++, storage.type, geoRef, propRef));
 }
 
-navigation_dispatcher::iOrderPtr CreateObjectListGenerator(central_pack * pack, navigation_dispatcher::iComService* pService)
+navigation_dispatcher::iOrderPtr CreateObjectListGenerator(central_pack_ptr pack, navigation_dispatcher::iComServicePtr pService)
 {
-   return std::make_shared<chart_object::ChartObjectGenerator>(pack, pService);
+   return new ChartObjectGenerator(pack, pService);
 }

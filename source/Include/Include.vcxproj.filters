@@ -37,6 +37,15 @@
     <Filter Include="settings">
       <UniqueIdentifier>{1b8f464b-5f7c-487b-9e4c-a2f24694c586}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ThirdParty">
+      <UniqueIdentifier>{0fab15c1-4075-4f05-908b-c166024daec5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ThirdParty\json">
+      <UniqueIdentifier>{9efd1555-8c9a-430a-8dc1-d352101f03db}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="json">
+      <UniqueIdentifier>{41829fb9-65b1-4d0d-beeb-215ac30c4f34}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\crossdllinterface\SettingsSerializerInterface.h">
@@ -368,6 +377,18 @@
     </ClInclude>
     <ClInclude Include="source\common\servicable.h">
       <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="source\ThirdParty\json\json.h">
+      <Filter>ThirdParty\json</Filter>
+    </ClInclude>
+    <ClInclude Include="source\ThirdParty\json\jsoncpp.hpp">
+      <Filter>ThirdParty\json</Filter>
+    </ClInclude>
+    <ClInclude Include="source\ThirdParty\json\json-forwards.h">
+      <Filter>ThirdParty\json</Filter>
+    </ClInclude>
+    <ClInclude Include="source\json\json_wrapper.h">
+      <Filter>json</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

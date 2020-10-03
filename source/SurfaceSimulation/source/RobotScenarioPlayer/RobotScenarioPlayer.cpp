@@ -7,10 +7,12 @@
 
 using namespace ColregSimulation;
 
-RobotScenarioPlayer::RobotScenarioPlayer(central_pack* pack, iPropertyInterface* prop, navigation_dispatcher::iComServicePtr service)
+RobotScenarioPlayer::RobotScenarioPlayer(central_pack_ptr pack, iPropertyInterface* prop, navigation_dispatcher::iComServicePtr service)
    : SimulatorBase(pack, prop, service)
+   , m_currentIdx(0)
+   , m_gridMeta({})
 {
-   m_debugInfo = dbg::CreateDebugInfoManager();
+   //m_debugInfo = dbg::CreateDebugInfoManager();
 }
 
 void RobotScenarioPlayer::Start()
@@ -239,23 +241,22 @@ const settings::map_settings& RobotScenarioPlayer::GetChartGridMeta() const
    return GetAppSettings().map_stt;
 }
 
-const colreg::chart_objects_ref& RobotScenarioPlayer::GetChartObjects() const
+const chart_object::chart_object_unit_vct_ref RobotScenarioPlayer::GetChartObjects() const
 {
-   ATLASSERT(false);
-   colreg::chart_objects_ref ref;
-   return ref;//m_generator->GetChartObjects();
+   return const_cast<const chart_object::chart_object_unit_vct_ref>(m_chartObjects);
 }
 
-const colreg::chart_object* RobotScenarioPlayer::GetChartObject(colreg::chart_object_id id) const
+const chart_object::chart_object_unit* RobotScenarioPlayer::GetChartObject(colreg::chart_object_id id) const
 {
    for (auto& chartObject : GetChartObjects())
    {
       if (chartObject.id == id)
          return &chartObject;
    }
+   return nullptr;
 }
 
-bool RobotScenarioPlayer::PrepareDataForSave(/*const ScenarioIO::scenario_data* pInputScenarioData, ScenarioIO::scenario_data* pScenarioData, */const bool focused, const colreg::geo_points_ref& ships, const colreg::base_ref<colreg::geo_points_ref>& chart_objects) const
+bool RobotScenarioPlayer::PrepareDataForSave(const bool focused, const colreg::geo_points_vct_ref ships, const chart_object::chart_object_unit_vct_ref chart_objects) const
 {
    return false;
 }
@@ -285,7 +286,7 @@ void RobotScenarioPlayer::addUnit(const settings::unit_data_element& setting, UN
    {
       SimulationDrone drone;
       track_point_full_info info;
-      info.point.pos = SVCG::RoutePointToPositionPoint(setting.start, /*GetSettings()->*/env_stt);
+      info.point.pos = SVCG::RoutePointToPositionPoint(setting.start, env_stt);
       info.point.course = 0;
       info.point.heading = 0;
       info.point.left_XTE = 1;
@@ -308,7 +309,7 @@ void RobotScenarioPlayer::addUnit(const settings::unit_data_element& setting, UN
    {
       SimulationRover rover;
       track_point_full_info info;
-      info.point.pos = SVCG::RoutePointToPositionPoint(setting.start, /*GetSettings()->*/env_stt);
+      info.point.pos = SVCG::RoutePointToPositionPoint(setting.start, env_stt);
       info.point.course = 0;
       info.point.heading = 0;
       info.point.left_XTE = 1;
@@ -331,7 +332,7 @@ void RobotScenarioPlayer::addUnit(const settings::unit_data_element& setting, UN
    {
       SimulationShip ship;
       track_point_full_info info;
-      info.point.pos = SVCG::RoutePointToPositionPoint(setting.start, /*GetSettings()->*/env_stt);
+      info.point.pos = SVCG::RoutePointToPositionPoint(setting.start, env_stt);
       ship.SetPosInfo(info);
       m_ships.emplace_back(std::make_unique<SimulationShip>(std::move(ship)));
       return;

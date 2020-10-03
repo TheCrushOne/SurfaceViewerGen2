@@ -10,19 +10,19 @@ namespace chart_object
 {
    struct iAlgorithm
    {
-      virtual std::vector<geometry_chart_object> GenerateIsolineLevel(const pathfinder::GeoMatrix* rawdata, double height, int H) = 0;
+      virtual chart_object::chart_object_unit_vct GenerateIsolineLevel(const pathfinder::GeoMatrix& rawdata, double height, int H) = 0;
    protected:
-      virtual std::vector<geometry_chart_object> generateIsolineLevel(const pathfinder::GeoMatrix* rawdata, double height, int H) = 0;
+      virtual chart_object::chart_object_unit_vct generateIsolineLevel(const pathfinder::GeoMatrix& rawdata, double height, int H) = 0;
    };
 
    struct AlgorithmBase : public Central, public Servicable, public iAlgorithm
    {
-      AlgorithmBase(central_pack* pack, navigation_dispatcher::iComService* service)
+      AlgorithmBase(central_pack_ptr pack, navigation_dispatcher::iComServicePtr service)
          : Central(pack)
          , Servicable(service)
       {}
 
-      std::vector<geometry_chart_object> GenerateIsolineLevel(const pathfinder::GeoMatrix* rawdata, double height, int H) override final
+      chart_object::chart_object_unit_vct GenerateIsolineLevel(const pathfinder::GeoMatrix& rawdata, double height, int H) override final
       {
          return generateIsolineLevel(rawdata, height, H);
       }

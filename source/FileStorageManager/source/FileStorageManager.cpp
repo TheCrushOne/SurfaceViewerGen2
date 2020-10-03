@@ -1,16 +1,13 @@
 #include "stdafx.h"
 #include "FileStorageManager.h"
 #include <filesystem>
-#include <nlohmann/json.hpp>
 #include <fstream>
 #include <string>
 #include <iostream>
 #include <iomanip>
 
 namespace fs = std::filesystem;
-using namespace nlohmann;
 using namespace file_storage;
-
 
 void FileStorageManager::PrepareStorage(const wchar_t* metaFileName)
 {

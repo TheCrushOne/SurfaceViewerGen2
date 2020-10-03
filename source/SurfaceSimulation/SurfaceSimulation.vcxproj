@@ -20,7 +20,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Include\source\colreg\ThirdParty\tinyxml2\tinyxml2.cpp" />
-    <ClCompile Include="source\Debug\DebugInfoImpl.cpp" />
+    <ClCompile Include="source\Debug\DebugInfoImpl.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="source\RobotLogPlayer\RobotLogPlayer.cpp" />
     <ClCompile Include="source\RobotScenarioPlayer\RobotScenarioPlayer.cpp" />
     <ClCompile Include="source\SimulationModel\ColregSimulationImpl.cpp" />
@@ -30,7 +33,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Include\source\colreg\ThirdParty\tinyxml2\tinyxml2.h" />
-    <ClInclude Include="source\Debug\DebugInfoImpl.h" />
+    <ClInclude Include="source\Debug\DebugInfoImpl.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="source\RobotLogPlayer\RobotLogPlayer.h" />
     <ClInclude Include="source\RobotScenarioPlayer\RobotScenarioPlayer.h" />
     <ClInclude Include="source\SimulationModel\ColregSimulationImpl.h" />

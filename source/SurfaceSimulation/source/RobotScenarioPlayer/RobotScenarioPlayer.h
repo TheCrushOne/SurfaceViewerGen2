@@ -39,9 +39,9 @@ namespace ColregSimulation
       const iUnit* GetUnitById(colreg::id_type id) const override final;
       double GetTime() const override final;
       const settings::map_settings& GetChartGridMeta() const override final;
-      const colreg::chart_objects_ref& GetChartObjects() const override final;
-      const colreg::chart_object* GetChartObject(colreg::chart_object_id id) const override final;
-      bool PrepareDataForSave(/*const ScenarioIO::scenario_data* pInputScenarioData, ScenarioIO::scenario_data* pScenarioData, */const bool focused, const colreg::geo_points_ref& ships, const colreg::base_ref<colreg::geo_points_ref>& chart_objects) const override final;
+      const chart_object::chart_object_unit_vct_ref GetChartObjects() const override final;
+      const chart_object::chart_object_unit* GetChartObject(colreg::chart_object_id id) const override final;
+      bool PrepareDataForSave(const bool focused, const colreg::geo_points_vct_ref ships, const chart_object::chart_object_unit_vct_ref chart_objects) const override final;
    protected:
       SimulationUnit* getUnitByIdx(UNIT_TYPE type, size_t idx);
       void updateUnitsPath();
@@ -56,11 +56,11 @@ namespace ColregSimulation
    private:
       std::vector<std::vector<double>> m_coordGrid;
 
-      chart_grid_meta m_gridMeta;
+      chart_grid_meta m_gridMeta = {};
       std::vector<std::unique_ptr<SimulationShip>> m_ships;
       std::vector<std::unique_ptr<SimulationRover>> m_rovers;
       std::vector<std::unique_ptr<SimulationDrone>> m_drones;
-      size_t m_currentIdx;
+      size_t m_currentIdx = 0;
 
       std::vector<std::vector<size_t>> m_roversIdxVct;
       std::vector<std::vector<size_t>> m_dronesIdxVct;

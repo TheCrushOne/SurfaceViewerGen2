@@ -8,7 +8,4 @@
     <ClInclude Include="source\FileStorageManager.h" />
     <ClInclude Include="source\stdafx.h" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
 </Project>

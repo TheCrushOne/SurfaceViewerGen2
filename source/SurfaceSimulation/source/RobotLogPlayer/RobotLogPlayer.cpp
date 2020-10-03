@@ -95,17 +95,17 @@ const settings::map_settings& RobotLogPlayer::GetChartGridMeta() const
    return meta;
 }
 
-const colreg::chart_objects_ref& RobotLogPlayer::GetChartObjects() const
+const chart_object::chart_object_unit_vct_ref RobotLogPlayer::GetChartObjects() const
 {
-   return m_chartObjects;
+   return const_cast<const chart_object::chart_object_unit_vct_ref>(m_chartObjects);
 }
 
-const colreg::chart_object* RobotLogPlayer::GetChartObject(colreg::chart_object_id id) const
+const chart_object::chart_object_unit* RobotLogPlayer::GetChartObject(colreg::chart_object_id id) const
 {
    return nullptr;
 }
 
-bool RobotLogPlayer::PrepareDataForSave(/*const ScenarioIO::scenario_data* pInputScenarioData, ScenarioIO::scenario_data* pScenarioData, */const bool focused, const colreg::geo_points_ref& ships, const colreg::base_ref<colreg::geo_points_ref>& chart_objects) const
+bool RobotLogPlayer::PrepareDataForSave(const bool focused, const colreg::geo_points_vct_ref ships, const chart_object::chart_object_unit_vct_ref chart_objects) const
 {
    return false;
 }

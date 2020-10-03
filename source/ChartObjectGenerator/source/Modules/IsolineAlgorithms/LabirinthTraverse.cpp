@@ -31,12 +31,12 @@ inline bool pointCheck(const std::shared_ptr<pathfinder::Matrix<bool>>& actValMt
    return false;
 }
 
-std::vector<geometry_chart_object> LabirinthTraverse::generateIsolineLevel(const pathfinder::GeoMatrix* rawdata, double height, int H)
+chart_object::chart_object_unit_vct LabirinthTraverse::generateIsolineLevel(const pathfinder::GeoMatrix& rawdata, double height, int H)
 {
-   auto rawRowCount = rawdata->GetRowCount(), rawColCount = rawdata->GetColCount();
+   auto rawRowCount = rawdata.GetRowCount(), rawColCount = rawdata.GetColCount();
    // TODO: установить минимальные ограничения
    if (!rawRowCount || !rawColCount)
-      return std::vector<geometry_chart_object>();
+      return chart_object::chart_object_unit_vct();
    auto actValMtx = std::make_shared<pathfinder::Matrix<bool>>(rawRowCount, rawColCount, false);
    auto inLineFlagMtx = std::make_shared<pathfinder::Matrix<bool>>(rawRowCount, rawColCount, false);
    auto passedFlagMtx = std::make_shared<pathfinder::Matrix<bool>>(rawRowCount, rawColCount, false);
@@ -45,7 +45,7 @@ std::vector<geometry_chart_object> LabirinthTraverse::generateIsolineLevel(const
    {
       for (size_t cIdx = 0; cIdx < rawColCount; cIdx++)
       {
-         if (rawdata->Get(rIdx, cIdx) >= height)
+         if (rawdata.Get(rIdx, cIdx) >= height)
             actValMtx->Set(rIdx, cIdx, true);
       }
    }
@@ -110,7 +110,7 @@ std::vector<geometry_chart_object> LabirinthTraverse::generateIsolineLevel(const
    }
 
    settings::environment_settings& env_stt = GetService()->GetSettingsSerializerHolder()->GetSettings().env_stt;
-   std::vector<geometry_chart_object> res;
+   chart_object::chart_object_unit_vct res;
    auto& gcBack = res.emplace_back();
    for (auto& line : isoLineVct)
    {

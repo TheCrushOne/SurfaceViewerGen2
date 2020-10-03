@@ -90,7 +90,7 @@ bool HeightMapConverter::writeToDestination(data_standart::iSurfaceVieverGenMapD
    return true;
 }
 
-navigation_dispatcher::iOrder* CreatePngHeightmapConverter(central_pack* pack, navigation_dispatcher::iComService* pService)
+navigation_dispatcher::iOrderPtr CreatePngHeightmapConverter(central_pack_ptr pack, navigation_dispatcher::iComServicePtr pService)
 {
    return new HeightMapConverter(pack, pService);
 }

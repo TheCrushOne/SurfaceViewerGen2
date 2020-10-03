@@ -26,8 +26,8 @@ private:
    bool onScenarioOptPathFound();
 
    void initObjInfo();
-   bool synchronize_map(/*const colreg::iChartSafetyCheck* checker, */render::iRender* renderer, const colreg::chart_objects_ref& chartObjects);
-   void addChartObject(render::iRender* renderer, const colreg::chart_object& obj);
+   bool synchronize_map(render::iRender* renderer, const chart_object::chart_object_unit_vct_ref chartObjects);
+   void addChartObject(render::iRender* renderer, const chart_object::chart_object_unit& obj);
    void onLayerEnabledChanged() override;
    bool isLayerEnabled() const override { return true; }
 private:

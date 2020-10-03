@@ -28,5 +28,5 @@ namespace navigation_dispatcher
       virtual colreg::iUnitDataSerializer* GetUnitDataSerializer() = 0;
    };
 
-   using iComServicePtr = iComService*;
+   typedef iComService* iComServicePtr;
 }

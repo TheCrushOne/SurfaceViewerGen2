@@ -24,7 +24,7 @@ ScenarioManager::ScenarioManager(central_pack* pack)
    : m_info({ "127.0.0.1", "8080", "27015", [this](const char* txt) { this->callback(txt); }})
 {
    m_info.data_callback_map[transceiver::JsonCommand::JC_NEWSURFACE] = [this](const char* txt) {};
-   m_cacheFolder = L"../../../cache/";
+   m_cacheFolder = L"../../../cache";
    m_databaseFolder = L"../../../database";
    std::string strBaseFolder = SVGUtils::wstringToString(m_databaseFolder);
    // TODO: включить, когда будет более ясная картина по протоколу обмена данными
@@ -65,7 +65,7 @@ void ScenarioManager::ProcessMap(std::function<void(void)> buttonEnableCallback)
 
 void ScenarioManager::ProcessMapObjects(std::function<void(void)> buttonEnableCallback)
 {
-   std::thread(&ScenarioManager::processMapCommand, this, [this, buttonEnableCallback]()
+   std::thread(&ScenarioManager::processMapObjCommand, this, [this, buttonEnableCallback]()
       {
          simulator::getSimulator()->SetAppSettings(m_comService->GetSettingsSerializerHolder()->GetSettings());
          simulator::getSimulator()->LoadProcessedMapObjects();
@@ -106,7 +106,7 @@ void ScenarioManager::processMapCommand(std::function<void(void)> successCallbac
    auto wscen = file_utils::getFileName(m_pathStorage.map_object_path);
    std::unordered_map<std::string, std::wstring> dict = {
       { "PNG_SRC", m_pathStorage.map_object_path },
-      { "SVGM_FLDR", m_cacheFolder + wscen },
+      { "SVGM_FLDR", m_cacheFolder + wscen + m_svgmCacheFolder },
       { "UNIT_DATA", m_pathStorage.unit_data_path },
       { "ENV_STT", m_pathStorage.environment_settings_path },
       { "MAP_STT", m_pathStorage.map_settings_path },
@@ -120,19 +120,40 @@ void ScenarioManager::processMapCommand(std::function<void(void)> successCallbac
       successCallback();
 }
 
-void ScenarioManager::processPathCommand(std::function<void(void)> successCallback)
+void ScenarioManager::processMapObjCommand(std::function<void(void)> successCallback)
 {
    auto wscen = file_utils::getFileName(m_pathStorage.map_object_path);
    std::unordered_map<std::string, std::wstring> dict = {
       { "PNG_SRC", m_pathStorage.map_object_path },
-      { "SVGM_FLDR", m_cacheFolder + wscen },
+      { "SVGM_FLDR", m_cacheFolder + wscen + m_svgmCacheFolder },
       { "UNIT_DATA", m_pathStorage.unit_data_path },
       { "ENV_STT", m_pathStorage.environment_settings_path },
       { "MAP_STT", m_pathStorage.map_settings_path },
       { "PTH_STT", m_pathStorage.pathfinder_settings_path },
       { "RES_STT", m_pathStorage.research_settings_path },
       { "SIM_STT", m_pathStorage.simulation_settings_path },
-      { "PATHS_DST", m_cacheFolder + wscen },
+      { "OBJ_FLDR", m_cacheFolder + wscen + m_objMapCacheFolder }
+   };
+
+   m_mapCommandProcessed = m_orderingWrapper->ProcessOrder(L"process_map_object.xml", NULL, dict);
+   if (m_mapCommandProcessed)
+      successCallback();
+}
+
+void ScenarioManager::processPathCommand(std::function<void(void)> successCallback)
+{
+   auto wscen = file_utils::getFileName(m_pathStorage.map_object_path);
+   std::unordered_map<std::string, std::wstring> dict = {
+      { "PNG_SRC", m_pathStorage.map_object_path },
+      { "SVGM_FLDR", m_cacheFolder + wscen + m_svgmCacheFolder },
+      { "UNIT_DATA", m_pathStorage.unit_data_path },
+      { "ENV_STT", m_pathStorage.environment_settings_path },
+      { "MAP_STT", m_pathStorage.map_settings_path },
+      { "PTH_STT", m_pathStorage.pathfinder_settings_path },
+      { "RES_STT", m_pathStorage.research_settings_path },
+      { "SIM_STT", m_pathStorage.simulation_settings_path },
+      { "OBJ_FLDR", m_cacheFolder + wscen + m_objMapCacheFolder },
+      { "PATHS_DST", m_cacheFolder + wscen + m_pathsCacheFolder }
    };
 
    m_pathCommandProcessed = m_orderingWrapper->ProcessOrder(L"process_path_find.xml", NULL, dict);
@@ -145,14 +166,15 @@ void ScenarioManager::processOptPathCommand(std::function<void(void)> successCal
    auto wscen = file_utils::getFileName(m_pathStorage.map_object_path);
    std::unordered_map<std::string, std::wstring> dict = {
       { "PNG_SRC", m_pathStorage.map_object_path },
-      { "SVGM_FLDR", m_cacheFolder + wscen },
+      { "SVGM_FLDR", m_cacheFolder + wscen + m_svgmCacheFolder },
       { "UNIT_DATA", m_pathStorage.unit_data_path },
       { "ENV_STT", m_pathStorage.environment_settings_path },
       { "MAP_STT", m_pathStorage.map_settings_path },
       { "PTH_STT", m_pathStorage.pathfinder_settings_path },
       { "RES_STT", m_pathStorage.research_settings_path },
       { "SIM_STT", m_pathStorage.simulation_settings_path },
-      { "OPTPATHS_DST", m_cacheFolder + wscen },
+      { "OBJ_FLDR", m_cacheFolder + wscen + m_objMapCacheFolder },
+      { "OPTPATHS_DST", m_cacheFolder + wscen + m_optPathsCacheFolder }
    };
 
    m_optPathCommandProcessed = m_orderingWrapper->ProcessOrder(L"process_opt_path_find.xml", NULL, dict);

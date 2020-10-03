@@ -10,11 +10,11 @@ namespace chart_object
    class CoverageGenerator : public ModuleBase
    {
    public:
-      CoverageGenerator(central_pack* pack, navigation_dispatcher::iComService* service)
+      CoverageGenerator(central_pack_ptr pack, navigation_dispatcher::iComServicePtr service)
          : ModuleBase(pack, service)
       {}
 
-      void GenerateChartBorder(const pathfinder::GeoMatrix*, geometry_chart_object&);
+      void GenerateChartBorder(const pathfinder::GeoMatrix&, chart_object::chart_object_unit&);
    private:
    };
 }

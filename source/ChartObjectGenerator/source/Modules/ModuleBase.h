@@ -11,7 +11,7 @@ namespace chart_object
    class ModuleBase : public iGeneratorModule, public Central, public Servicable
    {
    protected:
-      ModuleBase(central_pack* pack, navigation_dispatcher::iComService* pService)
+      ModuleBase(central_pack_ptr pack, navigation_dispatcher::iComServicePtr pService)
          : Central(pack)
          , Servicable(pService)
       {}

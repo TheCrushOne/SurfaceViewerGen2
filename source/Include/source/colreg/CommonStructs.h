@@ -57,7 +57,9 @@ namespace colreg
       double lat = NO_VALUE; ///< Координаты в градусах
    };
 
-   using geo_points_ref = base_ref<geo_point>;
+   //using geo_points_ref = base_ref<geo_point>;
+   typedef std::vector<geo_point> geo_points_vct;
+   typedef geo_points_vct& geo_points_vct_ref;
 
    template< class POINT_TYPE>
    struct track_point_info_t
@@ -75,7 +77,7 @@ namespace colreg
       bool is_valid() const { return pos.is_valid() && speed != colreg::NO_VALUE; }
    };
 
-   using track_point_info = track_point_info_t<geo_point>;
+   typedef track_point_info_t<geo_point> track_point_info;
 
    struct route_point
    {

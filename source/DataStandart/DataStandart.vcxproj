@@ -30,6 +30,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Include\source\colreg\ThirdParty\md5\md5.h" />
+    <ClInclude Include="source\Common\GeoJsonLoadHelper.h" />
+    <ClInclude Include="source\Common\GeoJsonSaveHelper.h" />
+    <ClInclude Include="source\Common\TagList.h" />
     <ClInclude Include="source\DataStandart\ChartObject\ChartObjectDS.h" />
     <ClInclude Include="source\DataStandart\DataStandartBase.h" />
     <ClInclude Include="source\DataStandart\OptimizedPathStorage\OptimizedPathStorageDS.h" />
@@ -183,7 +186,6 @@
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
-    <Import Project="..\packages\nlohmann.json.3.9.1\build\native\nlohmann.json.targets" Condition="Exists('..\packages\nlohmann.json.3.9.1\build\native\nlohmann.json.targets')" />
     <Import Project="..\packages\libpng-msvc-x86.1.6.33.8807\build\native\libpng-msvc-x86.targets" Condition="Exists('..\packages\libpng-msvc-x86.1.6.33.8807\build\native\libpng-msvc-x86.targets')" />
     <Import Project="..\packages\zlib-msvc-x86.1.2.11.8900\build\native\zlib-msvc-x86.targets" Condition="Exists('..\packages\zlib-msvc-x86.1.2.11.8900\build\native\zlib-msvc-x86.targets')" />
   </ImportGroup>
@@ -191,7 +193,6 @@
     <PropertyGroup>
       <ErrorText>Данный проект ссылается на пакеты NuGet, отсутствующие на этом компьютере. Используйте восстановление пакетов NuGet, чтобы скачать их.  Дополнительную информацию см. по адресу: http://go.microsoft.com/fwlink/?LinkID=322105. Отсутствует следующий файл: {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\packages\nlohmann.json.3.9.1\build\native\nlohmann.json.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\nlohmann.json.3.9.1\build\native\nlohmann.json.targets'))" />
     <Error Condition="!Exists('..\packages\libpng-msvc-x86.1.6.33.8807\build\native\libpng-msvc-x86.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\libpng-msvc-x86.1.6.33.8807\build\native\libpng-msvc-x86.targets'))" />
     <Error Condition="!Exists('..\packages\zlib-msvc-x86.1.2.11.8900\build\native\zlib-msvc-x86.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\zlib-msvc-x86.1.2.11.8900\build\native\zlib-msvc-x86.targets'))" />
   </Target>

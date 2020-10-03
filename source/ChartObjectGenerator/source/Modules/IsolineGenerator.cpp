@@ -13,7 +13,7 @@
 
 using namespace chart_object;
 
-IsolineGenerator::IsolineGenerator(central_pack* pack, navigation_dispatcher::iComService* service)
+IsolineGenerator::IsolineGenerator(central_pack_ptr pack, navigation_dispatcher::iComServicePtr service)
    : ModuleBase(pack, service)
 {
    //auto adder = [this](const std::vector<math::geo_points>& obj, double H, int height) { /*addChartObjectSet(obj, H, height);*/ };
@@ -22,10 +22,10 @@ IsolineGenerator::IsolineGenerator(central_pack* pack, navigation_dispatcher::iC
    m_waveFrontlineAlgortihm = std::make_unique<WaveFrontline>(pack, service);
 }
 
-void IsolineGenerator::GenerateIsolines(const pathfinder::GeoMatrix* rawdata, std::vector<geometry_chart_object>& staticStorage)
+void IsolineGenerator::GenerateIsolines(const pathfinder::GeoMatrix& rawdata, chart_object::chart_object_unit_vct_ref staticStorage)
 {
    size_t levelCount = 10;
-   double min = rawdata->Min(), max = rawdata->Max();
+   double min = rawdata.Min(), max = rawdata.Max();
 
    double step = (max - min) / static_cast<double>(levelCount);
    //double height = 27.;
@@ -34,7 +34,7 @@ void IsolineGenerator::GenerateIsolines(const pathfinder::GeoMatrix* rawdata, st
    __int64 start;
    CURTIME_MS(start);
 #ifdef LOCALMULTITHREAD
-   std::vector<std::future<std::vector<geometry_chart_object>>> futures;
+   std::vector<std::future<chart_object::chart_object_unit_vct>> futures;
    // NOTE: менять тип алгоритма тут
    for (size_t levelIdx = 0; levelIdx < levelCount; levelIdx++)
       futures.push_back(std::async(&IsolineGenerator::generateIsolineLevel, this, type, rawdata, min + step * static_cast<double>(levelIdx), 360. / static_cast<double>(levelCount)* static_cast<double>(levelIdx)));
@@ -54,7 +54,7 @@ void IsolineGenerator::GenerateIsolines(const pathfinder::GeoMatrix* rawdata, st
    GetPack()->comm->Message(ICommunicator::MessageType::MT_PERFORMANCE, (std::string("Isoline build time: ") + std::to_string(finish - start) + " ms.").c_str());
 }
 
-std::vector<geometry_chart_object> IsolineGenerator::generateIsolineLevel(AlgorithmType type, const pathfinder::GeoMatrix* rawdata, double height, int H)
+std::vector<chart_object::chart_object_unit> IsolineGenerator::generateIsolineLevel(AlgorithmType type, const pathfinder::GeoMatrix& rawdata, double height, int H)
 {
    switch(type)
    {
@@ -66,7 +66,7 @@ std::vector<geometry_chart_object> IsolineGenerator::generateIsolineLevel(Algori
          return m_waveFrontlineAlgortihm->GenerateIsolineLevel(rawdata, height, H);
       default:
          ATLASSERT(false);
-         return std::vector<geometry_chart_object>();
+         return chart_object::chart_object_unit_vct();
    }
 }
 

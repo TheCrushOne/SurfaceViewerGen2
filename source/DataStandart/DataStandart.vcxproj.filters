@@ -47,6 +47,15 @@
     <ClInclude Include="..\Include\source\colreg\ThirdParty\md5\md5.h">
       <Filter>ThirdParty</Filter>
     </ClInclude>
+    <ClInclude Include="source\Common\GeoJsonLoadHelper.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Common\GeoJsonSaveHelper.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Common\TagList.h">
+      <Filter>Common</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="DataStandart">
@@ -69,6 +78,9 @@
     </Filter>
     <Filter Include="ThirdParty">
       <UniqueIdentifier>{c17e5496-3d8d-4e12-ae14-c990e1dd26e6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common">
+      <UniqueIdentifier>{7e41e2e3-7e3c-4810-8dd1-24b134e7ddd0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

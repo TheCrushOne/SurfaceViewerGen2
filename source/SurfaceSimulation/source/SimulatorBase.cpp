@@ -87,6 +87,12 @@ bool SimulatorBase::LoadProcessedMapObjects()
    auto* mapObjDS = reinterpret_cast<data_standart::iChartObjectDataStandart*>(m_mapObjDS.operator->());
    m_currentConfig = m_orderCacheFolder + L"process_map_object.xml";
    deserializeStandartAttrs(mapObjDS, SVGUtils::wstringToString(m_currentConfig).c_str(), data_standart::DataStandartType::DST_OBJ);
+   auto& junc = mapObjDS->GetData();
+   // TODO: разделить, если потребуется
+   for (auto& dyn : junc.dynamic_objects)
+      m_chartObjects.emplace_back(dyn);
+   for (auto& stat : junc.static_objects)
+      m_chartObjects.emplace_back(stat);
    SetSimulatorScenarioState(ColregSimulation::SCENARIO_STATUS::SS_MAPOBJ_PROCESSED);
    SetSimulatorSimulationState(ColregSimulation::SIMULATION_STATUS::SS_STOP);
    return true;

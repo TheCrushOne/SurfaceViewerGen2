@@ -17,6 +17,7 @@
 				<params>
 					<source>SVGMDst</source>
 					<destination>GenObjDst</destination>
+					<rewrite_dst>true</rewrite_dst>
 				</params>
 			</order>
 		</orders>
@@ -41,10 +42,12 @@
 					<sim_stt>$(SIM_STT)</sim_stt>
 				</params>
 			</data_standart>
+			<data_standart>
 				<type>ObjectData</type>
 				<name>GenObjDst</name>
-			<data_standart>
-			
+				<params>
+					<folder>$(OBJ_FLDR)</folder>
+				</params>
 			</data_standart>
 		</data_standarts>
 	</root>

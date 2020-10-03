@@ -6,12 +6,10 @@
 
 namespace data_standart
 {
-   typedef std::vector<chart_object::geometry_chart_object> geom_object_vec;
-
    struct geom_object_vec_junc
    {
-      geom_object_vec static_objects;
-      geom_object_vec dynamic_objects;
+      chart_object::chart_object_unit_vct static_objects;
+      chart_object::chart_object_unit_vct dynamic_objects;
    };
 
    struct iChartObjectDataStandart : public iDataStandart
@@ -20,7 +18,7 @@ namespace data_standart
       // Read
       virtual const geom_object_vec_junc& GetData() = 0;
       // Write
-      virtual void SetData(const geom_object_vec&, const geom_object_vec&) = 0;
+      virtual void SetData(const chart_object::chart_object_unit_vct_ref, const chart_object::chart_object_unit_vct_ref) = 0;
    };
 }
 

@@ -52,7 +52,7 @@ namespace data_standart
       // Read
       const geom_object_vec_junc& GetData() override final;
       // Write
-      void SetData(const geom_object_vec&, const geom_object_vec&) override final;
+      void SetData(const chart_object::chart_object_unit_vct_ref, const chart_object::chart_object_unit_vct_ref) override final;
    private:
       // Common
       std::string getDataFilePath() override final { return std::string(getPath()) + "\\chart_objects.co"; }

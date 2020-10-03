@@ -87,6 +87,7 @@ BEGIN_MESSAGE_MAP(CSurfaceViewerGen2App, CWinAppEx)
 
    ON_UPDATE_COMMAND_UI(ID_SC_CHOOSESCENARIO, &CSurfaceViewerGen2App::OnChooseScenarioUpdateCommandUI)
    ON_UPDATE_COMMAND_UI(ID_SC_PROCESSMAP, &CSurfaceViewerGen2App::OnProcessMapUpdateCommandUI)
+   ON_UPDATE_COMMAND_UI(ID_SC_PROCESSMAPOBJ, &CSurfaceViewerGen2App::OnProcessMapObjUpdateCommandUI)
    ON_UPDATE_COMMAND_UI(ID_SC_PROCESSSIMPLEPATHS, &CSurfaceViewerGen2App::OnProcessSimplePathsUpdateCommandUI)
    ON_UPDATE_COMMAND_UI(ID_SC_PROCESSOPTIMIZEDPATHS, &CSurfaceViewerGen2App::OnProcessOptimizedPathsUpdateCommandUI)
 

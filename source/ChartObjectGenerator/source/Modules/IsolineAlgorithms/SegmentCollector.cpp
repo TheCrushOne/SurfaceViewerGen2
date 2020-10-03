@@ -6,7 +6,7 @@ using namespace chart_object;
 std::recursive_mutex g_segmentCollectorMutex;
 
 // NOTE: минимальное покрытие скипает очень много точек...
-std::vector<geometry_chart_object> SegmentCollector::generateIsolineLevel(const pathfinder::GeoMatrix* rawdata, double height, int H)
+chart_object::chart_object_unit_vct SegmentCollector::generateIsolineLevel(const pathfinder::GeoMatrix& rawdata, double height, int H)
 {
    ATLASSERT(false);
    settings::environment_settings env_stt;
@@ -14,11 +14,11 @@ std::vector<geometry_chart_object> SegmentCollector::generateIsolineLevel(const 
    std::vector<colreg::geo_point> isoPoints;
    constexpr double eps = 0.0001;
 
-   for (size_t rIdx = 0; rIdx < rawdata->GetRowCount() - 1; rIdx++)
+   for (size_t rIdx = 0; rIdx < rawdata.GetRowCount() - 1; rIdx++)
    {
       //auto& rowHigh = rawdata.arr[rIdx + 1];
       //auto& rowLow = rawdata.arr[rIdx];
-      for (size_t cIdx = 0; cIdx < rawdata->GetColCount() - 1; cIdx++)
+      for (size_t cIdx = 0; cIdx < rawdata.GetColCount() - 1; cIdx++)
       {
          // NOTE: нули расположены снизу слева
          int iCIdx = static_cast<int>(cIdx);
@@ -27,10 +27,10 @@ std::vector<geometry_chart_object> SegmentCollector::generateIsolineLevel(const 
          colreg::geo_point gpll = SVCG::RoutePointToPositionPoint(SVCG::route_point{ iRIdx, iCIdx }, envstt);
          colreg::geo_point gpru = SVCG::RoutePointToPositionPoint(SVCG::route_point{ iRIdx + 1, iCIdx + 1 }, envstt);
          colreg::geo_point gprl = SVCG::RoutePointToPositionPoint(SVCG::route_point{ iRIdx, iCIdx + 1 }, envstt);
-         double hlu = rawdata->Get(rIdx + 1, cIdx);
-         double hll = rawdata->Get(rIdx, cIdx);
-         double hru = rawdata->Get(rIdx + 1, cIdx + 1);
-         double hrl = rawdata->Get(rIdx, cIdx + 1);
+         double hlu = rawdata.Get(rIdx + 1, cIdx);
+         double hll = rawdata.Get(rIdx, cIdx);
+         double hru = rawdata.Get(rIdx + 1, cIdx + 1);
+         double hrl = rawdata.Get(rIdx, cIdx + 1);
          auto checkPoint = [eps, &isoPoints](colreg::geo_point pt)->bool
          {
             return (std::find_if(isoPoints.begin(), isoPoints.end(), [pt, eps](const colreg::geo_point& rs) { return math::isEqual(rs, pt, eps); }) == isoPoints.end());
@@ -389,7 +389,7 @@ std::vector<geometry_chart_object> SegmentCollector::generateIsolineLevel(const 
    //}
 
    settings::application_settings& app_stt = GetService()->GetSettingsSerializerHolder()->GetSettings();
-   std::vector<geometry_chart_object> res;
+   chart_object::chart_object_unit_vct res;
    auto& gcBack = res.emplace_back();
    for (auto& line : isoLineVct)
    {

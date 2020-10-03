@@ -5,55 +5,50 @@
 #include "gui/user_interface.h"
 
 SelectedChartObject::SelectedChartObject(colreg::id_type id, colreg::OBJECT_TYPE chart_object_type)
-   : _id{ id }
-   , _chart_object_type{ chart_object_type }
-   , _obj_id{ id }
+   : m_id{ id }
+   , m_chart_object_type{ chart_object_type }
+   , m_obj_id{ id }
 {
    // NOTE: загрузка инфы по выбранному объекту
-   auto pObj = simulator::getSimulator()->GetState().GetChartObject(_obj_id);
+   auto pObj = simulator::getSimulator()->GetState().GetChartObject(m_obj_id);
 
    //if (pObj && pObj->Get() && pObj->Get()->size)
    //{
    //   _chart_object_type = pObj->Get()->arr[0].type;
    //}
-   _info_folder = std::make_unique< FolderProperty>("chart object info");
-   _prop_id = std::make_unique< ValuePropertyHolder< SelectedChartObject, decltype(_id)>>
-      ("ID", "Chart object id", true, VALUE_FORMAT_TYPE::VFT_NONE, this, &SelectedChartObject::_id, &SelectedChartObject::OnSimSettingChanged, this);
-   _info_folder->AddChild(_prop_id.get());
+   m_info_folder = std::make_unique< FolderProperty>("chart object info");
+   m_prop_id = std::make_unique< ValuePropertyHolder< SelectedChartObject, decltype(m_id)>>
+      ("ID", "Chart object id", true, VALUE_FORMAT_TYPE::VFT_NONE, this, &SelectedChartObject::m_id, &SelectedChartObject::OnSimSettingChanged, this);
+   m_info_folder->AddChild(m_prop_id.get());
 
    if (pObj)
    {
       //const auto obj = pObj.arr[0];
-      _points = math::geo_points{ pObj->geom.arr->begin(), pObj->geom.arr->end() };
+      //m_points = std::vector<math::geo_points>{ pObj->geom_contour_vct.begin(), pObj->geom_contour_vct.end() };
 
-      if ((pObj->props.arr)
-         /*&& _stricmp(pObj->props.arr[0].key, "depth") == 0*/)
+      size_t i = 0;
+      for (const auto& p : pObj->prop_vct)
       {
-         size_t i = 0;
-         for (const auto& p : pObj->props)
-         {
-            _props[i].key = p.key;
-            _props[i].value = p.val;
-            bool readonly = true/*check_chart_obj_type(obj.type, colreg::OT_XTE_AREA) && p.key && strcmp(p.key, "STATISTIC_INFO") == 0;*/;
-            _props[i].prop_prop = std::make_unique< ValuePropertyHolder< prop_info, decltype(_props[i].value)>>
-               (p.key, p.key, readonly, VALUE_FORMAT_TYPE::VFT_NONE, &_props[i], &prop_info::value, &SelectedChartObject::OnSimSettingChanged, this);
-            _info_folder->AddChild(_props[i].prop_prop.get());
-            ++i;
-         }
+         m_props[i].key = p.key;
+         m_props[i].value = p.val;
+         bool readonly = true/*check_chart_obj_type(obj.type, colreg::OT_XTE_AREA) && p.key && strcmp(p.key, "STATISTIC_INFO") == 0;*/;
+         m_props[i].prop_prop = std::make_unique< ValuePropertyHolder< prop_info, decltype(m_props[i].value)>>
+            (p.key.c_str(), p.key.c_str(), readonly, VALUE_FORMAT_TYPE::VFT_NONE, &m_props[i], &prop_info::value, &SelectedChartObject::OnSimSettingChanged, this);
+         m_info_folder->AddChild(m_props[i].prop_prop.get());
+         ++i;
       }
-      //pObj->Release();
    }
    else
    {
       SelectedObjectManager::GetInstance().Unselect();
    }
 
-   _strType = colreg::chart_obj_type_to_str(_chart_object_type);
-   _prop_type = std::make_unique< ValuePropertyHolder< SelectedChartObject, decltype(_strType)>>
-      ("Type", "Chart object type", true, VALUE_FORMAT_TYPE::VFT_NONE, this, &SelectedChartObject::_strType, &SelectedChartObject::OnSimSettingChanged, this);
-   _info_folder->AddChild(_prop_type.get());
+   m_strType = colreg::chart_obj_type_to_str(m_chart_object_type);
+   m_prop_type = std::make_unique< ValuePropertyHolder< SelectedChartObject, decltype(m_strType)>>
+      ("Type", "Chart object type", true, VALUE_FORMAT_TYPE::VFT_NONE, this, &SelectedChartObject::m_strType, &SelectedChartObject::OnSimSettingChanged, this);
+   m_info_folder->AddChild(m_prop_type.get());
 
-   AddChild(_info_folder.get());
+   AddChild(m_info_folder.get());
 }
 
 void SelectedChartObject::OnSimSettingChanged()
@@ -86,19 +81,27 @@ void SelectedChartObject::OnSimSettingChanged()
 
 void SelectedChartObject::Render(render::iRender* renderer)
 {
-   if (colreg::check_chart_obj_type(colreg::OBJECT_TYPE::OT_AREAS, _chart_object_type))
+   if (colreg::check_chart_obj_type(colreg::OBJECT_TYPE::OT_AREAS, m_chart_object_type))
    {
-      renderer->AddObject({ _points,{ 2, render::LINE_STYLE::LL_NONE, render::FILL_TYPE::FT_SOLID, user_interface::selectedColor, "", 0, 0, user_interface::selectedAlpha } });
-      renderer->AddObject({ _points,{ 4, render::LINE_STYLE::LL_DASH, render::FILL_TYPE::FT_NONE, user_interface::selectedColor, "", 0, 0, 200} });
+      for (auto& contour : m_points)
+      {
+         renderer->AddObject({ contour, { 2, render::LINE_STYLE::LL_NONE, render::FILL_TYPE::FT_SOLID, user_interface::selectedColor, "", 0, 0, user_interface::selectedAlpha } });
+         renderer->AddObject({ contour, { 4, render::LINE_STYLE::LL_DASH, render::FILL_TYPE::FT_NONE, user_interface::selectedColor, "", 0, 0, 200} });
+      }
    }
-   else if (colreg::check_chart_obj_type(colreg::OT_LINES, _chart_object_type))
+   else if (colreg::check_chart_obj_type(colreg::OT_LINES, m_chart_object_type))
    {
-      renderer->AddObject({ _points,{ 4, render::LINE_STYLE::LL_DASH, render::FILL_TYPE::FT_NONE, user_interface::selectedColor, "", 0, 0, 200 } });
+      for (auto& contour : m_points)
+      {
+         renderer->AddObject({ contour,{ 4, render::LINE_STYLE::LL_DASH, render::FILL_TYPE::FT_NONE, user_interface::selectedColor, "", 0, 0, 200 } });
+      }
    }
-
-   for (size_t i = 0; i < _points.size(); ++i)
-      renderer->AddObject({ { _points[i] },{ 5, render::LINE_STYLE::LL_SOLID, render::FILL_TYPE::FT_NONE, RGB(200, 0, 0), ""}
-                                                            ,{render::FIND_TYPE::FT_FIND_FAST, (colreg::id_type) i, render::FIND_OBJECT_TYPE::FOT_SELECTED, SELECT_TYPE::ST_POINT } });
+   for (auto& contour : m_points)
+   {
+      for (size_t i = 0; i < contour.size(); ++i)
+         renderer->AddObject({ { contour[i] }, { 5, render::LINE_STYLE::LL_SOLID, render::FILL_TYPE::FT_NONE, RGB(200, 0, 0), "" }
+                             , { render::FIND_TYPE::FT_FIND_FAST, (colreg::id_type) i, render::FIND_OBJECT_TYPE::FOT_SELECTED, SELECT_TYPE::ST_POINT } });
+   }
 
 }
 void SelectedChartObject::StartEdit(render::iRender* renderer, CPoint point, render::find_info info)
@@ -110,11 +113,12 @@ void SelectedChartObject::StartEdit(render::iRender* renderer, CPoint point, ren
 
 size_t SelectedChartObject::findObjectPointIndex(const colreg::geo_point& geopt) const
 {
-   std::vector< double > distances;
-   distances.resize(_points.size());
-   for (size_t i = 0; i < _points.size(); ++i)
+   std::vector<double> distances;
+   distances.resize(m_points.size(), std::numeric_limits<double>::max());
+   for (size_t i = 0; i < m_points.size(); ++i)
    {
-      distances[i] = math::distance(_points[i], geopt);
+      for (size_t jdx = 0; jdx < m_points[i].size(); jdx++)
+         distances[i] = std::min(distances[i], math::distance(m_points[i][jdx], geopt));
    }
 
    double minDist = colreg::NO_VALUE;
@@ -134,90 +138,90 @@ void SelectedChartObject::Edit(render::iRender* renderer, CPoint point)
 {
    // NOTE: не надо, пока что...
    return;
-   if (_index == colreg::INVALID_INDEX)
+   /*if (m_index == colreg::INVALID_INDEX)
    {
       return;
    }
-   _geoEdit = renderer->PixelToGeo(math::point{ (double)point.y, (double)point.x });
+   m_geoEdit = renderer->PixelToGeo(math::point{ (double)point.y, (double)point.x });
 
-   if (!check_chart_obj_type(colreg::OBJECT_TYPE::OT_AREAS, _chart_object_type) || _points.size() < 3)
+   if (!check_chart_obj_type(colreg::OBJECT_TYPE::OT_AREAS, m_chart_object_type) || m_points.size() < 3)
    {
-      if (_index > 0)
+      if (m_index > 0)
       {
-         renderer->AddObject({ { _points[_index - 1], _geoEdit }, { 5, render::LINE_STYLE::LL_DASH, render::FILL_TYPE::FT_NONE , user_interface::selectedColor, "", 0, 0, user_interface::selectedAlpha } });
+         renderer->AddObject({ { m_points[m_index - 1], m_geoEdit }, { 5, render::LINE_STYLE::LL_DASH, render::FILL_TYPE::FT_NONE , user_interface::selectedColor, "", 0, 0, user_interface::selectedAlpha } });
          std::stringstream text;
-         text << "dir: " << get_formated_value(math::direction(_points[_index - 1], _geoEdit), VALUE_FORMAT_TYPE::VFT_COURSE);
-         text << ", d: " << get_formated_value(math::distance(_points[_index - 1], _geoEdit), VALUE_FORMAT_TYPE::VFT_DISTANCE);
+         text << "dir: " << get_formated_value(math::direction(m_points[m_index - 1], m_geoEdit), VALUE_FORMAT_TYPE::VFT_COURSE);
+         text << ", d: " << get_formated_value(math::distance(m_points[m_index - 1], m_geoEdit), VALUE_FORMAT_TYPE::VFT_DISTANCE);
 
-         renderer->AddObject({ {_geoEdit }, { 5, render::LINE_STYLE::LL_SOLID, render::FILL_TYPE::FT_NONE , user_interface::selectedColor, text.str(), 25, 0, user_interface::selectedAlpha } });
+         renderer->AddObject({ {m_geoEdit }, { 5, render::LINE_STYLE::LL_SOLID, render::FILL_TYPE::FT_NONE , user_interface::selectedColor, text.str(), 25, 0, user_interface::selectedAlpha } });
       }
 
-      if (_index < _points.size() - 1)
-         renderer->AddObject({ { _geoEdit,  _points[_index + 1] }, { 5, render::LINE_STYLE::LL_DASH, render::FILL_TYPE::FT_NONE , user_interface::selectedColor, "", 0, 0, user_interface::selectedAlpha } });
+      if (m_index < m_points.size() - 1)
+         renderer->AddObject({ { m_geoEdit, m_points[m_index + 1] }, { 5, render::LINE_STYLE::LL_DASH, render::FILL_TYPE::FT_NONE , user_interface::selectedColor, "", 0, 0, user_interface::selectedAlpha } });
    }
    else
    {
 
       colreg::geo_point pt1;
       colreg::geo_point pt2;
-      if (_index == 0)
+      if (m_index == 0)
       {
-         pt1 = _points[1];
-         pt2 = _points[_points.size() - 2];
+         pt1 = m_points[1];
+         pt2 = m_points[m_points.size() - 2];
       }
-      else if (_index == (_points.size() - 1))
+      else if (m_index == (m_points.size() - 1))
       {
-         pt1 = _points[_points.size() - 2];
-         pt2 = _points[1];
+         pt1 = m_points[m_points.size() - 2];
+         pt2 = m_points[1];
       }
       else
       {
 
-         pt1 = _points[_index - 1];
-         pt2 = _points[_index + 1];
+         pt1 = m_points[m_index - 1];
+         pt2 = m_points[m_index + 1];
       }
 
 
-      renderer->AddObject({ { pt1, _geoEdit }, { 5, render::LINE_STYLE::LL_DASH, render::FILL_TYPE::FT_NONE , user_interface::selectedColor, "", 0, 0, user_interface::selectedAlpha } });
+      renderer->AddObject({ { pt1, m_geoEdit }, { 5, render::LINE_STYLE::LL_DASH, render::FILL_TYPE::FT_NONE , user_interface::selectedColor, "", 0, 0, user_interface::selectedAlpha } });
 
-      renderer->AddObject({ {_geoEdit }, { 5, render::LINE_STYLE::LL_SOLID, render::FILL_TYPE::FT_NONE , user_interface::selectedColor, "", 25, 0, user_interface::selectedAlpha } });
+      renderer->AddObject({ { m_geoEdit }, { 5, render::LINE_STYLE::LL_SOLID, render::FILL_TYPE::FT_NONE , user_interface::selectedColor, "", 25, 0, user_interface::selectedAlpha } });
 
-      renderer->AddObject({ { _geoEdit,  pt2 }, { 5, render::LINE_STYLE::LL_DASH, render::FILL_TYPE::FT_NONE , user_interface::selectedColor, "", 0, 0, user_interface::selectedAlpha } });
-   }
+      renderer->AddObject({ { m_geoEdit,  pt2 }, { 5, render::LINE_STYLE::LL_DASH, render::FILL_TYPE::FT_NONE , user_interface::selectedColor, "", 0, 0, user_interface::selectedAlpha } });
+   }*/
 
 }
 
 void SelectedChartObject::EndEdit()
 {
-   if (_index == colreg::INVALID_INDEX || !_points.size())
-   {
-      return;
-   }
-   switch (_selectedType)
-   {
-   case  ST_POINT:
-   {
-      _points[_index] = _geoEdit;
+   //if (m_index == colreg::INVALID_INDEX || !m_points.size())
+   //{
+   //   return;
+   //}
+   //switch (m_selectedType)
+   //{
+   //case  ST_POINT:
+   //{
+   //   m_points[m_index] = m_geoEdit;
 
-      //if (check_chart_obj_type(colreg::OBJECT_TYPE::OT_AREAS, _chart_object_type))
-      {//поддержим замкнутость 
-         if (_index == 0)
-         {
-            _points.back() = _geoEdit;
-         }
-         else if (_index == (_points.size() - 1))
-         {
-            _points[0] = _geoEdit;
-         }
-      }
+   //   //if (check_chart_obj_type(colreg::OBJECT_TYPE::OT_AREAS, _chart_object_type))
+   //   {//поддержим замкнутость 
+   //      if (m_index == 0)
+   //      {
+   //         m_points.back() = m_geoEdit;
+   //      }
+   //      else if (m_index == (m_points.size() - 1))
+   //      {
+   //         m_points[0] = m_geoEdit;
+   //      }
+   //   }
 
-      break;
-   }
-   case SP_SEGMENT:
-   {
-      break;
-   }
-   }
+   //   break;
+   //}
+   //case SP_SEGMENT:
+   //{
+   //   break;
+   //}
+   //}
 
 
    //colreg::chart_object object;
@@ -233,7 +237,7 @@ void SelectedChartObject::EndEdit()
 
 void SelectedChartObject::Delete()
 {
-   colreg::chart_object_id cid;
+   //colreg::chart_object_id cid;
    //colreg::check_chart_obj_type(colreg::OT_DYNAMIC_AREAS | colreg::OT_STATISTIC_AREA, _chart_object_type) ? cid.dynamic_id = _id : cid.static_id = _id;
    //ScenarioManager::GetInstance().RemoveObject(cid, _chart_object_type);
 }

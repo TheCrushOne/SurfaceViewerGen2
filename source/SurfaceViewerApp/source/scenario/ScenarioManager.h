@@ -212,6 +212,7 @@ private:
    friend class ScenarioDispather;
 
    void processMapCommand(std::function<void(void)>);
+   void processMapObjCommand(std::function<void(void)>);
    void processPathCommand(std::function<void(void)>);
    void processOptPathCommand(std::function<void(void)>);
 
@@ -239,6 +240,11 @@ private:
    std::wstring m_cacheFolder;
 
    file_utils::global_path_storage m_pathStorage;
+
+   std::wstring m_svgmCacheFolder = L"\\svgm";
+   std::wstring m_objMapCacheFolder = L"\\obj";
+   std::wstring m_pathsCacheFolder = L"\\paths";
+   std::wstring m_optPathsCacheFolder = L"\\opt_paths";
 
    colreg::ModuleGuard<transceiver::iTransceiver> m_transceiver;
    colreg::ModuleGuard<file_storage::iFileStorageManager> m_fsm;

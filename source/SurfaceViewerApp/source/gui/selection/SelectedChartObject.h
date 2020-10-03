@@ -19,17 +19,17 @@ private:
    void OnSimSettingChanged();
    size_t findObjectPointIndex(const colreg::geo_point& geopt) const;
 private:
-   colreg::id_type _id;
-   colreg::OBJECT_TYPE _chart_object_type;
-   std::string _strType;
-   std::string  _propValue;
-   math::geo_points _points;
-   colreg::geo_points_ref _points_ref;
-   colreg::object_props_ref _props_ref;
+   colreg::id_type m_id;
+   colreg::OBJECT_TYPE m_chart_object_type;
+   std::string m_strType;
+   std::string m_propValue;
+   std::vector<math::geo_points> m_points;
+   colreg::geo_points_vct m_point_vct;
+   colreg::object_props_vct m_prop_vct;
 
-   std::unique_ptr<FolderProperty> _info_folder;
-   iPropertyPtr _prop_id;
-   iPropertyPtr _prop_type;
+   std::unique_ptr<FolderProperty> m_info_folder;
+   iPropertyPtr m_prop_id;
+   iPropertyPtr m_prop_type;
 
    static constexpr size_t MAX_PROPS = 20;
    struct prop_info
@@ -38,7 +38,7 @@ private:
       std::string value;
       iPropertyPtr prop_prop;
    };
-   prop_info _props[MAX_PROPS];
+   prop_info m_props[MAX_PROPS];
 
    enum SELECT_TYPE
    {
@@ -46,12 +46,10 @@ private:
       SP_SEGMENT,
    };
 
-   SELECT_TYPE _selectedType;
-   colreg::geo_point _geoEdit;
-   size_t _index = 0;
+   SELECT_TYPE m_selectedType;
+   colreg::geo_point m_geoEdit;
+   size_t m_index = 0;
 
-   colreg::chart_object_id _obj_id;
-   //colreg::OBJECT_TYPE  _type;
-
+   colreg::chart_object_id m_obj_id;
 };
 

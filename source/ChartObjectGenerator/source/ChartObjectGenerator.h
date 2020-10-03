@@ -27,8 +27,8 @@ namespace chart_object
       bool generateStatic();
       //const colreg::chart_objects_ref& getChartObjects() const;
       void init();
-      void addChartObject(geometry_chart_object& storage);
-      geometry_chart_object& generateNew() { m_chartStorage.emplace_back(); return m_chartStorage.back(); }
+      void addChartObject(chart_object::chart_object_unit& storage);
+      chart_object::chart_object_unit& generateNew() { m_chartStorage.emplace_back(); return m_chartStorage.back(); }
       //void prepareRef() const;
       void prepareLocalStorage();
    private:
@@ -38,14 +38,14 @@ namespace chart_object
       ZoneGenerator m_zoneGenerator;
       CoverageGenerator m_coverageGenerator;
 
-      std::vector<geometry_chart_object> m_chartStorage;
+      chart_object::chart_object_unit_vct m_chartStorage;
 
-      std::vector<geometry_chart_object> m_staticObjectStorage;
-      std::vector<geometry_chart_object> m_dynamicObjectStorage;
+      chart_object::chart_object_unit_vct m_staticObjectStorage;
+      chart_object::chart_object_unit_vct m_dynamicObjectStorage;
 
-      std::vector<colreg::chart_object> m_chartObjVct;
+      chart_object::chart_object_unit_vct m_chartObjVct;
 
       //colreg::chart_objects_ref m_chartObjectRef;
-      pathfinder::GeoMatrix* m_rawDataPtr = nullptr;
+      pathfinder::GeoMatrix m_rawDataPtr;
    };
 }

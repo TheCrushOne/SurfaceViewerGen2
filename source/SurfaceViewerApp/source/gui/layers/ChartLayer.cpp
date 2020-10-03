@@ -48,24 +48,24 @@ void ChartLayer::onLayerEnabledChanged()
 {
 }
 
-bool ChartLayer::synchronize_map(/*const colreg::iChartSafetyCheck* checker, */render::iRender* renderer, const colreg::chart_objects_ref& chartObjects)
+bool ChartLayer::synchronize_map(render::iRender* renderer, const chart_object::chart_object_unit_vct_ref chartObjects)
 {
    //m_chartUSN = checker->GetObjectsUSN();
    renderer->Clear();
 
-   for (size_t iObj = 0; iObj < chartObjects.size; ++iObj)
+   for (size_t iObj = 0; iObj < chartObjects.size(); ++iObj)
    {
-      const auto& obj = chartObjects.arr[iObj];
+      const auto& obj = chartObjects.at(iObj);
       addChartObject(renderer, obj);
    }
 
    return true;
 }
 
-void ChartLayer::addChartObject(render::iRender* renderer, const colreg::chart_object& obj)
+void ChartLayer::addChartObject(render::iRender* renderer, const chart_object::chart_object_unit& obj)
 {
    using namespace render;
-   math::geo_points points{ obj.geom.arr->begin(), obj.geom.arr->end() };
+   std::vector<math::geo_points> points{ obj.geom_contour_vct.begin(), obj.geom_contour_vct.end() };
    const auto itf = m_objInfo.find(obj.type);
    render::object_info info;
    if (itf != m_objInfo.end())
@@ -86,12 +86,12 @@ void ChartLayer::addChartObject(render::iRender* renderer, const colreg::chart_o
 
    int r = 0, g = 0, b = 0;
    bool colorOverride = false;
-   for (auto& prop : obj.props)
+   for (auto& prop : obj.prop_vct)
    {
-      if (strcmp(prop.key, "Color") == 0)
+      if (strcmp(prop.key.c_str(), "Color") == 0)
       {
          colorOverride = true;
-         sscanf(prop.val, "%i %i %i", &r, &g, &b);
+         sscanf(prop.val.c_str(), "%i %i %i", &r, &g, &b);
       }
    }
    if (colorOverride)
@@ -103,14 +103,16 @@ void ChartLayer::addChartObject(render::iRender* renderer, const colreg::chart_o
    //    if (id == 147838)
    //       info.width = 10;
 
-   renderer->AddObject({ points, info, {render::FIND_TYPE::FT_FIND_DETAILED, obj.id, render::FIND_OBJECT_TYPE::FOT_CHART_OBJECT, 0, obj.type}, minScale }, false);
+   for (auto& contour : points)
+      renderer->AddObject({ contour, info, {render::FIND_TYPE::FT_FIND_DETAILED, obj.id, render::FIND_OBJECT_TYPE::FOT_CHART_OBJECT, 0, obj.type}, minScale }, false);
    render::object_info ptInfo{ 1, render::LINE_STYLE::LL_DASH, render::FILL_TYPE::FT_NONE, RGB(110, 110, 110) };
    ptInfo.alpha = 255;
    if (colorOverride)
       ptInfo.color = RGB(r, g, b);
    ptInfo.width += 2;
-   for (size_t i = 0; i < points.size(); i++)
-      renderer->AddObject({ {points[i]}, ptInfo });
+   for (auto& contour : points)
+      for (size_t i = 0; i < contour.size(); i++)
+         renderer->AddObject({ {contour[i]}, ptInfo });
 }
 
 iProperty* ChartLayer::GetProperties()

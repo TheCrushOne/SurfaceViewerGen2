@@ -24,5 +24,5 @@ namespace navigation_dispatcher
       virtual bool DeserializeAttrs(const xml_properties::PropertyItem&) = 0;
    };
 
-   typedef std::shared_ptr<iOrder> iOrderPtr;
+   typedef iOrder* iOrderPtr;
 }

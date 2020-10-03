@@ -5,6 +5,7 @@
 #include "StateFullColregInterface.h"
 #include "common/header_collector.h"
 #include "common/file_storage.h"
+#include "common/chart_object.h"
 
 struct iPropertyInterface;
 
@@ -175,9 +176,9 @@ namespace ColregSimulation
 
       virtual const iUnit* GetUnitById(colreg::id_type id) const = 0;
 
-      virtual const colreg::chart_objects_ref& GetChartObjects() const = 0;
+      virtual const chart_object::chart_object_unit_vct_ref GetChartObjects() const = 0;
 
-      virtual const colreg::chart_object* GetChartObject(colreg::chart_object_id id) const = 0;
+      virtual const chart_object::chart_object_unit* GetChartObject(colreg::chart_object_id id) const = 0;
 
       //! Абсолютное время (UTC) среза симуляции
       virtual double GetTime() const = 0;
@@ -185,8 +186,6 @@ namespace ColregSimulation
       virtual const settings::map_settings& GetChartGridMeta() const = 0;
       //! Текущая навигационная оценка с решениями
       //virtual const iSimulationEstimation* GetEstimation() const = 0;
-
-      //virtual const colreg::iChartSafetyCheck* GetSafetyChecker() const = 0;
 
       //virtual const colreg::settings& GetSettings() const = 0;
 
@@ -198,7 +197,7 @@ namespace ColregSimulation
 
       //virtual colreg::id_type OwnShipId() const = 0;
 
-      virtual bool PrepareDataForSave(/*const ScenarioIO::scenario_data* pInputScenarioData, ScenarioIO::scenario_data* pScenarioData, */const bool focused, const colreg::geo_points_ref& ships, const colreg::base_ref<colreg::geo_points_ref>& chart_objects) const = 0;
+      virtual bool PrepareDataForSave(const bool focused, const colreg::geo_points_vct_ref ships, const chart_object::chart_object_unit_vct_ref chart_objects) const = 0;
 
       virtual ~iSimulationState() = default;
    };
@@ -214,7 +213,7 @@ namespace ColregSimulation
    struct iSimulator : colreg::iReleasable
    {
       //! Получить корневой элемент, который будет заполняться дебажной информацией
-      virtual dbg::iDebugInfo* GetDebugInfo() const = 0;
+      //virtual dbg::iDebugInfo* GetDebugInfo() const = 0;
 
       //! Реакция на загрузку метаданных сценария
       virtual bool CheckOpenScenario() = 0;

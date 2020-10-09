@@ -2,6 +2,8 @@
 
 #include "crossdllinterface/UniversalLoggerInterface.h"
 
+#include "json/json_wrapper.h"
+
 namespace logger
 {
    class UniversalLogger

@@ -13,7 +13,7 @@ namespace navigation_dispatcher
    };
 }
 
-#ifdef NAVDISP_DLL
+#ifdef NAVIGATIONDISPATCHER_EXPORTS
 #define NDEXPRTIMPRT __declspec(dllexport) // export DLL information
 #else
 #define NDEXPRTIMPRT __declspec(dllimport) // import DLL information

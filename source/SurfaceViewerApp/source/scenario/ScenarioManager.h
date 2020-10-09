@@ -172,7 +172,7 @@ public:
    }
    int GetTimeScale()const { return m_timeScale; }
 
-   std::wstring GetScenarioName() const { return m_pathStorage.meta_path; }
+   std::wstring GetScenarioName() const { return m_pathStorage.meta_path.path; }
 
    void ReSearch();
    void ReEstimate();

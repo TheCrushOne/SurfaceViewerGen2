@@ -56,6 +56,7 @@ namespace data_standart
       void saveHeightData();
    private:
       void resolvePathDee();
+      void mountPathFileStorage();
       LPCSTR getPath() override final { return m_dataStandartData.folder.c_str(); }
    private:
       // NOTE: путь до каталога
@@ -63,5 +64,6 @@ namespace data_standart
       std::wstring m_baseFolderPath;
       pathfinder::GeoMatrix m_rawdata;
       settings::unit_source_data m_unitData;
+      file_utils::global_path_storage m_storage;
    };
 }

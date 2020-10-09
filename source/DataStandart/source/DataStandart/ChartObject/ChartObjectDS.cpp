@@ -4,8 +4,6 @@
 #include <fstream>
 #include <filesystem>
 
-#include "json/json_wrapper.h"
-
 #include "Common\GeoJsonLoadHelper.h"
 #include "Common\GeoJsonSaveHelper.h"
 
@@ -32,11 +30,14 @@ void ChartObjectDataStandart::saveObjectData()
    std::string dataFilePath = getDataFilePath();
    std::wstring wDat = SVGUtils::stringToWstring(dataFilePath);
 
+   //m_service->GetPythonWrapper()->RunScript();
+
    Json::Value root;
    root[tag::static_obj] = geojson_save_helper::couvct_to_json(m_objectVecJunc.static_objects);
    root[tag::dynamic_obj] = geojson_save_helper::couvct_to_json(m_objectVecJunc.dynamic_objects);
 
    json_wrapper::to_file(root, wDat.c_str());
+   root.clear();
 }
 
 void ChartObjectDataStandart::readObjectData()
@@ -50,6 +51,7 @@ void ChartObjectDataStandart::readObjectData()
 
    m_objectVecJunc.static_objects = geojson_load_helper::json_to_couvct(root[tag::static_obj]);
    m_objectVecJunc.dynamic_objects = geojson_load_helper::json_to_couvct(root[tag::dynamic_obj]);
+   root.clear();
 }
 
 const geom_object_vec_junc& ChartObjectDataStandart::GetData()

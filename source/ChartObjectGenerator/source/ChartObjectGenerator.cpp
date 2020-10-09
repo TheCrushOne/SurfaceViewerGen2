@@ -74,7 +74,7 @@ bool ChartObjectGenerator::generateStatic()
    m_staticObjectStorage.clear();
    m_staticObjectStorage.emplace_back();
    m_coverageGenerator.GenerateChartBorder(m_rawDataPtr, m_staticObjectStorage.back());
-   //m_isolineGenerator.GenerateIsolines(m_rawDataPtr, m_staticObjectStorage);
+   m_isolineGenerator.GenerateIsolines(m_rawDataPtr, m_staticObjectStorage);
    return true;
 }
 

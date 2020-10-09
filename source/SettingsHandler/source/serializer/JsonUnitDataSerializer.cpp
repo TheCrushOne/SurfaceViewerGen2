@@ -99,30 +99,38 @@ namespace colreg
             elem[tag::start][tag::col] = pse.start.col;
             elem[tag::finish][tag::row] = pse.finish.row;
             elem[tag::finish][tag::col] = pse.finish.col;
-            elem[tag::control_points].resize(pse.control_point_list.size());
-            for (size_t idx = 0; idx < pse.control_point_list.size(); idx++)
+            Json::Value cpnts(Json::arrayValue);
+            for (const auto& control_point : pse.control_point_list)
             {
-               auto& cp = pse.control_point_list.at(idx);
                Json::Value o;
-               o[tag::row] = cp.row;
-               o[tag::col] = cp.col;
-               elem[tag::control_points][idx] = o;
+               o[tag::row] = control_point.row;
+               o[tag::col] = control_point.col;
+               cpnts.append(o);
             }
+            elem[tag::control_points] = cpnts;
             return true;
          };
-         for (auto& elem : data.land_units)
+         
+         auto jlu = Json::Value(Json::arrayValue);
+         jlu.resize(data.land_units.size());
+         for (size_t idx = 0; idx < data.land_units.size(); idx++)
          {
             Json::Value j_temp;
-            writePSEVector(j_temp, elem);
-            j[tag::land_units].emplace_back(j_temp);
+            writePSEVector(j_temp, data.land_units.at(idx));
+            jlu.append(j_temp);
          }
+         j[tag::land_units] = jlu;
 
-         for (auto& elem : data.air_units)
+         auto jau = Json::Value();
+         jau.resize(data.air_units.size());
+         for (const auto& au : data.air_units)
          {
-            json j_temp;
-            writePSEVector(j_temp, elem);
-            j["air_units"].emplace_back(j_temp);
+            Json::Value j_temp;
+            writePSEVector(j_temp, au);
+            jau.append(j_temp);
          }
+         j[tag::air_units] = jau;
+
          return true;
       }
 

@@ -3,7 +3,7 @@
 #include "common/header_collector.h"
 #include <fstream>
 
-#include "json/json_wrapper.h"
+#include "json/json_wrapper_impl.h"
 
 namespace colreg
 {
@@ -64,7 +64,7 @@ namespace colreg
          static std::string staticBuffer;
          Json::Value j;
          settingsToJson(j, data);
-         staticBuffer = j.dump();
+         staticBuffer = j.asString();
          return staticBuffer.c_str();
       }
 
@@ -92,7 +92,10 @@ namespace colreg
          j[tag::max] = range.max;
          j[tag::min] = range.min;
          j[tag::step] = range.step;
-         j[tag::values] = range.values;
+         Json::Value vals(Json::arrayValue);
+         for (const auto& val : range.values)
+            vals.append(val);
+         j[tag::values] = vals;
          return j;
       }
 
@@ -164,28 +167,41 @@ namespace colreg
       }
 
       template<typename T>
-      T valGetter(const Json::Value& j) { return T(); }
+      static T valGetter(const Json::Value& j) { return T(); }
 
       template<>
-      double valGetter(const Json::Value& j) { return j.asDouble(); }
+      static double valGetter(const Json::Value& j) { return j.asDouble(); }
 
       template<>
-      int valGetter(const Json::Value& j) { return j.asInt(); }
+      static int valGetter(const Json::Value& j) { return j.asInt(); }
 
       template<>
-      unsigned int valGetter(const Json::Value& j) { return j.asUInt(); }
+      static unsigned int valGetter(const Json::Value& j) { return j.asUInt(); }
 
       template<typename T>
-      std::vector<T> valVectorGetter(const Json::Value& j) { return std::vector<T>(); }
+      static std::vector<T> valVectorExtractor(const Json::Value& j, std::function<T(const Json::Value&)> getter)
+      {
+         std::vector<T> res;
+         size_t idx = 0;
+         for (const auto& elem : j)
+         {
+            res.emplace_back(getter(elem));
+            idx++;
+         }
+         return res;
+      }
+
+      template<typename T>
+      static std::vector<T> valVectorGetter(const Json::Value& j) { return std::vector<T>(); }
 
       template<>
-      std::vector<double> valVectorGetter(const Json::Value& j) { return std::vector<double>{ j.begin(), j.end() }; }
+      static std::vector<double> valVectorGetter(const Json::Value& j) { return valVectorExtractor<double>(j, [](const Json::Value& j)->double { return j.asDouble(); }); }
 
       template<>
-      std::vector<int> valVectorGetter(const Json::Value& j) { return std::vector<int>{ j.begin(), j.end() }; }
+      static std::vector<int> valVectorGetter(const Json::Value& j) { return valVectorExtractor<int>(j, [](const Json::Value& j)->int { return j.asDouble(); }); }
 
       template<>
-      std::vector<unsigned int> valVectorGetter(const Json::Value& j) { return std::vector<unsigned int>{ j.begin(), j.end() }; }
+      static std::vector<unsigned int> valVectorGetter(const Json::Value& j) { return valVectorExtractor<unsigned int>(j, [](const Json::Value& j)->unsigned int { return j.asDouble(); }); }
 
       template<typename T>
       static settings::range_data<T> rangeReader(const Json::Value& j)
@@ -194,7 +210,7 @@ namespace colreg
          range.max = valGetter<T>(j[tag::max]);
          range.min = valGetter<T>(j[tag::min]);
          range.step = valGetter<T>(j[tag::step]);
-         if (j.find(tag::values) != j.end())
+         if (j.find(tag::values, tag::values + strlen(tag::values)) != nullptr)
             range.values = valVectorGetter<T>(j[tag::values]);
 
          range.apply();

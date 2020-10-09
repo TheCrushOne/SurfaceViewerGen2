@@ -5,7 +5,9 @@
 
 namespace navigation_dispatcher
 {
-   class NavigationDispatcher : public iNavigationDispatcher, public Central
+   class NavigationDispatcher
+      : public iNavigationDispatcher
+      , public Central
    {
    public:
       NavigationDispatcher(central_pack* pack);

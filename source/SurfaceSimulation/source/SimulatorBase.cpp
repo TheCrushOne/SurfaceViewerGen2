@@ -14,6 +14,16 @@ using namespace ColregSimulation;
       Message(ICommunicator::MessageType::MT_ERROR, errMsg.c_str()); \
    }
 
+struct tag
+{
+   // TODO: запаковать в одно место(дублируется с ConfigDispatcherImpl.h)
+   static constexpr char root[] = "root";
+   static constexpr char standarts[] = "data_standarts";
+   static constexpr char standart[] = "data_standart";
+   static constexpr char type[] = "type";
+   static constexpr char params[] = "params";
+};
+
 SimulatorBase::SimulatorBase(central_pack * pack, iPropertyInterface * prop, navigation_dispatcher::iComServicePtr service)
    : Central(pack)
    , m_prop(prop)
@@ -47,7 +57,7 @@ void deserializeStandartAttrs(Standart* standart, const char* configPath, data_s
    if (!properties.load(configPath))
       return;
    const auto& sClass = properties.GetRoot();
-   const auto root = sClass.GetChild(tag_root);
+   const auto root = sClass.GetChild(tag::root);
 
    auto checkDataStandart = [](const xml_properties::PropertyItem& properties, Standart* ds, data_standart::DataStandartType expected)
    {
@@ -59,7 +69,7 @@ void deserializeStandartAttrs(Standart* standart, const char* configPath, data_s
          ds->DeserializeAttrs(properties[tag::params]);
    };
 
-   const auto standarts = root->GetChild(tag_standarts);
+   const auto standarts = root->GetChild(tag::standarts);
    const auto& standartList = standarts->GetChildren().equal_range(tag::standart);
    for (auto iter = standartList.first; iter != standartList.second; ++iter)
      checkDataStandart(iter->second, standart, expected);
@@ -93,7 +103,7 @@ bool SimulatorBase::LoadProcessedMapObjects()
 
 bool SimulatorBase::LoadProcessedPaths()
 {
-   auto* pathDS = reinterpret_cast<data_standart::iPathStorageDataStandart*>(m_mapDS.operator->());
+   auto* pathDS = reinterpret_cast<data_standart::iPathStorageDataStandart*>(m_pathDS.operator->());
    m_currentConfig = m_orderCacheFolder + L"process_path_find.xml";
    deserializeStandartAttrs(pathDS, SVGUtils::wstringToString(m_currentConfig).c_str(), data_standart::DataStandartType::DST_PATHS);
    auto& rt = pathDS->GetData();
@@ -111,7 +121,7 @@ bool SimulatorBase::LoadProcessedPaths()
 
 bool SimulatorBase::LoadProcessedOptPaths()
 {
-   auto* optPathDS = reinterpret_cast<data_standart::iOptimizedPathStorageDataStandart*>(m_mapDS.operator->());
+   auto* optPathDS = reinterpret_cast<data_standart::iOptimizedPathStorageDataStandart*>(m_optPathDS.operator->());
    SetSimulatorScenarioState(ColregSimulation::SCENARIO_STATUS::SS_OPT_PATHS_COUNTED);
    SetSimulatorSimulationState(ColregSimulation::SIMULATION_STATUS::SS_STOP);
    return true;

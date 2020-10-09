@@ -19,7 +19,8 @@ namespace SVGUtils
       char cCurrentPath[FILENAME_MAX];
       _getcwd(cCurrentPath, sizeof(cCurrentPath));
 #ifdef _WIN64
-      const std::string dllPath = std::string(cCurrentPath) + "\\" + dllFileName + "_64.dll";
+      //const std::string dllPath = std::string(cCurrentPath) + "\\" + dllFileName + "_64.dll";
+      const std::string dllPath = std::string(cCurrentPath) + "\\" + dllFileName + ".dll";
 #else
       const std::string dllPath = std::string(cCurrentPath) + "\\" + dllFileName + ".dll";
 #endif

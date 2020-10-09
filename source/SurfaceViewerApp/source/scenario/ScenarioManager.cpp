@@ -103,16 +103,16 @@ void ScenarioManager::ProcessOptPaths(std::function<void(void)> buttonEnableCall
 
 void ScenarioManager::processMapCommand(std::function<void(void)> successCallback)
 {
-   auto wscen = file_utils::getFileName(m_pathStorage.map_object_path);
+   auto wscen = file_utils::getFileName(m_pathStorage.map_object_path.path);
    std::unordered_map<std::string, std::wstring> dict = {
-      { "PNG_SRC", m_pathStorage.map_object_path },
+      { "PNG_SRC", m_pathStorage.map_object_path.path },
       { "SVGM_FLDR", m_cacheFolder + wscen + m_svgmCacheFolder },
-      { "UNIT_DATA", m_pathStorage.unit_data_path },
-      { "ENV_STT", m_pathStorage.environment_settings_path },
-      { "MAP_STT", m_pathStorage.map_settings_path },
-      { "PTH_STT", m_pathStorage.pathfinder_settings_path },
-      { "RES_STT", m_pathStorage.research_settings_path },
-      { "SIM_STT", m_pathStorage.simulation_settings_path }
+      { "UNIT_DATA", m_pathStorage.unit_data_path.path },
+      { "ENV_STT", m_pathStorage.environment_settings_path.path },
+      { "MAP_STT", m_pathStorage.map_settings_path.path },
+      { "PTH_STT", m_pathStorage.pathfinder_settings_path.path },
+      { "RES_STT", m_pathStorage.research_settings_path.path },
+      { "SIM_STT", m_pathStorage.simulation_settings_path.path }
    };
 
    m_mapCommandProcessed = m_orderingWrapper->ProcessOrder(L"process_map.xml", NULL, dict);
@@ -122,16 +122,16 @@ void ScenarioManager::processMapCommand(std::function<void(void)> successCallbac
 
 void ScenarioManager::processMapObjCommand(std::function<void(void)> successCallback)
 {
-   auto wscen = file_utils::getFileName(m_pathStorage.map_object_path);
+   auto wscen = file_utils::getFileName(m_pathStorage.map_object_path.path);
    std::unordered_map<std::string, std::wstring> dict = {
-      { "PNG_SRC", m_pathStorage.map_object_path },
+      { "PNG_SRC", m_pathStorage.map_object_path.path },
       { "SVGM_FLDR", m_cacheFolder + wscen + m_svgmCacheFolder },
-      { "UNIT_DATA", m_pathStorage.unit_data_path },
-      { "ENV_STT", m_pathStorage.environment_settings_path },
-      { "MAP_STT", m_pathStorage.map_settings_path },
-      { "PTH_STT", m_pathStorage.pathfinder_settings_path },
-      { "RES_STT", m_pathStorage.research_settings_path },
-      { "SIM_STT", m_pathStorage.simulation_settings_path },
+      { "UNIT_DATA", m_pathStorage.unit_data_path.path },
+      { "ENV_STT", m_pathStorage.environment_settings_path.path },
+      { "MAP_STT", m_pathStorage.map_settings_path.path },
+      { "PTH_STT", m_pathStorage.pathfinder_settings_path.path },
+      { "RES_STT", m_pathStorage.research_settings_path.path },
+      { "SIM_STT", m_pathStorage.simulation_settings_path.path },
       { "OBJ_FLDR", m_cacheFolder + wscen + m_objMapCacheFolder }
    };
 
@@ -142,16 +142,16 @@ void ScenarioManager::processMapObjCommand(std::function<void(void)> successCall
 
 void ScenarioManager::processPathCommand(std::function<void(void)> successCallback)
 {
-   auto wscen = file_utils::getFileName(m_pathStorage.map_object_path);
+   auto wscen = file_utils::getFileName(m_pathStorage.map_object_path.path);
    std::unordered_map<std::string, std::wstring> dict = {
-      { "PNG_SRC", m_pathStorage.map_object_path },
+      { "PNG_SRC", m_pathStorage.map_object_path.path },
       { "SVGM_FLDR", m_cacheFolder + wscen + m_svgmCacheFolder },
-      { "UNIT_DATA", m_pathStorage.unit_data_path },
-      { "ENV_STT", m_pathStorage.environment_settings_path },
-      { "MAP_STT", m_pathStorage.map_settings_path },
-      { "PTH_STT", m_pathStorage.pathfinder_settings_path },
-      { "RES_STT", m_pathStorage.research_settings_path },
-      { "SIM_STT", m_pathStorage.simulation_settings_path },
+      { "UNIT_DATA", m_pathStorage.unit_data_path.path },
+      { "ENV_STT", m_pathStorage.environment_settings_path.path },
+      { "MAP_STT", m_pathStorage.map_settings_path.path },
+      { "PTH_STT", m_pathStorage.pathfinder_settings_path.path },
+      { "RES_STT", m_pathStorage.research_settings_path.path },
+      { "SIM_STT", m_pathStorage.simulation_settings_path.path },
       { "OBJ_FLDR", m_cacheFolder + wscen + m_objMapCacheFolder },
       { "PATHS_DST", m_cacheFolder + wscen + m_pathsCacheFolder }
    };
@@ -163,16 +163,16 @@ void ScenarioManager::processPathCommand(std::function<void(void)> successCallba
 
 void ScenarioManager::processOptPathCommand(std::function<void(void)> successCallback)
 {
-   auto wscen = file_utils::getFileName(m_pathStorage.map_object_path);
+   auto wscen = file_utils::getFileName(m_pathStorage.map_object_path.path);
    std::unordered_map<std::string, std::wstring> dict = {
-      { "PNG_SRC", m_pathStorage.map_object_path },
+      { "PNG_SRC", m_pathStorage.map_object_path.path },
       { "SVGM_FLDR", m_cacheFolder + wscen + m_svgmCacheFolder },
-      { "UNIT_DATA", m_pathStorage.unit_data_path },
-      { "ENV_STT", m_pathStorage.environment_settings_path },
-      { "MAP_STT", m_pathStorage.map_settings_path },
-      { "PTH_STT", m_pathStorage.pathfinder_settings_path },
-      { "RES_STT", m_pathStorage.research_settings_path },
-      { "SIM_STT", m_pathStorage.simulation_settings_path },
+      { "UNIT_DATA", m_pathStorage.unit_data_path.path },
+      { "ENV_STT", m_pathStorage.environment_settings_path.path },
+      { "MAP_STT", m_pathStorage.map_settings_path.path },
+      { "PTH_STT", m_pathStorage.pathfinder_settings_path.path },
+      { "RES_STT", m_pathStorage.research_settings_path.path },
+      { "SIM_STT", m_pathStorage.simulation_settings_path.path },
       { "OBJ_FLDR", m_cacheFolder + wscen + m_objMapCacheFolder },
       { "OPTPATHS_DST", m_cacheFolder + wscen + m_optPathsCacheFolder }
    };

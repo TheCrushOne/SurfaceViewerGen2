@@ -9,6 +9,8 @@ struct tag
    static constexpr char prop_list[] = "prop_list";
    static constexpr char contour_list[] = "contour_list";
 
+   static constexpr char contour[] = "contour";
+
    static constexpr char key[] = "key";
    static constexpr char val[] = "val";
 

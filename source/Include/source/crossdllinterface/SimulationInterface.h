@@ -17,7 +17,7 @@ namespace ColregSimulation
 }
 
 
-#ifdef SIMULATION_DLL
+#ifdef SURFACESIMULATION_EXPORTS
 #define SIMEXPRTIMPRT __declspec(dllexport) // export DLL information
 #else
 #define SIMEXPRTIMPRT __declspec(dllimport) // import DLL information

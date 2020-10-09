@@ -3,7 +3,7 @@
 
 #include "engine.h"
 #include "algorithm/pathfinder/pathfinder.h"
-#include "common/settings.h"
+//#include "common/settings.h"
 #include "crossdllinterface\SettingsSerializerInterface.h"
 #include "crossdllinterface\UnitDataSerializerInterface.h"
 #include "common/file_storage.h"
@@ -52,8 +52,8 @@ Dispatcher::Dispatcher(/*GlViewerDlg::ViewerCluster cluster
    //m_loadingdlg = WFM::CreateSharedInstance<LoadingDlg>(DBG_DATA);
    //m_stat = WFM::CreateSharedInstance<RuntimeStatistic>(DBG_DATA);
    
-   m_appSettings = std::make_unique<settings::application_settings>();
-   m_engine = std::make_unique<engine::Engine>();
+   //m_appSettings = std::make_unique<settings::application_settings>();
+   //m_engine = std::make_unique<engine::Engine>();
    m_pathfinder = std::make_unique<pathfinder::PathFinder>();
    
    //createUnitDataSerializer();
@@ -64,10 +64,10 @@ Dispatcher::Dispatcher(/*GlViewerDlg::ViewerCluster cluster
 Dispatcher::~Dispatcher()
 {}
 
-const std::shared_ptr<settings::application_settings> Dispatcher::GetSettings()
+/*const std::shared_ptr<settings::application_settings> Dispatcher::GetSettings()
 {
    return m_appSettings;
-}
+}*/
 
 //std::shared_ptr<SVM::iMatrix<SurfaceElement>> Dispatcher::GetRawMap()
 //{
@@ -78,7 +78,7 @@ void Dispatcher::LoadScenario(const wchar_t* name)
 {
    m_fileStorage = std::make_shared<file_utils::global_path_storage>(name);
 
-   loadHeightMap(SVGUtils::wstringToString(m_fileStorage->map_path).c_str());
+   loadHeightMap(SVGUtils::wstringToString(m_fileStorage->map_path.path).c_str());
 }
 
 void Dispatcher::onScenarioLoad()

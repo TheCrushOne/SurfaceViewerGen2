@@ -34,6 +34,7 @@ namespace navigation_dispatcher
          VALID_CHECK_DLL_LOAD("SettingsHandler", "CreateUnitDataSerializer", m_unitDataSerializer);
          VALID_CHECK_DLL_LOAD("ChecksumService", "CreateChecksumService", m_checksumService, pack);
          VALID_CHECK_DLL_LOAD("SQLiteController", "CreateSQLiteDatabaseController", m_databaseController, pack);
+         VALID_CHECK_DLL_LOAD("PythonMiscellaneousWrapper", "CreatePythonWrapper", m_pythonWrapper, pack);
          auto pathToDb = std::string(baseFolder) + "\\svgm.db";
          m_databaseController->Connect(pathToDb.c_str());
       }
@@ -69,6 +70,10 @@ namespace navigation_dispatcher
       {
          return m_unitDataSerializer;
       }
+      python_wrapper::iPythonWrapper* GetPythonWrapper() override final
+      {
+         return m_pythonWrapper;
+      }
       void Release() override final { delete this; }
    private:
       std::shared_ptr<DataStandartFactoryImpl>                                   m_dataStandartFactory;
@@ -79,6 +84,7 @@ namespace navigation_dispatcher
       colreg::ModuleGuard<database::iSVGMDatabaseController, central_pack_ptr>   m_databaseController;
       colreg::ModuleGuard<checksum::iChecksumService, central_pack_ptr>          m_checksumService;
       colreg::ModuleGuard<colreg::iUnitDataSerializer>                           m_unitDataSerializer;
+      colreg::ModuleGuard<python_wrapper::iPythonWrapper, central_pack_ptr>      m_pythonWrapper;
    };
 
    // extern functions implementation

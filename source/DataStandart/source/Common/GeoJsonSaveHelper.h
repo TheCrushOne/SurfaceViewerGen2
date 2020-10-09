@@ -8,7 +8,7 @@
 
 namespace geojson_save_helper
 {
-   Json::Value prop_to_json(const colreg::simple_prop& prop)
+   inline Json::Value prop_to_json(const colreg::simple_prop& prop)
    {
       Json::Value jprop;
       jprop[tag::key] = prop.key.c_str();
@@ -16,7 +16,7 @@ namespace geojson_save_helper
       return jprop;
    }
 
-   Json::Value geopoint_to_json(const colreg::geo_point& point)
+   inline Json::Value geopoint_to_json(const colreg::geo_point& point)
    {
       Json::Value jpoint;
       jpoint[tag::lon] = point.lon;
@@ -24,39 +24,35 @@ namespace geojson_save_helper
       return jpoint;
    }
 
-   Json::Value geopointvct_to_json(const std::vector<colreg::geo_point>& points)
+   inline Json::Value geopointvct_to_json(const std::vector<colreg::geo_point>& points)
    {
-      Json::Value jcontour;
-      jcontour.resize(static_cast<Json::ArrayIndex>(points.size()));
+      Json::Value jcontour(Json::arrayValue);
       for (size_t idx = 0; idx < points.size(); idx++)
-         jcontour[static_cast<Json::ArrayIndex>(idx)] = geopoint_to_json(points.at(idx));
+         jcontour.append(geopoint_to_json(points.at(idx)));
       return jcontour;
    }
 
-   Json::Value cou_to_json(const chart_object::chart_object_unit& obj)
+   inline Json::Value cou_to_json(const chart_object::chart_object_unit& obj)
    {
       Json::Value jobj;
       jobj[tag::type] = static_cast<unsigned short>(obj.type);
-      Json::Value jprops;
-      jprops.resize(obj.prop_vct.size());
-      for (size_t idx = 0; idx < obj.prop_vct.size(); idx++)
-         jprops[idx] = prop_to_json(obj.prop_vct.at(idx));
+      Json::Value jprops(Json::arrayValue);
+      for (const auto& elem : obj.prop_vct)
+         jprops.append(prop_to_json(elem));
       jobj[tag::prop_list] = jprops;
 
-      Json::Value jcontours;
-      jcontours.resize(obj.geom_contour_vct.size());
-      for (size_t idx = 0; idx < obj.geom_contour_vct.size(); idx++)
-         jcontours[idx] = geopointvct_to_json(obj.geom_contour_vct.at(idx));
+      Json::Value jcontours(Json::arrayValue);
+      for (const auto& elem : obj.geom_contour_vct)
+         jcontours.append(geopointvct_to_json(elem));
       jobj[tag::contour_list] = jcontours;
       return jobj;
    }
 
-   Json::Value couvct_to_json(const chart_object::chart_object_unit_vct_ref objList)
+   inline Json::Value couvct_to_json(const chart_object::chart_object_unit_vct_ref objList)
    {
-      Json::Value objs;
-      objs.resize(static_cast<Json::ArrayIndex>(objList.size()));
-      for (size_t idx = 0; idx < objList.size(); idx++)
-         objs[idx] = cou_to_json(objList.at(idx));
+      Json::Value objs(Json::arrayValue);
+      for (const auto& elem : objList)
+         objs.append(cou_to_json(elem));
       return objs;
    }
 }

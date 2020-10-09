@@ -23,11 +23,11 @@ settings::application_settings& SettingsSerializerHolderImpl::GetSettings(const 
 
 void SettingsSerializerHolderImpl::load(const file_utils::global_path_storage& storage)
 {
-   STT_DESERIALIZE(environment_settings_path, env_stt, "Environment");
-   STT_DESERIALIZE(map_settings_path, map_stt, "Map");
-   STT_DESERIALIZE(pathfinder_settings_path, pth_stt, "Pathfinding");
-   STT_DESERIALIZE(research_settings_path, res_stt, "Research");
-   STT_DESERIALIZE(simulation_settings_path, sim_stt, "Simulation");
+   STT_DESERIALIZE(environment_settings_path.path, env_stt, "Environment");
+   STT_DESERIALIZE(map_settings_path.path, map_stt, "Map");
+   STT_DESERIALIZE(pathfinder_settings_path.path, pth_stt, "Pathfinding");
+   STT_DESERIALIZE(research_settings_path.path, res_stt, "Research");
+   STT_DESERIALIZE(simulation_settings_path.path, sim_stt, "Simulation");
    m_loaded = true;
 }
 

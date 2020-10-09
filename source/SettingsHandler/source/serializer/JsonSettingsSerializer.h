@@ -3,6 +3,8 @@
 #include "colreg/BaseRef.h"
 #include "crossdllinterface\SettingsSerializerInterface.h"
 
+#include "json/json_wrapper.h"
+
 namespace colreg
 {
    struct iJsonSettingsSerializer : iSettingsSerializer

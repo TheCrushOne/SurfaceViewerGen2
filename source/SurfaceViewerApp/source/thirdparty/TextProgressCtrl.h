@@ -264,7 +264,7 @@ class CTextProgressCtrl : public CProgressCtrl
 		afx_msg LRESULT OnSetTextBkColor(WPARAM, LPARAM crTextBk);
 		afx_msg LRESULT OnGetTextBkColor(WPARAM, LPARAM);
 		afx_msg LRESULT OnSetShowPercent(WPARAM bShow, LPARAM);
-		afx_msg	LRESULT OnAlignText(WPARAM dwAlignment, LPARAM);
+		afx_msg LRESULT OnAlignText(WPARAM dwAlignment, LPARAM);
 		afx_msg LRESULT OnSetMarquee(WPARAM bOn, LPARAM nMsecBetweenUpdate);
 		afx_msg LRESULT OnSetMarqueeOptions(WPARAM nBarSize, LPARAM);
 

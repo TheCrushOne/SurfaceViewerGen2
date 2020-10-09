@@ -4,7 +4,9 @@
 
 namespace checksum
 {
-   class ChecksumService : public iChecksumService, public Central
+   class ChecksumService
+      : public iChecksumService
+      , public Central
    {
    public:
       ChecksumService(central_pack* pack)

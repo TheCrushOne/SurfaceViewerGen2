@@ -2,8 +2,6 @@
 #include "PathStorageDS.h"
 #include "crossdllinterface\ChecksumServiceInterface.h"
 
-#include "json/json_wrapper.h"
-
 #include <filesystem>
 #include <fstream>
 
@@ -41,23 +39,21 @@ void PathStorageDataStandart::savePathData()
       Json::Value rt;
       rt[tag::start] = routePointWrite(route.start);
       rt[tag::finish] = routePointWrite(route.finish);
-      Json::Value cpl;
-      cpl.resize(route.control_point_list.size());
-      for (size_t idx = 0; idx < route.control_point_list.size(); idx++)
-         cpl[idx] = routePointWrite(route.control_point_list.at(idx));
+      Json::Value cpl(Json::arrayValue);
+      for (const auto& rt : route.control_point_list)
+         cpl.append(routePointWrite(rt));
       rt[tag::control_point_list] = cpl;
-      Json::Value rl;
-      for (size_t idx = 0; idx < route.route_list.size(); idx++)
-         rl[idx] = routePointWrite(route.route_list.at(idx));
+      Json::Value rl(Json::arrayValue);
+      for (const auto& rt : route.route_list)
+         rl.append(routePointWrite(rt));
       rt[tag::route_list] = cpl;
       return rt;
    };
    auto pathListWriter = [routeWrite](const std::vector<settings::route>& route_list)->Json::Value
    {
-      Json::Value routes;
-      routes.resize(route_list.size());
-      for (size_t idx = 0; idx < route_list.size(); idx++)
-         routes[idx] = routeWrite(route_list.at(idx));
+      Json::Value routes(Json::arrayValue);
+      for (const auto& route : route_list)
+         routes.append(routeWrite(route));
       return routes;
    };
    j[tag::air_routes] = pathListWriter(m_paths.air_routes);
@@ -103,11 +99,11 @@ void PathStorageDataStandart::readPathData()
    };
    auto pathListRead = [routeRead](std::vector<settings::route>& route_list, const Json::Value& jroute_list)
    {
-      for (auto& jroute : jroute_list)
+      for (const auto& jroute : jroute_list)
          route_list.emplace_back(routeRead(jroute));
    };
-   pathListRead(m_paths.air_routes, j[tag::air_routes]);
-   pathListRead(m_paths.land_routes, j[tag::land_routes]);
+   //pathListRead(m_paths.air_routes, j[tag::air_routes]);
+   //pathListRead(m_paths.land_routes, j[tag::land_routes]);
 }
 
 iDataStandart* CreatePathStorageDataStandart(central_pack* pack, LPCWSTR base_folder, navigation_dispatcher::iComService* pService)

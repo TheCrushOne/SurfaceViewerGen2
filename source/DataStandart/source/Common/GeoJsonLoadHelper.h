@@ -35,10 +35,10 @@ namespace geojson_load_helper
    chart_object::chart_object_unit json_to_cou(const Json::Value& jobj)
    {
       chart_object::chart_object_unit obj;
-      obj.type = static_cast<colreg::OBJECT_TYPE>(jobj[tag::type].asInt());
-      for (auto& jrp : jobj[tag::contour_list])
+      obj.type = static_cast<colreg::OBJECT_TYPE>(jobj[tag::type].asUInt());
+      for (const auto& jrp : jobj[tag::contour_list])
          obj.geom_contour_vct.emplace_back(json_to_geopointvct(jrp));
-      for (auto& jrp : jobj[tag::contour_list])
+      for (const auto& jrp : jobj[tag::prop_list])
          obj.prop_vct.emplace_back(json_to_prop(jrp));
       return obj;
    }
@@ -46,7 +46,7 @@ namespace geojson_load_helper
    chart_object::chart_object_unit_vct json_to_couvct(const Json::Value& jobj_list)
    {
       chart_object::chart_object_unit_vct rest;
-      for (auto& jobj : jobj_list)
+      for (const auto& jobj : jobj_list)
          rest.emplace_back(json_to_cou(jobj));
       return rest;
    }

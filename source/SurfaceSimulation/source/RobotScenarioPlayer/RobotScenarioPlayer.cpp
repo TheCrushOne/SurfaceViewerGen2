@@ -23,7 +23,6 @@ void RobotScenarioPlayer::Start()
 void RobotScenarioPlayer::start(std::function<void(void)> callback)
 {
    //m_settings.env_stt.gcs_info.scale = 0.001; // вроде как это вынесено в настройки...теперь
-   ATLASSERT(false);
    // TODO: переделать!!!
    /*m_databaseController->LoadScenarioData(m_data.unit_data, m_coordGrid);
    addUnitsFromScenario();
@@ -33,9 +32,8 @@ void RobotScenarioPlayer::start(std::function<void(void)> callback)
    for (auto& elem : m_coordGrid)
       lines.emplace_back(converter::data_line_ref{ elem.data(), elem.size() });
    ref = converter::raw_data_ref{ lines.data(), lines.size() };
-   m_generator->GenerateStatic(ref);
+   m_generator->GenerateStatic(ref);*/
    callback();
-   SetSimulatorScenarioState(ColregSimulation::SCENARIO_STATUS::SS_PAUSE);*/
 }
 
 void RobotScenarioPlayer::Stop()

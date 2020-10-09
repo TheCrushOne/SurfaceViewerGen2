@@ -24,7 +24,7 @@ private:
 public:
    void LoadScenario(const wchar_t*);
 
-   const std::shared_ptr<settings::application_settings> GetSettings();
+   //const std::shared_ptr<settings::application_settings> GetSettings();
    //std::shared_ptr<SVM::iMatrix<SurfaceElement>> GetRawMap();
 protected:
    void OnArrayReset();

@@ -25,6 +25,7 @@ SurfaceViewerGenMapDataStandart::SurfaceViewerGenMapDataStandart(central_pack * 
 void SurfaceViewerGenMapDataStandart::resolvePathDee()
 {
    std::filesystem::path filePath(m_dataStandartData.folder);
+   // TODO: check!!!
    if (filePath.is_relative())
       m_dataStandartData.folder = (std::filesystem::path(m_baseFolder) / filePath).generic_string().c_str();
 }
@@ -44,6 +45,8 @@ pathfinder::GeoMatrix& SurfaceViewerGenMapDataStandart::GetData()
 {
    readMetaData();
    readHeightData();
+   mountPathFileStorage();
+   m_service->GetSettingsSerializerHolder()->GetSettings(m_storage);
    return m_rawdata;
 }
 
@@ -110,6 +113,15 @@ void SurfaceViewerGenMapDataStandart::saveHeightData()
       }
    }
    file.close();
+}
+
+void SurfaceViewerGenMapDataStandart::mountPathFileStorage()
+{
+   m_storage.environment_settings_path.condition_mount(SVGUtils::stringToWstring(m_dataStandartData.env_stt), !m_dataStandartData.env_stt.empty());
+   m_storage.map_settings_path.condition_mount(SVGUtils::stringToWstring(m_dataStandartData.map_stt), !m_dataStandartData.map_stt.empty());
+   m_storage.pathfinder_settings_path.condition_mount(SVGUtils::stringToWstring(m_dataStandartData.pth_stt), !m_dataStandartData.pth_stt.empty());
+   m_storage.research_settings_path.condition_mount(SVGUtils::stringToWstring(m_dataStandartData.res_stt), !m_dataStandartData.res_stt.empty());
+   m_storage.simulation_settings_path.condition_mount(SVGUtils::stringToWstring(m_dataStandartData.sim_stt), !m_dataStandartData.sim_stt.empty());
 }
 
 iDataStandart* CreateSurfaceViewerGenMapDataStandart(central_pack* pack, LPCWSTR base_folder, navigation_dispatcher::iComService* pService)

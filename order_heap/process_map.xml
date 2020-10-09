@@ -9,6 +9,7 @@
 				<params>
 					<source>PngSrc</source>
 					<destination>SVGMDst</destination>
+					<rewrite_dst>true</rewrite_dst>
 				</params>
 			</order>
 		</orders>

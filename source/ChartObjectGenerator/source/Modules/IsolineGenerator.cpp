@@ -56,18 +56,31 @@ void IsolineGenerator::GenerateIsolines(const pathfinder::GeoMatrix& rawdata, ch
 
 std::vector<chart_object::chart_object_unit> IsolineGenerator::generateIsolineLevel(AlgorithmType type, const pathfinder::GeoMatrix& rawdata, double height, int H)
 {
+   std::vector<chart_object::chart_object_unit> res;
    switch(type)
    {
       case AlgorithmType::AT_LABTRV:
-         return m_labirinthTraverseAlgorithm->GenerateIsolineLevel(rawdata, height, H);
+         res = m_labirinthTraverseAlgorithm->GenerateIsolineLevel(rawdata, height, H);
+         break;
       case AlgorithmType::AT_SEGCOL:
-         return m_segmentCollectorAlgorithm->GenerateIsolineLevel(rawdata, height, H);
+         res = m_segmentCollectorAlgorithm->GenerateIsolineLevel(rawdata, height, H);
+         break;
       case AlgorithmType::AT_WAVEFL:
-         return m_waveFrontlineAlgortihm->GenerateIsolineLevel(rawdata, height, H);
+         res = m_waveFrontlineAlgortihm->GenerateIsolineLevel(rawdata, height, H);
+         break;
       default:
          ATLASSERT(false);
-         return chart_object::chart_object_unit_vct();
    }
+   for (auto& elem : res)
+   {
+      int rgb[3];
+      HSVtoRGB(H, 1., 1., rgb);
+      char color[64];
+      sprintf(color, "%i %i %i", rgb[0], rgb[1], rgb[2]);
+      elem.prop_vct.emplace_back("Color", color);
+      elem.prop_vct.emplace_back("Depth", std::to_string(height).c_str());
+   }
+   return res;
 }
 
 void IsolineGenerator::addChartObjectSet(const std::vector<math::geo_points>& data, double height, int H)

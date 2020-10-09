@@ -19,4 +19,4 @@ namespace raw_data
 #endif
 
 
-extern "C" RDATAEXPRTIMPRT raw_data::iRawDataController * CreateRawDataController(central_pack*);
+extern "C" RDATAEXPRTIMPRT raw_data::iRawDataController * CreateRawDataController(central_pack_ptr);

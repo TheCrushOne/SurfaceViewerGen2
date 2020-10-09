@@ -95,9 +95,10 @@ void PngHeightMapDataStandart::readDataFromPng()
       m_row_pointers[y] = (png_byte*)malloc(png_get_rowbytes(png, info));
    }
 
+   size_t byte_per_pixel = 4;
    // Так...вроде правильно
    m_data.row_count = height;
-   m_data.col_count = png_get_rowbytes(png, info) / sizeof(png_bytep);
+   m_data.col_count = png_get_rowbytes(png, info) / byte_per_pixel;
 
    png_read_image(png, m_row_pointers);
 
@@ -106,7 +107,8 @@ void PngHeightMapDataStandart::readDataFromPng()
 
 // TODO: перенести коррекции в настройки и сделать отдельный модуль
 // к-т преобразования градиента в высоту 0-256 -> height_min-height_max
-#define HEIGHT_CORRECTOR(h) 0.8*(h - 140.)
+//#define HEIGHT_CORRECTOR(h) 0.8*(h - 140.)
+#define HEIGHT_CORRECTOR(h) h
 
 void PngHeightMapDataStandart::convertToRawData()
 {

@@ -23,15 +23,6 @@ namespace ColregSimulation
       : public iSimulator
       , public Central
    {
-      struct tag
-      {
-         // TODO: запаковать в одно место(дублируется с ConfigDispatcherImpl.h)
-         static constexpr char root[] = "root";
-         static constexpr char standarts[] = "data_standarts";
-         static constexpr char standart[] = "data_standart";
-         static constexpr char type[] = "type";
-         static constexpr char params[] = "params";
-      };
    public:
       SimulatorBase(central_pack_ptr, iPropertyInterface*, navigation_dispatcher::iComServicePtr);
 

@@ -3,6 +3,8 @@
 #include "datastandart\DataStandart.h"
 #include "navdisp/ComService.h"
 
+#include "json/json_wrapper.h"
+
 namespace data_standart
 {
    template <int TDataStandartType, typename TDataStandartData>
@@ -19,7 +21,7 @@ namespace data_standart
    protected:
       bool deserializeAttrs(const xml_properties::PropertyItem& standart) { return m_dataStandartData.Deserialize(standart); }
       DataStandartType getType() const { return static_cast<DataStandartType>(data_standart_type); }
-      
+
       virtual LPCSTR getPath() = 0;
       // NOTE: לוים פאיכ
       virtual std::string getDataFilePath() = 0;

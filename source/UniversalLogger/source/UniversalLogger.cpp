@@ -7,7 +7,7 @@
 #include <cstdlib>
 #include <filesystem>
 
-#include "json/json_wrapper.h"
+#include "json/json_wrapper_impl.h"
 
 namespace fs = std::filesystem;
 using namespace logger;

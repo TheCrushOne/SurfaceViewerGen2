@@ -10,6 +10,7 @@
 #include "crossdllinterface\ChecksumServiceInterface.h"
 #include "crossdllinterface\UnitDataSerializerInterface.h"
 #include "crossdllinterface\SettingsSerializerInterface.h"
+#include "crossdllinterface\PythonWrapperInterface.h"
 
 namespace navigation_dispatcher
 {
@@ -26,6 +27,7 @@ namespace navigation_dispatcher
       virtual database::iSVGMDatabaseController* GetDatabaseController() = 0;
       virtual checksum::iChecksumService* GetChecksumService() = 0;
       virtual colreg::iUnitDataSerializer* GetUnitDataSerializer() = 0;
+      virtual python_wrapper::iPythonWrapper* GetPythonWrapper() = 0;
    };
 
    typedef iComService* iComServicePtr;

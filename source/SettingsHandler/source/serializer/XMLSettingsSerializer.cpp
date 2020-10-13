@@ -6,7 +6,7 @@
 #include "XMLSettingsMeta.h"
 #include "colreg/PropertyInterface.h"
 //#include "WeatherInterface.h"
-#include "common/settings.h"
+#include "common/header_collector.h"
 
 #define _PSN(x) colreg::pathfindingMeta.at(x)
 #define _RSN(x) colreg::researchMeta.at(x)
@@ -54,11 +54,11 @@ namespace colreg
          size_t offset = 0;
          std::unique_ptr < TypedSettingsTree<void*, settings::pathfinding_settings> > tree(new TypedSettingsTree<void*, settings::pathfinding_settings>(PATHFINDING_SETTINGS_TAG, "", {
               PSTCOLLECTINGELEM(_PSN(PathfindingSettingsFieldIndex::PSFI_LEVEL_ST)) {
-                   PSTVALELEM(double, _PSN(PathfindingSettingsFieldIndex::PSFI_MAXAIRHEIGHT), level_settings.max_air_height)
-                 , PSTVALELEM(double, _PSN(PathfindingSettingsFieldIndex::PSFI_MAXLANDHEIGHT), level_settings.max_land_height)
-                 , PSTVALELEM(double, _PSN(PathfindingSettingsFieldIndex::PSFI_MINLANDHEIGHT), level_settings.min_land_height)
-                 , PSTVALELEM(double, _PSN(PathfindingSettingsFieldIndex::PSFI_MAXLANDANGLE), level_settings.max_land_angle)
-                 , PSTVALELEM(double, _PSN(PathfindingSettingsFieldIndex::PSFI_DANGEROUSLANDANGLE), level_settings.dangerous_land_angle)
+                   PSTVALELEM(double, _PSN(PathfindingSettingsFieldIndex::PSFI_MAXAIRHEIGHT), lvl_stt.max_air_height)
+                 , PSTVALELEM(double, _PSN(PathfindingSettingsFieldIndex::PSFI_MAXLANDHEIGHT), lvl_stt.max_land_height)
+                 , PSTVALELEM(double, _PSN(PathfindingSettingsFieldIndex::PSFI_MINLANDHEIGHT), lvl_stt.min_land_height)
+                 , PSTVALELEM(double, _PSN(PathfindingSettingsFieldIndex::PSFI_MAXLANDANGLE), lvl_stt.max_land_angle)
+                 , PSTVALELEM(double, _PSN(PathfindingSettingsFieldIndex::PSFI_DANGEROUSLANDANGLE), lvl_stt.dangerous_land_angle)
               })
          }) );
          // NOTE: проверку может выбить из-за настроек по роботам

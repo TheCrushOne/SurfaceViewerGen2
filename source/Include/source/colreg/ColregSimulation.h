@@ -3,8 +3,9 @@
 #include "ColregInterfaces.h"
 #include "WeatherInterface.h"
 #include "StateFullColregInterface.h"
-#include "common/settings.h"
+#include "common/header_collector.h"
 #include "common/file_storage.h"
+#include "common/chart_object.h"
 
 struct iPropertyInterface;
 
@@ -31,11 +32,19 @@ namespace ColregSimulation
 
    enum class SCENARIO_STATUS : char
    {
+      SS_NOT_LOADED = 0,
+      SS_MAP_CHECKOPENED,
+      SS_MAP_PROCESSED,
+      SS_MAPOBJ_PROCESSED,
+      SS_PATHS_COUNTED,
+      SS_OPT_PATHS_COUNTED,
+   };
+
+   enum class SIMULATION_STATUS : char
+   {
       SS_RUN = 0,
       SS_PAUSE,
       SS_STOP,
-      SS_NOT_LOADED,
-      SS_UPDATE
    };
 
    struct control_point_info
@@ -167,9 +176,9 @@ namespace ColregSimulation
 
       virtual const iUnit* GetUnitById(colreg::id_type id) const = 0;
 
-      virtual const colreg::chart_objects_ref& GetChartObjects() const = 0;
+      virtual const chart_object::chart_object_unit_vct_ref GetChartObjects() const = 0;
 
-      virtual const colreg::chart_object* GetChartObject(colreg::chart_object_id id) const = 0;
+      virtual const chart_object::chart_object_unit* GetChartObject(colreg::chart_object_id id) const = 0;
 
       //! Абсолютное время (UTC) среза симуляции
       virtual double GetTime() const = 0;
@@ -177,8 +186,6 @@ namespace ColregSimulation
       virtual const settings::map_settings& GetChartGridMeta() const = 0;
       //! Текущая навигационная оценка с решениями
       //virtual const iSimulationEstimation* GetEstimation() const = 0;
-
-      //virtual const colreg::iChartSafetyCheck* GetSafetyChecker() const = 0;
 
       //virtual const colreg::settings& GetSettings() const = 0;
 
@@ -190,7 +197,7 @@ namespace ColregSimulation
 
       //virtual colreg::id_type OwnShipId() const = 0;
 
-      virtual bool PrepareDataForSave(/*const ScenarioIO::scenario_data* pInputScenarioData, ScenarioIO::scenario_data* pScenarioData, */const bool focused, const colreg::geo_points_ref& ships, const colreg::base_ref<colreg::geo_points_ref>& chart_objects) const = 0;
+      virtual bool PrepareDataForSave(const bool focused, const colreg::geo_points_vct_ref ships, const chart_object::chart_object_unit_vct_ref chart_objects) const = 0;
 
       virtual ~iSimulationState() = default;
    };
@@ -202,11 +209,26 @@ namespace ColregSimulation
       SPT_SIZE
    };
 
-   //! Интерфейс симулятора колрега
+   //! Интерфейс симулятора
    struct iSimulator : colreg::iReleasable
    {
       //! Получить корневой элемент, который будет заполняться дебажной информацией
-      virtual dbg::iDebugInfo* GetDebugInfo() const = 0;
+      //virtual dbg::iDebugInfo* GetDebugInfo() const = 0;
+
+      //! Реакция на загрузку метаданных сценария
+      virtual bool CheckOpenScenario() = 0;
+
+      //! Загрузить обработанную карту высот
+      virtual bool LoadProcessedMap() = 0;
+
+      //! Загрузить сгенерированные объекты карты
+      virtual bool LoadProcessedMapObjects() = 0;
+
+      //! Загрузить рассчитанный стандартный путь
+      virtual bool LoadProcessedPaths() = 0;
+
+      //! Загрузить рассчитанные оптимизированные пути
+      virtual bool LoadProcessedOptPaths() = 0;
 
       //! Запуск симулятора
       virtual void Start() = 0;
@@ -245,13 +267,13 @@ namespace ColregSimulation
       virtual const ColregSimulation::SIMULATION_PLAYER_TYPE GetSimulationType() = 0;
 
       //! Установить настройки
-      //virtual void SetAppSettings(const settings::application_settings& s) = 0;
+      virtual void SetAppSettings(const settings::application_settings& s) = 0;
       
       //! Перезагрузить настройки с xml
       virtual void ReloadSettings() = 0;
 
       //! Взять настройки
-      virtual const std::shared_ptr<settings::application_settings>& GetAppSettings() const = 0;
+      virtual const settings::application_settings& GetAppSettings() const = 0;
       
       //! Перерасчет путей
       virtual void RecountRoutes() = 0;
@@ -265,8 +287,14 @@ namespace ColregSimulation
       //! Статус сценария
       virtual SCENARIO_STATUS GetSimulatorScenarioState() const = 0;
 
+      //! Статус симуляции
+      virtual SIMULATION_STATUS GetSimulatorSimulationState() const = 0;
+
       //! Установка статуса сценария
       virtual void SetSimulatorScenarioState(SCENARIO_STATUS) = 0;
+
+      //! Установка статуса симуляции
+      virtual void SetSimulatorSimulationState(SIMULATION_STATUS) = 0;
 
       /*!
       \brief Добавить динамические объекты карты в симуляцию

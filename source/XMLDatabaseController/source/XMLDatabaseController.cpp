@@ -3,8 +3,13 @@
 
 using namespace database;
 
-XMLDatabaseController::XMLDatabaseController()
+XMLDatabaseController::XMLDatabaseController(central_pack* pack)
+   : Central(pack)
 {}
+
+void XMLDatabaseController::Connect(const char*)
+{
+}
 
 void XMLDatabaseController::SaveScenarioData(const settings::unit_source_data& unitData, const std::vector<std::vector<double>>& coordGrid)
 {
@@ -12,6 +17,10 @@ void XMLDatabaseController::SaveScenarioData(const settings::unit_source_data& u
 }
 
 void XMLDatabaseController::SaveAppSettings()
+{
+}
+
+void XMLDatabaseController::SaveDataStandartHashJunction(data_hash::hash_junction&)
 {
 }
 
@@ -23,7 +32,12 @@ void XMLDatabaseController::LoadAppSettings()
 {
 }
 
-database::iSVGMDatabaseController* CreateXMLDatabaseController()
+bool XMLDatabaseController::CheckDataStandartHashJunction(data_hash::hash_junction&)
 {
-   return new database::XMLDatabaseController();
+   return true;
+}
+
+database::iSVGMDatabaseController* CreateXMLDatabaseController(central_pack* pack)
+{
+   return new database::XMLDatabaseController(pack);
 }

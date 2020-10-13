@@ -88,7 +88,7 @@ int CAppStatusView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 void CAppStatusView::OnNMDblclkTree1(NMHDR* pNMHDR, LRESULT* pResult)
 {
-	UINT nFlags;
+	//UINT nFlags;
 	CPoint curPoint;
 	GetCursorPos(&curPoint);
 	*pResult = 1;

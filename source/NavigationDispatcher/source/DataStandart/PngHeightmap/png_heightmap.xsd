@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+
+<!--
+
+file      : examples/cxx/tree/binary/boost/library.xsd
+copyright : not copyrighted - public domain
+
+-->
+
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns:xse="http://www.codesynthesis.com/xmlns/xml-schema-extension"
+            xmlns:lib="http://www.codesynthesis.com/library"
+            targetNamespace="http://www.codesynthesis.com/library">
+
+  <xsd:simpleType name="token">
+    <xsd:restriction base="xsd:string"/>
+  </xsd:simpleType>
+
+  <xsd:element name="token" type="lib:token"/>
+
+</xsd:schema>

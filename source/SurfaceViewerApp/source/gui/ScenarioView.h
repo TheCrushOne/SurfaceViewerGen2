@@ -49,10 +49,10 @@ public:
    virtual ~ScenarioView();
 
 protected:
-   bool OnScenarioLoad() override;
-   bool OnScenarioModified() override;
-   bool OnScenarioStatusChanged(ColregSimulation::SCENARIO_STATUS status) override;
+   bool OnScenarioScenarioStatusChanged(ColregSimulation::SCENARIO_STATUS status) override;
+   bool OnScenarioSimulationStatusChanged(ColregSimulation::SIMULATION_STATUS status) override;
    bool OnScenarioTimeChanged(double time) override { InvalidateView(); return true; }
+   bool OnScenarioModified() override { _renderer->Clear(); return true; }
 
    // Generated message map functions
 protected:
@@ -72,6 +72,12 @@ protected:
 
 private:
    void setTimer();
+
+   bool onScenarioCheckOpened();
+   bool onScenarioMapProcessed();
+   bool onScenarioMapObjProcessed();
+   bool onScenarioPathFound();
+   bool onScenarioOptPathFound();
 private:
    std::unique_ptr<render::iRender> _renderer;
    std::unique_ptr<LayersContainer> _layers;

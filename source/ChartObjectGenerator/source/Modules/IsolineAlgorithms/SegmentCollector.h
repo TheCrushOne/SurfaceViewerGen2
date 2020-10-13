@@ -3,14 +3,15 @@
 
 namespace chart_object
 {
-   class SegmentCollector : public iAlgorithm
+   class SegmentCollector : public AlgorithmBase
    {
    public:
-      SegmentCollector(std::function<void(const std::vector<math::geo_points>&, double, int)> adder)
-         : iAlgorithm(adder)
+      SegmentCollector(central_pack_ptr pack, navigation_dispatcher::iComServicePtr service)
+         : AlgorithmBase(pack, service)
+         , m_maxRadius(0)
       {}
 
-      void GenerateIsolineLevel(const converter::raw_data_ref& rawdata, double height, int H) override final;
+      chart_object::chart_object_unit_vct generateIsolineLevel(const pathfinder::GeoMatrix& rawdata, double height, int H) override final;
    private:
       double m_maxRadius;
    };

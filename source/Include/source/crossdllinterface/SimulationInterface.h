@@ -2,24 +2,25 @@
 
 #include "colreg/ColregSimulation.h"
 #include "common/central_class.h"
+#include "navdisp\ComService.h"
 
 namespace ColregSimulation
 {
    struct iSimulatorManager : colreg::iReleasable
    {
       //! Подготовка менеджера симуляторов
-      virtual void Init(central_pack*, iPropertyInterface*) = 0;
+      virtual void SetPropertyInterface(iPropertyInterface*) = 0;
 
       //! Получение симулятора в зависимости от расширения сценария и загрузка сценария
-      virtual iSimulator* Get() = 0;
+      virtual iSimulator* Get(navigation_dispatcher::iComServicePtr) = 0;
    };
 }
 
 
-#ifdef SIMULATION_DLL
+#ifdef SURFACESIMULATION_EXPORTS
 #define SIMEXPRTIMPRT __declspec(dllexport) // export DLL information
 #else
 #define SIMEXPRTIMPRT __declspec(dllimport) // import DLL information
 #endif
 
-extern "C" SIMEXPRTIMPRT ColregSimulation::iSimulatorManager * __cdecl CreateSimulationManager();
+extern "C" SIMEXPRTIMPRT ColregSimulation::iSimulatorManager * __cdecl CreateSimulationManager(central_pack*);

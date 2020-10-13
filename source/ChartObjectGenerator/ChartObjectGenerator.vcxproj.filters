@@ -31,7 +31,6 @@
     <ClInclude Include="source\Modules\IsolineGenerator.h">
       <Filter>Modules</Filter>
     </ClInclude>
-    <ClInclude Include="source\chart_storage.h" />
     <ClInclude Include="source\GeneratorModuleInterface.h" />
     <ClInclude Include="source\Modules\CoverageGenerator.h">
       <Filter>Modules</Filter>

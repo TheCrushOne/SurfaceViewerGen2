@@ -57,47 +57,84 @@
     <ClInclude Include="source\colreg\XMLSettingsSerializer.h" />
     <ClInclude Include="source\common\base_class.h" />
     <ClInclude Include="source\common\central_class.h" />
+    <ClInclude Include="source\common\chart_object.h" />
     <ClInclude Include="source\common\communicator.h" />
     <ClInclude Include="source\common\converter_structs.h" />
     <ClInclude Include="source\common\coordinates.h" />
     <ClInclude Include="source\common\database_misc.h" />
+    <ClInclude Include="source\common\data_hash.h" />
+    <ClInclude Include="source\common\dispatcher_command.h" />
+    <ClInclude Include="source\common\enum_class.h" />
     <ClInclude Include="source\common\file_storage.h" />
+    <ClInclude Include="source\common\global.h" />
     <ClInclude Include="source\common\global_structs.h" />
+    <ClInclude Include="source\common\header_collector.h" />
+    <ClInclude Include="source\common\holder_base.h" />
     <ClInclude Include="source\common\observer.h" />
     <ClInclude Include="source\common\pathfinder_structs.h" />
     <ClInclude Include="source\common\pathfinder_types.h" />
     <ClInclude Include="source\common\research_structs.h" />
     <ClInclude Include="source\common\research_types.h" />
-    <ClInclude Include="source\common\settings.h" />
-    <ClInclude Include="source\common\settings_meta.h" />
-    <ClInclude Include="source\common\settings_types.h" />
+    <ClInclude Include="source\common\servicable.h" />
     <ClInclude Include="source\common\simulation_structs.h" />
     <ClInclude Include="source\common\transceiver_types.h" />
     <ClInclude Include="source\common\utils.h" />
-    <ClInclude Include="source\crossdllinterface\ChartObjectGeneratorInterface.h" />
-    <ClInclude Include="source\crossdllinterface\ConverterInterface.h" />
+    <ClInclude Include="source\crossdllinterface\ChecksumServiceInterface.h" />
     <ClInclude Include="source\crossdllinterface\DataShareInterface.h" />
     <ClInclude Include="source\crossdllinterface\EngineInterface.h" />
     <ClInclude Include="source\crossdllinterface\FileStorageInterface.h" />
-    <ClInclude Include="source\crossdllinterface\PackHoundInterface.h" />
+    <ClInclude Include="source\crossdllinterface\MCMInterface.h" />
+    <ClInclude Include="source\crossdllinterface\NavigationDispatcherInterface.h" />
+    <ClInclude Include="source\crossdllinterface\PythonWrapperInterface.h" />
     <ClInclude Include="source\crossdllinterface\RawDataInterface.h" />
     <ClInclude Include="source\crossdllinterface\SettingsSerializerInterface.h" />
     <ClInclude Include="source\crossdllinterface\SimulationInterface.h" />
     <ClInclude Include="source\crossdllinterface\SurfaceInterfaces.h" />
+    <ClInclude Include="source\crossdllinterface\SurfaceViewerOrderingWrapperInterface.h" />
     <ClInclude Include="source\crossdllinterface\SVGMDatabaseInterface.h" />
+    <ClInclude Include="source\crossdllinterface\TaskInterface.h" />
     <ClInclude Include="source\crossdllinterface\TransceiverInterface.h" />
     <ClInclude Include="source\crossdllinterface\UnitDataSerializerInterface.h" />
     <ClInclude Include="source\crossdllinterface\UniversalLoggerInterface.h" />
     <ClInclude Include="source\database\sqlite3.h" />
+    <ClInclude Include="source\datastandart\ChartObjectDataStandartInterface.h" />
+    <ClInclude Include="source\datastandart\DataStandart.h" />
+    <ClInclude Include="source\datastandart\DataStandartFactory.h" />
+    <ClInclude Include="source\datastandart\DataStandartInterfaceBase.h" />
+    <ClInclude Include="source\datastandart\DataStandartStruct.h" />
+    <ClInclude Include="source\datastandart\DataStandartTypes.h" />
+    <ClInclude Include="source\datastandart\OptimizedPathStorageDataStandartInterface.h" />
+    <ClInclude Include="source\datastandart\PackHoundDataStandartInterface.h" />
+    <ClInclude Include="source\datastandart\PathStorageDataStandartInterface.h" />
+    <ClInclude Include="source\datastandart\PngHeightMapDataStandartInterface.h" />
+    <ClInclude Include="source\datastandart\SVGenMapDataStandartInterface.h" />
+    <ClInclude Include="source\json\json_wrapper.h" />
+    <ClInclude Include="source\json\json_wrapper_impl.h" />
     <ClInclude Include="source\math\ellipse.h" />
     <ClInclude Include="source\math\intersect.h" />
     <ClInclude Include="source\math\math_utils.h" />
     <ClInclude Include="source\math\point.h" />
     <ClInclude Include="source\math\transform.h" />
+    <ClInclude Include="source\navdisp\ComService.h" />
+    <ClInclude Include="source\navdisp\ConfigDispatcher.h" />
+    <ClInclude Include="source\navdisp\NavDispTypes.h" />
+    <ClInclude Include="source\navdisp\OrderBase.h" />
+    <ClInclude Include="source\navdisp\OrderCreation.h" />
+    <ClInclude Include="source\navdisp\OrderFactory.h" />
+    <ClInclude Include="source\navdisp\OrderInterface.h" />
+    <ClInclude Include="source\navdisp\OrderProcessor.h" />
+    <ClInclude Include="source\navdisp\OrderStruct.h" />
+    <ClInclude Include="source\settings\settings.h" />
+    <ClInclude Include="source\settings\SettingsSerializerHolder.h" />
+    <ClInclude Include="source\settings\settings_meta.h" />
+    <ClInclude Include="source\settings\settings_types.h" />
     <ClInclude Include="source\SVCG\position_point.h" />
     <ClInclude Include="source\SVCG\math_base_types.h" />
     <ClInclude Include="source\SVCG\positioning.h" />
     <ClInclude Include="source\SVCG\route_point.h" />
+    <ClInclude Include="source\ThirdParty\json\json-forwards.h" />
+    <ClInclude Include="source\ThirdParty\json\json.h" />
+    <ClInclude Include="source\ThirdParty\json\jsoncpp.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\colreg\ThirdParty\tinyxml2\tinyxml2.cpp" />
@@ -217,6 +254,7 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;INCLUDE_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

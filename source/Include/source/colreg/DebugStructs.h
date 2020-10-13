@@ -35,23 +35,25 @@ namespace dbg
       PointsLinkage points_linkage; ///< Соединение точек
    };
 
-   struct debug_info_node;
-   using debug_info_node_ref = colreg::base_ref<debug_info_node>;
-   using debug_info_node_roots_ref = colreg::base_ref<const debug_info_node*>;
+   //struct debug_info_node;
+   //typedef std::vector<debug_info_node> debug_info_node_vct;
+   //typedef debug_info_node_vct& debug_info_node_vct_ref;
+   //using debug_info_node_ref = colreg::base_ref<debug_info_node>;
+   //using debug_info_node_roots_ref = colreg::base_ref<const debug_info_node*>;
 
-   struct debug_info_node
+   /*struct debug_info_node
    {
       const wchar_t* name;
 
-      colreg::geo_points_ref points;
-      debug_info_node_ref subnodes;
+      colreg::geo_points_vct points;
+      debug_info_node_vct subnodes;
 
       debug_drawing_info drawing;
-   };
+   };*/
 
-   struct iDebugInfo
+   /*struct iDebugInfo
    {
-      virtual const debug_info_node_roots_ref* GetNodes() const = 0;
+      virtual const debug_info_node_vct_ref GetNodes() const = 0;
       virtual void Enable(colreg::id_type id, bool enable) = 0;
       virtual bool IsEnabled(colreg::id_type id) const = 0;
 
@@ -67,6 +69,6 @@ namespace dbg
          const char* text = nullptr, size_t pixSz = dbg::DEFAULT_PIX_SIZE, size_t color = dbg::DEFAULT_COLOR, PointsLinkage ptsLinkage = dbg::PointsLinkage::PL_SOLID) = 0;
 
       virtual  ~iDebugInfo() = default;
-   };
+   };*/
 #pragma pack (pop)
 }

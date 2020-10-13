@@ -6,6 +6,7 @@
 #include <cstdarg>
 #include <memory>
 #include "colreg/Communicator.h"
+#include "global.h"
 
 #ifdef _WIN32
 #pragma warning (disable: 4996)
@@ -46,7 +47,8 @@ public:
       va_start(list, msg);
       vsprintf(str, msg, list);
       va_end(list);
-      return GetCommunicator()->Message(t, str);
+      auto comm = GetCommunicator();
+      return comm->Message(t, str);
    }
    virtual void SetCommunicator(ICommunicator* comm) = 0;
    virtual ICommunicator* GetCommunicator() = 0;

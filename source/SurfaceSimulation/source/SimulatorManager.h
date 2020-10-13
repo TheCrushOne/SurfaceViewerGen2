@@ -11,17 +11,19 @@ using iSimulatorPtr = std::unique_ptr<ColregSimulation::SimulatorBase, std::func
 class SimulatorManager : public ColregSimulation::iSimulatorManager, public Central
 {
 public:
+   SimulatorManager(central_pack* pack) : Central(pack) {}
+
    void Release() override final { delete this; }
 
-   void Init(central_pack* pack, iPropertyInterface* prop) final;
+   void SetPropertyInterface(iPropertyInterface* prop) override final;
 
-   ColregSimulation::iSimulator* Get() final;
+   ColregSimulation::iSimulator* Get(navigation_dispatcher::iComServicePtr service) override final;
 
 private:
    ColregSimulation::SIMULATION_PLAYER_TYPE getTypeFromExt(const char* ext) const;
    ColregSimulation::SIMULATION_PLAYER_TYPE correctXmlTypeByContent(const char* filename) const;
 
-   iSimulatorPtr createSimulationPlayer(ColregSimulation::SIMULATION_PLAYER_TYPE type);
+   iSimulatorPtr createSimulationPlayer(ColregSimulation::SIMULATION_PLAYER_TYPE type, navigation_dispatcher::iComServicePtr service);
 
 private:
    iPropertyInterface* m_prop = nullptr;

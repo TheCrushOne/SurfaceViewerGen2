@@ -11,8 +11,9 @@ bool TaskHolder::m_crsRaised = false;
 
 CRITICAL_SECTION critical_inner, critical_outer, critical_chck;
 
-TaskHolder::TaskHolder()
-   : status(HolderStatus::HS_IDLE)
+TaskHolder::TaskHolder(central_pack* pack)
+   : Central(pack)
+   , status(HolderStatus::HS_IDLE)
 {}
 
 TaskHolder::~TaskHolder()
@@ -97,7 +98,7 @@ void TaskHolder::onFinished(bool fromLaunch)
    }
    LeaveCriticalSection(&(fromLaunch ? critical_outer : critical_inner));
    if (status == HolderStatus::HS_FINISHED)
-      onTaskHolderFinished();
+      onTaskHolderFinished(); 
    //TaskHolder::m_sema->unlock();
 }
 

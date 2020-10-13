@@ -7,9 +7,9 @@
 
 namespace
 {
-   colreg::ModuleGuard<ColregSimulation::iSimulatorManager> _simMgr;
-   std::unique_ptr<CommunicatorWnd> comm(new CommunicatorWnd);
-   std::shared_ptr<central_pack> pack = std::make_shared<central_pack>(comm.get(), file_utils::global_path_storage{}, settings::application_settings{});  
+   colreg::ModuleGuard<ColregSimulation::iSimulatorManager, central_pack*> _simMgr;
+   std::shared_ptr<ICommunicator> comm = std::make_shared<CommunicatorWnd>();
+   std::shared_ptr<central_pack> pack = std::make_shared<central_pack>(comm);
    ColregSimulation::iSimulator* _simulator = nullptr;
 
    bool createSimulationManager()
@@ -19,7 +19,7 @@ namespace
          return true;
       }
       //const fpath simulatorPath = fpath::get_module_folder().append("ColregSimulation.dll");
-      auto simmgr = _simMgr.Create(SVGUtils::CurrentDllPath("SurfaceSimulation").c_str(), "CreateSimulationManager");
+      bool retval = _simMgr.Create(SVGUtils::CurrentDllPath("SurfaceSimulation").c_str(), "CreateSimulationManager", pack.get());
       if (!_simMgr.IsValid())
       {
          user_interface::RaiseError();
@@ -27,8 +27,7 @@ namespace
          user_interface::SetOutputText(user_interface::OT_ERROR, errMsg.c_str());
          return false;
       }
-      _simMgr->Init(pack.get(), LayersContainer::GetLayerProperties());
-      return simmgr;
+      return retval;
    }
 }
 
@@ -57,16 +56,22 @@ namespace simulator
       simulatorReset ? _simulator->Reset() : _simulator->Stop();
    }
 
-   bool simulatorStart()
+   // TODO: раскомментить, если понадобится
+   bool simulatorInit(navigation_dispatcher::iComServicePtr service)
    {
-      if (!_simulator)
+      if (!_simMgr.IsValid())
          createSimulationManager();
 
-      simulatorStop();
-
       _simulator = nullptr;
+      _simulator = _simMgr->Get(service);
 
-      _simulator = _simMgr->Get();
+      return true;
+   }
+
+   bool simulatorStart()
+   {
+      ATLASSERT(_simMgr.IsValid());
+      simulatorStop();
 
       ATLASSERT(_simulator);
 

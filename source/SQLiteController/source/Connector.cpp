@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Connector.h"
+#include <filesystem>
 
 #pragma comment(lib, "SQLiteWrapper.lib")
 
@@ -7,6 +8,10 @@ using namespace database;
 
 void Connector::Connect(const char* baseFileName)
 {
+   // NOTE: каталога может не быть
+   std::filesystem::path path(baseFileName);
+   auto dir = path.parent_path();
+   std::filesystem::create_directories(dir);
    // открываем соединение
    if (sqlite3_open(baseFileName, &m_db))
    {

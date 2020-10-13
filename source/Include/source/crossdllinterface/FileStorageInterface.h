@@ -8,16 +8,15 @@ namespace file_storage
 {
    struct iFileStorageManager : colreg::iReleasable
    {
-      virtual void Init(central_pack*) = 0;
       virtual void PrepareStorage(const wchar_t*) = 0;
    };
 }
 
-#ifdef FSM_DLL
+#ifdef FILESTORAGEMANAGER_EXPORTS
 #define FSMEXPRTIMPRT __declspec(dllexport) // export DLL information
 #else
 #define FSMEXPRTIMPRT __declspec(dllimport) // import DLL information
 #endif
 
 
-extern "C" FSMEXPRTIMPRT file_storage::iFileStorageManager * CreateFileStorageManager();
+extern "C" FSMEXPRTIMPRT file_storage::iFileStorageManager * CreateFileStorageManager(central_pack*);

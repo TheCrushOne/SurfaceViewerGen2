@@ -20,7 +20,8 @@
 #pragma comment (lib, "Mswsock.lib")
 #pragma comment (lib, "AdvApi32.lib")
 
-TransceiverImpl::TransceiverImpl()
+TransceiverImpl::TransceiverImpl(central_pack* pack)
+   : Central(pack)
 {}
 
 void TransceiverImpl::Init(const transceiver::transceiver_info& info)
@@ -48,7 +49,7 @@ void TransceiverImpl::initClient()
    m_client->Init();
 }
 
-extern "C" transceiver::iTransceiver* CreateTransceiver()
+extern "C" transceiver::iTransceiver* CreateTransceiver(central_pack * pack)
 {
-   return new TransceiverImpl();
+   return new TransceiverImpl(pack);
 }

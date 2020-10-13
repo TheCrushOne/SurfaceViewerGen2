@@ -1,19 +1,38 @@
 #pragma once
 #include "common\observer.h"
 #include "colreg/ModuleGuard.h"
-#include "crossdllinterface/ConverterInterface.h"
 #include "crossdllinterface\TransceiverInterface.h"
 #include "crossdllinterface/DataShareInterface.h"
 #include "crossdllinterface\FileStorageInterface.h"
+#include "crossdllinterface\TaskInterface.h"
+#include "crossdllinterface/SurfaceViewerOrderingWrapperInterface.h"
 #include "common/file_storage.h"
+#include "common/transceiver_types.h"
 #include "colreg\ColregSimulation.h"
 #include "simulator\simulator.h"
+#include "navdisp\OrderBase.h"
+#include "navdisp\ComService.h"
 
 namespace ColregSimulation
 {
    enum class ROUTE_TYPE : char;
 }
 
+#define OBSERVABLE_ATTACH_NO_ARGS(obs, fun) \
+   obs.Attach(pObj, [wptr]() \
+   { \
+      auto ptr = wptr.lock(); \
+      if (ptr)return ptr->##fun(); \
+      return false; \
+   });
+
+#define OBSERVABLE_ATTACH_ARG(obs, fun, type) \
+   obs.Attach(pObj, [wptr](type var) \
+   { \
+      auto ptr = wptr.lock(); \
+      if (ptr)return ptr->##fun(var); \
+      return false; \
+   });
 /**
 * \класс ScenarioDispather
 * –егистрирует наблюдателей дл€ рассылки уведомлений изменений при работе сценари€
@@ -31,65 +50,40 @@ public:
    {
       std::weak_ptr<T> wptr{ pObj };
 
-      m_observable.Attach(pObj, [wptr]()
-         {
-            auto ptr = wptr.lock();
-            if (ptr)return ptr->OnScenarioLoad();
-            return false;
-         });
-
-      m_observableF.Attach(pObj, [wptr]()
-         {
-            auto ptr = wptr.lock();
-            if (ptr)return ptr->OnScenarioPathFound();
-            return false;
-         });
-
-      m_observable2.Attach(pObj, [wptr](ColregSimulation::SCENARIO_STATUS status)
-         {
-            auto ptr = wptr.lock();
-            if (ptr)return ptr->OnScenarioStatusChanged(status);
-            return false;
-         });
-
-      m_observable3.Attach(pObj, [wptr](double time)
-         {
-            auto ptr = wptr.lock();
-            if (ptr)return ptr->OnScenarioTimeChanged(time);
-            return false;
-         });
-      m_observable4.Attach(pObj, [wptr]()
-         {
-            auto ptr = wptr.lock();
-            if (ptr)return ptr->OnScenarioModified();
-            return false;
-         });
-
-      m_observable5.Attach(pObj, [wptr]()
-         {
-            auto ptr = wptr.lock();
-            if (ptr)return ptr->OnAppQuit();
-            return false;
-         });
+      //OBSERVABLE_ATTACH_NO_ARGS(m_observableCheckOpened, OnScenarioCheckOpened);
+      //OBSERVABLE_ATTACH_NO_ARGS(m_observableMapProcessed, OnScenarioMapProcessed);
+      //OBSERVABLE_ATTACH_NO_ARGS(m_observablePathFound, OnScenarioPathFound);
+      //OBSERVABLE_ATTACH_NO_ARGS(m_observableOptPathFound, OnScenarioOptPathFound);
+      OBSERVABLE_ATTACH_ARG(m_observableSimulationStatusChanged, OnScenarioSimulationStatusChanged, ColregSimulation::SIMULATION_STATUS);
+      OBSERVABLE_ATTACH_ARG(m_observableScenarioStatusChanged, OnScenarioScenarioStatusChanged, ColregSimulation::SCENARIO_STATUS);
+      OBSERVABLE_ATTACH_ARG(m_observableTimeChanged, OnScenarioTimeChanged, double);
+      OBSERVABLE_ATTACH_NO_ARGS(m_observableModified, OnScenarioModified);
+      OBSERVABLE_ATTACH_NO_ARGS(m_observableQuit, OnAppQuit);
    }
 
-   bool OnScenarioLoad() { return m_observable.Notify(false); }
-   bool OnScenarioPathFound() { return m_observableF.Notify(false); }
-   bool OnScenarioStatusChanged(ColregSimulation::SCENARIO_STATUS status) { return m_observable2.Notify(false, status); }
-   bool OnScenarioTimeChanged(double time) { return m_observable3.Notify(false, time); }
-   bool OnScenarioModified() { return m_observable4.Notify(false); }
-   bool OnAppQuit() { return m_observable5.Notify(false); }
+   //bool OnScenarioCheckOpened() { return m_observableCheckOpened.Notify(false); }
+   //bool OnScenarioMapProcessed() { return m_observableMapProcessed.Notify(false); }
+   //bool OnScenarioPathFound() { return m_observablePathFound.Notify(false); }
+   //bool OnScenarioOptPathFound() { return m_observableOptPathFound.Notify(false); }
+   bool OnScenarioSimulationStatusChanged(ColregSimulation::SIMULATION_STATUS status) { return m_observableSimulationStatusChanged.Notify(false, status); }
+   bool OnScenarioScenarioStatusChanged(ColregSimulation::SCENARIO_STATUS status) { return m_observableScenarioStatusChanged.Notify(false, status); }
+   bool OnScenarioTimeChanged(double time) { return m_observableTimeChanged.Notify(false, time); }
+   bool OnScenarioModified() { return m_observableModified.Notify(false); }
+   bool OnAppQuit() { return m_observableQuit.Notify(false); }
 
 private:
    ScenarioDispather() = default;
    ScenarioDispather(const ScenarioDispather&) = delete;
    ScenarioDispather& operator=(const ScenarioDispather&) = delete;
-   Observable< NoLock, bool > m_observable;
-   Observable< NoLock, bool > m_observableF;
-   Observable< NoLock, bool, ColregSimulation::SCENARIO_STATUS  > m_observable2;
-   Observable< NoLock, bool, double  > m_observable3;
-   Observable< NoLock, bool > m_observable4;
-   Observable< NoLock, bool > m_observable5;
+   //Observable<NoLock, bool> m_observableCheckOpened;
+   //Observable<NoLock, bool> m_observableMapProcessed;
+   //Observable<NoLock, bool> m_observablePathFound;
+   //Observable<NoLock, bool> m_observableOptPathFound;
+   Observable<NoLock, bool, ColregSimulation::SIMULATION_STATUS> m_observableSimulationStatusChanged;
+   Observable<NoLock, bool, ColregSimulation::SCENARIO_STATUS> m_observableScenarioStatusChanged;
+   Observable<NoLock, bool, double> m_observableTimeChanged;
+   Observable<NoLock, bool> m_observableModified;
+   Observable<NoLock, bool> m_observableQuit;
    friend class Singleton< ScenarioDispather >;
 };
 
@@ -105,10 +99,12 @@ public:
       m_pHolder = pHolder;
       ScenarioDispather::GetInstance().AddReciever(shared_from_this());
    }
-
-   bool OnScenarioLoad() { return m_pHolder->OnScenarioLoad(); }
-   bool OnScenarioPathFound() { return m_pHolder->OnScenarioPathFound(); }
-   bool OnScenarioStatusChanged(ColregSimulation::SCENARIO_STATUS status) { return m_pHolder->OnScenarioStatusChanged(status); }
+   //bool OnScenarioCheckOpened() { return m_pHolder->OnScenarioCheckOpened(); }
+   //bool OnScenarioMapProcessed() { return m_pHolder->OnScenarioMapProcessed(); }
+   //bool OnScenarioPathFound() { return m_pHolder->OnScenarioPathFound(); }
+   //bool OnScenarioOptPathFound() { return m_pHolder->OnScenarioOptPathFound(); }
+   bool OnScenarioSimulationStatusChanged(ColregSimulation::SIMULATION_STATUS status) { return m_pHolder->OnScenarioSimulationStatusChanged(status); }
+   bool OnScenarioScenarioStatusChanged(ColregSimulation::SCENARIO_STATUS status) { return m_pHolder->OnScenarioScenarioStatusChanged(status); }
    bool OnScenarioTimeChanged(double time) { return m_pHolder->OnScenarioTimeChanged(time); }
    bool OnScenarioModified() { return m_pHolder->OnScenarioModified(); }
    bool OnAppQuit() { return m_pHolder->OnAppQuit(); };
@@ -130,9 +126,12 @@ protected:
       m_spObserver = ScenarioObserver< ScenarioObserverBase >::Create();
       m_spObserver->Init(this);
    }
-   virtual bool OnScenarioLoad() { return false; }
-   virtual bool OnScenarioPathFound() { return false; }
-   virtual bool OnScenarioStatusChanged(ColregSimulation::SCENARIO_STATUS status) { return false; }
+   //virtual bool OnScenarioCheckOpened() { return false; }
+   //virtual bool OnScenarioMapProcessed() { return false; }
+   //virtual bool OnScenarioPathFound() { return false; }
+   //virtual bool OnScenarioOptPathFound() { return false; }
+   virtual bool OnScenarioSimulationStatusChanged(ColregSimulation::SIMULATION_STATUS status) { return false; }
+   virtual bool OnScenarioScenarioStatusChanged(ColregSimulation::SCENARIO_STATUS status) { return false; }
    virtual bool OnScenarioTimeChanged(double time) { return false; }
    virtual bool OnScenarioModified() { return false; }
    virtual bool OnAppQuit() { return false; };
@@ -144,12 +143,16 @@ private:
 
 
 class ScenarioManager
-   : public Singleton< ScenarioManager>
+   : public Singleton< ScenarioManager, central_pack*>
 {
 public:
-   ScenarioManager();
+   ScenarioManager(central_pack*);
 public:
-   void Open(const wchar_t* name);
+   void CheckOpen(const wchar_t*, std::function<void(void)>);
+   void ProcessMap(std::function<void(void)>);
+   void ProcessMapObjects(std::function<void(void)>);
+   void ProcessPaths(std::function<void(void)>);
+   void ProcessOptPaths(std::function<void(void)>);
 
    void Run();
    void Pause();
@@ -164,24 +167,31 @@ public:
       auto sim = simulator::getSimulator();
       if (!sim)
          return;
-      if (sim->GetSimulatorScenarioState() == ColregSimulation::SCENARIO_STATUS::SS_RUN)
-         setState(ColregSimulation::SCENARIO_STATUS::SS_RUN, true);
+      if (sim->GetSimulatorSimulationState() == ColregSimulation::SIMULATION_STATUS::SS_RUN)
+         setState(ColregSimulation::SIMULATION_STATUS::SS_RUN, true);
    }
    int GetTimeScale()const { return m_timeScale; }
 
-   std::wstring GetScenarioName() const { return m_scenarioFile; }
+   std::wstring GetScenarioName() const { return m_pathStorage.meta_path.path; }
 
    void ReSearch();
    void ReEstimate();
    void LogResearchResult();
-   bool OnScenarioPathFound() { return ScenarioDispather::GetInstance().OnScenarioPathFound(); }
+   //bool OnScenarioPathFound() { return ScenarioDispather::GetInstance().OnScenarioPathFound(); }
 
-   ColregSimulation::SCENARIO_STATUS GetState()
+   ColregSimulation::SCENARIO_STATUS GetScenarionState()
    {
       auto sim = simulator::getSimulator();
       if (!sim)
          return ColregSimulation::SCENARIO_STATUS::SS_NOT_LOADED;
       return sim->GetSimulatorScenarioState();
+   }
+   ColregSimulation::SIMULATION_STATUS GetSimulationState()
+   {
+      auto sim = simulator::getSimulator();
+      if (!sim)
+         return ColregSimulation::SIMULATION_STATUS::SS_STOP;
+      return sim->GetSimulatorSimulationState();
    }
 
    bool GetAutoPause() const { return m_autoPause; }
@@ -198,21 +208,22 @@ public:
    void SetDebugMode(bool debug);
 private:
    //ScenarioManager() = default;
-   friend class Singleton< ScenarioManager>;
+   friend class Singleton< ScenarioManager, central_pack*>;
    friend class ScenarioDispather;
 
-   void save(const char* fileName = 0, bool focused = false);
-   void setState(ColregSimulation::SCENARIO_STATUS state, bool force = false);
+   void processMapCommand(std::function<void(void)>);
+   void processMapObjCommand(std::function<void(void)>);
+   void processPathCommand(std::function<void(void)>);
+   void processOptPathCommand(std::function<void(void)>);
 
-   void printSolutuins();
-   void printEnentsAndSuggestions();
-   
+   void save(const char* fileName = 0, bool focused = false);
+   void setState(ColregSimulation::SIMULATION_STATUS state, bool force = false);
 
    void createTransceiver();
    void initTransceiver();
    void callback(const char*);
 private:
-   colreg::ModuleGuard<converter::iConverter> m_converter;
+   //colreg::ModuleGuard<navigation_dispatcher::iOrder, central_pack*, navigation_dispatcher::iComService*> m_converter;
    bool m_autoPause = true;
    //ColregSimulation::SCENARIO_STATUS m_state = ColregSimulation::SCENARIO_STATUS::SS_NOT_LOADED;
    bool m_showRelations = false;
@@ -220,8 +231,25 @@ private:
    bool m_debugMode = false;
    int m_timeScale = 10;
    bool m_recording = false;
-   std::wstring m_scenarioFile;
+
+   bool m_mapCommandProcessed = false;
+   bool m_pathCommandProcessed = false;
+   bool m_optPathCommandProcessed = false;
+
+   std::wstring m_databaseFolder;
+   std::wstring m_cacheFolder;
+
+   file_utils::global_path_storage m_pathStorage;
+
+   std::wstring m_svgmCacheFolder = L"\\svgm";
+   std::wstring m_objMapCacheFolder = L"\\obj";
+   std::wstring m_pathsCacheFolder = L"\\paths";
+   std::wstring m_optPathsCacheFolder = L"\\opt_paths";
+
    colreg::ModuleGuard<transceiver::iTransceiver> m_transceiver;
    colreg::ModuleGuard<file_storage::iFileStorageManager> m_fsm;
+   colreg::ModuleGuard<surface_ordering::iOrderingWrapper, central_pack_ptr, const wchar_t*> m_orderingWrapper;
+   colreg::ModuleGuard<navigation_dispatcher::iComService, central_pack_ptr, const char*> m_comService;
+
    transceiver::transceiver_info m_info;
 };

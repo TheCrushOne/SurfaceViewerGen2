@@ -34,6 +34,17 @@ namespace colreg
          return _guard != nullptr;
       }
 
+      ModuleGuard<TInterface, TCreationArgs...>& operator=(ModuleGuard<TInterface, TCreationArgs...>&& rhs)
+      {
+         if (this == &rhs)
+            return *this;
+
+         _guard = std::move(rhs._guard);
+         //rhs._guard = nullptr;
+
+         return *this;
+      }
+
       bool IsValid() const
       {
          return _handle && _guard;

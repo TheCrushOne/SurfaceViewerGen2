@@ -32,15 +32,9 @@ protected:
    UINT m_nCurrSort;
 
    void fillClassView();
-   bool OnScenarioTimeChanged(double time)override
-   {
-      CMFCToolBarButton* button = DYNAMIC_DOWNCAST(CMFCToolBarButton, m_wndToolBar.GetButton(2));
-      if (_autoUpdate)
-         fillClassView();
-      return true;
-   }
-
-   bool OnScenarioLoad() override { m_treeFilters.DeleteAllItems(); fillClassView(); return true; }
+   bool OnScenarioScenarioStatusChanged(ColregSimulation::SCENARIO_STATUS status) override;
+   bool OnScenarioSimulationStatusChanged(ColregSimulation::SIMULATION_STATUS status) override { return true; }
+   bool OnScenarioTimeChanged(double time) override;   
 
    // Overrides
 public:
@@ -65,6 +59,11 @@ protected:
    DECLARE_MESSAGE_MAP()
 
 private:
+   bool onScenarioCheckOpened();
+   bool onScenarioMapProcessed();
+   bool onScenarioMapObjProcessed();
+   bool onScenarioPathFound();
+   bool onScenarioOptPathFound();
 
    void recursive_set_check(HTREEITEM hRoot, bool check);
    void fillSubFilters(HTREEITEM hParent, const filter_info& filter);

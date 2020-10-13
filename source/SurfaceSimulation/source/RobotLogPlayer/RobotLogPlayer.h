@@ -10,7 +10,7 @@ namespace ColregSimulation
       , public SimulatorBase
    {
    public:
-      RobotLogPlayer(iPropertyInterface* prop);
+      RobotLogPlayer(central_pack*, iPropertyInterface*, navigation_dispatcher::iComServicePtr);
       ~RobotLogPlayer() = default;
 
       // iSimulator impl
@@ -37,10 +37,10 @@ namespace ColregSimulation
       const iUnit* GetUnitById(colreg::id_type id) const override final;
       double GetTime() const override final;
       const settings::map_settings& GetChartGridMeta() const override final;
-      const colreg::chart_objects_ref& GetChartObjects() const override final;
-      const colreg::chart_object* GetChartObject(colreg::chart_object_id id) const override final;
-      bool PrepareDataForSave(/*const ScenarioIO::scenario_data* pInputScenarioData, ScenarioIO::scenario_data* pScenarioData, */const bool focused, const colreg::geo_points_ref& ships, const colreg::base_ref<colreg::geo_points_ref>& chart_objects) const override final;
+      const chart_object::chart_object_unit_vct_ref GetChartObjects() const override final;
+      const chart_object::chart_object_unit* GetChartObject(colreg::chart_object_id id) const override final;
+      bool PrepareDataForSave(const bool focused, const colreg::geo_points_vct_ref ships, const chart_object::chart_object_unit_vct_ref chart_objects) const override final;
    private:
-      colreg::chart_objects_ref m_chartObjects;
+      chart_object::chart_object_unit_vct m_chartObjects;
    };
 }

@@ -2,6 +2,8 @@
 
 #include "CommonStructs.h"
 #include "BaseRef.h"
+#include <string>
+#include <vector>
 
 namespace colreg
 {
@@ -37,9 +39,9 @@ namespace colreg
       double right_XTE; ///< Максимальное боковое смещение справа, мили
    };
 
-   using geo_points_ex_ref = base_ref<geo_point_ex>;
+   //using geo_points_ex_ref = base_ref<geo_point_ex>;
 
-   struct simple_prop
+   /*struct simple_prop
    {
       simple_prop() = default;
 
@@ -50,13 +52,13 @@ namespace colreg
 
       const char* key;
       const char* val;
-   };
+   };*/
 
-   struct simple_prop_holder
+   struct simple_prop/*_holder*/
    {
-      simple_prop_holder() = default;
+      simple_prop/*_holder*/() = default;
 
-      simple_prop_holder(std::string k, std::string v)
+      simple_prop/*_holder*/(std::string k, std::string v)
          : key{ k }
          , val{ v }
       {}
@@ -65,7 +67,9 @@ namespace colreg
       std::string val;
    };
 
-   using object_props_ref = base_ref<simple_prop>;
+   //using object_props_ref = base_ref<simple_prop>
+   typedef std::vector<simple_prop> object_props_vct;
+   typedef object_props_vct& object_props_vct_ref;
 
    using chart_object_id = unsigned long long;
    //struct chart_object_id
@@ -87,28 +91,33 @@ namespace colreg
    //};
 
    //! Геометрия объекта карты
-   using object_geometry_ref = base_ref<geo_points_ref>;
+   //using object_geometry_ref = base_ref<geo_points_ref>;
+   typedef std::vector<geo_point> geo_contour;
+   typedef std::vector<geo_contour> geo_contour_vct;
+   typedef geo_contour_vct& geo_contour_vct_ref;
 
-   struct chart_object
+   /*struct chart_object
    {
       chart_object() = default;
 
-      chart_object(OBJECT_TYPE t, const object_geometry_ref& g, const object_props_ref& p)
+      chart_object(OBJECT_TYPE t, const object_geometry_vct_ref g, const object_props_vct_ref p)
          : type{ t }, geom{ g }, props{ p }
       {}
 
-      chart_object(chart_object_id i, OBJECT_TYPE t, const object_geometry_ref& g, const object_props_ref& p)
+      chart_object(chart_object_id i, OBJECT_TYPE t, const object_geometry_vct_ref g, const object_props_vct_ref p)
          : id{ i }, type{ t }, geom{ g }, props{ p }
       {}
 
       chart_object_id id;
       OBJECT_TYPE     type;
 
-      object_geometry_ref geom;
-      object_props_ref    props; ///< Свойства объекта
-   };
+      object_geometry_vct geom;
+      object_props_vct    props; ///< Свойства объекта
+   };*/
 
-   using chart_objects_ref = base_ref<chart_object>;
+   /*typedef std::vector<chart_object> chart_object_vct;
+   typedef chart_object_vct& chart_object_vct_ref;*/
+   //using chart_objects_ref = base_ref<chart_object>;
 #pragma pack (pop)
 
    inline bool check_chart_obj_type(colreg::mask_type mask, OBJECT_TYPE type)

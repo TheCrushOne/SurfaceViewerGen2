@@ -2,6 +2,7 @@
 
 #include "SurfaceInterfaces.h"
 #include "common/transceiver_types.h"
+#include "common/central_class.h"
 #include <functional>
 
 namespace transceiver
@@ -19,4 +20,4 @@ namespace transceiver
 #define TRANSEXPRTIMPRT __declspec(dllimport) // import DLL information
 #endif
 
-extern "C" TRANSEXPRTIMPRT transceiver::iTransceiver * CreateTransceiver();
+extern "C" TRANSEXPRTIMPRT transceiver::iTransceiver * CreateTransceiver(central_pack * pack);

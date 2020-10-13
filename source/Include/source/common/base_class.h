@@ -32,13 +32,13 @@ private:
    const Noncopyable& operator=(const Noncopyable&) = delete;
 };
 
-template< class T >
+template< class T, typename... TCreationArgs>
 class Singleton : public  Noncopyable
 {
 public:
-   static T& GetInstance()
+   static T& GetInstance(TCreationArgs... creationProcArgs)
    {
-      static T instance;
+      static T instance(creationProcArgs...);
       return instance;
    }
 
@@ -306,4 +306,29 @@ public:
          _objects.erase(itf);
    }
    static ListObjects _objects;
+};
+
+
+template<typename T>
+class TransitPtr
+{
+public:
+   TransitPtr() {}
+   TransitPtr(const TransitPtr& parent)
+   {
+      m_data = parent.GetData();
+      m_dataPtr = std::make_shared<T>(m_data);
+   }
+   TransitPtr(const T& data)
+   {
+      m_data = data;
+      m_dataPtr = std::make_shared<T>(m_data);
+   }
+   T* Get() { return m_dataPtr.get(); }
+protected:
+   T& GetData() { return m_data; }
+private:
+   // HACK: создаём локальную копию данных, чтобы не продолбать инфу при уничтожении объекта от которого ссылка
+   T m_data;
+   std::shared_ptr<T> m_dataPtr;
 };

@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+
+<!--
+
+file      : examples/cxx/tree/binary/boost/library.xsd
+copyright : not copyrighted - public domain
+
+-->
+
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns:xse="http://www.codesynthesis.com/xmlns/xml-schema-extension"
+            xmlns:lib="http://www.codesynthesis.com/library"
+            targetNamespace="http://www.codesynthesis.com/library">
+
+  <xsd:simpleType name="id">
+    <xsd:restriction base="xsd:unsignedInt"/>
+  </xsd:simpleType>
+
+  <xsd:complexType name="command">
+    <xsd:attribute name="lang" type="xsd:language"/>
+  </xsd:complexType>
+
+  <xsd:complexType name="common">
+    <xsd:sequence>
+      <xsd:element name="id" type="lib:command" minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="commands">
+    <xsd:sequence>
+      <xsd:element name="id" type="lib:id" minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="data_standarts">
+    <xsd:sequence>
+      <xsd:element name="id" type="lib:id" minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:element name="common" type="lib:common"/>
+
+</xsd:schema>

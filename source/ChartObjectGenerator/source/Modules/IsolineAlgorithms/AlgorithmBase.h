@@ -1,18 +1,31 @@
 #pragma once
 #include "common/converter_structs.h"
 #include "common/central_class.h"
+#include "common/servicable.h"
+#include "common/chart_object.h"
+#include "common/pathfinder_structs.h"
 #include "math/math_utils.h"
 
 namespace chart_object
 {
-   struct iAlgorithm : public Central
+   struct iAlgorithm
    {
-      iAlgorithm(std::function<void(const std::vector<math::geo_points>&, double, int)> adder)
-         : m_chartObjectSetAdder(adder)
+      virtual chart_object::chart_object_unit_vct GenerateIsolineLevel(const pathfinder::GeoMatrix& rawdata, double height, int H) = 0;
+   protected:
+      virtual chart_object::chart_object_unit_vct generateIsolineLevel(const pathfinder::GeoMatrix& rawdata, double height, int H) = 0;
+   };
+
+   struct AlgorithmBase : public Central, public Servicable, public iAlgorithm
+   {
+      AlgorithmBase(central_pack_ptr pack, navigation_dispatcher::iComServicePtr service)
+         : Central(pack)
+         , Servicable(service)
       {}
 
-      virtual void GenerateIsolineLevel(const converter::raw_data_ref& rawdata, double height, int H) = 0;
+      chart_object::chart_object_unit_vct GenerateIsolineLevel(const pathfinder::GeoMatrix& rawdata, double height, int H) override final
+      {
+         return generateIsolineLevel(rawdata, height, H);
+      }
    protected:
-      std::function<void(const std::vector<math::geo_points>&, double, int)> m_chartObjectSetAdder;
    };
 }

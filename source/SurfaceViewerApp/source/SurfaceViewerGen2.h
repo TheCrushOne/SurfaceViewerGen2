@@ -9,6 +9,8 @@
 
 #include "resource.h"       // основные символы
 #include "colreg\ModuleGuard.h"
+#include "colreg/ColregSimulation.h"
+#include "scenario/ScenarioManager.h"
 
 // CSurfaceViewerGen2App:
 // Сведения о реализации этого класса: SurfaceViewerGen2.cpp
@@ -20,19 +22,47 @@ public:
    CSurfaceViewerGen2App() noexcept;
 protected:
    void createDirectXApp();
+   void refresh() { /*this->OnIdle(-1);*/ }
+   void recountSimulationControlStatus(ColregSimulation::SCENARIO_STATUS status)
+   {
+      ScenarioDispather::GetInstance().OnScenarioScenarioStatusChanged(status);
+      m_runStatus = status >= ColregSimulation::SCENARIO_STATUS::SS_PATHS_COUNTED;
+      m_runStepStatus = status >= ColregSimulation::SCENARIO_STATUS::SS_PATHS_COUNTED;
+      m_pauseStatus = status >= ColregSimulation::SCENARIO_STATUS::SS_PATHS_COUNTED;
+      m_stopStatus = status >= ColregSimulation::SCENARIO_STATUS::SS_PATHS_COUNTED;
+      m_chooseScenario = true;
+      m_processMap = status >= ColregSimulation::SCENARIO_STATUS::SS_MAP_CHECKOPENED;
+      m_processMapObj = status >= ColregSimulation::SCENARIO_STATUS::SS_MAP_PROCESSED;
+      m_simplePaths = status >= ColregSimulation::SCENARIO_STATUS::SS_MAPOBJ_PROCESSED;
+      m_optPaths = status >= ColregSimulation::SCENARIO_STATUS::SS_MAPOBJ_PROCESSED;
+   }
 // Переопределение
 public:
    virtual BOOL InitInstance();
    virtual BOOL OnIdle(LONG lCount);
    virtual int ExitInstance();
 
-   void RaiseCheckEngine() { m_checkEngineStatus = true; this->OnIdle(-1); }
+   void RaiseCheckEngine() { m_checkEngineStatus = true; refresh(); }
 
 // Реализация
    UINT  m_nAppLook;
    BOOL  m_bHiColorIcons;
    bool m_checkEngineStatus = false;
-   bool m_runStatus = true;
+
+   bool m_runStatus = false;
+   bool m_runStepStatus = false;
+   bool m_pauseStatus = false;
+   bool m_stopStatus = false;
+
+   bool m_timeScale1XStatus = false;
+   bool m_timeScale10XStatus = false;
+   bool m_timeScale100XStatus = false;
+
+   bool m_chooseScenario = true;
+   bool m_processMap = false;
+   bool m_processMapObj = false;
+   bool m_simplePaths = false;
+   bool m_optPaths = false;
 
    virtual void PreLoadState();
    virtual void LoadCustomState();
@@ -55,23 +85,35 @@ public:
    afx_msg void OnRunStep();
    afx_msg void OnPause();
    afx_msg void OnStop();
-   afx_msg void OnRuler();
-   afx_msg void OnSelect();
-   afx_msg void OnCreate();
-   afx_msg void OnEdit();
+
    afx_msg void OnTimeScale1X();
    afx_msg void OnTimeScale10X();
    afx_msg void OnTimeScale100X();
-   afx_msg void OnEnableTrafficStatistic();
-   afx_msg void OnAutoPause();
-   afx_msg void OnDelete();
-   afx_msg void OnRecord();
-   afx_msg void OnShowRelations();
-   afx_msg void OnUploadDangerStatistic();
+
+   //afx_msg void OnAutoPause();
+   afx_msg void OnChooseScenario();
+   afx_msg void OnProcessMap();
+   afx_msg void OnProcessMapObj();
+   afx_msg void OnProcessSimplePaths();
+   afx_msg void OnProcessOptimizedPaths();
    afx_msg void OnDebug();
    afx_msg void OnFalse();
 
    afx_msg void OnRunUpdateCommandUI(CCmdUI* pCmdUI);
+   afx_msg void OnStepUpdateCommandUI(CCmdUI* pCmdUI);
+   afx_msg void OnPauseUpdateCommandUI(CCmdUI* pCmdUI);
+   afx_msg void OnStopUpdateCommandUI(CCmdUI* pCmdUI);
+
+   afx_msg void On1XUpdateCommandUI(CCmdUI* pCmdUI);
+   afx_msg void On10XUpdateCommandUI(CCmdUI* pCmdUI);
+   afx_msg void On100XUpdateCommandUI(CCmdUI* pCmdUI);
+
+   afx_msg void OnChooseScenarioUpdateCommandUI(CCmdUI* pCmdUI);
+   afx_msg void OnProcessMapUpdateCommandUI(CCmdUI* pCmdUI);
+   afx_msg void OnProcessMapObjUpdateCommandUI(CCmdUI* pCmdUI);
+   afx_msg void OnProcessSimplePathsUpdateCommandUI(CCmdUI* pCmdUI);
+   afx_msg void OnProcessOptimizedPathsUpdateCommandUI(CCmdUI* pCmdUI);
+
    afx_msg void OnCheckEngineUpdateCommandUI(CCmdUI* pCmdUI);
 
    DECLARE_MESSAGE_MAP()

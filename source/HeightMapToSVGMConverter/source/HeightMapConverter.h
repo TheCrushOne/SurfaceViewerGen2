@@ -1,38 +1,43 @@
 #pragma once
-#include "crossdllinterface\ConverterInterface.h"
+#include "crossdllinterface\TaskInterface.h"
 #include "crossdllinterface\SVGMDatabaseInterface.h"
 #include "crossdllinterface\SettingsSerializerInterface.h"
 #include "crossdllinterface\UnitDataSerializerInterface.h"
 #include "colreg/ModuleGuard.h"
 #include "common/converter_structs.h"
+#include "datastandart\DataStandart.h"
+#include "datastandart\PngHeightMapDataStandartInterface.h"
+#include "datastandart\SVGenMapDataStandartInterface.h"
+#include "navdisp\OrderBase.h"
+#include "navdisp\OrderStruct.h"
 
 #include <png.h>
 
 namespace converter
 {
-   class HeightMapConverter : public iConverter, public Central
+   class HeightMapConverter
+      : public navigation_dispatcher::OrderBase<navigation_dispatcher::OrderType::OT_PNGHMCONVERT, navigation_dispatcher::png_hm_convert_order>
    {
    public:
-      HeightMapConverter();
-
-      void Init(central_pack* pack) override final { Central::Init(pack); }
-
-      bool Convert() override final;
+      HeightMapConverter(central_pack* pack, navigation_dispatcher::iComService* pService);
       void Release() override final { delete this; }
    private:
-      void readDataFromPng(const char* srcPath);
-      void convertToDatabaseFormat();
-      void safeReleaseData();
+      virtual bool processCommand() override final;
    private:
-      colreg::ModuleGuard<database::iSVGMDatabaseController> m_databaseController;
+      bool readFromSource(data_standart::iPngHeightMapDataStandart*);
+      bool writeToDestination(data_standart::iSurfaceVieverGenMapDataStandart*);
+      bool processData();
+   private:
+      
       colreg::ModuleGuard<colreg::iSettingsSerializer> m_settingsSerializer;
       colreg::ModuleGuard<colreg::iUnitDataSerializer> m_unitDataSerializer;
-      png_bytep* m_row_pointers = nullptr;
+      
       bool m_lock = false;
 
       std::vector<std::vector<double>> m_rawData;
       raw_data_ref m_rawDataRef;
-
-      settings::unit_source_data m_unitData;
+      data_standart::png_data m_srcRawData;
+      pathfinder::GeoMatrix m_dstRawData;
+      //settings::unit_source_data m_unitData;
    };
 }

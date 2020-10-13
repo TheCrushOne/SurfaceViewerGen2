@@ -1,0 +1,89 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="source\stdafx.cpp" />
+    <ClCompile Include="source\DataStandart\DataStandartBase.cpp">
+      <Filter>DataStandart</Filter>
+    </ClCompile>
+    <ClCompile Include="source\DataStandart\PngHeightMap\PngHeightMapDS.cpp">
+      <Filter>DataStandart\PngHeightMap</Filter>
+    </ClCompile>
+    <ClCompile Include="source\DataStandart\SurfaceVieverGeneralMap\SVGenMapDS.cpp">
+      <Filter>DataStandart\SurfaceViewerGeneralMap</Filter>
+    </ClCompile>
+    <ClCompile Include="source\DataStandart\ChartObject\ChartObjectDS.cpp">
+      <Filter>DataStandart\ChartObject</Filter>
+    </ClCompile>
+    <ClCompile Include="source\DataStandart\OptimizedPathStorage\OptimizedPathStorageDS.cpp">
+      <Filter>DataStandart\OptimizedPathStorage</Filter>
+    </ClCompile>
+    <ClCompile Include="source\DataStandart\PathStorage\PathStorageDS.cpp">
+      <Filter>DataStandart\PathStorage</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Include\source\colreg\ThirdParty\md5\md5.cpp">
+      <Filter>ThirdParty</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="source\stdafx.h" />
+    <ClInclude Include="source\DataStandart\DataStandartBase.h">
+      <Filter>DataStandart</Filter>
+    </ClInclude>
+    <ClInclude Include="source\DataStandart\PngHeightMap\PngHeightMapDS.h">
+      <Filter>DataStandart\PngHeightMap</Filter>
+    </ClInclude>
+    <ClInclude Include="source\DataStandart\SurfaceVieverGeneralMap\SVGenMapDS.h">
+      <Filter>DataStandart\SurfaceViewerGeneralMap</Filter>
+    </ClInclude>
+    <ClInclude Include="source\DataStandart\ChartObject\ChartObjectDS.h">
+      <Filter>DataStandart\ChartObject</Filter>
+    </ClInclude>
+    <ClInclude Include="source\DataStandart\OptimizedPathStorage\OptimizedPathStorageDS.h">
+      <Filter>DataStandart\OptimizedPathStorage</Filter>
+    </ClInclude>
+    <ClInclude Include="source\DataStandart\PathStorage\PathStorageDS.h">
+      <Filter>DataStandart\PathStorage</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\source\colreg\ThirdParty\md5\md5.h">
+      <Filter>ThirdParty</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Common\GeoJsonLoadHelper.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Common\GeoJsonSaveHelper.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Common\TagList.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="DataStandart">
+      <UniqueIdentifier>{cdb04880-34b6-4ec4-8c57-2b9d51d7821f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DataStandart\PngHeightMap">
+      <UniqueIdentifier>{b628ef8b-fb98-46a5-9248-51fe017c4729}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DataStandart\SurfaceViewerGeneralMap">
+      <UniqueIdentifier>{20b156bd-f6c2-44a3-af09-9fd23acc7a23}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DataStandart\ChartObject">
+      <UniqueIdentifier>{963866e8-5ca3-4040-a6c2-2f53847aa603}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DataStandart\PathStorage">
+      <UniqueIdentifier>{42ed57b5-3d45-4986-b2ba-296130a0d85f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DataStandart\OptimizedPathStorage">
+      <UniqueIdentifier>{687d21b3-6e6e-4beb-8f15-c8a12f5d51f1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ThirdParty">
+      <UniqueIdentifier>{c17e5496-3d8d-4e12-ae14-c990e1dd26e6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common">
+      <UniqueIdentifier>{7e41e2e3-7e3c-4810-8dd1-24b134e7ddd0}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+</Project>

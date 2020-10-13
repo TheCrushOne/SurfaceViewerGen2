@@ -11,15 +11,23 @@ public:
    ChartLayer() { initObjInfo(); }
 
    void Render(render::iRender* renderer) override;
-   bool OnScenarioLoad() override { m_chartUSN = colreg::INVALID_ID; return true; }
+   bool OnScenarioScenarioStatusChanged(ColregSimulation::SCENARIO_STATUS status) override;
+   bool OnScenarioSimulationStatusChanged(ColregSimulation::SIMULATION_STATUS status) override { return true; }
+   bool OnScenarioTimeChanged(double time) override { return true; }
    bool OnScenarioModified() { m_chartUSN = colreg::INVALID_ID; return true; }
 
    iProperty* GetProperties() override;
 
 private:
+   bool onScenarioCheckOpened();
+   bool onScenarioMapProcessed();
+   bool onScenarioMapObjProcessed();
+   bool onScenarioPathFound();
+   bool onScenarioOptPathFound();
+
    void initObjInfo();
-   bool synchronize_map(/*const colreg::iChartSafetyCheck* checker, */render::iRender* renderer, const colreg::chart_objects_ref& chartObjects);
-   void addChartObject(render::iRender* renderer, const colreg::chart_object& obj);
+   bool synchronize_map(render::iRender* renderer, const chart_object::chart_object_unit_vct_ref chartObjects);
+   void addChartObject(render::iRender* renderer, const chart_object::chart_object_unit& obj);
    void onLayerEnabledChanged() override;
    bool isLayerEnabled() const override { return true; }
 private:

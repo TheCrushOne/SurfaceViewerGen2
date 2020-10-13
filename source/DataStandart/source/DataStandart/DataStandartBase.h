@@ -2,6 +2,7 @@
 
 #include "datastandart\DataStandart.h"
 #include "navdisp/ComService.h"
+#include <filesystem>
 
 #include "json/json_wrapper.h"
 
@@ -25,7 +26,13 @@ namespace data_standart
       virtual LPCSTR getPath() = 0;
       // NOTE: לוים פאיכ
       virtual std::string getDataFilePath() = 0;
-      virtual size_t getDataHash() { return atoi(m_service->GetChecksumService()->CalcHash(getDataFilePath().c_str())); }
+      virtual size_t getDataHash()
+      {
+         std::filesystem::path filePath(getDataFilePath().c_str());
+         if (!std::filesystem::exists(filePath))
+            return data_hash::INVALID_HASH;
+         return atoi(m_service->GetChecksumService()->CalcHash(getDataFilePath().c_str()));
+      }
       // Common
    protected:
       std::wstring m_baseFolder;

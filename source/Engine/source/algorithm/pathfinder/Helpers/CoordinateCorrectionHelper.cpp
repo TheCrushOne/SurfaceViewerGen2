@@ -1,7 +1,9 @@
 #include "stdafx.h"
 #include "CoordinateCorrectionHelper.h"
 
-SVCG::route_point CoordinateCorrectionHelper::CorrectPoint(const std::shared_ptr<pathfinder::Matrix<SVCG::route_point>>& rawdata, int row, int col, affilationCheckerMtd checker, ICommunicator* communicator)
+using namespace SV;
+
+CG::route_point CoordinateCorrectionHelper::CorrectPoint(const std::shared_ptr<pathfinder::RoutePointMatrix>& rawdata, int row, int col, affilationCheckerMtd checker, ICommunicator* communicator)
 {
    auto rowCount = rawdata->GetRowCount();
    auto colCount = rawdata->GetColCount();

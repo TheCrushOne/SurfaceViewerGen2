@@ -19,7 +19,7 @@ namespace
    }
 }
 
-bool GDIRender::IsNeedRender(const math::geo_points& points)const
+bool GDIRender::IsNeedRender(const math::geo_contour& points)const
 {
    for (const auto& p : points)
    {

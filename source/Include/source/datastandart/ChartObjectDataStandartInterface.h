@@ -4,7 +4,7 @@
 #include "DataStandartInterfaceBase.h"
 #include "navdisp/ComService.h"
 
-namespace data_standart
+namespace SV::data_standart
 {
    struct geom_object_vec_junc
    {
@@ -18,7 +18,7 @@ namespace data_standart
       // Read
       virtual const geom_object_vec_junc& GetData() = 0;
       // Write
-      virtual void SetData(const chart_object::chart_object_unit_vct_ref, const chart_object::chart_object_unit_vct_ref) = 0;
+      virtual void SetData(const chart_object::chart_object_unit_vct&, const chart_object::chart_object_unit_vct&) = 0;
    };
 }
 
@@ -28,4 +28,4 @@ namespace data_standart
 #define CHARTOBJEXPRTIMPRT __declspec(dllimport) // import DLL information
 #endif
 
-extern "C" CHARTOBJEXPRTIMPRT data_standart::iDataStandart * CreateChartObjectDataStandart(central_pack * pack, LPCWSTR base_folder, navigation_dispatcher::iComService * pService);
+extern "C" CHARTOBJEXPRTIMPRT SV::data_standart::iDataStandart * CreateChartObjectDataStandart(central_pack * pack, LPCWSTR base_folder, navigation_dispatcher::iComService * pService);

@@ -16,7 +16,7 @@ void ChartObjectDataStandart::resolvePathDee()
       m_dataStandartData.folder = (std::filesystem::path(m_baseFolder) / filePath).generic_string().c_str();
 }
 
-void ChartObjectDataStandart::SetData(const chart_object::chart_object_unit_vct_ref staticObjVec, const chart_object::chart_object_unit_vct_ref dynamicObjVec)
+void ChartObjectDataStandart::SetData(const chart_object::chart_object_unit_vct& staticObjVec, const chart_object::chart_object_unit_vct& dynamicObjVec)
 {
    m_objectVecJunc.static_objects = staticObjVec;
    m_objectVecJunc.dynamic_objects = dynamicObjVec;

@@ -19,6 +19,8 @@
 
 namespace ColregSimulation
 {
+   constexpr double DefaultUnitSpeed = 10.;
+
    class SimulatorBase
       : public iSimulator
       , public Central
@@ -47,6 +49,8 @@ namespace ColregSimulation
       virtual void SetSimulatorScenarioState(SCENARIO_STATUS status) override final { m_scenarioStatus = status; }
       virtual void SetSimulatorSimulationState(SIMULATION_STATUS status) override final { m_simulationStatus = status; }
    protected:
+      void processRecountRouteVisualizeMeta(std::vector<settings::unit_data_element>&);
+      void calcStepCount();
       //void deserializeStandartAttrs()
    protected:
       settings::application_settings m_settings;

@@ -10,7 +10,7 @@
 #include "colreg/BaseRef.h"
 #include "colreg/XmlProperties/xml_property_container.h"
 
-namespace data_standart
+namespace SV::data_standart
 {
    struct iDataStandart : colreg::iReleasable
    {

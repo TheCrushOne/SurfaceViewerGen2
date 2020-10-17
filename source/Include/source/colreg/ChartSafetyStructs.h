@@ -1,6 +1,7 @@
 #pragma once
 
 #include "CommonStructs.h"
+#include "SVCG/base_geometry.h"
 #include "BaseRef.h"
 #include <string>
 #include <vector>
@@ -9,35 +10,20 @@ namespace colreg
 {
 #define _BIT_(n) (1i64 << n)
 
-   //! Типы опасных объектов карты
-   enum OBJECT_TYPE : unsigned long long int
-   {
-      OT_NONE = 0,
-
-      OT_BORDER_AREA = _BIT_(0),
-      OT_ISOLINE = _BIT_(1),
-      OT_NO_GO_AREA = _BIT_(2),
-      OT_NO_FLY_AREA = _BIT_(3),
-
-      OT_FORBIDDEN_AREAS = OT_NO_GO_AREA | OT_NO_FLY_AREA,
-      OT_AREAS = OT_BORDER_AREA | OT_NO_GO_AREA | OT_NO_FLY_AREA,
-      OT_LINES = OT_ISOLINE,
-
-      OT_ALL = 0xFFFFFFFFFFFFFFFF
-   };
+   
 #pragma pack (push, 1)
 
-   struct geo_point_ex : geo_point
-   {
-      geo_point_ex(const geo_point& p, double leftXTE, double rightXTE)
-         : geo_point(p)
-         , left_XTE{ leftXTE }
-         , right_XTE{ rightXTE }
-      {}
+   //struct geo_point_ex : geo_point
+   //{
+   //   geo_point_ex(const geo_point& p, double leftXTE, double rightXTE)
+   //      : geo_point(p)
+   //      , left_XTE{ leftXTE }
+   //      , right_XTE{ rightXTE }
+   //   {}
 
-      double left_XTE;  ///< Максимальное боковое смещение слева, мили
-      double right_XTE; ///< Максимальное боковое смещение справа, мили
-   };
+   //   double left_XTE;  ///< Максимальное боковое смещение слева, мили
+   //   double right_XTE; ///< Максимальное боковое смещение справа, мили
+   //};
 
    //using geo_points_ex_ref = base_ref<geo_point_ex>;
 
@@ -71,7 +57,6 @@ namespace colreg
    typedef std::vector<simple_prop> object_props_vct;
    typedef object_props_vct& object_props_vct_ref;
 
-   using chart_object_id = unsigned long long;
    //struct chart_object_id
    //{
    //   id_type static_id = INVALID_ID; ///< ID для статических объектов карты
@@ -92,9 +77,7 @@ namespace colreg
 
    //! Геометрия объекта карты
    //using object_geometry_ref = base_ref<geo_points_ref>;
-   typedef std::vector<geo_point> geo_contour;
-   typedef std::vector<geo_contour> geo_contour_vct;
-   typedef geo_contour_vct& geo_contour_vct_ref;
+   
 
    /*struct chart_object
    {
@@ -120,7 +103,7 @@ namespace colreg
    //using chart_objects_ref = base_ref<chart_object>;
 #pragma pack (pop)
 
-   inline bool check_chart_obj_type(colreg::mask_type mask, OBJECT_TYPE type)
+   inline bool check_chart_obj_type(SVCG::mask_type mask, OBJECT_TYPE type)
    {
       return (mask & type) != 0;
    }

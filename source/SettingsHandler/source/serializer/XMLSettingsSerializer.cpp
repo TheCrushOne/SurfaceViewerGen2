@@ -367,7 +367,7 @@ namespace colreg
             if (!nwItem)
                nwItem = &item->AddChild(name.c_str());
 
-            if (!it->get_childs().arr)
+            if (it->get_childs().empty())
             {
                ATLASSERT(nwItem);
                *nwItem = it->get_value();
@@ -401,7 +401,7 @@ namespace colreg
             auto nwItem = item->GetChild(name.c_str());
             if (!nwItem)
                continue;
-            if (!it->get_childs().arr)
+            if (it->get_childs().empty())
             {
                std::string data;
                nwItem->Get(data);

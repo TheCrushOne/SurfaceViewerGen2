@@ -74,7 +74,7 @@ size_t RobotLogPlayer::GetUnitCount(UNIT_TYPE type) const
    return 0;
 }
 
-const iUnit* RobotLogPlayer::GetUnitById(colreg::id_type id) const
+const iUnit* RobotLogPlayer::GetUnitById(SVCG::id_type id) const
 {
    return nullptr;
 }
@@ -95,17 +95,17 @@ const settings::map_settings& RobotLogPlayer::GetChartGridMeta() const
    return meta;
 }
 
-const chart_object::chart_object_unit_vct_ref RobotLogPlayer::GetChartObjects() const
+const chart_object::chart_object_unit_vct& RobotLogPlayer::GetChartObjects() const
 {
-   return const_cast<const chart_object::chart_object_unit_vct_ref>(m_chartObjects);
+   return const_cast<const chart_object::chart_object_unit_vct&>(m_chartObjects);
 }
 
-const chart_object::chart_object_unit* RobotLogPlayer::GetChartObject(colreg::chart_object_id id) const
+const chart_object::chart_object_unit* RobotLogPlayer::GetChartObject(SVCG::chart_object_id id) const
 {
    return nullptr;
 }
 
-bool RobotLogPlayer::PrepareDataForSave(const bool focused, const colreg::geo_points_vct_ref ships, const chart_object::chart_object_unit_vct_ref chart_objects) const
+bool RobotLogPlayer::PrepareDataForSave(const bool focused, const SVCG::geo_contour_vct& ships, const chart_object::chart_object_unit_vct& chart_objects) const
 {
    return false;
 }

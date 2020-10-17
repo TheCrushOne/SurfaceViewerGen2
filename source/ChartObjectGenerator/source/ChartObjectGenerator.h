@@ -25,11 +25,6 @@ namespace chart_object
       bool writeToDestination(data_standart::iChartObjectDataStandart*);
 
       bool generateStatic();
-      //const colreg::chart_objects_ref& getChartObjects() const;
-      void init();
-      void addChartObject(chart_object::chart_object_unit& storage);
-      chart_object::chart_object_unit& generateNew() { m_chartStorage.emplace_back(); return m_chartStorage.back(); }
-      //void prepareRef() const;
       void prepareLocalStorage();
    private:
       bool m_lock = false;

@@ -46,6 +46,9 @@
     <Filter Include="json">
       <UniqueIdentifier>{41829fb9-65b1-4d0d-beeb-215ac30c4f34}</UniqueIdentifier>
     </Filter>
+    <Filter Include="layer_provider">
+      <UniqueIdentifier>{7f7288eb-eba2-4e09-97e0-3ea74e3e9a82}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\crossdllinterface\SettingsSerializerInterface.h">
@@ -188,9 +191,6 @@
     </ClInclude>
     <ClInclude Include="source\math\transform.h">
       <Filter>math</Filter>
-    </ClInclude>
-    <ClInclude Include="source\SVCG\math_base_types.h">
-      <Filter>SVCG</Filter>
     </ClInclude>
     <ClInclude Include="source\colreg\Communicator.h">
       <Filter>colreg</Filter>
@@ -395,6 +395,27 @@
     </ClInclude>
     <ClInclude Include="source\crossdllinterface\PythonWrapperInterface.h">
       <Filter>crossdllinterface</Filter>
+    </ClInclude>
+    <ClInclude Include="source\SVCG\base_geometry.h">
+      <Filter>SVCG</Filter>
+    </ClInclude>
+    <ClInclude Include="source\SVCG\enhanced_geometry.h">
+      <Filter>SVCG</Filter>
+    </ClInclude>
+    <ClInclude Include="source\SVCG\base_structs.h">
+      <Filter>SVCG</Filter>
+    </ClInclude>
+    <ClInclude Include="source\layer_provider\chart_object.h">
+      <Filter>layer_provider</Filter>
+    </ClInclude>
+    <ClInclude Include="source\layer_provider\unit_object.h">
+      <Filter>layer_provider</Filter>
+    </ClInclude>
+    <ClInclude Include="source\SVCG\base_types.h">
+      <Filter>SVCG</Filter>
+    </ClInclude>
+    <ClInclude Include="source\common\base_types.h">
+      <Filter>common</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

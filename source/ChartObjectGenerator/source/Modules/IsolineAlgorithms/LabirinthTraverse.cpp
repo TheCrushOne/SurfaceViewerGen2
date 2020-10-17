@@ -80,7 +80,7 @@ chart_object::chart_object_unit_vct LabirinthTraverse::generateIsolineLevel(cons
          if (activationCheck(actValMtx, rIdx, cIdx) && inLineCheck(inLineFlagMtx, rIdx, cIdx) && !passedCheck(passedFlagMtx, rIdx, cIdx))
          {
             TraversalDirection dir = TraversalDirection::TD_R;
-            std::vector<SVCG::route_point> resultList;
+            SVCG::route_line resultList;
             SVCG::route_point start{ static_cast<int>(rIdx), static_cast<int>(cIdx) }, cur;
             resultList.push_back(start);
             cur = start;
@@ -116,7 +116,7 @@ chart_object::chart_object_unit_vct LabirinthTraverse::generateIsolineLevel(cons
    {
       auto& cBack = gcBack.geom_contour_vct.emplace_back();
       for (auto& point : line)
-         cBack.emplace_back(static_cast<colreg::geo_point>(SVCG::RoutePointToPositionPoint(point, env_stt)));
+         cBack.emplace_back(static_cast<SVCG::geo_point>(SVCG::RoutePointToPositionPoint(point, env_stt)));
    }
 
    std::lock_guard<std::recursive_mutex> guard(g_labirinthTraverseMutex);

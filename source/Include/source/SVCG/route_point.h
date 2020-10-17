@@ -4,15 +4,15 @@
 //#include "pixel_point.h"
 //#include "math_base_types.h"
 #include "common/pathfinder_types.h"
-#include "colreg/CommonStructs.h"
+#include "SVCG/base_geometry.h"
 
 #include <cmath>
 
-namespace SVCG
+namespace SV::CG
 {
    struct route_point
    {
-      int row = colreg::INVALID_INT_ID, col = colreg::INVALID_INT_ID;
+      int row = INVALID_INT_ID, col = INVALID_INT_ID;
       double height;
       pathfinder::FlyZoneAffilation fly;
       pathfinder::GoZoneAffilation go;
@@ -65,4 +65,7 @@ namespace SVCG
       //int x() { return ToPixelPoint().x; }
       //int y() { return ToPixelPoint().y; }
    };
+
+   typedef std::vector<route_point> route_line;
+   typedef std::vector<route_line> route_line_vct;
 }

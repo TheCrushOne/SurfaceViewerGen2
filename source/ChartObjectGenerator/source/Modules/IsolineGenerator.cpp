@@ -22,7 +22,7 @@ IsolineGenerator::IsolineGenerator(central_pack_ptr pack, navigation_dispatcher:
    m_waveFrontlineAlgortihm = std::make_unique<WaveFrontline>(pack, service);
 }
 
-void IsolineGenerator::GenerateIsolines(const pathfinder::GeoMatrix& rawdata, chart_object::chart_object_unit_vct_ref staticStorage)
+void IsolineGenerator::GenerateIsolines(const pathfinder::GeoMatrix& rawdata, chart_object::chart_object_unit_vct& staticStorage)
 {
    size_t levelCount = 10;
    double min = rawdata.Min(), max = rawdata.Max();
@@ -83,7 +83,7 @@ std::vector<chart_object::chart_object_unit> IsolineGenerator::generateIsolineLe
    return res;
 }
 
-void IsolineGenerator::addChartObjectSet(const std::vector<math::geo_points>& data, double height, int H)
+void IsolineGenerator::addChartObjectSet(const SVCG::geo_contour_vct& data, double height, int H)
 {
    /*for (auto& isoLine : data)
    {

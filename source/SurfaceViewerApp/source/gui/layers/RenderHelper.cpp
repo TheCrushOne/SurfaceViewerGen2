@@ -1,15 +1,15 @@
 #include "stdafx.h"
 #include "renderhelper.h"
 #include "colreg/domain_utils.h"
+#include "math/math_utils.h"
 
-
-void RenderUnitContour(render::iRender* renderer, ColregSimulation::UNIT_TYPE type, const colreg::ship_info& ship_info, const colreg::track_point_info& center, const render::object_info& info)
+void RenderUnitContour(render::iRender* renderer, ColregSimulation::UNIT_TYPE type, const SVCG::ship_info& ship_info, const SVCG::trajectory_point& center, const render::object_info& info)
 {
    switch (type)
    {
    case ColregSimulation::UNIT_TYPE::UT_SHIP:
    {
-      const auto heading = center.heading == colreg::NO_VALUE ? center.course : center.heading;
+      const auto heading = center.heading;
       const auto L = ship_info.length * METERS_TO_MILE;
       const auto W = ship_info.width * METERS_TO_MILE;
       const auto N = W * sqrt(2 * .5);
@@ -23,12 +23,12 @@ void RenderUnitContour(render::iRender* renderer, ColregSimulation::UNIT_TYPE ty
 
       renderer->AddObject({ { p1, p2, p3, p4, p5, p1 }
                            , info
-                           ,{render::FIND_TYPE::FT_FIND_FAST, ship_info.id, render::FIND_OBJECT_TYPE::FOT_ROVER } });
+                           , {render::FIND_TYPE::FT_FIND_FAST, ship_info.id, render::FIND_OBJECT_TYPE::FOT_ROVER } });
       break;
    }
    case ColregSimulation::UNIT_TYPE::UT_ROVER:
    {
-      const auto heading = center.heading == colreg::NO_VALUE ? center.course : center.heading;
+      const auto heading = center.heading;
       std::string imagePath = SVGUtils::CurrentCurrentPath() + "\\res\\glyphicon\\citroen.png";
       COLORREF clrDanger = 255;
       renderer->AddObject({ { center.pos }
@@ -40,7 +40,7 @@ void RenderUnitContour(render::iRender* renderer, ColregSimulation::UNIT_TYPE ty
    }
    case ColregSimulation::UNIT_TYPE::UT_DRONE:
    {
-      const auto heading = center.heading == colreg::NO_VALUE ? center.course : center.heading;
+      const auto heading = center.heading;
       std::string imagePath = SVGUtils::CurrentCurrentPath() + "\\res\\glyphicon\\helicopter.png";
       COLORREF clrDanger = 255;
       renderer->AddObject({ { center.pos }
@@ -56,9 +56,10 @@ void RenderUnitContour(render::iRender* renderer, ColregSimulation::UNIT_TYPE ty
 }
 
 
-void RenderDomain(render::FIND_OBJECT_TYPE fot, render::iRender* renderer, const ColregSimulation::iUnit* unit, const colreg::track_point_info& center, double timeFromNow, const render::object_info& info, const colreg::domain_scales* scales)
+void RenderDomain(render::FIND_OBJECT_TYPE fot, render::iRender* renderer, const ColregSimulation::iUnit* unit, const SVCG::trajectory_point& center, double timeFromNow, const render::object_info& info/*, const colreg::domain_scales* scales*/)
 {
-   auto domainTopology = unit->GetDomainTopology(timeFromNow, scales);
+   // TODO: включить при необходимости
+   /*auto domainTopology = unit->GetDomainTopology(timeFromNow, scales);
    if (!domainTopology)
       return;
 
@@ -72,17 +73,16 @@ void RenderDomain(render::FIND_OBJECT_TYPE fot, render::iRender* renderer, const
       points[i] = math::calc_point(center.pos, domainContour[i].distance, domainContour[i].course + center.heading);
    renderer->AddObject({ points
                         , info
-                        , { render::FIND_TYPE::FT_FIND_FAST, unit->GetInfo().id, fot } });
-
+                        , { render::FIND_TYPE::FT_FIND_FAST, unit->GetInfo().id, fot } });*/
 }
 
-void RenderArrow(render::iRender* renderer, const math::geo_point& pTo, double direction, const render::object_info& info, double sizeKoef)
+void RenderArrow(render::iRender* renderer, const SVCG::geo_point& pTo, double direction, const render::object_info& info, double sizeKoef)
 {
    const auto length = math::distance(renderer->PixelToGeo(math::point{}), renderer->PixelToGeo(math::point{ 5., 5. })) * sizeKoef;
 
-   math::geo_point& pStart = math::calc_point(pTo, length * 3, direction + 180);
-   math::geo_point& p1 = math::calc_point(pStart, length, direction + 90);
-   math::geo_point& p2 = math::calc_point(pStart, length, direction - 90);
+   SVCG::geo_point& pStart = math::calc_point(pTo, length * 3, direction + 180);
+   SVCG::geo_point& p1 = math::calc_point(pStart, length, direction + 90);
+   SVCG::geo_point& p2 = math::calc_point(pStart, length, direction - 90);
 
    renderer->AddObject({ {p1, pTo, p2}, info });
 }

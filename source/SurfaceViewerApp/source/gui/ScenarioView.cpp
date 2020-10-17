@@ -25,7 +25,7 @@ void user_interface::InvalidateView()
 
 void user_interface::SetCenter(double lt, double ln)
 {
-   pView->GetRenderer()->SetCenter(math::geo_point{ lt, ln });
+   pView->GetRenderer()->SetCenter(SVCG::geo_point{ lt, ln });
 }
 
 void user_interface::ShowToolTip(const wchar_t* title, const wchar_t* description)
@@ -45,13 +45,13 @@ user_interface::objects_to_draw user_interface::GetObjectsInsideScreen()
       return {};
    const auto& simulationState = sim->GetState();
 
-   std::vector<colreg::geo_point> unitCoords;
+   SVCG::geo_contour unitCoords;
    auto unitSummator = [&unitCoords](ColregSimulation::UNIT_TYPE type, const ColregSimulation::iSimulationState& state)
    {
       for (size_t idx = 0; idx < state.GetUnitCount(type); idx++)
       {
-         const auto* unit = state.GetUnitByIdx(type, idx);
-         const auto& center = unit->GetPos().point.pos;
+         const auto& unit = state.GetUnitByIdx(type, idx);
+         const auto& center = unit.pos;
          if (pView->GetRenderer()->IsNeedRender({ center }))
             unitCoords.emplace_back(center);
       }
@@ -166,7 +166,7 @@ int ScenarioView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
    //_renderer->SetScale(30);
    _renderer->SetScale(300);
-   _renderer->SetCenter(math::geo_point{ 0, 0 });
+   _renderer->SetCenter(SVCG::geo_point{ 0, 0 });
 
    _layers = std::make_unique<LayersContainer>();
 
@@ -299,7 +299,7 @@ bool ScenarioView::OnScenarioScenarioStatusChanged(ColregSimulation::SCENARIO_ST
 bool ScenarioView::onScenarioCheckOpened()
 {
    _renderer->Clear();
-   math::geo_point center = simulator::getCenter();
+   SVCG::geo_point center = simulator::getCenter();
    if (!center.lat && !center.lon)
       _needResetCenter = true;
    else
@@ -364,7 +364,7 @@ void ScenarioView::OnTimer(UINT_PTR nIDEvent)
 
       if (_needResetCenter)
       {
-         math::geo_point center = simulator::getCenter();
+         SVCG::geo_point center = simulator::getCenter();
          if (center.lat || center.lon)
          {
             _needResetCenter = false;

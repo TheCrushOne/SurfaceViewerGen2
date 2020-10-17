@@ -1,5 +1,6 @@
 #pragma once
 #include "CommonStructs.h"
+#include "SVCG/base_geometry.h"
 
 namespace colreg
 {
@@ -56,8 +57,8 @@ namespace colreg
       domain_border_info() = default;
 
       double    width;
-      geo_point left;
-      geo_point right;
+      SVCG::geo_point left;
+      SVCG::geo_point right;
    };
 
 #pragma pack (pop)

@@ -8,7 +8,7 @@ using namespace chart_object;
 void CoverageGenerator::GenerateChartBorder(const pathfinder::GeoMatrix& rawdata, chart_object::chart_object_unit& border)
 {
    const auto& envstt = GetService()->GetSettingsSerializerHolder()->GetSettings().env_stt;
-   border.type = colreg::OBJECT_TYPE::OT_BORDER_AREA;
+   border.type = SVCG::OBJECT_TYPE::OT_BORDER_AREA;
    int rowCount = rawdata.GetRowCount(), colCount = rawdata.GetColCount();
    border.geom_contour_vct.emplace_back();
    auto& borderCnt = border.geom_contour_vct.back();

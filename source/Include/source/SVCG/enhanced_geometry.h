@@ -1,8 +1,6 @@
 #pragma once
 
-#include <limits>
-#include <string>
-#include <vector>
+#include "base_geometry.h"
 
 namespace SVCG
 {
@@ -15,7 +13,7 @@ namespace SVCG
 
    struct PolyPolygon_2
    {
-      bool IsPointInPolygon(const point_2& pt, bool *isOnEdge) { return false; }
+      bool IsPointInPolygon(const point_2& pt, bool* isOnEdge) { return false; }
       void AddContour(const vector_2& vct) {}
    };
 }

@@ -1,5 +1,7 @@
 #include "stdafx.h"
 #include "SimulatorBase.h"
+#include "math/math_utils.h"
+#include "SVCG/positioning.h"
 
 #include <filesystem>
 
@@ -114,6 +116,9 @@ bool SimulatorBase::LoadProcessedPaths()
    };
    routeMover(rt.air_routes, m_data.unit_data.air_units);
    routeMover(rt.land_routes, m_data.unit_data.land_units);
+   processRecountRouteVisualizeMeta(m_data.unit_data.air_units);
+   processRecountRouteVisualizeMeta(m_data.unit_data.land_units);
+   calcStepCount();
    SetSimulatorScenarioState(ColregSimulation::SCENARIO_STATUS::SS_PATHS_COUNTED);
    SetSimulatorSimulationState(ColregSimulation::SIMULATION_STATUS::SS_STOP);
    return true;
@@ -125,4 +130,36 @@ bool SimulatorBase::LoadProcessedOptPaths()
    SetSimulatorScenarioState(ColregSimulation::SCENARIO_STATUS::SS_OPT_PATHS_COUNTED);
    SetSimulatorSimulationState(ColregSimulation::SIMULATION_STATUS::SS_STOP);
    return true;
+}
+
+void processRecountRouteMeta(std::vector<SVCG::route_point>& route, SVCG::trajectory_point_vct, const settings::environment_settings& env_stt)
+{
+   for (size_t idx = 0; idx < route.size(); idx++)
+   {
+      auto& cur = route[idx];
+      auto& next = route[idx < route.size() - 1 ? idx + 1 : idx];
+      auto rpc = SVCG::RoutePointToPositionPoint(cur, env_stt);
+      auto rpn = SVCG::RoutePointToPositionPoint(next, env_stt);
+      cur.course = math::direction(rpc, rpn);
+      cur.speed = DefaultUnitSpeed;   // NOTE: пока что дефолт
+   }
+}
+
+void SimulatorBase::processRecountRouteVisualizeMeta(std::vector<settings::unit_data_element>& route)
+{
+   for (size_t idx = 0; idx < route.size(); idx++)
+      processRecountRouteMeta(route.at(idx).route_list, m_service->GetSettingsSerializerHolder()->GetSettings().env_stt);
+}
+
+void SimulatorBase::calcStepCount()
+{
+   size_t maxStepCount = 0;
+   auto& au = m_data.unit_data.air_units;
+   for (const auto& elem : au)
+      maxStepCount = maxStepCount < elem.route_list.size() ? elem.route_list.size() : maxStepCount;
+   auto& lu = m_data.unit_data.land_units;
+   for (const auto& elem : lu)
+      maxStepCount = maxStepCount < elem.route_list.size() ? elem.route_list.size() : maxStepCount;
+   m_data.step_count = maxStepCount;
+   m_data.current_step = 0;
 }

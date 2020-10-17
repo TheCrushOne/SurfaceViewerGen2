@@ -16,7 +16,7 @@ namespace geojson_save_helper
       return jprop;
    }
 
-   inline Json::Value geopoint_to_json(const colreg::geo_point& point)
+   inline Json::Value geopoint_to_json(const SVCG::geo_point& point)
    {
       Json::Value jpoint;
       jpoint[tag::lon] = point.lon;
@@ -24,7 +24,7 @@ namespace geojson_save_helper
       return jpoint;
    }
 
-   inline Json::Value geopointvct_to_json(const std::vector<colreg::geo_point>& points)
+   inline Json::Value geopointvct_to_json(const std::vector<SVCG::geo_point>& points)
    {
       Json::Value jcontour(Json::arrayValue);
       for (size_t idx = 0; idx < points.size(); idx++)
@@ -48,7 +48,7 @@ namespace geojson_save_helper
       return jobj;
    }
 
-   inline Json::Value couvct_to_json(const chart_object::chart_object_unit_vct_ref objList)
+   inline Json::Value couvct_to_json(const chart_object::chart_object_unit_vct& objList)
    {
       Json::Value objs(Json::arrayValue);
       for (const auto& elem : objList)

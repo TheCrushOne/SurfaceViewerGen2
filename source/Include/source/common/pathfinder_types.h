@@ -4,7 +4,7 @@
 #include <functional>
 #include <memory>
 
-namespace pathfinder
+namespace SV::pathfinder
 {
    enum class FlyZoneAffilation : unsigned short
    {

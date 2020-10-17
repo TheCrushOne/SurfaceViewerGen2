@@ -2,16 +2,17 @@
 
 #include <vector>
 #include "colreg/CommonStructs.h"
+#include "SVCG/base_geometry.h"
 
 namespace SVCG
 {
-   struct position_point : colreg::geo_point
+   struct position_point : geo_point
    {
       position_point(double lt, double ln)
-         : colreg::geo_point(lt, ln)
+         : geo_point(lt, ln)
       {}
       position_point(double lt, double ln, double at)
-         : colreg::geo_point(lt, ln)
+         : geo_point(lt, ln)
          , alt(at)
       {}
       position_point() = default;
@@ -23,7 +24,7 @@ namespace SVCG
       bool operator==(const position_point& other) const { return lon == other.lon && lat == other.lat && alt == other.alt; }
       bool operator!=(const position_point& other) const { return !(*this == other); }
 
-      double alt = colreg::NO_VALUE;
+      double alt = NO_VALUE;
    };
 
    using position_points = std::vector<position_point>;

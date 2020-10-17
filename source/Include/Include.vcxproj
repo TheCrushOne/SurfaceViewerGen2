@@ -56,6 +56,7 @@
     <ClInclude Include="source\colreg\XmlProperties\xml_property_container.h" />
     <ClInclude Include="source\colreg\XMLSettingsSerializer.h" />
     <ClInclude Include="source\common\base_class.h" />
+    <ClInclude Include="source\common\base_types.h" />
     <ClInclude Include="source\common\central_class.h" />
     <ClInclude Include="source\common\chart_object.h" />
     <ClInclude Include="source\common\communicator.h" />
@@ -110,6 +111,8 @@
     <ClInclude Include="source\datastandart\SVGenMapDataStandartInterface.h" />
     <ClInclude Include="source\json\json_wrapper.h" />
     <ClInclude Include="source\json\json_wrapper_impl.h" />
+    <ClInclude Include="source\layer_provider\chart_object.h" />
+    <ClInclude Include="source\layer_provider\unit_object.h" />
     <ClInclude Include="source\math\ellipse.h" />
     <ClInclude Include="source\math\intersect.h" />
     <ClInclude Include="source\math\math_utils.h" />
@@ -128,8 +131,11 @@
     <ClInclude Include="source\settings\SettingsSerializerHolder.h" />
     <ClInclude Include="source\settings\settings_meta.h" />
     <ClInclude Include="source\settings\settings_types.h" />
+    <ClInclude Include="source\SVCG\base_structs.h" />
+    <ClInclude Include="source\SVCG\base_types.h" />
+    <ClInclude Include="source\SVCG\enhanced_geometry.h" />
     <ClInclude Include="source\SVCG\position_point.h" />
-    <ClInclude Include="source\SVCG\math_base_types.h" />
+    <ClInclude Include="source\SVCG\base_geometry.h" />
     <ClInclude Include="source\SVCG\positioning.h" />
     <ClInclude Include="source\SVCG\route_point.h" />
     <ClInclude Include="source\ThirdParty\json\json-forwards.h" />

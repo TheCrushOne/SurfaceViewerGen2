@@ -11,7 +11,7 @@ chart_object::chart_object_unit_vct SegmentCollector::generateIsolineLevel(const
    ATLASSERT(false);
    settings::environment_settings env_stt;
    const auto& envstt = /*GetPack()->settings->*/env_stt;
-   std::vector<colreg::geo_point> isoPoints;
+   SVCG::geo_contour isoPoints;
    constexpr double eps = 0.0001;
 
    for (size_t rIdx = 0; rIdx < rawdata.GetRowCount() - 1; rIdx++)
@@ -23,17 +23,17 @@ chart_object::chart_object_unit_vct SegmentCollector::generateIsolineLevel(const
          // NOTE: нули расположены снизу слева
          int iCIdx = static_cast<int>(cIdx);
          int iRIdx = static_cast<int>(rIdx);
-         colreg::geo_point gplu = SVCG::RoutePointToPositionPoint(SVCG::route_point{ iRIdx + 1, iCIdx }, envstt);
-         colreg::geo_point gpll = SVCG::RoutePointToPositionPoint(SVCG::route_point{ iRIdx, iCIdx }, envstt);
-         colreg::geo_point gpru = SVCG::RoutePointToPositionPoint(SVCG::route_point{ iRIdx + 1, iCIdx + 1 }, envstt);
-         colreg::geo_point gprl = SVCG::RoutePointToPositionPoint(SVCG::route_point{ iRIdx, iCIdx + 1 }, envstt);
+         SVCG::geo_point gplu = SVCG::RoutePointToPositionPoint(SVCG::route_point{ iRIdx + 1, iCIdx }, envstt);
+         SVCG::geo_point gpll = SVCG::RoutePointToPositionPoint(SVCG::route_point{ iRIdx, iCIdx }, envstt);
+         SVCG::geo_point gpru = SVCG::RoutePointToPositionPoint(SVCG::route_point{ iRIdx + 1, iCIdx + 1 }, envstt);
+         SVCG::geo_point gprl = SVCG::RoutePointToPositionPoint(SVCG::route_point{ iRIdx, iCIdx + 1 }, envstt);
          double hlu = rawdata.Get(rIdx + 1, cIdx);
          double hll = rawdata.Get(rIdx, cIdx);
          double hru = rawdata.Get(rIdx + 1, cIdx + 1);
          double hrl = rawdata.Get(rIdx, cIdx + 1);
-         auto checkPoint = [eps, &isoPoints](colreg::geo_point pt)->bool
+         auto checkPoint = [eps, &isoPoints](SVCG::geo_point pt)->bool
          {
-            return (std::find_if(isoPoints.begin(), isoPoints.end(), [pt, eps](const colreg::geo_point& rs) { return math::isEqual(rs, pt, eps); }) == isoPoints.end());
+            return (std::find_if(isoPoints.begin(), isoPoints.end(), [pt, eps](const SVCG::geo_point& rs) { return math::isEqual(rs, pt, eps); }) == isoPoints.end());
          };
          if ((height - hll) * (height - hrl) <= 0)
          {
@@ -46,7 +46,7 @@ chart_object::chart_object_unit_vct SegmentCollector::generateIsolineLevel(const
             }
             else
             {
-               colreg::geo_point gp = gpll;
+               SVCG::geo_point gp = gpll;
                double heightPerLat = (hrl - hll) / (gprl.lat - gpll.lat);
                gp.lat = (height - hll) / heightPerLat + gpll.lat;
                if (checkPoint(gp))
@@ -64,7 +64,7 @@ chart_object::chart_object_unit_vct SegmentCollector::generateIsolineLevel(const
             }
             else
             {
-               colreg::geo_point gp = gplu;
+               SVCG::geo_point gp = gplu;
                double heightPerLon = (hlu - hll) / (gplu.lon - gpll.lon);
                gp.lon = (height - hll) / heightPerLon + gpll.lon;
                if (checkPoint(gp))
@@ -82,7 +82,7 @@ chart_object::chart_object_unit_vct SegmentCollector::generateIsolineLevel(const
             }
             else
             {
-               colreg::geo_point gp = gpru;
+               SVCG::geo_point gp = gpru;
                double heightPerLon = (hru - hrl) / (gpru.lon - gprl.lon);
                gp.lon = (height - hrl) / heightPerLon + gprl.lon;
                if (checkPoint(gp))
@@ -100,7 +100,7 @@ chart_object::chart_object_unit_vct SegmentCollector::generateIsolineLevel(const
             }
             else
             {
-               colreg::geo_point gp = gplu;
+               SVCG::geo_point gp = gplu;
                double heightPerLat = (hru - hlu) / (gpru.lat - gplu.lat);
                gp.lat = (height - hlu) / heightPerLat + gplu.lat;
                if (checkPoint(gp))
@@ -115,21 +115,21 @@ chart_object::chart_object_unit_vct SegmentCollector::generateIsolineLevel(const
    auto pt1 = SVCG::RoutePointToPositionPoint({ 0, 0 }, envstt);
    auto pt2 = SVCG::RoutePointToPositionPoint({ 1, 1 }, envstt);
    m_maxRadius = math::distance(pt2, pt1);
-   std::vector<std::vector<colreg::geo_point>> isoLineVct;
+   SVCG::geo_contour_vct isoLineVct;
    //isoLineVct.emplace_back();
    //for (auto& elem : isoPoints)
    //   isoLineVct.back().emplace_back(elem);
-   auto nearestPointSetComparator = [](const std::vector<colreg::geo_point>& check, const std::vector<colreg::geo_point>& nearest, math::geo_point isoPoint, double& nearestMinDist) -> bool
+   auto nearestPointSetComparator = [](const std::vector<SVCG::geo_point>& check, const SVCG::geo_contour& nearest, SVCG::geo_point isoPoint, double& nearestMinDist) -> bool
    {
       auto isocheckmin = std::min_element(check.begin(), check.end(),
-         [&isoPoint](const colreg::geo_point& ptCheck, const colreg::geo_point& nearest) -> bool
+         [&isoPoint](const SVCG::geo_point& ptCheck, const SVCG::geo_point& nearest) -> bool
          {
             return math::distance(ptCheck, isoPoint) < math::distance(nearest, isoPoint);
          }
       );
       double checkDist = (isocheckmin == check.end() ? 0. : math::distance(*isocheckmin, isoPoint));
       auto isosmallestmin = std::min_element(nearest.begin(), nearest.end(),
-         [&isoPoint](const colreg::geo_point& ptCheck, const colreg::geo_point& nearest) -> bool
+         [&isoPoint](const SVCG::geo_point& ptCheck, const SVCG::geo_point& nearest) -> bool
          {
             return math::distance(ptCheck, isoPoint) < math::distance(nearest, isoPoint);
          }
@@ -145,7 +145,7 @@ chart_object::chart_object_unit_vct SegmentCollector::generateIsolineLevel(const
       double min = std::numeric_limits<double>::max();
       double nearestMinDist = std::numeric_limits<double>::max();
       auto nearestIsoLine = std::min_element(isoLineVct.begin(), isoLineVct.end(),
-         [&isoPoint, &nearestMinDist, nearestPointSetComparator](const std::vector<colreg::geo_point>& check, const std::vector<colreg::geo_point>& nearest)->bool
+         [&isoPoint, &nearestMinDist, nearestPointSetComparator](const SVCG::geo_contour& check, const SVCG::geo_contour& nearest)->bool
          {
             return nearestPointSetComparator(check, nearest, isoPoint, nearestMinDist);
          }
@@ -185,7 +185,7 @@ chart_object::chart_object_unit_vct SegmentCollector::generateIsolineLevel(const
             {
                auto& isoPoint = isoLineVct.at(outerIdx).at(ptIdx);
                auto isosmallestmin = std::min_element(isoLineVct.at(innerIdx).begin(), isoLineVct.at(innerIdx).end(),
-                  [&isoPoint](const colreg::geo_point& ptCheck, const colreg::geo_point& nearest) -> bool
+                  [&isoPoint](const SVCG::geo_point& ptCheck, const SVCG::geo_point& nearest) -> bool
                   {
                      return math::distance(ptCheck, isoPoint) < math::distance(nearest, isoPoint);
                   }
@@ -241,27 +241,27 @@ chart_object::chart_object_unit_vct SegmentCollector::generateIsolineLevel(const
       //   }
       //);
 
-      auto cmp = [](colreg::geo_point a, colreg::geo_point b)->bool
+      auto cmp = [](SVCG::geo_point a, SVCG::geo_point b)->bool
       {
          return a.lon < b.lon || a.lon == b.lon && a.lat < b.lat;
       };
 
-      auto cw = [](colreg::geo_point a, colreg::geo_point b, colreg::geo_point c)->bool
+      auto cw = [](SVCG::geo_point a, SVCG::geo_point b, SVCG::geo_point c)->bool
       {
          return a.lon * (b.lat - c.lat) + b.lon * (c.lat - a.lat) + c.lon * (a.lat - b.lat) < 0;
       };
 
-      auto ccw = [](colreg::geo_point a, colreg::geo_point b, colreg::geo_point c)->bool
+      auto ccw = [](SVCG::geo_point a, SVCG::geo_point b, SVCG::geo_point c)->bool
       {
          return a.lon * (b.lat - c.lat) + b.lon * (c.lat - a.lat) + c.lon * (a.lat - b.lat) > 0;
       };
 
-      auto convex_hull = [cmp, cw, ccw](std::vector<colreg::geo_point>& a)
+      auto convex_hull = [cmp, cw, ccw](SVCG::geo_contour& a)
       {
          if (a.size() == 1)  return;
          std::sort(a.begin(), a.end(), cmp);
-         colreg::geo_point p1 = a[0], p2 = a.back();
-         std::vector<colreg::geo_point> up, down;
+         SVCG::geo_point p1 = a[0], p2 = a.back();
+         SVCG::geo_contour up, down;
          up.push_back(p1);
          down.push_back(p1);
          for (size_t i = 1; i < a.size(); ++i) {
@@ -395,7 +395,7 @@ chart_object::chart_object_unit_vct SegmentCollector::generateIsolineLevel(const
    {
       auto& cBack = gcBack.geom_contour_vct.emplace_back();
       for (auto& point : line)
-         cBack.emplace_back(static_cast<colreg::geo_point>(point));
+         cBack.emplace_back(static_cast<SVCG::geo_point>(point));
    }
 
    std::lock_guard<std::recursive_mutex> guard(g_segmentCollectorMutex);

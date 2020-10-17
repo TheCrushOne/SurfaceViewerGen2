@@ -174,9 +174,9 @@ bool StrategyManager::PrepareControlPoint(size_t iterations, std::vector<setting
          // NOTE : при разлете в 45 грд.
          // NOTE : для смены угла разлета заменить на двойной синус
          double distantValue = sqrt(2)*(dDiameter * static_cast<double>((lineIdx + 1)/2));
-         colreg::geo_point startNonRotated{ dSRow + cos(theta)*distantValue, dSCol + sin(theta)*distantValue };
+         SVCG::geo_point startNonRotated{ dSRow + cos(theta)*distantValue, dSCol + sin(theta)*distantValue };
          // NOTE: разворот на 180, т.е. на Пи
-         colreg::geo_point finishNonRotated{ dFRow + cos(theta + PI) * distantValue, dFCol + sin(theta + PI) * distantValue };
+         SVCG::geo_point finishNonRotated{ dFRow + cos(theta + PI) * distantValue, dFCol + sin(theta + PI) * distantValue };
 
          // NOTE: заюзана формула поворота относительно произвольной точки
          GeoMatrix rtResStart =

@@ -2,6 +2,7 @@
 #include "ChartLayer.h"
 #include "simulator\simulator.h"
 
+using namespace SV;
 // HACK: шайтан каст...но без него не линкуется автоконтейнер
 // HACK: этот объект должен стоять в первом классе слоёв по списку из .vcxproj, иначе игнорятся модули
 AutoContainer< LayersContainer>::ListObjects AutoContainer< LayersContainer>::_objects;
@@ -48,7 +49,7 @@ void ChartLayer::onLayerEnabledChanged()
 {
 }
 
-bool ChartLayer::synchronize_map(render::iRender* renderer, const chart_object::chart_object_unit_vct_ref chartObjects)
+bool ChartLayer::synchronize_map(render::iRender* renderer, const SV::layer_provider::layer_chart_object_vct& chartObjects)
 {
    //m_chartUSN = checker->GetObjectsUSN();
    renderer->Clear();
@@ -62,10 +63,9 @@ bool ChartLayer::synchronize_map(render::iRender* renderer, const chart_object::
    return true;
 }
 
-void ChartLayer::addChartObject(render::iRender* renderer, const chart_object::chart_object_unit& obj)
+void ChartLayer::addChartObject(render::iRender* renderer, const SV::layer_provider::layer_chart_object& obj)
 {
    using namespace render;
-   std::vector<math::geo_points> points{ obj.geom_contour_vct.begin(), obj.geom_contour_vct.end() };
    const auto itf = m_objInfo.find(obj.type);
    render::object_info info;
    if (itf != m_objInfo.end())
@@ -103,14 +103,14 @@ void ChartLayer::addChartObject(render::iRender* renderer, const chart_object::c
    //    if (id == 147838)
    //       info.width = 10;
 
-   for (auto& contour : points)
+   for (auto& contour : obj.geom_contour_vct)
       renderer->AddObject({ contour, info, {render::FIND_TYPE::FT_FIND_DETAILED, obj.id, render::FIND_OBJECT_TYPE::FOT_CHART_OBJECT, 0, obj.type}, minScale }, false);
    render::object_info ptInfo{ 1, render::LINE_STYLE::LL_DASH, render::FILL_TYPE::FT_NONE, RGB(110, 110, 110) };
    ptInfo.alpha = 255;
    if (colorOverride)
       ptInfo.color = RGB(r, g, b);
    ptInfo.width += 2;
-   for (auto& contour : points)
+   for (auto& contour : obj.geom_contour_vct)
       for (size_t i = 0; i < contour.size(); i++)
          renderer->AddObject({ {contour[i]}, ptInfo });
 }
@@ -166,7 +166,7 @@ bool ChartLayer::OnScenarioScenarioStatusChanged(ColregSimulation::SCENARIO_STAT
 
 bool ChartLayer::onScenarioCheckOpened()
 {
-   m_chartUSN = colreg::INVALID_ID;
+   m_chartUSN = SV::CG::INVALID_ID;
    return true;
 }
 
@@ -192,20 +192,20 @@ bool ChartLayer::onScenarioOptPathFound()
 
 void ChartLayer::initObjInfo()
 {
-   m_objInfo[colreg::OBJECT_TYPE::OT_BORDER_AREA].color = RGB(250, 200, 100);
-   m_objInfo[colreg::OBJECT_TYPE::OT_BORDER_AREA].width = 2;
-   m_objInfo[colreg::OBJECT_TYPE::OT_BORDER_AREA].fill = render::FILL_TYPE::FT_NONE;
+   m_objInfo[CG::OBJECT_TYPE::OT_BORDER_AREA].color = RGB(250, 200, 100);
+   m_objInfo[CG::OBJECT_TYPE::OT_BORDER_AREA].width = 2;
+   m_objInfo[CG::OBJECT_TYPE::OT_BORDER_AREA].fill = render::FILL_TYPE::FT_NONE;
 
-   m_objInfo[colreg::OBJECT_TYPE::OT_ISOLINE].color = RGB(0, 127, 255);
-   m_objInfo[colreg::OBJECT_TYPE::OT_ISOLINE].width = 2;
+   m_objInfo[CG::OBJECT_TYPE::OT_ISOLINE].color = RGB(0, 127, 255);
+   m_objInfo[CG::OBJECT_TYPE::OT_ISOLINE].width = 2;
 
-   m_objInfo[colreg::OBJECT_TYPE::OT_NO_GO_AREA].color = RGB(255, 0, 0);
-   m_objInfo[colreg::OBJECT_TYPE::OT_NO_GO_AREA].width = 3;
-   m_objInfo[colreg::OBJECT_TYPE::OT_NO_GO_AREA].style = render::LINE_STYLE::LL_SOLID;
-   m_objInfo[colreg::OBJECT_TYPE::OT_NO_GO_AREA].fill = render::FILL_TYPE::FT_DIAGCROSS;
+   m_objInfo[CG::OBJECT_TYPE::OT_NO_GO_AREA].color = RGB(255, 0, 0);
+   m_objInfo[CG::OBJECT_TYPE::OT_NO_GO_AREA].width = 3;
+   m_objInfo[CG::OBJECT_TYPE::OT_NO_GO_AREA].style = render::LINE_STYLE::LL_SOLID;
+   m_objInfo[CG::OBJECT_TYPE::OT_NO_GO_AREA].fill = render::FILL_TYPE::FT_DIAGCROSS;
 
-   m_objInfo[colreg::OBJECT_TYPE::OT_NO_FLY_AREA].color = RGB(200, 200, 0);
-   m_objInfo[colreg::OBJECT_TYPE::OT_NO_FLY_AREA].width = 1;
-   m_objInfo[colreg::OBJECT_TYPE::OT_NO_FLY_AREA].style = render::LINE_STYLE::LL_DASH_DOT;
-   m_objInfo[colreg::OBJECT_TYPE::OT_NO_FLY_AREA].fill = render::FILL_TYPE::FT_FDIAGONAL;
+   m_objInfo[CG::OBJECT_TYPE::OT_NO_FLY_AREA].color = RGB(200, 200, 0);
+   m_objInfo[CG::OBJECT_TYPE::OT_NO_FLY_AREA].width = 1;
+   m_objInfo[CG::OBJECT_TYPE::OT_NO_FLY_AREA].style = render::LINE_STYLE::LL_DASH_DOT;
+   m_objInfo[CG::OBJECT_TYPE::OT_NO_FLY_AREA].fill = render::FILL_TYPE::FT_FDIAGONAL;
 }

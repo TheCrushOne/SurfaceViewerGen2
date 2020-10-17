@@ -45,7 +45,7 @@ public:
             }
          }
 
-         if (folderProps->get_childs().arr && folderProps->get_childs().size)
+         if (!folderProps->get_childs().empty() && folderProps->get_childs().size())
          {
             _properties = std::move(folderProps);
          }

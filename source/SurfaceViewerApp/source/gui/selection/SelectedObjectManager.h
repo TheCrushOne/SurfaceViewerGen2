@@ -46,8 +46,8 @@ public:
    void Delete();
 
    iSelected* GetSelected() { return _selected.get(); }
-   colreg::id_type GetSelectedShip()const { return _selected_ship_id; }
-   colreg::chart_object_id GetSelectedChartObj()const { return _selected_chart_id; }
+   SVCG::id_type GetSelectedShip()const { return _selected_ship_id; }
+   SVCG::chart_object_id GetSelectedChartObj()const { return _selected_chart_id; }
    render::FIND_OBJECT_TYPE GetSelectedObjectType() const { return _info.find_object_type; }
 
    // NOTE: на всякий...
@@ -60,6 +60,6 @@ private:
 private:
    render::find_info _info;
    iSelectablePtr _selected;
-   colreg::id_type _selected_ship_id = colreg::INVALID_ID;
-   colreg::chart_object_id _selected_chart_id;
+   SVCG::id_type _selected_ship_id = SVCG::INVALID_ID;
+   SVCG::chart_object_id _selected_chart_id;
 };

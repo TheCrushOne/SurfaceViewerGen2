@@ -16,17 +16,17 @@ namespace geojson_load_helper
       return prop;
    }
 
-   colreg::geo_point json_to_geopoint(const Json::Value& jpt)
+   SVCG::geo_point json_to_geopoint(const Json::Value& jpt)
    {
-      colreg::geo_point point;
+      SVCG::geo_point point;
       point.lat = jpt[tag::lat].asDouble();
       point.lon = jpt[tag::lon].asDouble();
       return point;
    }
 
-   std::vector<colreg::geo_point> json_to_geopointvct(const Json::Value& jobj)
+   std::vector<SVCG::geo_point> json_to_geopointvct(const Json::Value& jobj)
    {
-      std::vector<colreg::geo_point> contour;
+      std::vector<SVCG::geo_point> contour;
       for (auto& jpt : jobj)
          contour.emplace_back(json_to_geopoint(jpt));
       return contour;

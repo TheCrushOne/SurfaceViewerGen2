@@ -3,6 +3,7 @@
 #include <typeindex>
 #include <limits>
 #include "colreg/CommonStructs.h"
+#include "SVCG\base_geometry.h"
 
 namespace colreg
 {
@@ -22,7 +23,7 @@ namespace colreg
    template<>
    void setValue(xml_properties::PropertyItem& item, const double value)
    {
-      value != colreg::NO_VALUE ? item = value : item = "NO_VALUE";
+      value != SVCG::NO_VALUE ? item = value : item = "NO_VALUE";
    }
 
    template<typename T>
@@ -38,7 +39,7 @@ namespace colreg
    {
       std::string str;
       item.Get(str);
-      return str.compare("NO_VALUE") ? atof(str.c_str()) : colreg::NO_VALUE;
+      return str.compare("NO_VALUE") ? atof(str.c_str()) : SVCG::NO_VALUE;
    }
 
    template<typename DataType = settings::pathfinding_settings>

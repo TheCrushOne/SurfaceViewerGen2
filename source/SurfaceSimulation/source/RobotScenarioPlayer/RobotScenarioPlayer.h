@@ -35,37 +35,25 @@ namespace ColregSimulation
 
       // iSimulationState impl
       size_t GetUnitCount(UNIT_TYPE type) const override final;
-      const iUnit* GetUnitByIdx(UNIT_TYPE type, size_t idx) const override final;
-      const iUnit* GetUnitById(colreg::id_type id) const override final;
+      const settings::unit_data_element& GetUnitByIdx(UNIT_TYPE type, size_t idx) const override final;
+      const iUnit* GetUnitById(SVCG::id_type id) const override final;
       double GetTime() const override final;
       const settings::map_settings& GetChartGridMeta() const override final;
-      const chart_object::chart_object_unit_vct_ref GetChartObjects() const override final;
-      const chart_object::chart_object_unit* GetChartObject(colreg::chart_object_id id) const override final;
-      bool PrepareDataForSave(const bool focused, const colreg::geo_points_vct_ref ships, const chart_object::chart_object_unit_vct_ref chart_objects) const override final;
+      const chart_object::chart_object_unit_vct& GetChartObjects() const override final;
+      const chart_object::chart_object_unit* GetChartObject(SVCG::chart_object_id id) const override final;
+      bool PrepareDataForSave(const bool focused, const SVCG::geo_contour_vct& ships, const chart_object::chart_object_unit_vct& chart_objects) const override final;
    protected:
-      SimulationUnit* getUnitByIdx(UNIT_TYPE type, size_t idx);
-      void updateUnitsPath();
-      void addUnit(const settings::unit_data_element&, UNIT_TYPE, size_t);
-      void addUnitsFromScenario();
-      void correctCoordinateGrid();
-      void createIndexMaps();
+      settings::unit_data_element& getUnitByIdx(UNIT_TYPE type, size_t idx);
       void start(std::function<void(void)>);
 
       void step();
-      void moveUnits();
    private:
       std::vector<std::vector<double>> m_coordGrid;
 
       chart_grid_meta m_gridMeta = {};
-      std::vector<std::unique_ptr<SimulationShip>> m_ships;
-      std::vector<std::unique_ptr<SimulationRover>> m_rovers;
-      std::vector<std::unique_ptr<SimulationDrone>> m_drones;
-      size_t m_currentIdx = 0;
 
-      std::vector<std::vector<size_t>> m_roversIdxVct;
-      std::vector<std::vector<size_t>> m_dronesIdxVct;
       //size_t m_maxStepIdx;
 
-      double m_defaultUnitSpeed = 10.;
+      
    };
 }

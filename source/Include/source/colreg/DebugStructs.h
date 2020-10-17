@@ -2,15 +2,16 @@
 
 #include "BaseRef.h"
 #include "CommonStructs.h"
+#include "SVCG/base_geometry.h"
 
 namespace dbg
 {
-   const size_t        DEFAULT_COLOR = 255;
-   const size_t        DEFAULT_PIX_SIZE = 3;
+   //const size_t        DEFAULT_COLOR = 255;
+   //const size_t        DEFAULT_PIX_SIZE = 3;
 
-   using dbg_info_node_path_ref = colreg::base_ref<const wchar_t*>;
-   using dbg_point = colreg::geo_point;
-   using dbg_points_ref = colreg::base_ref<dbg_point>;
+   //using dbg_info_node_path_ref = colreg::base_ref<const wchar_t*>;
+   //typedef SVCG::geo_point dbg_point;
+   //using dbg_points_ref = colreg::base_ref<dbg_point>;
 
    enum class PointsLinkage
    {

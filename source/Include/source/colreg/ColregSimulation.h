@@ -6,6 +6,7 @@
 #include "common/header_collector.h"
 #include "common/file_storage.h"
 #include "common/chart_object.h"
+#include "SVCG\base_structs.h"
 
 struct iPropertyInterface;
 
@@ -53,33 +54,33 @@ namespace ColregSimulation
    };
 
    //! Полная информация для точки трека
-   struct track_point_full_info
-   {
-      track_point_full_info()
-      {}
+   //struct track_point_full_info
+   //{
+   //   track_point_full_info()
+   //   {}
 
-      track_point_full_info(const colreg::track_point_info& pt)
-         : point{ pt }
-      {}
+   //   track_point_full_info(const SVCG::track_point_info& pt)
+   //      : point{ pt }
+   //   {}
 
-      track_point_full_info(const colreg::track_point_info& pt, const colreg::model_point_info& modelInfo)
-         : point{ pt }
-         , model_info{ modelInfo }
-      {}
+   //   track_point_full_info(const SVCG::track_point_info& pt, const colreg::model_point_info& modelInfo)
+   //      : point{ pt }
+   //      , model_info{ modelInfo }
+   //   {}
 
-      colreg::track_point_info   point;
-      colreg::model_point_info   model_info;
-      colreg::domain_border_info domain_border;
-   };
+   //   colreg::track_point_info   point;
+   //   colreg::model_point_info   model_info;
+   //   colreg::domain_border_info domain_border;
+   //};
 
    //! Данные пути корабля
-   struct ship_path_ref
+   /*struct ship_path_ref
    {
       ship_path_ref() = default;
 
       const colreg::route_ref*           route = nullptr;
       const colreg::track_full_info_ref* track = nullptr;
-   };
+   };*/
 
    struct chart_grid_meta
    {
@@ -90,34 +91,26 @@ namespace ColregSimulation
    struct iUnit
    {
       //! Информационные данные юнита
-      virtual colreg::ship_info GetInfo() const = 0;
+      virtual SVCG::ship_info GetInfo() const = 0;
 
-      virtual const colreg::domain_scales& GetDomainScales() const = 0;
+      //virtual const colreg::domain_scales& GetDomainScales() const = 0;
 
       //! Полная информация по текущему местоположению
-      virtual track_point_full_info GetPos() const = 0;
+      //virtual track_point_full_info GetPos() const = 0;
 
       //! Псевдосписок путей
-      virtual const ship_path_ref* GetRoute(ROUTE_TYPE type)const = 0;
+      virtual const SVCG::trajectory_point_vct& GetRoute(ROUTE_TYPE type)const = 0;
 
       //! Исходный путь
-      virtual const ship_path_ref* GetSrcPath() const = 0;
+      virtual const SVCG::trajectory_point_vct& GetSrcPath() const = 0;
 
       //! Исходный набор кт
-      virtual const ship_path_ref* GetSrcControlPoints() const = 0;
-
-      //! Симулированный путь
-      virtual const ship_path_ref* GetSimulationPath() const = 0;
-
-      //! Симулированный путь
-      virtual const ship_path_ref* GetPredictionPath() const = 0;
+      virtual const SVCG::trajectory_point_vct& GetSrcControlPoints() const = 0;
 
       /*! Получить топологию домена юнита в момент времени
       \param[in] scales Получить топологию с переданными коэффициентами сжатия
       */
-      virtual const colreg::domain_geometry_ref* GetDomainTopology(double time, const colreg::domain_scales* scales = nullptr) const = 0;
-
-      virtual const char* GetETA() const = 0;
+      //virtual const colreg::domain_geometry_ref* GetDomainTopology(double time, const colreg::domain_scales* scales = nullptr) const = 0;
 
       virtual ~iUnit() = default;
    };
@@ -170,15 +163,17 @@ namespace ColregSimulation
       */
       //virtual bool SaveSettings(const char* scenarioPath) const = 0;
 
-      virtual size_t GetUnitCount(UNIT_TYPE type)      const = 0;
+      //virtual SVCG::trajectory_point& GetCurrentUnitPositionByIdx(UNIT_TYPE type, size_t idx) const = 0;
 
-      virtual const iUnit* GetUnitByIdx(UNIT_TYPE type, size_t idx) const = 0;
+      virtual size_t GetUnitCount(UNIT_TYPE type) const = 0;
 
-      virtual const iUnit* GetUnitById(colreg::id_type id) const = 0;
+      virtual const SVCG::trajectory_point GetUnitByIdx(UNIT_TYPE type, size_t idx) const = 0;
 
-      virtual const chart_object::chart_object_unit_vct_ref GetChartObjects() const = 0;
+      virtual const iUnit* GetUnitById(SVCG::id_type id) const = 0;
 
-      virtual const chart_object::chart_object_unit* GetChartObject(colreg::chart_object_id id) const = 0;
+      virtual const chart_object::chart_object_unit_vct& GetChartObjects() const = 0;
+
+      virtual const chart_object::chart_object_unit* GetChartObject(SVCG::chart_object_id id) const = 0;
 
       //! Абсолютное время (UTC) среза симуляции
       virtual double GetTime() const = 0;
@@ -197,7 +192,7 @@ namespace ColregSimulation
 
       //virtual colreg::id_type OwnShipId() const = 0;
 
-      virtual bool PrepareDataForSave(const bool focused, const colreg::geo_points_vct_ref ships, const chart_object::chart_object_unit_vct_ref chart_objects) const = 0;
+      virtual bool PrepareDataForSave(const bool focused, const SVCG::geo_contour_vct& ships, const chart_object::chart_object_unit_vct& chart_objects) const = 0;
 
       virtual ~iSimulationState() = default;
    };

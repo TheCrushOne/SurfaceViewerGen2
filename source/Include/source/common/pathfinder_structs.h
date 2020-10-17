@@ -7,7 +7,7 @@
 #include "SVCG/route_point.h"
 #include "common/header_collector.h"
 
-namespace pathfinder
+namespace SV::pathfinder
 {
    template<class type>
    class Matrix
@@ -148,13 +148,13 @@ namespace pathfinder
       }
    };
 
-   class RoutePointMatrix : public Matrix<SVCG::route_point>
+   class RoutePointMatrix : public Matrix<CG::route_point>
    {
    public:
-      RoutePointMatrix(SVCG::route_point inVal = SVCG::route_point{})
+      RoutePointMatrix(CG::route_point inVal = CG::route_point{})
          : Matrix(inVal)
       {}
-      RoutePointMatrix(std::vector<std::vector<SVCG::route_point>> source)
+      RoutePointMatrix(CG::route_line_vct& source)
       {
          m_rowCount = source.size();
          m_colCount = m_rowCount > 0 ? source.at(0).size() : 0;
@@ -203,7 +203,7 @@ namespace pathfinder
       {}
    };
 
-   using aff_checker = std::function<bool(const std::shared_ptr<Matrix<SVCG::route_point>>&, std::shared_ptr<Matrix<size_t>>&, size_t, size_t)>;
+   using aff_checker = std::function<bool(const std::shared_ptr<RoutePointMatrix>&, std::shared_ptr<Matrix<size_t>>&, size_t, size_t)>;
 
    struct path_finder_logic
    {

@@ -10,7 +10,7 @@
 
 struct iPropertyInterface;
 
-namespace ColregSimulation
+namespace SV::surface_simulation
 {
 #pragma pack (push, 4)
    //!тип маршрута
@@ -91,7 +91,7 @@ namespace ColregSimulation
    struct iUnit
    {
       //! Информационные данные юнита
-      virtual SVCG::ship_info GetInfo() const = 0;
+      virtual SV::ship_info GetInfo() const = 0;
 
       //virtual const colreg::domain_scales& GetDomainScales() const = 0;
 
@@ -99,13 +99,13 @@ namespace ColregSimulation
       //virtual track_point_full_info GetPos() const = 0;
 
       //! Псевдосписок путей
-      virtual const SVCG::trajectory_point_vct& GetRoute(ROUTE_TYPE type)const = 0;
+      virtual const CG::trajectory_point_vct& GetRoute(ROUTE_TYPE type)const = 0;
 
       //! Исходный путь
-      virtual const SVCG::trajectory_point_vct& GetSrcPath() const = 0;
+      virtual const CG::trajectory_point_vct& GetSrcPath() const = 0;
 
       //! Исходный набор кт
-      virtual const SVCG::trajectory_point_vct& GetSrcControlPoints() const = 0;
+      virtual const CG::trajectory_point_vct& GetSrcControlPoints() const = 0;
 
       /*! Получить топологию домена юнита в момент времени
       \param[in] scales Получить топологию с переданными коэффициентами сжатия
@@ -167,13 +167,13 @@ namespace ColregSimulation
 
       virtual size_t GetUnitCount(UNIT_TYPE type) const = 0;
 
-      virtual const SVCG::trajectory_point GetUnitByIdx(UNIT_TYPE type, size_t idx) const = 0;
+      virtual const CG::trajectory_point GetUnitByIdx(UNIT_TYPE type, size_t idx) const = 0;
 
-      virtual const iUnit* GetUnitById(SVCG::id_type id) const = 0;
+      virtual const iUnit* GetUnitById(id_type id) const = 0;
 
       virtual const chart_object::chart_object_unit_vct& GetChartObjects() const = 0;
 
-      virtual const chart_object::chart_object_unit* GetChartObject(SVCG::chart_object_id id) const = 0;
+      virtual const chart_object::chart_object_unit* GetChartObject(chart_object_id id) const = 0;
 
       //! Абсолютное время (UTC) среза симуляции
       virtual double GetTime() const = 0;

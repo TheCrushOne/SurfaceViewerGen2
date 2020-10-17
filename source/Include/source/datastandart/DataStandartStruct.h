@@ -5,7 +5,7 @@
 
 //#define DEFINE_DATASOURCE_TYPE( ds_type ) enum { data_source_type = (ds_type) };
 
-namespace data_standart
+namespace SV::data_standart
 {
    struct data_standart_base
    {

@@ -1,5 +1,5 @@
 #pragma once
-#include "common/chart_object.h"
+#include "common/chart_object_unit.h"
 #include "DataStandart.h"
 #include "DataStandartInterfaceBase.h"
 #include "navdisp/ComService.h"

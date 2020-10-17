@@ -9,7 +9,7 @@
 #include "IsolineAlgorithms\SegmentCollector.h"
 #include "IsolineAlgorithms\WaveFrontline.h"
 
-namespace chart_object
+namespace SV::chart_object
 {
    enum class AlgorithmType : unsigned short
    {
@@ -22,11 +22,11 @@ namespace chart_object
    {
    public:
       IsolineGenerator(central_pack_ptr pack, navigation_dispatcher::iComServicePtr service);
-      void GenerateIsolines(const pathfinder::GeoMatrix&, chart_object::chart_object_unit_vct&);
+      void GenerateIsolines(const pathfinder::GeoMatrix&, chart_object_unit_vct&);
    private:
       chart_object::chart_object_unit_vct generateIsolineLevel(AlgorithmType type, const pathfinder::GeoMatrix& rawdata, double height, int H);
 
-      void addChartObjectSet(const SVCG::geo_contour_vct& data, double height, int H);
+      void addChartObjectSet(const CG::geo_contour_vct& data, double height, int H);
    private:
       std::unique_ptr<LabirinthTraverse> m_labirinthTraverseAlgorithm;
       std::unique_ptr<SegmentCollector> m_segmentCollectorAlgorithm;

@@ -4,15 +4,15 @@
 #include "SVCG/positioning.h"
 #include "AlgorithmHelpers.h"
 
-using namespace chart_object;
+using namespace SV;
+using namespace SV::chart_object;
 std::recursive_mutex g_waveFrontlineMutex;
 
-using frontlineElement = std::pair<SVCG::route_point, size_t>;
+using frontlineElement = std::pair<CG::route_point, size_t>;
 using frontlineType = std::vector<frontlineElement>;
-using lineVct = std::vector<std::vector<SVCG::route_point>>;
 
 // WARNING: Не натравливать на пустой парент!!! падает!!!
-inline size_t addDuplicateIsolineShard(lineVct& shardVct, std::vector<SVCG::route_point> parent)
+inline size_t addDuplicateIsolineShard(CG::route_line_vct& shardVct, const CG::route_line& parent)
 {
    shardVct.emplace_back();
    auto lineIter = shardVct.end() - 1;
@@ -21,23 +21,23 @@ inline size_t addDuplicateIsolineShard(lineVct& shardVct, std::vector<SVCG::rout
    return shardVct.size() - 1;
 }
 
-inline frontlineType checkAddSurrondPoints(const std::shared_ptr<pathfinder::Matrix<bool>>& actValMtx, const std::shared_ptr<pathfinder::Matrix<bool>>& inLineFlagMtx, const std::shared_ptr<pathfinder::Matrix<bool>>& passedFlagMtx, lineVct& shardVct, size_t parentIdx, size_t rIdx, size_t cIdx)
+inline frontlineType checkAddSurrondPoints(const std::shared_ptr<pathfinder::Matrix<bool>>& actValMtx, const std::shared_ptr<pathfinder::Matrix<bool>>& inLineFlagMtx, const std::shared_ptr<pathfinder::Matrix<bool>>& passedFlagMtx, CG::route_line_vct& shardVct, size_t parentIdx, size_t rIdx, size_t cIdx)
 {
    frontlineType result;
-   std::vector<SVCG::route_point> surr;
+   CG::route_line surr;
    int row = static_cast<int>(rIdx);
    int col = static_cast<int>(cIdx);
 
-   surr.emplace_back(SVCG::route_point{ row - 1, col - 1 });
-   surr.emplace_back(SVCG::route_point{ row - 1, col });
-   surr.emplace_back(SVCG::route_point{ row - 1, col + 1 });
-   surr.emplace_back(SVCG::route_point{ row, col - 1 });
-   surr.emplace_back(SVCG::route_point{ row, col + 1 });
-   surr.emplace_back(SVCG::route_point{ row + 1, col - 1 });
-   surr.emplace_back(SVCG::route_point{ row + 1, col });
-   surr.emplace_back(SVCG::route_point{ row + 1, col + 1 });
+   surr.emplace_back(CG::route_point{ row - 1, col - 1 });
+   surr.emplace_back(CG::route_point{ row - 1, col });
+   surr.emplace_back(CG::route_point{ row - 1, col + 1 });
+   surr.emplace_back(CG::route_point{ row, col - 1 });
+   surr.emplace_back(CG::route_point{ row, col + 1 });
+   surr.emplace_back(CG::route_point{ row + 1, col - 1 });
+   surr.emplace_back(CG::route_point{ row + 1, col });
+   surr.emplace_back(CG::route_point{ row + 1, col + 1 });
 
-   std::vector<SVCG::route_point> parentData = shardVct.at(parentIdx);
+   CG::route_line parentData = shardVct.at(parentIdx);
 
    bool first = true;
    for (auto& elem : surr)
@@ -56,17 +56,17 @@ inline frontlineType checkAddSurrondPoints(const std::shared_ptr<pathfinder::Mat
          }
          else
             lineIdx = addDuplicateIsolineShard(shardVct, parentData);
-         shardVct.at(lineIdx).emplace_back(SVCG::route_point(row, col));
-         result.push_back(frontlineElement{ SVCG::route_point(row, col), lineIdx });
+         shardVct.at(lineIdx).emplace_back(CG::route_point(row, col));
+         result.push_back(frontlineElement{ CG::route_point(row, col), lineIdx });
       }
    }
    return result;
 }
 
-chart_object::chart_object_unit_vct WaveFrontline::generateIsolineLevel(const pathfinder::GeoMatrix& rawdata, double height, int H)
+chart_object_unit_vct WaveFrontline::generateIsolineLevel(const pathfinder::GeoMatrix& rawdata, double height, int H)
 {
    if (!rawdata.GetRowCount())
-      return chart_object::chart_object_unit_vct();
+      return chart_object_unit_vct();
 
    auto actValMtx = std::make_shared<pathfinder::Matrix<bool>>(rawdata.GetRowCount(), rawdata.GetColCount(), false);
    auto inLineFlagMtx = std::make_shared<pathfinder::Matrix<bool>>(rawdata.GetRowCount(), rawdata.GetColCount(), false);
@@ -87,7 +87,7 @@ chart_object::chart_object_unit_vct WaveFrontline::generateIsolineLevel(const pa
          inLineFlagMtx->Set(rIdx, cIdx, activationCheck(actValMtx, rIdx, cIdx) && nearestActivationCheck(actValMtx, rIdx, cIdx));
    }
 
-   lineVct isoLineVct;
+   CG::route_line_vct isoLineVct;
    // Построение контура
    for (size_t rIdx = 0; rIdx < actValMtx->GetRowCount(); rIdx++)
    {
@@ -98,9 +98,9 @@ chart_object::chart_object_unit_vct WaveFrontline::generateIsolineLevel(const pa
          // С этой точки начинаем обход в ширину
          if (activationCheck(actValMtx, row, col) && inLineCheck(inLineFlagMtx, row, col) && !passedCheck(passedFlagMtx, row, col))
          {
-            SVCG::route_point root{row, col};
+            CG::route_point root{row, col};
             frontlineType frontline;
-            lineVct shardVct;
+            CG::route_line_vct shardVct;
             shardVct.emplace_back();
             frontline.emplace_back(root, shardVct.size() - 1);
             shardVct.begin()->emplace_back(root);
@@ -123,13 +123,13 @@ chart_object::chart_object_unit_vct WaveFrontline::generateIsolineLevel(const pa
    }
 
    settings::environment_settings& env_stt = GetService()->GetSettingsSerializerHolder()->GetSettings().env_stt;
-   chart_object::chart_object_unit_vct res;
+   chart_object_unit_vct res;
    auto& gcBack = res.emplace_back();
    for (auto& line : isoLineVct)
    {
       auto& cBack = gcBack.geom_contour_vct.emplace_back();
       for (auto& point : line)
-         cBack.emplace_back(static_cast<math::geo_point>(SVCG::RoutePointToPositionPoint(point, env_stt)));
+         cBack.emplace_back(static_cast<CG::geo_point>(transfercase::RoutePointToPositionPoint(point, env_stt)));
    }
 
    std::lock_guard<std::recursive_mutex> guard(g_waveFrontlineMutex);

@@ -11,7 +11,8 @@
 #define LOCALMULTITHREAD
 #define CURTIME_MS(time_ms) time_ms = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count()
 
-using namespace chart_object;
+using namespace SV;
+using namespace SV::chart_object;
 
 IsolineGenerator::IsolineGenerator(central_pack_ptr pack, navigation_dispatcher::iComServicePtr service)
    : ModuleBase(pack, service)
@@ -22,7 +23,7 @@ IsolineGenerator::IsolineGenerator(central_pack_ptr pack, navigation_dispatcher:
    m_waveFrontlineAlgortihm = std::make_unique<WaveFrontline>(pack, service);
 }
 
-void IsolineGenerator::GenerateIsolines(const pathfinder::GeoMatrix& rawdata, chart_object::chart_object_unit_vct& staticStorage)
+void IsolineGenerator::GenerateIsolines(const pathfinder::GeoMatrix& rawdata, chart_object_unit_vct& staticStorage)
 {
    size_t levelCount = 10;
    double min = rawdata.Min(), max = rawdata.Max();
@@ -34,7 +35,7 @@ void IsolineGenerator::GenerateIsolines(const pathfinder::GeoMatrix& rawdata, ch
    __int64 start;
    CURTIME_MS(start);
 #ifdef LOCALMULTITHREAD
-   std::vector<std::future<chart_object::chart_object_unit_vct>> futures;
+   std::vector<std::future<chart_object_unit_vct>> futures;
    // NOTE: менять тип алгоритма тут
    for (size_t levelIdx = 0; levelIdx < levelCount; levelIdx++)
       futures.push_back(std::async(&IsolineGenerator::generateIsolineLevel, this, type, rawdata, min + step * static_cast<double>(levelIdx), 360. / static_cast<double>(levelCount)* static_cast<double>(levelIdx)));
@@ -54,7 +55,7 @@ void IsolineGenerator::GenerateIsolines(const pathfinder::GeoMatrix& rawdata, ch
    GetPack()->comm->Message(ICommunicator::MessageType::MT_PERFORMANCE, (std::string("Isoline build time: ") + std::to_string(finish - start) + " ms.").c_str());
 }
 
-std::vector<chart_object::chart_object_unit> IsolineGenerator::generateIsolineLevel(AlgorithmType type, const pathfinder::GeoMatrix& rawdata, double height, int H)
+chart_object_unit_vct IsolineGenerator::generateIsolineLevel(AlgorithmType type, const pathfinder::GeoMatrix& rawdata, double height, int H)
 {
    std::vector<chart_object::chart_object_unit> res;
    switch(type)
@@ -83,7 +84,7 @@ std::vector<chart_object::chart_object_unit> IsolineGenerator::generateIsolineLe
    return res;
 }
 
-void IsolineGenerator::addChartObjectSet(const SVCG::geo_contour_vct& data, double height, int H)
+void IsolineGenerator::addChartObjectSet(const CG::geo_contour_vct& data, double height, int H)
 {
    /*for (auto& isoLine : data)
    {

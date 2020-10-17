@@ -8,6 +8,8 @@
 
 #include "json/json_wrapper.h"
 
+using namespace SV;
+
 namespace colreg
 {
    class UnitDataSerializer : public iUnitDataSerializer
@@ -70,7 +72,7 @@ namespace colreg
             if (elem.find(tag::control_points, tag::control_points+strlen(tag::control_points)) != nullptr)
             {
                for (auto& cp : elem[tag::control_points])
-                  pse.control_point_list.emplace_back(SVCG::route_point(cp[tag::row].asUInt(), cp[tag::col].asUInt(), 0.f));
+                  pse.control_point_list.emplace_back(CG::route_point(cp[tag::row].asUInt(), cp[tag::col].asUInt(), 0.f));
             }
             return true;
          };

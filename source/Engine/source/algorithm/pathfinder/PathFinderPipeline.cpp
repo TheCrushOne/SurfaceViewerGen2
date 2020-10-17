@@ -4,7 +4,8 @@
 #include <limits.h>
 #include "Helpers\CoordinateCorrectionHelper.h"
 
-using namespace pathfinder;
+using namespace SV;
+using namespace SV::pathfinder;
 
 PathFinderPipeline::PathFinderPipeline(central_pack* pack)
 //: m_data(LightPointData())
@@ -29,7 +30,7 @@ PathFinderPipeline::~PathFinderPipeline()
 
 // NOTE: желательно и лаунчер запускать в своем потоке
 // WARNING: распараллелено!!!
-void PathFinderPipeline::FindPath(std::function<void(void)> callback, const std::shared_ptr<Matrix<SVCG::route_point>> rawdata, std::shared_ptr<path_finder_indata> indata)
+void PathFinderPipeline::FindPath(std::function<void(void)> callback, const std::shared_ptr<RoutePointMatrix> rawdata, std::shared_ptr<path_finder_indata> indata)
 {
    // NOTE: итерация шага стратегий
    m_iterations = 2;
@@ -244,13 +245,13 @@ void PathFinderPipeline::findPathSingleThread()
 
 void PathFinderPipeline::correctControlPoints()
 {
-   affilationCheckerMtd affilationChecker = [this](const std::shared_ptr<pathfinder::Matrix<SVCG::route_point>>& rawdata, size_t row, size_t col)->bool
+   affilationCheckerMtd affilationChecker = [this](const std::shared_ptr<pathfinder::RoutePointMatrix>& rawdata, size_t row, size_t col)->bool
    {
       return this->GetCurrentCoverage()->Get(row, col) == 1 && rawdata->Get(row, col).go != pathfinder::GoZoneAffilation::GZA_FORBIDDEN;
    };
-   auto corrector = [this, affilationChecker](SVCG::route_point& src)
+   auto corrector = [this, affilationChecker](CG::route_point& src)
    {
-      SVCG::route_point corrected;
+      CG::route_point corrected;
       corrected = CoordinateCorrectionHelper::CorrectPoint(m_rawdata, src.row, src.col, affilationChecker, GetCommunicator());
       src = corrected;
    };

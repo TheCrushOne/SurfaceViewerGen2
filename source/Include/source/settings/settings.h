@@ -9,29 +9,29 @@
 #include "settings_types.h"
 #include "settings_meta.h"
 
-namespace settings
+namespace SV::settings
 {
    struct route
    {
-      SVCG::route_point start;
-      SVCG::route_point finish;
-      std::vector<SVCG::route_point> control_point_list;
-      std::vector<SVCG::route_point> route_list;
+      CG::route_point start;
+      CG::route_point finish;
+      CG::route_line control_point_list;
+      CG::route_line route_list;
 
       route() {}
-      route(const SVCG::route_point& start, const SVCG::route_point& finish)
+      route(const CG::route_point& start, const CG::route_point& finish)
          : start(start)
          , finish(finish)
          , control_point_list()
          , route_list()
       {}
-      route(const SVCG::route_point& start, const SVCG::route_point& finish, const std::vector<SVCG::route_point>& route, const std::vector<SVCG::route_point>& controlPointList)
+      route(const CG::route_point& start, const CG::route_point& finish, const CG::route_line& route, const CG::route_line& controlPointList)
          : start(start)
          , finish(finish)
          , control_point_list(controlPointList)
          , route_list(route)
       {}
-      route(const SVCG::route_point& start, const SVCG::route_point& finish, const std::vector<SVCG::route_point>& controlPointList)
+      route(const CG::route_point& start, const CG::route_point& finish, const CG::route_line& controlPointList)
          : start(start)
          , finish(finish)
          , control_point_list(controlPointList)
@@ -50,15 +50,15 @@ namespace settings
          : route()
          , name(name)
       {}
-      unit_data_element(const char* name, const SVCG::route_point& start, const SVCG::route_point& finish)
+      unit_data_element(const char* name, const CG::route_point& start, const CG::route_point& finish)
          : route(start, finish)
          , name(name)
       {}
-      unit_data_element(const char* name, const SVCG::route_point& start, const SVCG::route_point& finish, const std::vector<SVCG::route_point>& route, const std::vector<SVCG::route_point>& controlPointList)
+      unit_data_element(const char* name, const CG::route_point& start, const CG::route_point& finish, const CG::route_line& route, const CG::route_line& controlPointList)
          : route(start, finish, route, controlPointList)
          , name(name)
       {}
-      unit_data_element(const char* name, const SVCG::route_point& start, const SVCG::route_point& finish, const std::vector<SVCG::route_point>& controlPointList)
+      unit_data_element(const char* name, const CG::route_point& start, const CG::route_point& finish, const CG::route_line& controlPointList)
          : route(start, finish, controlPointList)
          , name(name)
       {}

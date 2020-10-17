@@ -3,11 +3,11 @@
 #include "common\central_class.h"
 #include "TaskHolder.h"
 
-namespace pathfinder
+namespace SV::pathfinder
 {
-   using TaskHolderData = std::pair<TaskHolder, TaskStatus>;
-   using TaskHolders = std::vector<TaskHolderData>;
-   using TaskStorage = std::vector<task_unit>;
+   typedef std::pair<TaskHolder, TaskStatus> TaskHolderData;
+   typedef std::vector<TaskHolderData> TaskHolders;
+   typedef std::vector<task_unit> TaskStorage;
 
    class MultithreadComputingManager : public Central
    {

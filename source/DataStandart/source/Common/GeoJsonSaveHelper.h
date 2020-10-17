@@ -1,14 +1,15 @@
 #pragma once
 
 #include "colreg/ChartSafetyStructs.h"
-#include "common/chart_object.h"
+#include "common/chart_object_unit.h"
+#include "common/properties.h"
 #include "TagList.h"
 
 #include "json/json_wrapper.h"
 
 namespace geojson_save_helper
 {
-   inline Json::Value prop_to_json(const colreg::simple_prop& prop)
+   inline Json::Value prop_to_json(const properties::simple_prop& prop)
    {
       Json::Value jprop;
       jprop[tag::key] = prop.key.c_str();
@@ -16,7 +17,7 @@ namespace geojson_save_helper
       return jprop;
    }
 
-   inline Json::Value geopoint_to_json(const SVCG::geo_point& point)
+   inline Json::Value geopoint_to_json(const CG::geo_point& point)
    {
       Json::Value jpoint;
       jpoint[tag::lon] = point.lon;
@@ -24,7 +25,7 @@ namespace geojson_save_helper
       return jpoint;
    }
 
-   inline Json::Value geopointvct_to_json(const std::vector<SVCG::geo_point>& points)
+   inline Json::Value geopointvct_to_json(const CG::geo_contour& points)
    {
       Json::Value jcontour(Json::arrayValue);
       for (size_t idx = 0; idx < points.size(); idx++)

@@ -58,7 +58,7 @@
     <ClInclude Include="source\common\base_class.h" />
     <ClInclude Include="source\common\base_types.h" />
     <ClInclude Include="source\common\central_class.h" />
-    <ClInclude Include="source\common\chart_object.h" />
+    <ClInclude Include="source\common\chart_object_unit.h" />
     <ClInclude Include="source\common\communicator.h" />
     <ClInclude Include="source\common\converter_structs.h" />
     <ClInclude Include="source\common\coordinates.h" />
@@ -71,9 +71,11 @@
     <ClInclude Include="source\common\global_structs.h" />
     <ClInclude Include="source\common\header_collector.h" />
     <ClInclude Include="source\common\holder_base.h" />
+    <ClInclude Include="source\common\object_type.h" />
     <ClInclude Include="source\common\observer.h" />
     <ClInclude Include="source\common\pathfinder_structs.h" />
     <ClInclude Include="source\common\pathfinder_types.h" />
+    <ClInclude Include="source\common\properties.h" />
     <ClInclude Include="source\common\research_structs.h" />
     <ClInclude Include="source\common\research_types.h" />
     <ClInclude Include="source\common\servicable.h" />
@@ -111,8 +113,10 @@
     <ClInclude Include="source\datastandart\SVGenMapDataStandartInterface.h" />
     <ClInclude Include="source\json\json_wrapper.h" />
     <ClInclude Include="source\json\json_wrapper_impl.h" />
-    <ClInclude Include="source\layer_provider\chart_object.h" />
-    <ClInclude Include="source\layer_provider\unit_object.h" />
+    <ClInclude Include="source\layer_provider\layer_chart_object.h" />
+    <ClInclude Include="source\layer_provider\trajectory_point.h" />
+    <ClInclude Include="source\layer_provider\unit_info.h" />
+    <ClInclude Include="source\layer_provider\layer_unit_object.h" />
     <ClInclude Include="source\math\ellipse.h" />
     <ClInclude Include="source\math\intersect.h" />
     <ClInclude Include="source\math\math_utils.h" />
@@ -135,7 +139,7 @@
     <ClInclude Include="source\SVCG\base_types.h" />
     <ClInclude Include="source\SVCG\enhanced_geometry.h" />
     <ClInclude Include="source\SVCG\position_point.h" />
-    <ClInclude Include="source\SVCG\base_geometry.h" />
+    <ClInclude Include="source\SVCG\geo_point.h" />
     <ClInclude Include="source\SVCG\positioning.h" />
     <ClInclude Include="source\SVCG\route_point.h" />
     <ClInclude Include="source\ThirdParty\json\json-forwards.h" />

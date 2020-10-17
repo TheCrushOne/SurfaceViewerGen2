@@ -10,7 +10,7 @@
 #define ORDER_EXPORTIMPORT __declspec(dllimport) // import DLL information
 #endif
 
-#define PREPARE_ORDER(name) extern "C" ORDER_EXPORTIMPORT navigation_dispatcher::iOrderPtr name(central_pack_ptr pack, navigation_dispatcher::iComServicePtr pService);
+#define PREPARE_ORDER(name) extern "C" ORDER_EXPORTIMPORT SV::navigation_dispatcher::iOrderPtr name(central_pack_ptr pack, SV::navigation_dispatcher::iComService pService);
 
 PREPARE_ORDER(CreatePngHeightmapConverter);
 PREPARE_ORDER(CreateObjectListGenerator);

@@ -5,9 +5,9 @@
 #include "common/central_class.h"
 #include "navdisp/ComService.h"
 
-namespace navigation_dispatcher
+namespace SV::navigation_dispatcher
 {
-   struct iNavigationDispatcher : colreg::iReleasable
+   struct iNavigationDispatcher : iReleasable
    {
       virtual int ProcessCommand(const char* configFilePath, const char* begCommandName, const char* baseFolder, iComService* service = nullptr) = 0;
    };
@@ -19,5 +19,5 @@ namespace navigation_dispatcher
 #define NDEXPRTIMPRT __declspec(dllimport) // import DLL information
 #endif
 
-extern "C" NDEXPRTIMPRT navigation_dispatcher::iNavigationDispatcher * CreateNavigationDispatcher(central_pack*);
-extern "C" NDEXPRTIMPRT navigation_dispatcher::iComService * CreateExternalComService(central_pack*, const char*);
+extern "C" NDEXPRTIMPRT SV::navigation_dispatcher::iNavigationDispatcher * CreateNavigationDispatcher(central_pack*);
+extern "C" NDEXPRTIMPRT SV::navigation_dispatcher::iComService * CreateExternalComService(central_pack*, const char*);

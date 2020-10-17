@@ -3,7 +3,7 @@
 #include "navdisp/ComService.h"
 #include "common/pathfinder_structs.h"
 
-namespace data_standart
+namespace SV::data_standart
 {
    struct iPathStorageDataStandart : public iDataStandart
    {
@@ -18,4 +18,4 @@ namespace data_standart
 #define CHARTOBJEXPRTIMPRT __declspec(dllimport) // import DLL information
 #endif
 
-extern "C" CHARTOBJEXPRTIMPRT data_standart::iDataStandart * CreatePathStorageDataStandart(central_pack * pack, LPCWSTR base_folder, navigation_dispatcher::iComService * pService);
+extern "C" CHARTOBJEXPRTIMPRT SV::data_standart::iDataStandart * CreatePathStorageDataStandart(central_pack * pack, LPCWSTR base_folder, SV::navigation_dispatcher::iComService * pService);

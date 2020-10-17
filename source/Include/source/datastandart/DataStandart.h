@@ -12,7 +12,7 @@
 
 namespace SV::data_standart
 {
-   struct iDataStandart : colreg::iReleasable
+   struct iDataStandart : iReleasable
    {
       virtual ~iDataStandart() = 0 { }
 

@@ -15,7 +15,7 @@
 #include "StrategyManager.h"
 #include "Multithread/TaskHolder.h"
 
-namespace pathfinder
+namespace SV::pathfinder
 {
    class PathFinder
    {
@@ -25,9 +25,9 @@ namespace pathfinder
    public:
       ~PathFinder();
    public:
-      void FindLandPath(settings::route& route, const std::shared_ptr<Matrix<SVCG::route_point>> rawdata, const std::shared_ptr<Matrix<size_t>> coverageMatrix, bool multithread, bool* pathfound);
-      void FindAirPath(settings::route& route, const std::shared_ptr<Matrix<SVCG::route_point>> rawdata, size_t iterations, bool multithread);
+      void FindLandPath(settings::route& route, const std::shared_ptr<RoutePointMatrix>& rawdata, const std::shared_ptr<Matrix<size_t>> coverageMatrix, bool multithread, bool* pathfound);
+      void FindAirPath(settings::route& route, const std::shared_ptr<RoutePointMatrix>& rawdata, size_t iterations, bool multithread);
    private:
-      std::vector<SVCG::route_point> findUniversalPath(SVCG::route_point& start, SVCG::route_point& finish, path_finder_logic& logic, const std::shared_ptr<Matrix<SVCG::route_point>> rawdata, std::shared_ptr<Matrix<size_t>> coverageMatrix, bool multithread, bool* pathFound);
+      CG::route_line findUniversalPath(CG::route_point& start, CG::route_point& finish, path_finder_logic& logic, const std::shared_ptr<RoutePointMatrix> rawdata, std::shared_ptr<Matrix<size_t>> coverageMatrix, bool multithread, bool* pathFound);
    };
 }

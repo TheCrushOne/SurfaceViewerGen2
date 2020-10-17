@@ -2,7 +2,7 @@
 
 #include <unordered_map>
 
-namespace settings
+namespace SV::settings
 {
    enum class PathfindingSettingsUID : unsigned short
    {

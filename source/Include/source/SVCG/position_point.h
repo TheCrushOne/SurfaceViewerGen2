@@ -2,9 +2,9 @@
 
 #include <vector>
 #include "colreg/CommonStructs.h"
-#include "SVCG/base_geometry.h"
+#include "SVCG/geo_point.h"
 
-namespace SVCG
+namespace SV::CG
 {
    struct position_point : geo_point
    {
@@ -27,5 +27,6 @@ namespace SVCG
       double alt = NO_VALUE;
    };
 
-   using position_points = std::vector<position_point>;
+   typedef std::vector<position_point> position_contour;
+   typedef std::vector<position_contour> position_contour_vct;
 }

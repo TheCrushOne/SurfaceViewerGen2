@@ -6,11 +6,8 @@
 #include <string>
 #include <vector>
 
-namespace colreg
+namespace SV::chart_safety
 {
-#define _BIT_(n) (1i64 << n)
-
-   
 #pragma pack (push, 1)
 
    //struct geo_point_ex : geo_point
@@ -40,22 +37,7 @@ namespace colreg
       const char* val;
    };*/
 
-   struct simple_prop/*_holder*/
-   {
-      simple_prop/*_holder*/() = default;
-
-      simple_prop/*_holder*/(std::string k, std::string v)
-         : key{ k }
-         , val{ v }
-      {}
-
-      std::string key;
-      std::string val;
-   };
-
-   //using object_props_ref = base_ref<simple_prop>
-   typedef std::vector<simple_prop> object_props_vct;
-   typedef object_props_vct& object_props_vct_ref;
+   
 
    //struct chart_object_id
    //{
@@ -102,22 +84,4 @@ namespace colreg
    typedef chart_object_vct& chart_object_vct_ref;*/
    //using chart_objects_ref = base_ref<chart_object>;
 #pragma pack (pop)
-
-   inline bool check_chart_obj_type(SVCG::mask_type mask, OBJECT_TYPE type)
-   {
-      return (mask & type) != 0;
-   }
-
-   inline const char* chart_obj_type_to_str(OBJECT_TYPE type)
-   {
-      switch (type)
-      {
-      // SurfaceViewer Types
-      case OBJECT_TYPE::OT_BORDER_AREA:   return "B_AREA";
-      case OBJECT_TYPE::OT_ISOLINE:       return "ISOLINE";
-      case OBJECT_TYPE::OT_NO_GO_AREA:    return "NOGO";
-      case OBJECT_TYPE::OT_NO_FLY_AREA:   return "NOFLY";
-      }
-      return "UNKNOWN";
-   }
 } //namespace colreg

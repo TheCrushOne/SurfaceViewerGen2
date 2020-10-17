@@ -8,9 +8,10 @@
 
 #define FLYCRCHCKPOINT(row, col, data) checkRetranslateFlyPointAffilation(static_cast<int>(row), static_cast<int>(col), data)
 
-using namespace pathfinder;
+using namespace SV;
+using namespace SV::pathfinder;
 
-bool StrategyManager::PrepareControlPoint(size_t iterations, std::vector<settings::route>& landRoutes, std::vector<settings::route>& airRoutes, const std::shared_ptr<Matrix<SVCG::route_point>>& rawdata, const std::shared_ptr<pathfinder::path_finder_indata> indata)
+bool StrategyManager::PrepareControlPoint(size_t iterations, std::vector<settings::route>& landRoutes, std::vector<settings::route>& airRoutes, const std::shared_ptr<RoutePointMatrix>& rawdata, const std::shared_ptr<pathfinder::path_finder_indata> indata)
 {
    ATLASSERT(indata->unit_data.land_units.size() > 0);
    pathfinder::StrategyType type = indata->strategy_settings.type;
@@ -22,7 +23,7 @@ bool StrategyManager::PrepareControlPoint(size_t iterations, std::vector<setting
    bool isPlusDirectionCol = start.col < finish.col;
    size_t rowCount = rawdata->GetRowCount(), colCount = rawdata->GetColCount();
    size_t directionControllerPointCount = 20;
-   auto controlPointInserter = [](settings::route& route, const SVCG::route_point point)
+   auto controlPointInserter = [](settings::route& route, const CG::route_point point)
    {
       /*if (route.start == SVCG::route_point())
       {
@@ -162,7 +163,7 @@ bool StrategyManager::PrepareControlPoint(size_t iterations, std::vector<setting
       double dFRow = static_cast<double>(finish.row);
       double dFCol = static_cast<double>(finish.col);
 
-      std::vector<std::pair<SVCG::route_point, SVCG::route_point>> cpPairVector;
+      std::vector<std::pair<CG::route_point, CG::route_point>> cpPairVector;
       double k = (dSCol - dFCol) / (dSRow - dFRow);
       double b = dSCol - k * dSRow;
       double dDiameter = static_cast<double>(diameter);
@@ -174,9 +175,9 @@ bool StrategyManager::PrepareControlPoint(size_t iterations, std::vector<setting
          // NOTE : при разлете в 45 грд.
          // NOTE : для смены угла разлета заменить на двойной синус
          double distantValue = sqrt(2)*(dDiameter * static_cast<double>((lineIdx + 1)/2));
-         SVCG::geo_point startNonRotated{ dSRow + cos(theta)*distantValue, dSCol + sin(theta)*distantValue };
+         CG::geo_point startNonRotated{ dSRow + cos(theta)*distantValue, dSCol + sin(theta)*distantValue };
          // NOTE: разворот на 180, т.е. на Пи
-         SVCG::geo_point finishNonRotated{ dFRow + cos(theta + PI) * distantValue, dFCol + sin(theta + PI) * distantValue };
+         CG::geo_point finishNonRotated{ dFRow + cos(theta + PI) * distantValue, dFCol + sin(theta + PI) * distantValue };
 
          // NOTE: заюзана формула поворота относительно произвольной точки
          GeoMatrix rtResStart =
@@ -201,7 +202,7 @@ bool StrategyManager::PrepareControlPoint(size_t iterations, std::vector<setting
             * GeoMatrix({ { 1., 0., 0. }
                         , { 0., 1., 0. }
                         , { dFRow, dFCol, 1. } });
-         cpPairVector.emplace_back(std::pair<SVCG::route_point, SVCG::route_point>{
+         cpPairVector.emplace_back(std::pair<CG::route_point, CG::route_point>{
               { static_cast<int>(rtResStart.Get(0, 0)), static_cast<int>(rtResStart.Get(0, 1)) }
             , { static_cast<int>(rtResFinish.Get(0, 0)), static_cast<int>(rtResFinish.Get(0, 1)) }
          });
@@ -244,9 +245,9 @@ bool StrategyManager::PrepareControlPoint(size_t iterations, std::vector<setting
    return true;
 }
 
-SVCG::route_point StrategyManager::checkRetranslateFlyPointAffilation(int row, int col, const std::shared_ptr<Matrix<SVCG::route_point>>& rawdata)
+CG::route_point StrategyManager::checkRetranslateFlyPointAffilation(int row, int col, const std::shared_ptr<RoutePointMatrix>& rawdata)
 {
-   affilationCheckerMtd affilationChecker = [](const std::shared_ptr<pathfinder::Matrix<SVCG::route_point>>& rawdata, size_t row, size_t col)->bool
+   affilationCheckerMtd affilationChecker = [](const std::shared_ptr<pathfinder::RoutePointMatrix>& rawdata, size_t row, size_t col)->bool
    {
       return rawdata->Get(row, col).fly != pathfinder::FlyZoneAffilation::FZA_FORBIDDEN;
    };

@@ -7,7 +7,8 @@
 #include "Common\GeoJsonLoadHelper.h"
 #include "Common\GeoJsonSaveHelper.h"
 
-using namespace data_standart;
+using namespace SV;
+using namespace SV::data_standart;
 
 void ChartObjectDataStandart::resolvePathDee()
 {

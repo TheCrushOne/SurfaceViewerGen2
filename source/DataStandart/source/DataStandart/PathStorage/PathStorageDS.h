@@ -4,7 +4,7 @@
 #include "datastandart\DataStandartBase.h"
 #include "datastandart\DataStandartStruct.h"
 
-namespace data_standart
+namespace SV::data_standart
 {
    //template<int DSType = DataStandartType::DST_PATHS, typename DSStruct = path_storage_data_standart>
    class PathStorageDataStandart

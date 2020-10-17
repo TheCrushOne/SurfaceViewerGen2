@@ -1,6 +1,6 @@
 #pragma once
 
-namespace settings
+namespace SV::settings
 {
    enum class ResearchType : unsigned short
    {

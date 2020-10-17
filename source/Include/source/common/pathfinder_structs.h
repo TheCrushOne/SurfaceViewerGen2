@@ -5,6 +5,7 @@
 #include <memory>
 #include "pathfinder_types.h"
 #include "SVCG/route_point.h"
+#include "SVCG/geo_point.h"
 #include "common/header_collector.h"
 
 namespace SV::pathfinder
@@ -171,6 +172,8 @@ namespace SV::pathfinder
          : Matrix(mtx)
       {}
    };
+   
+   typedef Matrix<CG::geo_point> GeoPointMatrix;
 
    struct check_fly_zone_result
    {

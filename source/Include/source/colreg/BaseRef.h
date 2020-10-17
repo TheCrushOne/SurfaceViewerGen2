@@ -1,6 +1,6 @@
 #pragma once
 
-namespace colreg
+namespace SV
 {
 #pragma pack (push, 1)
 

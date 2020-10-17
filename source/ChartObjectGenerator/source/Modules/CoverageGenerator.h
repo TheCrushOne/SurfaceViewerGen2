@@ -5,7 +5,7 @@
 #include "common/chart_object.h"
 #include "ModuleBase.h"
 
-namespace chart_object
+namespace SV::chart_object
 {
    class CoverageGenerator : public ModuleBase
    {
@@ -14,7 +14,7 @@ namespace chart_object
          : ModuleBase(pack, service)
       {}
 
-      void GenerateChartBorder(const pathfinder::GeoMatrix&, chart_object::chart_object_unit&);
+      void GenerateChartBorder(const pathfinder::GeoMatrix&, chart_object_unit&);
    private:
    };
 }

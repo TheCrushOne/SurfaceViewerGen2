@@ -4,7 +4,7 @@
 //#include "pixel_point.h"
 //#include "math_base_types.h"
 #include "common/pathfinder_types.h"
-#include "SVCG/base_geometry.h"
+#include "SVCG/geo_point.h"
 
 #include <cmath>
 

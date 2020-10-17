@@ -3,7 +3,7 @@
 #include "common/central_class.h"
 #include "OrderInterface.h"
 
-namespace navigation_dispatcher
+namespace SV::navigation_dispatcher
 {
    struct iOrderFactory
    {

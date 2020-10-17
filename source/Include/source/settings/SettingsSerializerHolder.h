@@ -3,7 +3,7 @@
 #include "settings.h"
 #include "common\file_storage.h"
 
-namespace settings
+namespace SV::settings
 {
    struct iSettingsSerializerHolder
    {

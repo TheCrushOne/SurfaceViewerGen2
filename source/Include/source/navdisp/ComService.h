@@ -12,9 +12,9 @@
 #include "crossdllinterface\SettingsSerializerInterface.h"
 #include "crossdllinterface\PythonWrapperInterface.h"
 
-namespace navigation_dispatcher
+namespace SV::navigation_dispatcher
 {
-   struct iComService : colreg::iReleasable
+   struct iComService : iReleasable
    {
       // NOTE: она дублируется с Communicator!!!
       //virtual ICommunicator* GetCommunicator() = 0;
@@ -29,6 +29,4 @@ namespace navigation_dispatcher
       virtual colreg::iUnitDataSerializer* GetUnitDataSerializer() = 0;
       virtual python_wrapper::iPythonWrapper* GetPythonWrapper() = 0;
    };
-
-   typedef iComService* iComServicePtr;
 }

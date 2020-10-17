@@ -1,15 +1,15 @@
 #pragma once
 
-#include "base_geometry.h"
+#include <vector>
 
-namespace SVCG
+namespace SV::CG
 {
    struct point_2
    {
       point_2(double x, double y) {}
    };
 
-   using vector_2 = std::vector<point_2>;
+   typedef std::vector<point_2> vector_2;
 
    struct PolyPolygon_2
    {

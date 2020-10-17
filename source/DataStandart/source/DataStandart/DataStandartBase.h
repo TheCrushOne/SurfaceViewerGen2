@@ -6,7 +6,7 @@
 
 #include "json/json_wrapper.h"
 
-namespace data_standart
+namespace SV::data_standart
 {
    template <int TDataStandartType, typename TDataStandartData>
    class DataStandart : public Central

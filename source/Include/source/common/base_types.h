@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-namespace SV::CG
+namespace SV
 {
    using id_type = unsigned long long int;
    using mask_type = long long int;

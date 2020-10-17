@@ -2,7 +2,7 @@
 
 #include "OrderInterface.h"
 
-namespace navigation_dispatcher
+namespace SV::navigation_dispatcher
 {
    struct iOrderProcessor
    {

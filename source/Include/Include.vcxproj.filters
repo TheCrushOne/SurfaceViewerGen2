@@ -372,9 +372,6 @@
     <ClInclude Include="source\crossdllinterface\SurfaceViewerOrderingWrapperInterface.h">
       <Filter>crossdllinterface</Filter>
     </ClInclude>
-    <ClInclude Include="source\common\chart_object.h">
-      <Filter>common</Filter>
-    </ClInclude>
     <ClInclude Include="source\common\servicable.h">
       <Filter>common</Filter>
     </ClInclude>
@@ -396,25 +393,40 @@
     <ClInclude Include="source\crossdllinterface\PythonWrapperInterface.h">
       <Filter>crossdllinterface</Filter>
     </ClInclude>
-    <ClInclude Include="source\SVCG\base_geometry.h">
-      <Filter>SVCG</Filter>
-    </ClInclude>
     <ClInclude Include="source\SVCG\enhanced_geometry.h">
       <Filter>SVCG</Filter>
     </ClInclude>
     <ClInclude Include="source\SVCG\base_structs.h">
       <Filter>SVCG</Filter>
     </ClInclude>
-    <ClInclude Include="source\layer_provider\chart_object.h">
-      <Filter>layer_provider</Filter>
-    </ClInclude>
-    <ClInclude Include="source\layer_provider\unit_object.h">
-      <Filter>layer_provider</Filter>
-    </ClInclude>
     <ClInclude Include="source\SVCG\base_types.h">
       <Filter>SVCG</Filter>
     </ClInclude>
     <ClInclude Include="source\common\base_types.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="source\layer_provider\trajectory_point.h">
+      <Filter>layer_provider</Filter>
+    </ClInclude>
+    <ClInclude Include="source\layer_provider\unit_info.h">
+      <Filter>layer_provider</Filter>
+    </ClInclude>
+    <ClInclude Include="source\layer_provider\layer_chart_object.h">
+      <Filter>layer_provider</Filter>
+    </ClInclude>
+    <ClInclude Include="source\layer_provider\layer_unit_object.h">
+      <Filter>layer_provider</Filter>
+    </ClInclude>
+    <ClInclude Include="source\SVCG\geo_point.h">
+      <Filter>SVCG</Filter>
+    </ClInclude>
+    <ClInclude Include="source\common\properties.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="source\common\chart_object_unit.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="source\common\object_type.h">
       <Filter>common</Filter>
     </ClInclude>
   </ItemGroup>

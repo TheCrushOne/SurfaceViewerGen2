@@ -7,7 +7,7 @@
 #include "common/enum_class.h"
 #include "navdisp/NavDispTypes.h"
 
-namespace data_standart
+namespace SV::data_standart
 {
    // hdat -> Height DATa
    // obj -> OBJects

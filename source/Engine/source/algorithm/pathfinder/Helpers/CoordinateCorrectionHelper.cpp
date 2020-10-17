@@ -3,6 +3,22 @@
 
 using namespace SV;
 
+inline bool isInRowSafeRange(const std::shared_ptr<pathfinder::RoutePointMatrix>& rawdata, int rowIdx)
+{
+   return rowIdx >= 0 && rowIdx < static_cast<int>(rawdata->GetRowCount());
+}
+
+inline bool isInColSafeRange(const std::shared_ptr<pathfinder::RoutePointMatrix>& rawdata, int colIdx)
+{
+   return colIdx >= 0 && colIdx < static_cast<int>(rawdata->GetColCount());
+}
+
+inline void frontlineCheckEmplace(const std::shared_ptr<pathfinder::RoutePointMatrix>& rawdata, std::vector<std::pair<size_t, size_t>>& storage, size_t row, size_t col)
+{
+   if (isInRowSafeRange(rawdata, static_cast<int>(row)) && isInColSafeRange(rawdata, static_cast<int>(col)))
+      storage.emplace_back(std::make_pair(row, col));
+}
+
 CG::route_point CoordinateCorrectionHelper::CorrectPoint(const std::shared_ptr<pathfinder::RoutePointMatrix>& rawdata, int row, int col, affilationCheckerMtd checker, ICommunicator* communicator)
 {
    auto rowCount = rawdata->GetRowCount();
@@ -26,20 +42,6 @@ CG::route_point CoordinateCorrectionHelper::CorrectPoint(const std::shared_ptr<p
    int step = 1;
    int correctedRow = 0, correctedCol = 0;
 
-   auto isInRowSafeRange = [rawdata](int rowIdx)->bool
-   {
-      return rowIdx >= 0 && rowIdx < static_cast<int>(rawdata->GetRowCount());
-   };
-   auto isInColSafeRange = [rawdata](int colIdx)->bool
-   {
-      return colIdx >= 0 && colIdx < static_cast<int>(rawdata->GetColCount());
-   };
-   auto frontlineCheckEmplace = [isInRowSafeRange, isInColSafeRange](std::vector<std::pair<size_t, size_t>>& storage, size_t row, size_t col)
-   {
-      if (isInRowSafeRange(static_cast<int>(row)) && isInColSafeRange(static_cast<int>(col)))
-         storage.emplace_back(std::make_pair(row, col));
-   };
-
    if (!checker(rawdata, row, col))
    {
       auto pointScore = std::make_shared<pathfinder::Matrix<size_t>>(rawdata->GetRowCount(), rawdata->GetColCount(), 0);
@@ -54,14 +56,14 @@ CG::route_point CoordinateCorrectionHelper::CorrectPoint(const std::shared_ptr<p
             //qDebug() << "Score: " << score << " size " << frontline.size() << " row: " << curRow << " col: " << curCol;
             std::vector<std::pair<size_t, size_t>> pts;
             // NOTE: если понадобится вернуть 4 направления - срезать лишнее только тут
-            frontlineCheckEmplace(pts, curRow - 1, curCol - 1);   // topleft
-            frontlineCheckEmplace(pts, curRow - 1, curCol);       // top
-            frontlineCheckEmplace(pts, curRow - 1, curCol + 1);   // topright
-            frontlineCheckEmplace(pts, curRow, curCol - 1);       // left
-            frontlineCheckEmplace(pts, curRow, curCol + 1);       // right
-            frontlineCheckEmplace(pts, curRow + 1, curCol - 1);   // bottomleft
-            frontlineCheckEmplace(pts, curRow + 1, curCol);       // bottom
-            frontlineCheckEmplace(pts, curRow + 1, curCol + 1);   // bottomright
+            frontlineCheckEmplace(rawdata, pts, curRow - 1, curCol - 1);   // topleft
+            frontlineCheckEmplace(rawdata, pts, curRow - 1, curCol);       // top
+            frontlineCheckEmplace(rawdata, pts, curRow - 1, curCol + 1);   // topright
+            frontlineCheckEmplace(rawdata, pts, curRow, curCol - 1);       // left
+            frontlineCheckEmplace(rawdata, pts, curRow, curCol + 1);       // right
+            frontlineCheckEmplace(rawdata, pts, curRow + 1, curCol - 1);   // bottomleft
+            frontlineCheckEmplace(rawdata, pts, curRow + 1, curCol);       // bottom
+            frontlineCheckEmplace(rawdata, pts, curRow + 1, curCol + 1);   // bottomright
 
             for (auto iter : pts)
             {
@@ -73,7 +75,7 @@ CG::route_point CoordinateCorrectionHelper::CorrectPoint(const std::shared_ptr<p
                      correctedRow = iter.first;
                      correctedCol = iter.second;
                      communicator->Message(ICommunicator::MessageType::MT_INFO, "fly control point correction [%i %i] -> [%i %i]", row, col, correctedRow, correctedCol);
-                     return SVCG::route_point(correctedRow, correctedCol, 0.f);
+                     return CG::route_point(correctedRow, correctedCol, 0.f);
                   }
                   else
                   {
@@ -89,10 +91,10 @@ CG::route_point CoordinateCorrectionHelper::CorrectPoint(const std::shared_ptr<p
          {
             stuck = true;
             communicator->Message(ICommunicator::MessageType::MT_ERROR, "fly control point correction stucked [%i %i]", row, col);
-            return SVCG::route_point(0, 0);
+            return CG::route_point(0, 0);
          }
          //qDebug() << "corrector step:" << step << row << col;//row << static_cast<int>(rowCount) << (row - step < 0) << (row + step >= static_cast<int>(rowCount)) << (col - step < 0) << (col + step >= static_cast<int>(colCount));
       }
    }
-   return SVCG::route_point(row, col);
+   return CG::route_point(row, col);
 }

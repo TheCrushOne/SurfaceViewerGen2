@@ -7,7 +7,7 @@
 #include "common/central_class.h"
 #include "common/servicable.h"
 
-namespace navigation_dispatcher
+namespace SV::navigation_dispatcher
 {
    template <int TOrderType, typename TOrderData>
    class OrderBase : public iOrder, public Central, public Servicable

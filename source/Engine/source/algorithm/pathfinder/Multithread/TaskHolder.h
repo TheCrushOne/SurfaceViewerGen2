@@ -5,7 +5,7 @@
 #include "common/pathfinder_structs.h"
 #include "common/central_class.h"
 
-namespace pathfinder
+namespace SV::pathfinder
 {
    enum class TaskStatus : unsigned short
    {

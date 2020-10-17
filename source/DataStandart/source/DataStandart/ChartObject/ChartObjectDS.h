@@ -4,7 +4,7 @@
 #include "datastandart\DataStandartBase.h"
 #include "DataStandart\DataStandartStruct.h"
 
-namespace data_standart
+namespace SV::data_standart
 {
    class ChartObjectDataStandart
       : public iChartObjectDataStandart

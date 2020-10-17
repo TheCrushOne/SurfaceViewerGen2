@@ -2,14 +2,14 @@
 #include "DataStandart.h"
 #include "navdisp/ComService.h"
 
-namespace data_standart
+namespace SV::data_standart
 {
-   using PngMatrixData = std::vector<std::vector<double>>;
+   typedef std::vector<std::vector<double>> png_matrix_data;
 
    struct png_data
    {
       size_t row_count, col_count;
-      PngMatrixData raw_data;
+      png_matrix_data raw_data;
    };
 
    struct iPngHeightMapDataStandart : public iDataStandart
@@ -28,4 +28,4 @@ namespace data_standart
 #define PNGHMEXPRTIMPRT __declspec(dllimport) // import DLL information
 #endif
 
-extern "C" PNGHMEXPRTIMPRT data_standart::iDataStandart * CreatePngHeighMapDataStandart(central_pack* pack, LPCWSTR base_folder, navigation_dispatcher::iComService* pService);
+extern "C" PNGHMEXPRTIMPRT SV::data_standart::iDataStandart * CreatePngHeighMapDataStandart(central_pack* pack, LPCWSTR base_folder, SV::navigation_dispatcher::iComService* pService);

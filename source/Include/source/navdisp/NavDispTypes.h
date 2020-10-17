@@ -6,7 +6,7 @@
 #include <unordered_map>
 #include <windows.h>
 
-namespace navigation_dispatcher
+namespace SV::navigation_dispatcher
 {
    enum OrderType
    {

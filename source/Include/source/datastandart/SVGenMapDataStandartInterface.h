@@ -3,7 +3,7 @@
 #include "common/pathfinder_structs.h"
 #include "navdisp/ComService.h"
 
-namespace data_standart
+namespace SV::data_standart
 {
    struct iSurfaceVieverGenMapDataStandart : public iDataStandart
    {
@@ -19,4 +19,4 @@ namespace data_standart
 #define CHARTOBJEXPRTIMPRT __declspec(dllimport) // import DLL information
 #endif
 
-extern "C" CHARTOBJEXPRTIMPRT data_standart::iDataStandart * CreateSurfaceViewerGenMapDataStandart(central_pack * pack, LPCWSTR base_folder, navigation_dispatcher::iComService * pService);
+extern "C" CHARTOBJEXPRTIMPRT SV::data_standart::iDataStandart * CreateSurfaceViewerGenMapDataStandart(central_pack * pack, LPCWSTR base_folder, SV::navigation_dispatcher::iComService * pService);

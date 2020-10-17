@@ -5,9 +5,9 @@
 #include "colreg/XmlProperties/xml_property_container.h"
 #include <memory>
 
-namespace navigation_dispatcher
+namespace SV::navigation_dispatcher
 {
-   struct iOrder : colreg::iReleasable
+   struct iOrder : iReleasable
    {
       virtual ~iOrder() = 0 {}
 
@@ -23,6 +23,4 @@ namespace navigation_dispatcher
 
       virtual bool DeserializeAttrs(const xml_properties::PropertyItem&) = 0;
    };
-
-   typedef iOrder* iOrderPtr;
 }

@@ -9,10 +9,10 @@ namespace SV
    public:
       SelectedChartObject(id_type id, chart_object::OBJECT_TYPE chart_object_type);
 
-      void Render(render::iRender* renderer)override;
+      void Render(render::iRender* renderer) override;
 
-      void StartEdit(render::iRender* renderer, CPoint point, render::find_info info)override;
-      void Edit(render::iRender* renderer, CPoint point)override;
+      void StartEdit(render::iRender* renderer, CPoint point, render::find_info info) override;
+      void Edit(render::iRender* renderer, CPoint point) override;
       void EndEdit() override;
       void Delete() override;
       bool IsCanDelete() override { return true; }

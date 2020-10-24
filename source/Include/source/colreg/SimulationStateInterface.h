@@ -2,8 +2,9 @@
 
 #include "layer_provider/layer_unit_object.h"
 #include "layer_provider/layer_chart_object.h"
-#include "colreg/ColregSimulation.h"
 #include "colreg/SimulationTypes.h"
+#include "simulation/LayerUnitInterface.h"
+#include "simulation/LayerChartObjectInterface.h"
 
 namespace SV::surface_simulation
 {

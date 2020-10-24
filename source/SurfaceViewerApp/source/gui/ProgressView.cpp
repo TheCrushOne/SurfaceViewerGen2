@@ -246,8 +246,9 @@ void CProgressViewWnd::OnClickedSetButton()
    double timeVal = timeToTimestamp(time);
    for (size_t iControlPnt = 0; iControlPnt < sim->GetControlPointsCount(); ++iControlPnt)
    {
-      const surface_simulation::control_point_info& ctrlPt = sim->GetControlPointInfo(iControlPnt);
-      if (ctrlPt.time > timeVal)
+      //TODO: восстановить!!!
+      //const surface_simulation::control_point_info& ctrlPt = sim->GetControlPointInfo(iControlPnt);
+      /*if (ctrlPt.time > timeVal)
       {
          if (!sim->PlayFrom(iControlPnt))
          {
@@ -258,7 +259,7 @@ void CProgressViewWnd::OnClickedSetButton()
          simulator::simulatorStep();
          user_interface::InvalidateView();
          return;
-      }
+      }*/
    }
 }
 

@@ -58,7 +58,7 @@ void RenderUnitContour(render::iRender* renderer, surface_simulation::UNIT_TYPE 
 }
 
 
-void RenderDomain(render::FIND_OBJECT_TYPE fot, render::iRender* renderer, const surface_simulation::iUnit* unit, const CG::layer_provider::trajectory_point& center, double timeFromNow, const render::object_info& info/*, const colreg::domain_scales* scales*/)
+void RenderDomain(render::FIND_OBJECT_TYPE fot, render::iRender* renderer, const surface_simulation::iLayerUnit* unit, const CG::layer_provider::trajectory_point& center, double timeFromNow, const render::object_info& info/*, const colreg::domain_scales* scales*/)
 {
    // TODO: включить при необходимости
    /*auto domainTopology = unit->GetDomainTopology(timeFromNow, scales);

@@ -9,6 +9,8 @@
 #include <string>
 #include <regex>
 
+using namespace SV;
+
 #define VALID_CHECK_DLL_LOAD(dllName, funcName, guard, ...) \
    guard.Create(SVGUtils::CurrentDllPath(dllName).c_str(), funcName, __VA_ARGS__); \
    if (!guard.IsValid()) \

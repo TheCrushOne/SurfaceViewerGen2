@@ -1,10 +1,10 @@
 #pragma once
 #include "MouseTool.h"
 
-struct iSelected;
-
 namespace SV
 {
+   struct iSelected;
+
    class DragTool : public BaseTool
    {
 
@@ -24,6 +24,6 @@ namespace SV
       bool processFindInfo(const render::find_info& find);
 
    private:
-      iSelected* _selected = nullptr;
+      iSelected* m_selected = nullptr;
    };
 }

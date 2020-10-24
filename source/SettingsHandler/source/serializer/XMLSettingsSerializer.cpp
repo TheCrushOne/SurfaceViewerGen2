@@ -357,7 +357,7 @@ namespace SV::serializer
          {
             return;
          }
-         for (auto* it : node->get_childs())
+         for (auto* it : *node->get_childs())
          {
             std::string name(it->get_name());
             replaceNotAlphaNum(name);
@@ -366,7 +366,7 @@ namespace SV::serializer
             if (!nwItem)
                nwItem = &item->AddChild(name.c_str());
 
-            if (it->get_childs().empty())
+            if (!it->get_childs())
             {
                ATLASSERT(nwItem);
                *nwItem = it->get_value();
@@ -393,14 +393,14 @@ namespace SV::serializer
       }
       static void traverseDeserialize(const iPropertyInterface* node, const xml_properties::PropertyItem* item)
       {
-         for (auto* it : node->get_childs())
+         for (auto* it : *node->get_childs())
          {
             std::string name(it->get_name());
             replaceNotAlphaNum(name);
             auto nwItem = item->GetChild(name.c_str());
             if (!nwItem)
                continue;
-            if (it->get_childs().empty())
+            if (!it->get_childs())
             {
                std::string data;
                nwItem->Get(data);

@@ -30,8 +30,8 @@ namespace SV
       bool onScenarioOptPathFound();
 
       void initObjInfo();
-      bool synchronize_map(render::iRender* renderer, const SV::layer_provider::layer_chart_object_vct* chartObjects);
-      void addChartObject(render::iRender* renderer, const SV::layer_provider::layer_chart_object& obj);
+      bool synchronize_map(render::iRender* renderer, const SV::surface_simulation::iSimulationState& state);
+      void addChartObject(render::iRender* renderer, const SV::surface_simulation::iLayerChartObject* obj);
       void onLayerEnabledChanged() override;
       bool isLayerEnabled() const override { return true; }
    private:

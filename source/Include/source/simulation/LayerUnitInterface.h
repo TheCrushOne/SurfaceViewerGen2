@@ -2,6 +2,8 @@
 
 #include "LayerEntityInterface.h"
 #include "layer_provider/unit_info.h"
+#include "layer_provider/trajectory_point.h"
+#include "colreg/SimulationTypes.h"
 
 namespace SV::surface_simulation
 {
@@ -17,7 +19,7 @@ namespace SV::surface_simulation
       virtual const CG::layer_provider::trajectory_point& GetPos() const = 0;
 
       //! ѕсевдосписок путей
-      virtual const CG::layer_provider::trajectory_point_vct& GetRoute(ROUTE_TYPE type)const = 0;
+      virtual const CG::layer_provider::trajectory_point_vct& GetRoute(ROUTE_TYPE type) const = 0;
 
       //! »сходный путь
       virtual const CG::layer_provider::trajectory_point_vct& GetSrcPath() const = 0;

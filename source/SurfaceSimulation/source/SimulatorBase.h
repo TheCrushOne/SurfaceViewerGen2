@@ -1,7 +1,8 @@
 #pragma once
 
 #include "common/communicator.h"
-#include "colreg/ColregSimulation.h"
+//#include "colreg/ColregSimulation.h"
+#include "colreg/PropertyInterface.h"
 #include "colreg/ModuleGuard.h"
 #include "colreg/SimulationStateInterface.h"
 #include "colreg/SimulatorInterface.h"
@@ -70,12 +71,12 @@ namespace SV::surface_simulation
       virtual void SetSimulatorSimulationState(SIMULATION_STATUS status) override final { m_simulationStatus = status; }
 
       // iSimulationState impl
-      size_t GetUnitCount(UNIT_TYPE type) const override final { return m_data.chart_objects.size(); };
+      size_t GetUnitCount(UNIT_TYPE type) const override final;
 
       const iLayerUnit* GetUnitByIdx(UNIT_TYPE type, size_t idx) const override final;
       const iLayerUnit* GetUnitById(id_type id) const override final;
 
-      size_t GetChartObjectCount() const override final;
+      size_t GetChartObjectCount() const override final { return m_data.chart_objects.size(); }
 
       const iLayerChartObject* GetChartObjectByIdx(size_t idx) const override final;
       const iLayerChartObject* GetChartObjectById(chart_object_id id) const override final;

@@ -3,7 +3,6 @@
 #include "SimulatorBase.h"
 #include "crossdllinterface\EngineInterface.h"
 #include "common\pathfinder_structs.h"
-#include "SimulationModel/ColregSimulationImpl.h"
 
 namespace SV::surface_simulation
 {

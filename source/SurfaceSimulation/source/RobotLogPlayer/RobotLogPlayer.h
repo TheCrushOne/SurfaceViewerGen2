@@ -1,7 +1,6 @@
 #pragma once
 
 #include "SimulatorBase.h"
-#include "SimulationModel/ColregSimulationImpl.h"
 
 namespace SV::surface_simulation
 {

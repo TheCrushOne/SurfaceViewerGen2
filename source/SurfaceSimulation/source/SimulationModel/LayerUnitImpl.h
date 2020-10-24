@@ -34,6 +34,7 @@ namespace SV::surface_simulation
          createDomain(.5);
       }
 
+      properties::simple_prop_vct* GetProps() const override final { return nullptr; }
       layer_provider::ship_info GetInfo() const override final { return m_info; }
       //const colreg::domain_scales& GetDomainScales() const override final { return m_domainScales; }
       const CG::layer_provider::trajectory_point& GetPos() const override final { return m_srcRoute.at(m_currentPositionIdx); }

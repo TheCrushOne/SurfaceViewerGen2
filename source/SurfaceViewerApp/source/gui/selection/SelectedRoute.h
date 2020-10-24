@@ -6,29 +6,27 @@ namespace SV
    class SelectRouteBase : public iSelected
    {
    public:
-
       SelectRouteBase(id_type id, size_t data);
       bool IsCanDelete() override { return true; }
    protected:
-      id_type _id;
-      size_t _index;
-      surface_simulation::ROUTE_TYPE _format_type;
+      id_type m_id;
+      size_t m_index;
+      surface_simulation::ROUTE_TYPE m_format_type;
 
-      std::unique_ptr<FolderProperty> _ship_info_folder;
-      iPropertyPtr _prop_id;
-      iPropertyPtr _prop_name;
+      std::unique_ptr<FolderProperty> m_ship_info_folder;
+      iPropertyPtr m_prop_id;
+      iPropertyPtr m_prop_name;
 
-      std::unique_ptr<FolderProperty> _route_info_folder;
-      iPropertyPtr _route_type;
+      std::unique_ptr<FolderProperty> m_route_info_folder;
+      iPropertyPtr m_route_type;
 
-      CG::geo_point _geoEdit;
-      CG::route_line _route;
+      CG::geo_point m_geoEdit;
+      CG::layer_provider::trajectory_point_vct m_route;
 
-      std::string _typeName;
+      std::string m_typeName;
    private:
       void OnEmpty() {}
    };
-
 
    class SelectedRoutePoint : public SelectRouteBase
    {
@@ -46,15 +44,12 @@ namespace SV
       void OnSimSettingChanged();
 
    private:
-      CG::route_point _point;
+      CG::layer_provider::trajectory_point m_point;
 
-      std::unique_ptr<FolderProperty> _point_folder;
-      iPropertyPtr _prop_index;
-      iPropertyPtr _prop_radius;
-
+      std::unique_ptr<FolderProperty> m_point_folder;
+      iPropertyPtr m_prop_index;
+      iPropertyPtr m_prop_radius;
    };
-
-
 
    class SelectedRouteSegment : public SelectRouteBase
    {
@@ -71,20 +66,20 @@ namespace SV
       void OnSimSettingChanged();
 
    private:
-      double _direction;
-      double _distance;
-      double _xte_left;
-      double _xte_right;
-      CG::route_point _pointFrom;
-      CG::route_point _pointTo;
+      double m_direction;
+      double m_distance;
+      double m_xte_left;
+      double m_xte_right;
+      CG::layer_provider::trajectory_point m_pointFrom;
+      CG::layer_provider::trajectory_point m_pointTo;
 
-      std::unique_ptr<FolderProperty> _segment_folder;
-      iPropertyPtr _prop_index;
-      iPropertyPtr _prop_speed;
-      iPropertyPtr _prop_direction;
-      iPropertyPtr _prop_distance;
-      iPropertyPtr _prop_xte_left;
-      iPropertyPtr _prop_xte_right;
+      std::unique_ptr<FolderProperty> m_segment_folder;
+      iPropertyPtr m_prop_index;
+      iPropertyPtr m_prop_speed;
+      iPropertyPtr m_prop_direction;
+      iPropertyPtr m_prop_distance;
+      iPropertyPtr m_prop_xte_left;
+      iPropertyPtr m_prop_xte_right;
 
       enum SEGMENT_PART
       {
@@ -92,6 +87,6 @@ namespace SV
          SP_END_POINT,
          SP_SEGMENT
       };
-      SEGMENT_PART _editPart;
+      SEGMENT_PART m_editPart;
    };
 }

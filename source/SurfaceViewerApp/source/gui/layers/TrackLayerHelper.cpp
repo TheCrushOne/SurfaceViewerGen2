@@ -4,6 +4,7 @@
 #include "colreg/ChartSafetyStructs.h"
 
 using namespace SV;
+
 namespace
 {
    /*bool is_non_default_scales(const colreg::domain_scales& scales)

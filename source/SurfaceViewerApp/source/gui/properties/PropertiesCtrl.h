@@ -32,7 +32,7 @@ namespace SV
       };
 
    private:
-      void addFolder(iProperty* folder, CMFCPropertyGridProperty* pFolderProp, props_structure* pStruct);
+      void addFolder(iPropertyInterface* folder, CMFCPropertyGridProperty* pFolderProp, props_structure* pStruct);
 
       props_structure   _prop_struct;
       iProperty* _selected = nullptr;

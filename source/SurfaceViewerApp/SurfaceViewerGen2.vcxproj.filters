@@ -50,6 +50,9 @@
     <Filter Include="gui\templates">
       <UniqueIdentifier>{4912c198-ada7-44c0-92a7-a7b730fdb153}</UniqueIdentifier>
     </Filter>
+    <Filter Include="properties">
+      <UniqueIdentifier>{7a97e86b-65f5-4273-9eef-db1544c1f37e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="SurfaceViewerGen2.rc">
@@ -260,12 +263,6 @@
     <ClInclude Include="source\gui\tools\RulerTool.h">
       <Filter>gui\tools</Filter>
     </ClInclude>
-    <ClInclude Include="source\gui\selection\property.h">
-      <Filter>gui\selection</Filter>
-    </ClInclude>
-    <ClInclude Include="source\gui\selection\property_helper.h">
-      <Filter>gui\selection</Filter>
-    </ClInclude>
     <ClInclude Include="source\gui\selection\SelectedRoute.h">
       <Filter>gui\selection</Filter>
     </ClInclude>
@@ -331,6 +328,24 @@
     </ClInclude>
     <ClInclude Include="source\gui\templates\SortableListDataModel.h">
       <Filter>gui\templates</Filter>
+    </ClInclude>
+    <ClInclude Include="source\properties\property_helper.h">
+      <Filter>properties</Filter>
+    </ClInclude>
+    <ClInclude Include="source\properties\PropertyModify.h">
+      <Filter>properties</Filter>
+    </ClInclude>
+    <ClInclude Include="source\properties\PropertyModifyImpl.h">
+      <Filter>properties</Filter>
+    </ClInclude>
+    <ClInclude Include="source\properties\FolderPropertyHolder.h">
+      <Filter>properties</Filter>
+    </ClInclude>
+    <ClInclude Include="source\properties\ValuePropertyHolder.h">
+      <Filter>properties</Filter>
+    </ClInclude>
+    <ClInclude Include="source\properties\property_structs.h">
+      <Filter>properties</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

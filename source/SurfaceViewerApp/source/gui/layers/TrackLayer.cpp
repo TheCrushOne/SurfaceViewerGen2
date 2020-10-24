@@ -50,9 +50,9 @@ void TrackLayer::renderTracks(render::iRender* renderer)
       ATLASSERT(rover);
 
       if (m_renderSourceRoute)
-         TrackLayerHelper::renderRoute(renderer, rover->id, rover->trajectory, roverRouteObjInfo, surface_simulation::ROUTE_TYPE::RT_SOURSE);
+         TrackLayerHelper::renderRoute(renderer, rover->GetInfo().id, rover->GetSrcPath(), roverRouteObjInfo, surface_simulation::ROUTE_TYPE::RT_SOURSE);
       if (m_renderControlPoints)
-         TrackLayerHelper::renderRoute(renderer, rover->id, rover->control_points, roverControlPointsObjInfo, surface_simulation::ROUTE_TYPE::RT_CONTROL);
+         TrackLayerHelper::renderRoute(renderer, rover->GetInfo().id, rover->GetSrcControlPoints(), roverControlPointsObjInfo, surface_simulation::ROUTE_TYPE::RT_CONTROL);
    }
 
    for (size_t idx = 0; idx < simulationState.GetUnitCount(surface_simulation::UNIT_TYPE::UT_DRONE); ++idx)
@@ -60,8 +60,8 @@ void TrackLayer::renderTracks(render::iRender* renderer)
       const auto* drone = simulationState.GetUnitByIdx(surface_simulation::UNIT_TYPE::UT_DRONE, idx);
 
       if (m_renderSourceRoute)
-         TrackLayerHelper::renderRoute(renderer, drone->id, drone->trajectory, droneRouteObjInfo, surface_simulation::ROUTE_TYPE::RT_SOURSE);
+         TrackLayerHelper::renderRoute(renderer, drone->GetInfo().id, drone->GetSrcPath(), droneRouteObjInfo, surface_simulation::ROUTE_TYPE::RT_SOURSE);
       if (m_renderControlPoints)
-         TrackLayerHelper::renderRoute(renderer, drone->id, drone->control_points, droneControlPointsObjInfo, surface_simulation::ROUTE_TYPE::RT_CONTROL);
+         TrackLayerHelper::renderRoute(renderer, drone->GetInfo().id, drone->GetSrcControlPoints(), droneControlPointsObjInfo, surface_simulation::ROUTE_TYPE::RT_CONTROL);
    }
 }

@@ -102,7 +102,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>source;$(SolutionDir)Include\source\;$(IncludePath)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>source;$(SolutionDir)Include\source\;$(IncludePath);%(AdditionalIncludeDirectories);</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalUsingDirectories>
       </AdditionalUsingDirectories>
@@ -130,7 +130,7 @@
       <PreprocessorDefinitions>_WINDOWS;_DEBUG;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>source;$(SolutionDir)Include\source\;%(AdditionalIncludeDirectories);</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>source;$(SolutionDir)Include\source\;$(IncludePath);%(AdditionalIncludeDirectories);</AdditionalIncludeDirectories>
       <OmitFramePointers>false</OmitFramePointers>
     </ClCompile>
     <Link>
@@ -360,8 +360,6 @@
     <ClInclude Include="source\gui\properties\PropertiesWnd.h" />
     <ClInclude Include="source\gui\properties\PropertiesWndBase.h" />
     <ClInclude Include="source\gui\ScenarioView.h" />
-    <ClInclude Include="source\gui\selection\property.h" />
-    <ClInclude Include="source\gui\selection\property_helper.h" />
     <ClInclude Include="source\gui\selection\ScenarioProperties.h" />
     <ClInclude Include="source\gui\selection\SelectedChartObject.h" />
     <ClInclude Include="source\gui\selection\SelectedObjectManager.h" />
@@ -377,6 +375,12 @@
     <ClInclude Include="source\gui\user_interface.h" />
     <ClInclude Include="source\gui\ViewTree.h" />
     <ClInclude Include="source\gui\WndCommunicator.h" />
+    <ClInclude Include="source\properties\FolderPropertyHolder.h" />
+    <ClInclude Include="source\properties\PropertyModifyImpl.h" />
+    <ClInclude Include="source\properties\PropertyModify.h" />
+    <ClInclude Include="source\properties\property_helper.h" />
+    <ClInclude Include="source\properties\property_structs.h" />
+    <ClInclude Include="source\properties\ValuePropertyHolder.h" />
     <ClInclude Include="source\render\GDIRender.h" />
     <ClInclude Include="source\render\Render.h" />
     <ClInclude Include="source\Resource.h" />

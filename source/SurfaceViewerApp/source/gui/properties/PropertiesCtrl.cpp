@@ -61,9 +61,9 @@ void CPropertiesCtrl::ShowProperties(iProperty* prop, bool fullReload)
    }
 
    LockWindowUpdate();
-   auto* childs = prop->get_child_list();
+   auto* childs = prop->get_childs();
    std::set< std::string > addedFolders;
-   for (auto& child : *childs)
+   for (auto child : *childs)
    {
       addFolder(child, nullptr, &_prop_struct);
       addedFolders.insert(child->get_name());

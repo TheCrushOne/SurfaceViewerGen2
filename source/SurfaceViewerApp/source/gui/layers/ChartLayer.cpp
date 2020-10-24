@@ -26,7 +26,7 @@ void ChartLayer::Render(render::iRender* renderer)
    
    //colreg::ReleaseGuard<colreg::iChartObjects> chartObjs(safetyChecker->GetChartObjects());
 
-   synchronize_map(renderer, simulationState.GetChartObjects());
+   synchronize_map(renderer, simulationState);
 
    //size_t statAreaCount = sim->GetStatisticsAreaObjectsCount();
 
@@ -49,24 +49,25 @@ void ChartLayer::onLayerEnabledChanged()
 {
 }
 
-bool ChartLayer::synchronize_map(render::iRender* renderer, const SV::layer_provider::layer_chart_object_vct* chartObjects)
+bool ChartLayer::synchronize_map(render::iRender* renderer, const SV::surface_simulation::iSimulationState& state)
 {
    //m_chartUSN = checker->GetObjectsUSN();
    renderer->Clear();
 
-   for (size_t iObj = 0; iObj < (*chartObjects).size(); ++iObj)
+   for (size_t iObj = 0; iObj < state.GetChartObjectCount(); iObj++)
    {
-      const auto& obj = (*chartObjects).at(iObj);
+      const auto* obj = state.GetChartObjectByIdx(iObj);
       addChartObject(renderer, obj);
    }
 
    return true;
 }
 
-void ChartLayer::addChartObject(render::iRender* renderer, const SV::layer_provider::layer_chart_object& obj)
+void ChartLayer::addChartObject(render::iRender* renderer, const SV::surface_simulation::iLayerChartObject* obj)
 {
    using namespace render;
-   const auto itf = m_objInfo.find(obj.type);
+   const auto* contour_data = obj->GetContourData();
+   const auto itf = m_objInfo.find(contour_data->type);
    render::object_info info;
    if (itf != m_objInfo.end())
       info = (*itf).second;
@@ -85,17 +86,21 @@ void ChartLayer::addChartObject(render::iRender* renderer, const SV::layer_provi
    //}
 
    int r = 0, g = 0, b = 0;
+   const auto* props = obj->GetProps();
    bool colorOverride = false;
-   for (auto& prop : obj.prop_vct)
+   if (props)
    {
-      if (strcmp(prop.key.c_str(), "Color") == 0)
+      for (auto& prop : *props)
       {
-         colorOverride = true;
-         sscanf(prop.val.c_str(), "%i %i %i", &r, &g, &b);
+         if (strcmp(prop.key.c_str(), "Color") == 0)
+         {
+            colorOverride = true;
+            sscanf(prop.val.c_str(), "%i %i %i", &r, &g, &b);
+         }
       }
+      if (colorOverride)
+         info.color = RGB(r, g, b);
    }
-   if (colorOverride)
-      info.color = RGB(r, g, b);
    //if (colreg::check_chart_obj_type(colreg::OT_POINTS, obj.type))
       //info.width = 3;
 
@@ -103,14 +108,14 @@ void ChartLayer::addChartObject(render::iRender* renderer, const SV::layer_provi
    //    if (id == 147838)
    //       info.width = 10;
 
-   for (auto& contour : obj.geom_contour_vct)
-      renderer->AddObject({ contour, info, {render::FIND_TYPE::FT_FIND_DETAILED, obj.id, render::FIND_OBJECT_TYPE::FOT_CHART_OBJECT, 0, obj.type}, minScale }, false);
+   for (auto& contour : contour_data->geom_contour_vct)
+      renderer->AddObject({ contour, info, {render::FIND_TYPE::FT_FIND_DETAILED, contour_data->id, render::FIND_OBJECT_TYPE::FOT_CHART_OBJECT, 0, contour_data->type}, minScale }, false);
    render::object_info ptInfo{ 1, render::LINE_STYLE::LL_DASH, render::FILL_TYPE::FT_NONE, RGB(110, 110, 110) };
    ptInfo.alpha = 255;
    if (colorOverride)
       ptInfo.color = RGB(r, g, b);
    ptInfo.width += 2;
-   for (auto& contour : obj.geom_contour_vct)
+   for (auto& contour : contour_data->geom_contour_vct)
       for (size_t i = 0; i < contour.size(); i++)
          renderer->AddObject({ {contour[i]}, ptInfo });
 }

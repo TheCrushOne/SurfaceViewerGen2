@@ -2,7 +2,7 @@
 #include "CoverageGenerator.h"
 #include "math/math_utils.h"
 #include "SVCG/positioning.h"
-#include "common/chart_object.h"
+#include "common/chart_object_unit.h"
 
 using namespace SV;
 using namespace SV::chart_object;

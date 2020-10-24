@@ -9,12 +9,13 @@
 #include <windows.h>
 #include "algorithm/statistic.h"
 
-using namespace engine;
+using namespace SV;
+using namespace SV::engine;
 std::recursive_mutex g_engineMutex;
 
 Engine::Engine(central_pack* pack)
    : Central(pack)
-   , m_rawdata(std::make_shared<pathfinder::RoutePointMatrix>(SVCG::route_point{}))
+   , m_rawdata(std::make_shared<pathfinder::RoutePointMatrix>(CG::route_point{}))
    , m_routedata(std::make_shared<pathfinder::route_data>())
    , m_pathfinder(std::make_unique<pathfinder::PathFinderPipeline>(pack))
 {
@@ -25,28 +26,27 @@ Engine::Engine(central_pack* pack)
    m_maxDangerAngle = 70.f;*/
 }
 
-void Engine::ProcessPathFind(const ColregSimulation::scenario_data& scenarioData, const pathfinder::GeoMatrix& rawData, std::shared_ptr<settings::application_settings> settings, std::function<void(void)> completeCallback)
+void Engine::ProcessPathFind(const pathfinder::path_finder_indata& scenarioData, const pathfinder::GeoMatrix& rawData, std::shared_ptr<settings::application_settings> settings, std::function<void(void)> completeCallback)
 {
    m_settings = settings;
    std::thread(&Engine::processPathFind, this, scenarioData, rawData, completeCallback).detach();
 }
 
-void Engine::processPathFind(const ColregSimulation::scenario_data& scenarioData, const pathfinder::GeoMatrix& rawData, std::function<void(void)> completeCallback)
+void Engine::processPathFind(const pathfinder::path_finder_indata& scenarioData, const pathfinder::GeoMatrix& rawData, std::function<void(void)> completeCallback)
 {
    // TODO: разобраться с настройками
    convertMap(rawData, m_rawdata);
-   processPathFindInternal(scenarioData, pathfinder::path_finder_settings{}, completeCallback);
+   processPathFindInternal(scenarioData, completeCallback);
 }
 
-void Engine::processPathFindInternal(const ColregSimulation::scenario_data& scenarioData, pathfinder::path_finder_settings stt, std::function<void(void)> completeCallback)
+void Engine::processPathFindInternal(const pathfinder::path_finder_indata& scenarioData, std::function<void(void)> completeCallback)
 {
-   m_indata = std::make_shared<pathfinder::path_finder_indata>(pathfinder::path_finder_indata{
-      scenarioData.unit_data,
-      stt,
-      pathfinder::path_finder_statistic(),
-      pathfinder::strategy_settings{ pathfinder::StrategyType::ST_RHOMBOID, 5. } // NOTE: радиус пока что тут настраивается
-   });
-   m_pathfinder->FindPath([completeCallback]() { completeCallback(); }, m_rawdata, m_indata);
+   m_indata = std::make_shared<pathfinder::path_finder_indata>(scenarioData);
+   // NOTE: радиус пока что тут настраивается
+   m_indata->strategy_settings = pathfinder::strategy_settings{ pathfinder::StrategyType::ST_RHOMBOID, 5. }; 
+   m_indata->settings = pathfinder::path_finder_settings{};
+   m_indata->settings.multithread = true;
+   m_pathfinder->FindPath([completeCallback]() { completeCallback(); }, m_settings, m_rawdata, m_indata);
    //using namespace std::chrono_literals;
    //std::this_thread::sleep_for(3ms);
    //completeCallback();
@@ -62,7 +62,7 @@ void Engine::convertMap(const pathfinder::GeoMatrix& rawdataSrc, std::shared_ptr
    for (size_t rIdx = 0; rIdx < rowCount; rIdx++)
    {
       for (size_t cIdx = 0; cIdx < colCount; cIdx++)
-         rawdataDst->Set(rIdx, cIdx, SVCG::route_point(rIdx, cIdx, rawdataSrc.Get(rIdx, cIdx), checkFlyZone(rawdataSrc, rIdx, cIdx).fza, checkGoZone(rawdataSrc, rIdx, cIdx).gza));
+         rawdataDst->Set(rIdx, cIdx, CG::route_point(rIdx, cIdx, rawdataSrc.Get(rIdx, cIdx), checkFlyZone(rawdataSrc, rIdx, cIdx).fza, checkGoZone(rawdataSrc, rIdx, cIdx).gza));
    }
 }
 
@@ -374,8 +374,8 @@ void Engine::threadResearch(/*const std::shared_ptr<SVM::iMatrix<SurfaceElement>
             for (size_t flyCountIdx = 0; flyCountIdx < res_stt.fly_count_range.values.size(); flyCountIdx++)
             {
                size_t flyCount = res_stt.fly_count_range.values.at(flyCountIdx);
-               m_threadResStorage.data.emplace_back(ThreadResearchComplexStorage::SuperCell{
-                  ThreadResearchComplexStorage::SuperCell::Index{
+               m_threadResStorage.data.emplace_back(research::ThreadResearchComplexStorage::SuperCell{
+                  research::ThreadResearchComplexStorage::SuperCell::Index{
                      threadPoolIdx,
                      taskPoolIdx,
                      flyCountIdx,
@@ -385,7 +385,7 @@ void Engine::threadResearch(/*const std::shared_ptr<SVM::iMatrix<SurfaceElement>
                      flyCount,
                      length
                   },
-                  ThreadResearchComplexStorage::SuperCell::Result{
+                  research::ThreadResearchComplexStorage::SuperCell::Result{
                      0
                   }
                });
@@ -424,19 +424,19 @@ void Engine::threadResNextStep()
    auto& threadRes = m_threadResStorage.data.at(m_threadTaskCurrentIdx);
    auto& threadResIndex = threadRes.index;
    threadRes.result.time.start = startTime;
-   ColregSimulation::scenario_data data;
+   pathfinder::path_finder_indata data;
    generateResScenarioData(data, res_stt, threadResIndex);
    pathfinder::path_finder_settings stt(true, {}, true, true, 0, 0, false);
    stt.packet_size = threadResIndex.task_pool_value;
    stt.thread_count = threadResIndex.thread_pool_value;
    GetPack()->comm->Message(ICommunicator::MessageType::MT_INFO, "task started: [fly: %i, length: %f, task: %i, thread: %i]", threadResIndex.fly_count_value, threadResIndex.length_value, threadResIndex.task_pool_value, threadResIndex.thread_pool_value);
-   std::thread(&Engine::processPathFindInternal, this, data, stt, [this]() { threadResNextStep(); }).detach();
+   std::thread(&Engine::processPathFindInternal, this, data/*, stt*/, [this]() { threadResNextStep(); }).detach();
    //m_communicator->Message(ICommunicator::MS_Debug, "Thread task idx %i", m_threadTaskCurrentIdx);
    m_threadTaskCurrentIdx++;
    GetPack()->comm->SetProgress(static_cast<unsigned int>(static_cast<double>(m_threadTaskCurrentIdx)/static_cast<double>(m_threadResStorage.data.size())*100.));
 }
 
-void Engine::generateResScenarioData(ColregSimulation::scenario_data& data, const settings::research_settings& stt, const ThreadResearchComplexStorage::SuperCell::Index& idx)
+void Engine::generateResScenarioData(pathfinder::path_finder_indata& data, const settings::research_settings& stt, const research::ThreadResearchComplexStorage::SuperCell::Index& idx)
 {
    data.unit_data.air_units.resize(idx.fly_count_value);
    data.unit_data.land_units.resize(1);
@@ -446,20 +446,18 @@ void Engine::generateResScenarioData(ColregSimulation::scenario_data& data, cons
    int fnCoord = curSize < mapSize - 1 ? curSize : mapSize - 1;
    for (auto& elem : data.unit_data.air_units)
    {
-      elem.start = SVCG::route_point{ 0, 0 };
-      elem.finish = SVCG::route_point{ fnCoord, fnCoord };
+      elem.start = CG::route_point{ 0, 0 };
+      elem.finish = CG::route_point{ fnCoord, fnCoord };
    }
    for (auto& elem : data.unit_data.land_units)
    {
-      elem.start = SVCG::route_point{ 0, 0 };
-      elem.finish = SVCG::route_point{ fnCoord, fnCoord };
+      elem.start = CG::route_point{ 0, 0 };
+      elem.finish = CG::route_point{ fnCoord, fnCoord };
    }
 }
 
 void Engine::logThreadResearchResult()
-{
-
-}
+{}
 
 engine::iEngine* CreateEngine(central_pack* pack)
 {

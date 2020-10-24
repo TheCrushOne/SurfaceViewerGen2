@@ -1,17 +1,14 @@
 #include "stdafx.h"
 #include "OptimizedPathStorageDS.h"
 
-using namespace data_standart;
+using namespace SV;
+using namespace SV::data_standart;
 
 void OptimizedPathStorageDataStandart::resolvePathDee()
-{
-
-}
+{}
 
 void OptimizedPathStorageDataStandart::SetData(const pathfinder::route_data& paths)
-{
-
-}
+{}
 
 const pathfinder::route_data& OptimizedPathStorageDataStandart::GetData()
 {

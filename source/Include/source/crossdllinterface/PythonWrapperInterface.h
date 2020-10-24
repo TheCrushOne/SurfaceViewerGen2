@@ -1,10 +1,11 @@
 #pragma once
 
+#include "colreg/BaseRef.h"
 #include "common/central_class.h"
 
-namespace python_wrapper
+namespace SV::python_wrapper
 {
-   struct iPythonWrapper : colreg::iReleasable
+   struct iPythonWrapper : iReleasable
    {
       virtual void RunScript() = 0;
    };
@@ -16,4 +17,4 @@ namespace python_wrapper
 #define PWEXPRTIMPRT __declspec(dllimport) // import DLL information
 #endif
 
-extern "C" PWEXPRTIMPRT python_wrapper::iPythonWrapper * CreatePythonWrapper(central_pack_ptr);
+extern "C" PWEXPRTIMPRT SV::python_wrapper::iPythonWrapper * CreatePythonWrapper(SV::central_pack*);

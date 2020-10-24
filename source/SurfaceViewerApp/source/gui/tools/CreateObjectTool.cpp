@@ -5,7 +5,8 @@
 #include "scenario/ScenarioManager.h"
 //#include "Layers\renderhelper.h"
 
-using namespace user_interface;
+using namespace SV;
+using namespace SV::user_interface;
 
 void CreateObjectTool::MouseMove(CPoint point)
 {
@@ -82,7 +83,7 @@ void CreateObjectTool::RmouseDown(CPoint point)
    //      _route[i].left_XTE = _route[i].right_XTE = .5;
    //   }
    //   if (id != colreg::INVALID_ID)
-   //      ScenarioManager::GetInstance().SetShipRoute(_createType == CREATE_TYPE::CT_SIMULATION_ROUTE ? ColregSimulation::ROUTE_TYPE::RT_SIMULAION : ColregSimulation::ROUTE_TYPE::RT_SOURSE
+   //      ScenarioManager::GetInstance().SetShipRoute(_createType == CREATE_TYPE::CT_SIMULATION_ROUTE ? surface_simulation::ROUTE_TYPE::RT_SIMULAION : surface_simulation::ROUTE_TYPE::RT_SOURSE
    //         , id, _route);
    //   _points.clear();
    //}

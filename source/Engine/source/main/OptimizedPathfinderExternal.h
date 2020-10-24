@@ -6,7 +6,7 @@
 #include "navdisp\OrderBase.h"
 #include "navdisp\OrderStruct.h"
 
-namespace engine
+namespace SV::engine
 {
    class OptPathfinderExternal
       : public navigation_dispatcher::OrderBase<navigation_dispatcher::OrderType::OT_OPTPATH, navigation_dispatcher::opt_pathfind_order>
@@ -22,7 +22,7 @@ namespace engine
       bool processData();
    private:
       pathfinder::GeoMatrix m_data;
-      ColregSimulation::scenario_data m_scenarioData;
+      pathfinder::path_finder_indata m_indata;
       std::shared_ptr<engine::Engine> m_engine;
       std::shared_ptr<settings::application_settings> m_settings;
    };

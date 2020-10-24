@@ -5,7 +5,8 @@
 
 #include <filesystem>
 
-using namespace ColregSimulation;
+using namespace SV;
+using namespace SV::surface_simulation;
 
 #define VALID_CHECK_DLL_LOAD(dllName, funcName, guard, ...) \
    guard.Create(SVGUtils::CurrentDllPath(dllName).c_str(), funcName, __VA_ARGS__); \
@@ -26,10 +27,11 @@ struct tag
    static constexpr char params[] = "params";
 };
 
-SimulatorBase::SimulatorBase(central_pack * pack, iPropertyInterface * prop, navigation_dispatcher::iComServicePtr service)
+SimulatorBase::SimulatorBase(central_pack* pack, iPropertyInterface* prop, navigation_dispatcher::iComService* service)
    : Central(pack)
    , m_prop(prop)
    , m_service(service)
+   , m_gridMeta({})
 {
    m_orderCacheFolder = std::filesystem::absolute(std::filesystem::current_path().generic_wstring() + L"\\..\\..\\..\\cache\\order_heap\\");
 
@@ -46,8 +48,8 @@ SimulatorBase::SimulatorBase(central_pack * pack, iPropertyInterface * prop, nav
 bool SimulatorBase::CheckOpenScenario()
 {
    // TODO: check!!! а то я чет не уверен, что тут всё верно
-   SetSimulatorScenarioState(ColregSimulation::SCENARIO_STATUS::SS_MAP_CHECKOPENED);
-   SetSimulatorSimulationState(ColregSimulation::SIMULATION_STATUS::SS_STOP);
+   SetSimulatorScenarioState(SCENARIO_STATUS::SS_MAP_CHECKOPENED);
+   SetSimulatorSimulationState(SIMULATION_STATUS::SS_STOP);
    return true;
 }
 
@@ -82,8 +84,8 @@ bool SimulatorBase::LoadProcessedMap()
    auto* mapDS = reinterpret_cast<data_standart::iSurfaceVieverGenMapDataStandart*>(m_mapDS.operator->());
    m_currentConfig = m_orderCacheFolder + L"process_map.xml";
    deserializeStandartAttrs(mapDS, SVGUtils::wstringToString(m_currentConfig).c_str(), data_standart::DataStandartType::DST_SVGM);
-   SetSimulatorScenarioState(ColregSimulation::SCENARIO_STATUS::SS_MAP_PROCESSED);
-   SetSimulatorSimulationState(ColregSimulation::SIMULATION_STATUS::SS_STOP);
+   SetSimulatorScenarioState(SCENARIO_STATUS::SS_MAP_PROCESSED);
+   SetSimulatorSimulationState(SIMULATION_STATUS::SS_STOP);
    return true;
 }
 
@@ -94,13 +96,33 @@ bool SimulatorBase::LoadProcessedMapObjects()
    deserializeStandartAttrs(mapObjDS, SVGUtils::wstringToString(m_currentConfig).c_str(), data_standart::DataStandartType::DST_OBJ);
    auto& junc = mapObjDS->GetData();
    // TODO: разделить, если потребуется
+   size_t id = 0;
+   auto& chartObjs = m_data.chart_objects;
+   chartObjs.clear();
    for (auto& dyn : junc.dynamic_objects)
-      m_chartObjects.emplace_back(dyn);
+   {
+      chartObjs.emplace_back(LayerChartObjectImpl{});
+      chartObjs.back().SetSrcRoute(layer_provider::layer_chart_object{ dyn, id++ });
+   }
    for (auto& stat : junc.static_objects)
-      m_chartObjects.emplace_back(stat);
-   SetSimulatorScenarioState(ColregSimulation::SCENARIO_STATUS::SS_MAPOBJ_PROCESSED);
-   SetSimulatorSimulationState(ColregSimulation::SIMULATION_STATUS::SS_STOP);
+   {
+      chartObjs.emplace_back(LayerChartObjectImpl{});
+      chartObjs.back().SetSrcRoute(layer_provider::layer_chart_object{ stat, id++ });
+   }
+   SetSimulatorScenarioState(SCENARIO_STATUS::SS_MAPOBJ_PROCESSED);
+   SetSimulatorSimulationState(SIMULATION_STATUS::SS_STOP);
    return true;
+}
+
+template<typename UnitType>
+void routeMover(const std::vector<settings::route>& src, std::vector<UnitType>& dst)
+{
+   for (const auto& pt : src)
+   {
+      UnitType unit;
+      unit.SetSrcRoute(pt);
+      dst.emplace_back(unit);
+   }
 }
 
 bool SimulatorBase::LoadProcessedPaths()
@@ -109,57 +131,104 @@ bool SimulatorBase::LoadProcessedPaths()
    m_currentConfig = m_orderCacheFolder + L"process_path_find.xml";
    deserializeStandartAttrs(pathDS, SVGUtils::wstringToString(m_currentConfig).c_str(), data_standart::DataStandartType::DST_PATHS);
    auto& rt = pathDS->GetData();
-   auto routeMover = [](const std::vector<settings::route>& src, std::vector<settings::unit_data_element>& dst)
-   {
-      for (auto& pt : src)
-         dst.emplace_back(settings::unit_data_element("", pt.start, pt.finish, pt.route_list, pt.control_point_list));
-   };
-   routeMover(rt.air_routes, m_data.unit_data.air_units);
-   routeMover(rt.land_routes, m_data.unit_data.land_units);
-   processRecountRouteVisualizeMeta(m_data.unit_data.air_units);
-   processRecountRouteVisualizeMeta(m_data.unit_data.land_units);
+   routeMover<LayerDroneImpl>(rt.air_routes, m_data.air_unit_objects);
+   routeMover<LayerRoverImpl>(rt.land_routes, m_data.land_unit_objects);
    calcStepCount();
-   SetSimulatorScenarioState(ColregSimulation::SCENARIO_STATUS::SS_PATHS_COUNTED);
-   SetSimulatorSimulationState(ColregSimulation::SIMULATION_STATUS::SS_STOP);
+   SetSimulatorScenarioState(SCENARIO_STATUS::SS_PATHS_COUNTED);
+   SetSimulatorSimulationState(SIMULATION_STATUS::SS_STOP);
    return true;
 }
 
 bool SimulatorBase::LoadProcessedOptPaths()
 {
    auto* optPathDS = reinterpret_cast<data_standart::iOptimizedPathStorageDataStandart*>(m_optPathDS.operator->());
-   SetSimulatorScenarioState(ColregSimulation::SCENARIO_STATUS::SS_OPT_PATHS_COUNTED);
-   SetSimulatorSimulationState(ColregSimulation::SIMULATION_STATUS::SS_STOP);
+   SetSimulatorScenarioState(surface_simulation::SCENARIO_STATUS::SS_OPT_PATHS_COUNTED);
+   SetSimulatorSimulationState(surface_simulation::SIMULATION_STATUS::SS_STOP);
    return true;
-}
-
-void processRecountRouteMeta(std::vector<SVCG::route_point>& route, SVCG::trajectory_point_vct, const settings::environment_settings& env_stt)
-{
-   for (size_t idx = 0; idx < route.size(); idx++)
-   {
-      auto& cur = route[idx];
-      auto& next = route[idx < route.size() - 1 ? idx + 1 : idx];
-      auto rpc = SVCG::RoutePointToPositionPoint(cur, env_stt);
-      auto rpn = SVCG::RoutePointToPositionPoint(next, env_stt);
-      cur.course = math::direction(rpc, rpn);
-      cur.speed = DefaultUnitSpeed;   // NOTE: пока что дефолт
-   }
-}
-
-void SimulatorBase::processRecountRouteVisualizeMeta(std::vector<settings::unit_data_element>& route)
-{
-   for (size_t idx = 0; idx < route.size(); idx++)
-      processRecountRouteMeta(route.at(idx).route_list, m_service->GetSettingsSerializerHolder()->GetSettings().env_stt);
 }
 
 void SimulatorBase::calcStepCount()
 {
    size_t maxStepCount = 0;
-   auto& au = m_data.unit_data.air_units;
+   auto& au = m_data.air_unit_objects;
    for (const auto& elem : au)
-      maxStepCount = maxStepCount < elem.route_list.size() ? elem.route_list.size() : maxStepCount;
-   auto& lu = m_data.unit_data.land_units;
+      maxStepCount = maxStepCount < elem.GetPosCount() ? elem.GetPosCount() : maxStepCount;
+   auto& lu = m_data.land_unit_objects;
    for (const auto& elem : lu)
-      maxStepCount = maxStepCount < elem.route_list.size() ? elem.route_list.size() : maxStepCount;
+      maxStepCount = maxStepCount < elem.GetPosCount() ? elem.GetPosCount() : maxStepCount;
    m_data.step_count = maxStepCount;
    m_data.current_step = 0;
+}
+
+size_t SimulatorBase::GetUnitCount(UNIT_TYPE type) const
+{
+   switch (type)
+   {
+   case UNIT_TYPE::UT_DRONE:
+      return m_data.air_unit_objects.size();
+   case UNIT_TYPE::UT_ROVER:
+      return m_data.land_unit_objects.size();
+   }
+   return 0;
+}
+
+const iLayerUnit* SimulatorBase::GetUnitById(id_type id) const
+{
+   bool find = false;
+   auto idChecker = [this, id, &find](surface_simulation::UNIT_TYPE type) -> const surface_simulation::iLayerUnit*
+   {
+      for (size_t idx = 0; idx < GetUnitCount(type); idx++)
+      {
+         if (GetUnitByIdx(type, idx)->GetInfo().id == id)
+         {
+            find = true;
+            return GetUnitByIdx(type, idx);
+         }
+      }
+      return nullptr;
+   };
+   const iLayerUnit* res = nullptr;
+   res = idChecker(surface_simulation::UNIT_TYPE::UT_DRONE) ? idChecker(surface_simulation::UNIT_TYPE::UT_DRONE)
+      : (idChecker(surface_simulation::UNIT_TYPE::UT_ROVER) ? idChecker(surface_simulation::UNIT_TYPE::UT_ROVER)
+      : idChecker(surface_simulation::UNIT_TYPE::UT_SHIP));
+
+   return res;
+}
+
+const iLayerUnit* SimulatorBase::GetUnitByIdx(UNIT_TYPE type, size_t idx) const
+{
+   return const_cast<SimulatorBase*>(this)->getUnitByIdx(type, idx);
+}
+
+iLayerUnit* SimulatorBase::getUnitByIdx(UNIT_TYPE type, size_t idx)
+{
+   switch (type)
+   {
+   case UNIT_TYPE::UT_ROVER:
+      return &m_data.land_unit_objects.at(idx);
+   case UNIT_TYPE::UT_DRONE:
+      return &m_data.air_unit_objects.at(idx);
+   case UNIT_TYPE::UT_SHIP:
+   default:
+      break;
+   }
+   ATLASSERT(false);
+   return nullptr;
+}
+
+const iLayerChartObject* SimulatorBase::GetChartObjectByIdx(size_t idx) const
+{
+   /*const_cast<const math::geo_contour_vct_ref>(m_chartObjects.geom_contour_vct)*/
+   return &m_data.chart_objects.at(idx);
+}
+
+const iLayerChartObject* SimulatorBase::GetChartObjectById(chart_object_id id) const
+{
+   for (size_t idx = 0; idx < GetChartObjectCount(); idx++)
+   {
+      const auto* obj = GetChartObjectByIdx(idx);
+      if (obj->GetContourData()->id == id)
+         return obj;
+   }
+   return nullptr;
 }

@@ -6,6 +6,7 @@
 
 #define ID_PROPS 123
 
+using namespace SV;
 
 BEGIN_MESSAGE_MAP(CPropertiesWndBase, CDockablePane)
    ON_WM_CREATE()

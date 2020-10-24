@@ -3,9 +3,9 @@
 #include "SurfaceInterfaces.h"
 #include "common/central_class.h"
 
-namespace surface_ordering
+namespace SV::surface_ordering
 {
-   struct iOrderingWrapper : colreg::iReleasable
+   struct iOrderingWrapper : iReleasable
    {
       virtual bool ProcessOrder(const wchar_t* orderFile, const wchar_t* begCommand, std::unordered_map<std::string, std::wstring>& dict) = 0;
    };
@@ -17,4 +17,4 @@ namespace surface_ordering
 #define SVORDWRAPEXPRTIMPRT __declspec(dllimport) // import DLL information
 #endif
 
-extern "C" SVORDWRAPEXPRTIMPRT surface_ordering::iOrderingWrapper * CreateSurfaceViewerOrderingWrapper(central_pack_ptr, const wchar_t*);
+extern "C" SVORDWRAPEXPRTIMPRT SV::surface_ordering::iOrderingWrapper* CreateSurfaceViewerOrderingWrapper(SV::central_pack*, const wchar_t*);

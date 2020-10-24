@@ -4,7 +4,7 @@
 
 #include "json/json_wrapper.h"
 
-namespace logger
+namespace SV::logger
 {
    class UniversalLogger
       : public iUniversalLogger
@@ -20,10 +20,10 @@ namespace logger
    public:
       UniversalLogger(central_pack* pack);
 
-      bool LogThreadResearchResult(const ThreadResearchComplexStorage&) override final;
+      bool LogThreadResearchResult(const research::ThreadResearchComplexStorage&) override final;
       void Release() override final { delete this; }
    protected:
-      void logThreadResearchResult(const ThreadResearchComplexStorage&, const std::wstring);
-      void logThreadResearchMeta(const ThreadResearchComplexStorage&, const std::wstring);
+      void logThreadResearchResult(const research::ThreadResearchComplexStorage&, const std::wstring);
+      void logThreadResearchMeta(const research::ThreadResearchComplexStorage&, const std::wstring);
    };
 }

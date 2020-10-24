@@ -47,6 +47,10 @@
     <ClInclude Include="source\colreg\ReleaseGuard.h" />
     <ClInclude Include="source\colreg\RouteModelSettings.h" />
     <ClInclude Include="source\colreg\SettingsSerializer.h" />
+    <ClInclude Include="source\colreg\SimulationStateInterface.h" />
+    <ClInclude Include="source\colreg\SimulationStructs.h" />
+    <ClInclude Include="source\colreg\SimulationTypes.h" />
+    <ClInclude Include="source\colreg\SimulatorInterface.h" />
     <ClInclude Include="source\colreg\StateFullColregInterface.h" />
     <ClInclude Include="source\colreg\ThirdParty\dirent.h" />
     <ClInclude Include="source\colreg\ThirdParty\tinyxml2\tinyxml2.h" />
@@ -71,6 +75,7 @@
     <ClInclude Include="source\common\global_structs.h" />
     <ClInclude Include="source\common\header_collector.h" />
     <ClInclude Include="source\common\holder_base.h" />
+    <ClInclude Include="source\common\matrix_object.h" />
     <ClInclude Include="source\common\object_type.h" />
     <ClInclude Include="source\common\observer.h" />
     <ClInclude Include="source\common\pathfinder_structs.h" />
@@ -135,9 +140,13 @@
     <ClInclude Include="source\settings\SettingsSerializerHolder.h" />
     <ClInclude Include="source\settings\settings_meta.h" />
     <ClInclude Include="source\settings\settings_types.h" />
+    <ClInclude Include="source\simulation\LayerChartObjectInterface.h" />
+    <ClInclude Include="source\simulation\LayerEntityInterface.h" />
+    <ClInclude Include="source\simulation\LayerUnitInterface.h" />
     <ClInclude Include="source\SVCG\base_structs.h" />
     <ClInclude Include="source\SVCG\base_types.h" />
     <ClInclude Include="source\SVCG\enhanced_geometry.h" />
+    <ClInclude Include="source\SVCG\polar_point.h" />
     <ClInclude Include="source\SVCG\position_point.h" />
     <ClInclude Include="source\SVCG\geo_point.h" />
     <ClInclude Include="source\SVCG\positioning.h" />

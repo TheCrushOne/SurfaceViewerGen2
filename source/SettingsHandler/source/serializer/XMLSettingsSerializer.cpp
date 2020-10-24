@@ -8,9 +8,9 @@
 //#include "WeatherInterface.h"
 #include "common/header_collector.h"
 
-#define _PSN(x) colreg::pathfindingMeta.at(x)
-#define _RSN(x) colreg::researchMeta.at(x)
-#define _ESN(x) colreg::environmentMeta.at(x)
+#define _PSN(x) pathfindingMeta.at(x)
+#define _RSN(x) researchMeta.at(x)
+#define _ESN(x) environmentMeta.at(x)
 
 #define VALCHECKER(type, obj, defobj, value, defValue, offset) [objptr = obj, defobjptr = defobj, va = value, da = defValue, offset_m = offset]() mutable -> bool \
 { \
@@ -20,16 +20,16 @@
    /*ATLASSERT(expdef && ("default struct offset mismatch: ") && #defValue);*/ \
    return true; \
 }
-#define VALELEM(type, dattype, signature, obj, defobj, field, diff) new TypedSettingsTree<type, dattype>(signature.first, signature.second, &obj.field, &defobj.field, diff, VALCHECKER(type, (char*)&obj, (char*)&defobj, (char*)&obj.field, (char*)&defobj.field, offset += sizeof(type))())
+#define VALELEM(type, dattype, signature, obj, defobj, field, diff) new xml_properties::TypedSettingsTree<type, dattype>(signature.first, signature.second, &obj.field, &defobj.field, diff, VALCHECKER(type, (char*)&obj, (char*)&defobj, (char*)&obj.field, (char*)&defobj.field, offset += sizeof(type))())
 #define PSTVALELEM(type, signature, field) VALELEM(type, settings::pathfinding_settings, signature, data, defdata, field, diff)
 #define RSTVALELEM(type, signature, field) VALELEM(type, settings::research_settings, signature, data, defdata, field, diff)
 #define ENVVALELEM(type, signature, field) VALELEM(type, settings::environment_settings, signature, data, defdata, field, diff)
 
-#define PSTCOLLECTINGELEM(signature) new TypedSettingsTree<void*, settings::pathfinding_settings>(signature.first, "",
-#define RSTCOLLECTINGELEM(signature) new TypedSettingsTree<void*, settings::research_settings>(signature.first, "",
-#define ENVCOLLECTINGELEM(signature) new TypedSettingsTree<void*, settings::environment_settings>(signature.first, "",
+#define PSTCOLLECTINGELEM(signature) new xml_properties::TypedSettingsTree<void*, settings::pathfinding_settings>(signature.first, "",
+#define RSTCOLLECTINGELEM(signature) new xml_properties::TypedSettingsTree<void*, settings::research_settings>(signature.first, "",
+#define ENVCOLLECTINGELEM(signature) new xml_properties::TypedSettingsTree<void*, settings::environment_settings>(signature.first, "",
 
-namespace colreg
+namespace SV::serializer
 {
    constexpr const char* PATHFINDING_SETTINGS_HEADER = "PathfindingSettings";
    constexpr const char* PATHFINDING_SETTINGS_VERSION = "1.0";
@@ -46,13 +46,13 @@ namespace colreg
    {
    public:
       template<typename DataType>
-      static std::unique_ptr < TypedSettingsTree<void*, DataType> > buildDataTree(DataType& data, const DataType& defdata, bool diff) { ATLASSERT(false); return nullptr; }
+      static std::unique_ptr<xml_properties::TypedSettingsTree<void*, DataType>> buildDataTree(DataType& data, const DataType& defdata, bool diff) { ATLASSERT(false); return nullptr; }
 
       template<>
-      static std::unique_ptr < TypedSettingsTree<void*, settings::pathfinding_settings> > buildDataTree(settings::pathfinding_settings& data, const settings::pathfinding_settings& defdata, bool diff)
+      static std::unique_ptr<xml_properties::TypedSettingsTree<void*, settings::pathfinding_settings>> buildDataTree(settings::pathfinding_settings& data, const settings::pathfinding_settings& defdata, bool diff)
       {
          size_t offset = 0;
-         std::unique_ptr < TypedSettingsTree<void*, settings::pathfinding_settings> > tree(new TypedSettingsTree<void*, settings::pathfinding_settings>(PATHFINDING_SETTINGS_TAG, "", {
+         std::unique_ptr<xml_properties::TypedSettingsTree<void*, settings::pathfinding_settings>> tree(new xml_properties::TypedSettingsTree<void*, settings::pathfinding_settings>(PATHFINDING_SETTINGS_TAG, "", {
               PSTCOLLECTINGELEM(_PSN(PathfindingSettingsFieldIndex::PSFI_LEVEL_ST)) {
                    PSTVALELEM(double, _PSN(PathfindingSettingsFieldIndex::PSFI_MAXAIRHEIGHT), lvl_stt.max_air_height)
                  , PSTVALELEM(double, _PSN(PathfindingSettingsFieldIndex::PSFI_MAXLANDHEIGHT), lvl_stt.max_land_height)
@@ -66,28 +66,28 @@ namespace colreg
          return tree;
       }
       template<>
-      static std::unique_ptr < TypedSettingsTree<void*, settings::research_settings> > buildDataTree(settings::research_settings& data, const settings::research_settings& defdata, bool diff)
+      static std::unique_ptr<xml_properties::TypedSettingsTree<void*, settings::research_settings> > buildDataTree(settings::research_settings& data, const settings::research_settings& defdata, bool diff)
       {
          size_t offset = 0;
-         std::unique_ptr < TypedSettingsTree<void*, settings::research_settings> > tree(new TypedSettingsTree<void*, settings::research_settings>(RESEARCH_SETTINGS_TAG, "", {
+         std::unique_ptr<xml_properties::TypedSettingsTree<void*, settings::research_settings> > tree(new xml_properties::TypedSettingsTree<void*, settings::research_settings>(RESEARCH_SETTINGS_TAG, "", {
               RSTCOLLECTINGELEM(_RSN(ResearchSettingsFieldIndex::RSFI_COUNTRANGE_ST)) {
-                   RSTVALELEM(size_t, _RSN(ResearchSettingsFieldIndex::RSFI_MIN), fly_count_range.min)
-                 , RSTVALELEM(size_t, _RSN(ResearchSettingsFieldIndex::RSFI_MAX), fly_count_range.max)
+                   RSTVALELEM(size_t, _RSN(ResearchSettingsFieldIndex::RSFI_MIN), fly_count_range.min_val)
+                 , RSTVALELEM(size_t, _RSN(ResearchSettingsFieldIndex::RSFI_MAX), fly_count_range.max_val)
                  , RSTVALELEM(size_t, _RSN(ResearchSettingsFieldIndex::RSFI_STEP), fly_count_range.step)
               })
             , RSTCOLLECTINGELEM(_RSN(ResearchSettingsFieldIndex::RSFI_LENGTHRANGE_ST)) {
-                   RSTVALELEM(double, _RSN(ResearchSettingsFieldIndex::RSFI_MIN), length_range.min)
-                 , RSTVALELEM(double, _RSN(ResearchSettingsFieldIndex::RSFI_MAX), length_range.max)
+                   RSTVALELEM(double, _RSN(ResearchSettingsFieldIndex::RSFI_MIN), length_range.min_val)
+                 , RSTVALELEM(double, _RSN(ResearchSettingsFieldIndex::RSFI_MAX), length_range.max_val)
                  , RSTVALELEM(double, _RSN(ResearchSettingsFieldIndex::RSFI_STEP), length_range.step)
               })
             , RSTCOLLECTINGELEM(_RSN(ResearchSettingsFieldIndex::RSFI_THREADRANGE_ST)) {
-                   RSTVALELEM(size_t, _RSN(ResearchSettingsFieldIndex::RSFI_MIN), thread_pool_range.min)
-                 , RSTVALELEM(size_t, _RSN(ResearchSettingsFieldIndex::RSFI_MAX), thread_pool_range.max)
+                   RSTVALELEM(size_t, _RSN(ResearchSettingsFieldIndex::RSFI_MIN), thread_pool_range.min_val)
+                 , RSTVALELEM(size_t, _RSN(ResearchSettingsFieldIndex::RSFI_MAX), thread_pool_range.max_val)
                  , RSTVALELEM(size_t, _RSN(ResearchSettingsFieldIndex::RSFI_STEP), thread_pool_range.step)
               })
             , RSTCOLLECTINGELEM(_RSN(ResearchSettingsFieldIndex::RSFI_TASKRANGE_ST)) {
-                   RSTVALELEM(size_t, _RSN(ResearchSettingsFieldIndex::RSFI_MIN), task_pool_range.min)
-                 , RSTVALELEM(size_t, _RSN(ResearchSettingsFieldIndex::RSFI_MAX), task_pool_range.max)
+                   RSTVALELEM(size_t, _RSN(ResearchSettingsFieldIndex::RSFI_MIN), task_pool_range.min_val)
+                 , RSTVALELEM(size_t, _RSN(ResearchSettingsFieldIndex::RSFI_MAX), task_pool_range.max_val)
                  , RSTVALELEM(size_t, _RSN(ResearchSettingsFieldIndex::RSFI_STEP), task_pool_range.step)
               })
             , RSTVALELEM(size_t, _RSN(ResearchSettingsFieldIndex::RSFI_ITERCOUNT), iter_count)
@@ -101,10 +101,10 @@ namespace colreg
          return tree;
       }
       template<>
-      static std::unique_ptr < TypedSettingsTree<void*, settings::environment_settings> > buildDataTree(settings::environment_settings& data, const settings::environment_settings& defdata, bool diff)
+      static std::unique_ptr<xml_properties::TypedSettingsTree<void*, settings::environment_settings> > buildDataTree(settings::environment_settings& data, const settings::environment_settings& defdata, bool diff)
       {
          size_t offset = 0;
-         std::unique_ptr < TypedSettingsTree<void*, settings::environment_settings> > tree(new TypedSettingsTree<void*, settings::environment_settings>(ENVIRONMENT_SETTINGS_TAG, "", {
+         std::unique_ptr<xml_properties::TypedSettingsTree<void*, settings::environment_settings> > tree(new xml_properties::TypedSettingsTree<void*, settings::environment_settings>(ENVIRONMENT_SETTINGS_TAG, "", {
               ENVCOLLECTINGELEM(_ESN(EnvironmentSettingsFieldIndex::ESFI_GSC)) {
                    ENVVALELEM(double, _ESN(EnvironmentSettingsFieldIndex::ESFI_ANGLE), gcs_info.angle)
                  , ENVVALELEM(double, _ESN(EnvironmentSettingsFieldIndex::ESFI_SCALE), gcs_info.scale)
@@ -122,7 +122,6 @@ namespace colreg
          //ATLASSERT(offset == sizeof(settings::research_settings));
          return tree;
       }
-
 
       void Release() override { delete this; }
 
@@ -223,7 +222,7 @@ namespace colreg
       }
 
       template<typename DataType>
-      static void walker(const colreg::iSettingsTree<DataType>* tree, xml_properties::PropertyItem& root)
+      static void walker(const xml_properties::iSettingsTree<DataType>* tree, xml_properties::PropertyItem& root)
       {
          for (const auto it : tree->_children)
          {
@@ -335,7 +334,7 @@ namespace colreg
       static inline void replaceNotAlphaNum(std::string& src) { std::replace_if(src.begin(), src.end(), isNotAlphaNum, '_'); }
 
       template<typename DataType>
-      static void traverseSerialize(iSettingsTree<DataType>* node, xml_properties::PropertyItem* item)
+      static void traverseSerialize(xml_properties::iSettingsTree<DataType>* node, xml_properties::PropertyItem* item)
       {
          for (auto it : node->_children)
          {
@@ -379,7 +378,7 @@ namespace colreg
       }
 
       template<typename DataType>
-      static void traverseDeserialize(const iSettingsTree<DataType>* node, const xml_properties::PropertyItem* item)
+      static void traverseDeserialize(const xml_properties::iSettingsTree<DataType>* node, const xml_properties::PropertyItem* item)
       {
          for (const auto it : node->_children)
          {
@@ -418,9 +417,9 @@ namespace colreg
    };
 }
 
-colreg::iSettingsSerializer * CreateXMLSettingsSerializer()
+SV::serializer::iSettingsSerializer * CreateXMLSettingsSerializer()
 {
-   return new colreg::XMLSettingsSerializer();
+   return new SV::serializer::XMLSettingsSerializer();
 }
 
 #undef _PSN

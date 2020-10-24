@@ -5,7 +5,7 @@
 #include "navdisp\ComService.h"
 #include "ComServiceImpl.h"
 
-namespace navigation_dispatcher
+namespace SV::navigation_dispatcher
 {
    // iCommandsProcessor guard
    class ComServiceHolder : public HolderBase<iComService>

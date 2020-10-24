@@ -3,9 +3,9 @@
 #include "xml_property.h"
 #include "colreg\ThirdParty\tinyxml2\tinyxml2.h"
 #include <map>
-namespace xml_properties
-{
 
+namespace SV::xml_properties
+{
    struct ci_less
    {
       bool operator()(const std::string& left, const std::string& right) const
@@ -202,7 +202,6 @@ namespace xml_properties
       }
    }
 
-
    inline void loadWalker(XmlDocumentPtr *cDoc, tinyxml2::XMLElement *parentNode, PropertyItem& prop)
    {
       tinyxml2::XMLElement* pElem;
@@ -342,5 +341,4 @@ namespace xml_properties
 
       return classDoc;
    }
-
 }

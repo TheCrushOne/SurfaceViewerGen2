@@ -14,7 +14,7 @@
 using namespace SV;
 using namespace SV::chart_object;
 
-IsolineGenerator::IsolineGenerator(central_pack_ptr pack, navigation_dispatcher::iComServicePtr service)
+IsolineGenerator::IsolineGenerator(central_pack* pack, navigation_dispatcher::iComService* service)
    : ModuleBase(pack, service)
 {
    //auto adder = [this](const std::vector<math::geo_points>& obj, double H, int height) { /*addChartObjectSet(obj, H, height);*/ };

@@ -3,32 +3,38 @@
 #include "gui/selection/SelectedObjectManager.h"
 #include "gui/selection/property.h"
 
-class CPropertiesCtrl : public CMFCPropertyGridCtrl
+namespace SV
 {
-public :
-   void ShowProperties(iProperty* property, bool fullReload = false );
-
-private:
-   
-   CMFCPropertyGridProperty* createMaskedProperty(iProperty* const &child);
-   virtual void OnPropertyChanged(CMFCPropertyGridProperty* pProp) const;
-private:
-
-   struct prop_item;
-   using props_structure = std::map< std::string, prop_item >;
-
-   struct prop_item
+   class CPropertiesCtrl : public CMFCPropertyGridCtrl
    {
-      prop_item(CMFCPropertyGridProperty* gProp, PROPERTY_TYPE pt): grid_prop(gProp), prop_type( pt ) {}
+   public:
+      void ShowProperties(iProperty* property, bool fullReload = false);
 
-      PROPERTY_TYPE     prop_type;
-      CMFCPropertyGridProperty*  grid_prop = nullptr;
-      props_structure prop_childs;
+   private:
+
+      CMFCPropertyGridProperty* createMaskedProperty(iProperty* const& child);
+      virtual void OnPropertyChanged(CMFCPropertyGridProperty* pProp) const;
+   private:
+
+      struct prop_item;
+      using props_structure = std::map< std::string, prop_item >;
+
+      struct prop_item
+      {
+         prop_item(CMFCPropertyGridProperty* gProp, PROPERTY_TYPE pt)
+            : grid_prop(gProp)
+            , prop_type(pt)
+         {}
+
+         PROPERTY_TYPE prop_type;
+         CMFCPropertyGridProperty* grid_prop = nullptr;
+         props_structure prop_childs;
+      };
+
+   private:
+      void addFolder(iProperty* folder, CMFCPropertyGridProperty* pFolderProp, props_structure* pStruct);
+
+      props_structure   _prop_struct;
+      iProperty* _selected = nullptr;
    };
-
-private:
-   void addFolder(iProperty* folder, CMFCPropertyGridProperty* pFolderProp, props_structure* pStruct);
-
-   props_structure   _prop_struct;
-   iProperty* _selected = nullptr;
-};
+}

@@ -1,10 +1,13 @@
 #include "stdafx.h"
 #include "GDIRender.h"
-#include "SVCG/math_base_types.h"
+#include "SVCG/enhanced_geometry.h"
+#include "math/math_utils.h"
 
 #include "wingdi.h"
 #include "gdiplus.h"
-using namespace render;
+
+using namespace SV;
+using namespace SV::render;
 
 namespace
 {
@@ -19,7 +22,7 @@ namespace
    }
 }
 
-bool GDIRender::IsNeedRender(const math::geo_contour& points)const
+bool GDIRender::IsNeedRender(const CG::geo_contour& points)const
 {
    for (const auto& p : points)
    {
@@ -62,7 +65,7 @@ void GDIRender::SetSize(size_t w, size_t h)
    calcRenderGeoRect();
 }
 
-void GDIRender::SetCenter(const math::geo_point& center)
+void GDIRender::SetCenter(const CG::geo_point& center)
 {
    _center = center;
 
@@ -85,7 +88,7 @@ void GDIRender::AddObject(object&& obj, bool dynamic)
    getContainer(dynamic).emplace_back(std::move(obj));
 }
 
-void GDIRender::AddArc(const math::geo_point& center, double radius, double beg, double end, double step, unsigned long clr, LINE_STYLE conture, unsigned int width, bool dynamic)
+void GDIRender::AddArc(const CG::geo_point& center, double radius, double beg, double end, double step, unsigned long clr, LINE_STYLE conture, unsigned int width, bool dynamic)
 {
    object obj;
    obj.info.style = conture;
@@ -99,7 +102,7 @@ void GDIRender::AddArc(const math::geo_point& center, double radius, double beg,
    AddObject(std::move(obj), dynamic);
 }
 
-math::point GDIRender::GeoToPixel(const math::geo_point& pos)const
+math::point GDIRender::GeoToPixel(const CG::geo_point& pos)const
 {
    auto dlon = pos.lon - _center.lon;
    auto dlat = pos.lat - _center.lat;
@@ -109,7 +112,7 @@ math::point GDIRender::GeoToPixel(const math::geo_point& pos)const
    return point;
 }
 
-math::geo_point GDIRender::PixelToGeo(const math::point& pos)const
+CG::geo_point GDIRender::PixelToGeo(const math::point& pos)const
 {
    math::point center{ _height * .5, _width * .5 };
    const auto course = -math::direction(pos, center);
@@ -118,7 +121,7 @@ math::geo_point GDIRender::PixelToGeo(const math::point& pos)const
    const auto courseRad = math::grad_to_rad(course);
    double dLat = dist * cos(courseRad);
    double dLon = dist * sin(courseRad);
-   return math::geo_point(_center.lat + dLat, _center.lon + dLon / math::cos_grad(_center.lat));
+   return CG::geo_point(_center.lat + dLat, _center.lon + dLon / math::cos_grad(_center.lat));
 }
 
 void GDIRender::selectPen(CDC* dc, const render::object_info& info)
@@ -392,18 +395,18 @@ find_info GDIRender::FindObject(const math::point& pos, FIND_TYPE type)const
          {
             if (obj.info.fill != FILL_TYPE::FT_NONE)//polygon
             {
-               SVCG::vector_2 polypoints;
+               CG::vector_2 polypoints;
                polypoints.reserve(size);
                for (size_t index = 0; index < obj.pixels.size(); ++index)
                {
                   const auto& gpt = obj.pixels[index];
-                  polypoints.emplace_back(SVCG::point_2(gpt.y, gpt.x));
+                  polypoints.emplace_back(CG::point_2(gpt.y, gpt.x));
                }
 
-               SVCG::PolyPolygon_2 poligon;
+               CG::PolyPolygon_2 poligon;
                poligon.AddContour(polypoints);
 
-               if (poligon.IsPointInPolygon(SVCG::point_2(pos.y, pos.x), nullptr))
+               if (poligon.IsPointInPolygon(CG::point_2(pos.y, pos.x), nullptr))
                   return obj.find;
             }
             else//polyline
@@ -464,9 +467,9 @@ void GDIRender::getObjectInsideScreen()
    }
 }
 
-std::vector<std::vector<math::geo_point>> GDIRender::GetObjectsInsideScreenPts()
+CG::geo_contour_vct GDIRender::GetObjectsInsideScreenPts()
 {
-   std::vector<std::vector<math::geo_point>> pts;
+   CG::geo_contour_vct pts;
    getObjectInsideScreen();
    for (auto& obj : _objectsWithinScreen)
    {

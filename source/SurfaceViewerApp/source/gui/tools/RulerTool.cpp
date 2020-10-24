@@ -3,8 +3,8 @@
 //#include "Colreg\simulator.h"
 //#include "Selection\SelectetObjectManager.h"
 
-
-using namespace user_interface;
+using namespace SV;
+using namespace SV::user_interface;
 
 void RulerTool::MouseMove(CPoint point)
 {
@@ -66,7 +66,7 @@ std::string RulerTool::getDistText(double dist)const
    return s.str();
 }
 
-void RulerTool::renderRuler(CPoint from, CPoint to)const
+void RulerTool::renderRuler(CPoint from, CPoint to) const
 {
    const auto geoFrom = _renderer->PixelToGeo(math::point{ (double)from.y, (double)from.x });
    const auto geoTo = _renderer->PixelToGeo(math::point{ (double)to.y, (double)to.x });

@@ -3,6 +3,8 @@
 #include "udef.h"
 #include "JsonCommandSplitter.h"
 
+using namespace SV;
+
 Server::Server(const transceiver::transceiver_info& info)
    : m_info(info)
 {}

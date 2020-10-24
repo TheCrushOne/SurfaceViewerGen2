@@ -6,7 +6,7 @@
 #include "colreg/ModuleGuard.h"
 
 
-namespace data_standart
+namespace SV::data_standart
 {
    class SurfaceViewerGenMapDataStandart
       : public iSurfaceVieverGenMapDataStandart

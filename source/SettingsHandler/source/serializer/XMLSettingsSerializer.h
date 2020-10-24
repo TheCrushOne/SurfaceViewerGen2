@@ -6,14 +6,14 @@
 #include "colreg/BaseRef.h"
 #include "crossdllinterface\SettingsSerializerInterface.h"
 
-namespace xml_properties
+namespace SV::xml_properties
 {
    class PropertyItem;
 }
 
 struct iPropertyInterface;
 
-namespace colreg
+namespace SV::serializer
 {
    struct iXMLSettingsSerializer : iSettingsSerializer
    {

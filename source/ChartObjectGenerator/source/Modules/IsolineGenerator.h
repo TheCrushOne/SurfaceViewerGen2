@@ -2,7 +2,7 @@
 
 #include "common/central_class.h"
 #include "common/servicable.h"
-#include "common/chart_object.h"
+#include "common/chart_object_unit.h"
 #include "ModuleBase.h"
 #include "math/math_utils.h"
 #include "IsolineAlgorithms\LabirinthTraverse.h"
@@ -21,7 +21,7 @@ namespace SV::chart_object
    class IsolineGenerator : public ModuleBase
    {
    public:
-      IsolineGenerator(central_pack_ptr pack, navigation_dispatcher::iComServicePtr service);
+      IsolineGenerator(central_pack* pack, navigation_dispatcher::iComService* service);
       void GenerateIsolines(const pathfinder::GeoMatrix&, chart_object_unit_vct&);
    private:
       chart_object::chart_object_unit_vct generateIsolineLevel(AlgorithmType type, const pathfinder::GeoMatrix& rawdata, double height, int H);

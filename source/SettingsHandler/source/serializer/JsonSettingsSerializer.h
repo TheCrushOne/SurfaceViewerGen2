@@ -5,7 +5,7 @@
 
 #include "json/json_wrapper.h"
 
-namespace colreg
+namespace SV::serializer
 {
    struct iJsonSettingsSerializer : iSettingsSerializer
    {

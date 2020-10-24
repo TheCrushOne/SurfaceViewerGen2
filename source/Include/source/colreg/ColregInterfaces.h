@@ -5,10 +5,12 @@
 #include "ModelInterface.h"
 #include "DomainInterface.h"
 #include "DebugStructs.h"
-#include "SVCG/base_geometry.h"
+#include "SVCG/base_structs.h"
 
-struct ICommunicator;
-
+namespace SV
+{
+   struct ICommunicator;
+}
 //namespace colreg
 //{
 //#pragma pack (push, 1)

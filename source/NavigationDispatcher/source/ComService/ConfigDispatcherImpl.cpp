@@ -4,7 +4,8 @@
 #include "common\utils.h"
 //#include <memory>
 
-using namespace navigation_dispatcher;
+using namespace SV;
+using namespace SV::navigation_dispatcher;
 
 void ConfigDispatcherImpl::Dispatch(const char* configPath)
 {

@@ -5,11 +5,11 @@
 #include "common/research_structs.h"
 #include "common/central_class.h"
 
-namespace logger
+namespace SV::logger
 {
-   struct iUniversalLogger : colreg::iReleasable
+   struct iUniversalLogger : iReleasable
    {
-      virtual bool LogThreadResearchResult(const ThreadResearchComplexStorage&) = 0;
+      virtual bool LogThreadResearchResult(const research::ThreadResearchComplexStorage&) = 0;
    };
 }
 
@@ -19,4 +19,4 @@ namespace logger
 #define UNILOGGEREXPRTIMPRT __declspec(dllimport) // import DLL information
 #endif
 
-extern "C" UNILOGGEREXPRTIMPRT logger::iUniversalLogger * CreateUniversalLogger(central_pack*);
+extern "C" UNILOGGEREXPRTIMPRT SV::logger::iUniversalLogger * CreateUniversalLogger(SV::central_pack*);

@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "JsonCommandSplitter.h"
 
+using namespace SV;
 
 transceiver::JsonCommand JsonCommandSplitter::GetCommandToken(const char* jsonDee)
 {

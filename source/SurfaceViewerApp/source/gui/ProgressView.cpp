@@ -8,6 +8,8 @@
 #include <commctrl.h>
 #include "resource.h"
 
+using namespace SV;
+
 BEGIN_MESSAGE_MAP(CProgressViewWnd, CDockablePane)
    ON_WM_CREATE()
    ON_WM_SIZE()
@@ -46,34 +48,34 @@ void CProgressViewWnd::adjustElementLayout()
    GetDlgItem(IDC_SIMULATION_TIME_SET_BUTTON)->SetWindowPos(nullptr, (int)(DW * 3. / 4.), 0, (int)(DW * .25), DH, SWP_NOZORDER);
 }
 
-ColregSimulation::iSimulator* CProgressViewWnd::getSimulator()
+surface_simulation::iSimulator* CProgressViewWnd::getSimulator()
 {
    auto* sim = simulator::getSimulator();
    ATLASSERT(sim);
    return sim;
 }
 
-bool CProgressViewWnd::OnScenarioScenarioStatusChanged(ColregSimulation::SCENARIO_STATUS status)
+bool CProgressViewWnd::OnScenarioScenarioStatusChanged(surface_simulation::SCENARIO_STATUS status)
 {
    bool res = true;
    switch (status)
    {
-   case ColregSimulation::SCENARIO_STATUS::SS_MAP_CHECKOPENED:
+   case surface_simulation::SCENARIO_STATUS::SS_MAP_CHECKOPENED:
       res &= onScenarioCheckOpened();
       break;
-   case ColregSimulation::SCENARIO_STATUS::SS_MAP_PROCESSED:
+   case surface_simulation::SCENARIO_STATUS::SS_MAP_PROCESSED:
       res &= onScenarioMapProcessed();
       break;
-   case ColregSimulation::SCENARIO_STATUS::SS_MAPOBJ_PROCESSED:
+   case surface_simulation::SCENARIO_STATUS::SS_MAPOBJ_PROCESSED:
       res &= onScenarioMapObjProcessed();
       break;
-   case ColregSimulation::SCENARIO_STATUS::SS_PATHS_COUNTED:
+   case surface_simulation::SCENARIO_STATUS::SS_PATHS_COUNTED:
       res &= onScenarioPathFound();
       break;
-   case ColregSimulation::SCENARIO_STATUS::SS_OPT_PATHS_COUNTED:
+   case surface_simulation::SCENARIO_STATUS::SS_OPT_PATHS_COUNTED:
       res &= onScenarioOptPathFound();
       break;
-   case ColregSimulation::SCENARIO_STATUS::SS_NOT_LOADED:
+   case surface_simulation::SCENARIO_STATUS::SS_NOT_LOADED:
    default:
       break;
    }
@@ -82,7 +84,7 @@ bool CProgressViewWnd::OnScenarioScenarioStatusChanged(ColregSimulation::SCENARI
 
 bool CProgressViewWnd::onScenarioCheckOpened()
 {
-   active = true;//getSimulator()->GetSimulationType() == ColregSimulation::SIMULATION_PLAYER_TYPE::SPT_LOG;
+   active = true;//getSimulator()->GetSimulationType() == surface_simulation::SIMULATION_PLAYER_TYPE::SPT_LOG;
    if (active)
    {
       ShowPane(true, false, false);
@@ -244,7 +246,7 @@ void CProgressViewWnd::OnClickedSetButton()
    double timeVal = timeToTimestamp(time);
    for (size_t iControlPnt = 0; iControlPnt < sim->GetControlPointsCount(); ++iControlPnt)
    {
-      const ColregSimulation::control_point_info& ctrlPt = sim->GetControlPointInfo(iControlPnt);
+      const surface_simulation::control_point_info& ctrlPt = sim->GetControlPointInfo(iControlPnt);
       if (ctrlPt.time > timeVal)
       {
          if (!sim->PlayFrom(iControlPnt))

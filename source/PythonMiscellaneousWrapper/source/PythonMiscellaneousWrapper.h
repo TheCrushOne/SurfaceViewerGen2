@@ -2,7 +2,7 @@
 
 #include "crossdllinterface\PythonWrapperInterface.h"
 
-namespace python_wrapper
+namespace SV::python_wrapper
 {
    class PythonMiscellaneousWrapper
       : public iPythonWrapper

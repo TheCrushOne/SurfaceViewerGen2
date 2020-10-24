@@ -2,7 +2,7 @@
 #include "crossdllinterface\ChecksumServiceInterface.h"
 #include "md5.h"
 
-namespace checksum
+namespace SV::checksum
 {
    class ChecksumService
       : public iChecksumService

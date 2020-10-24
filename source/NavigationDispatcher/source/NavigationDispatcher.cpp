@@ -6,7 +6,8 @@
 //#include "DataStandartmanager/nd_command.hxx"
 
 
-using namespace navigation_dispatcher;
+using namespace SV;
+using namespace SV::navigation_dispatcher;
 
 #define VALID_CHECK_DLL_LOAD(dllName, funcName, guard) \
    guard.Create(SVGUtils::CurrentDllPath(dllName).c_str(), funcName); \

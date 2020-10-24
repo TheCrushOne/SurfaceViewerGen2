@@ -28,4 +28,4 @@ namespace SV::data_standart
 #define CHARTOBJEXPRTIMPRT __declspec(dllimport) // import DLL information
 #endif
 
-extern "C" CHARTOBJEXPRTIMPRT SV::data_standart::iDataStandart * CreateChartObjectDataStandart(central_pack * pack, LPCWSTR base_folder, navigation_dispatcher::iComService * pService);
+extern "C" CHARTOBJEXPRTIMPRT SV::data_standart::iDataStandart * CreateChartObjectDataStandart(SV::central_pack * pack, LPCWSTR base_folder, SV::navigation_dispatcher::iComService * pService);

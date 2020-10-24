@@ -2,7 +2,7 @@
 
 #include "crossdllinterface\SVGMDatabaseInterface.h"
 
-namespace database
+namespace SV::database
 {
    class XMLDatabaseController : public iSVGMDatabaseController, public Central
    {

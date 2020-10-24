@@ -1,7 +1,8 @@
 #include "stdafx.h"
 #include "SettingsSerializerHolderImpl.h"
 
-using namespace navigation_dispatcher;
+using namespace SV;
+using namespace SV::navigation_dispatcher;
 
 settings::application_settings& SettingsSerializerHolderImpl::GetSettings(const file_utils::global_path_storage& storage)
 {

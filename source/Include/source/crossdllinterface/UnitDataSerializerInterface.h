@@ -2,7 +2,7 @@
 
 #include "SurfaceInterfaces.h"
 
-namespace colreg
+namespace SV::serializer
 {
    struct iUnitDataSerializer : iReleasable
    {
@@ -20,4 +20,4 @@ namespace colreg
 #define UDATASEREXPRTIMPRT __declspec(dllimport) // import DLL information
 #endif
 
-extern "C" UDATASEREXPRTIMPRT colreg::iUnitDataSerializer* CreateUnitDataSerializer();
+extern "C" UDATASEREXPRTIMPRT SV::serializer::iUnitDataSerializer* CreateUnitDataSerializer();

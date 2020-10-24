@@ -2,6 +2,7 @@
 #include "Client.h"
 #include "udef.h"
 
+using namespace SV;
 
 Client::Client(const transceiver::transceiver_info& info)
    : m_info(info)

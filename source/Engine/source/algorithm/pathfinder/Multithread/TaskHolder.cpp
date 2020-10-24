@@ -1,7 +1,8 @@
 #include "stdafx.h"
 #include "TaskHolder.h"
 
-using namespace pathfinder;
+using namespace SV;
+using namespace SV::pathfinder;
 std::recursive_mutex g_mutex;
 
 std::unique_ptr<SemaphoreType> TaskHolder::m_sema = nullptr;

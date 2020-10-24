@@ -4,7 +4,8 @@
 #include "navdisp\ComService.h"
 #include "datastandart\PackHoundDataStandartInterface.h"
 
-using namespace pack_hound;
+using namespace SV;
+using namespace SV::pack_hound;
 
 PackHound::PackHound(central_pack* pack, navigation_dispatcher::iComService* pService)
    : navigation_dispatcher::OrderBase<navigation_dispatcher::OrderType::OT_PACKHOUND, navigation_dispatcher::packhound_order>(pack, pService)

@@ -3,9 +3,9 @@
 #include "SurfaceInterfaces.h"
 #include "common/central_class.h"
 
-namespace raw_data
+namespace SV::raw_data
 {
-   struct iRawDataController : colreg::iReleasable
+   struct iRawDataController : iReleasable
    {
       virtual void LoadRawData() = 0;
       virtual void SaveRawData() = 0;
@@ -19,4 +19,4 @@ namespace raw_data
 #endif
 
 
-extern "C" RDATAEXPRTIMPRT raw_data::iRawDataController * CreateRawDataController(central_pack_ptr);
+extern "C" RDATAEXPRTIMPRT SV::raw_data::iRawDataController * CreateRawDataController(SV::central_pack*);

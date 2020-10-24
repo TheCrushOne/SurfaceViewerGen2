@@ -2,9 +2,9 @@
 #include "OrderFactoryImpl.h"
 #include "navdisp/OrderCreation.h"
 
-using namespace navigation_dispatcher;
+using namespace SV;
 
-OrderFactoryImpl::OrderFactoryImpl(central_pack* pack, iComService* service)
+OrderFactoryImpl::OrderFactoryImpl(central_pack* pack, navigation_dispatcher::iComService* service)
    : Central(pack)
    , m_service(service)
 {
@@ -15,7 +15,7 @@ void OrderFactoryImpl::DeleteOrder(LPCSTR id)
    m_orderMap.erase(id);
 }
 
-iOrder* OrderFactoryImpl::GetOrder(LPCSTR id) const
+navigation_dispatcher::iOrder* OrderFactoryImpl::GetOrder(LPCSTR id) const
 {
    return m_orderMap[id];
 }
@@ -25,7 +25,7 @@ void OrderFactoryImpl::Clear()
    m_orderMap.clear();
 }
 
-#define ORDER_CASE(type, method) case type: return std::shared_ptr<iOrder>(method(GetPack(), m_service));
+#define ORDER_CASE(type, method) case type: return std::shared_ptr<navigation_dispatcher::iOrder>(method(GetPack(), m_service));
 
 #define VALID_CHECK_DLL_LOAD(type, dllName, funcName) case type: \
    m_orderMap[id] = OrderModuleGuard(); \
@@ -38,7 +38,7 @@ void OrderFactoryImpl::Clear()
    } \
    return m_orderMap[id].operator->();
 
-iOrder* OrderFactoryImpl::CreateOrder(navigation_dispatcher::OrderType type, LPCSTR id)
+navigation_dispatcher::iOrder* OrderFactoryImpl::CreateOrder(navigation_dispatcher::OrderType type, LPCSTR id)
 {
    switch (type)
    {

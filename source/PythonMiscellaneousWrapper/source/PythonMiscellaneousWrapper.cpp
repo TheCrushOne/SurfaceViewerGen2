@@ -6,7 +6,8 @@
 #include <Python.h>
 #include <pybind11/pybind11.h>
 
-using namespace python_wrapper;
+using namespace SV;
+using namespace SV::python_wrapper;
 namespace py = pybind11;
 
 struct Pet {

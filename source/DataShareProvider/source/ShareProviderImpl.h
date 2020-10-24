@@ -3,7 +3,7 @@
 #include "crossdllinterface/DataShareInterface.h"
 #include "common/central_class.h"
 
-namespace data_share
+namespace SV::data_share
 {
    class ShareProviderImpl : public iDataShareProvider, public Central
    {

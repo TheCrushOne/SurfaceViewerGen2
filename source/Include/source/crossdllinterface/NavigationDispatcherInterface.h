@@ -19,5 +19,5 @@ namespace SV::navigation_dispatcher
 #define NDEXPRTIMPRT __declspec(dllimport) // import DLL information
 #endif
 
-extern "C" NDEXPRTIMPRT SV::navigation_dispatcher::iNavigationDispatcher * CreateNavigationDispatcher(central_pack*);
-extern "C" NDEXPRTIMPRT SV::navigation_dispatcher::iComService * CreateExternalComService(central_pack*, const char*);
+extern "C" NDEXPRTIMPRT SV::navigation_dispatcher::iNavigationDispatcher * CreateNavigationDispatcher(SV::central_pack*);
+extern "C" NDEXPRTIMPRT SV::navigation_dispatcher::iComService * CreateExternalComService(SV::central_pack*, const char*);

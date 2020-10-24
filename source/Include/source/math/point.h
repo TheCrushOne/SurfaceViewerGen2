@@ -2,7 +2,7 @@
 
 #include "math.h"
 
-namespace math
+namespace SV::math
 {
    struct point
    {
@@ -57,4 +57,18 @@ namespace math
    {
       return !(lhs == rhs);
    }
+
+   /*inline point& operator+= (const point& rhs)
+   {
+      x += rhs.x, y += rhs.y;
+      return *this;
+   }
+
+   inline point& operator-= (const point& rhs)
+   {
+      x -= rhs.x, y -= rhs.y;
+      return *this;
+   }
+
+   inline point operator- () const { return{ -x, -y }; }*/
 }

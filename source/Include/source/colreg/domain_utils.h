@@ -18,61 +18,6 @@ namespace math
    using std::hypot;
    using std::abs;
 
-   constexpr double meters_in_mile = 1852.;
-
-   struct point
-   {
-      double x;
-      double y;
-
-      point& operator+=(const point& rhs)
-      {
-         x += rhs.x, y += rhs.y;
-         return *this;
-      }
-
-      point& operator-=(const point& rhs)
-      {
-         x -= rhs.x, y -= rhs.y;
-         return *this;
-      }
-
-      point operator-() const { return{ -x, -y }; }
-   };
-
-   inline point operator-(const point& lhs, const point& rhs)
-   {
-      return point(lhs) -= rhs;
-   }
-
-   inline point operator+(const point& lhs, const point& rhs)
-   {
-      return point(lhs) += rhs;
-   }
-
-   constexpr double rad_to_deg(double radian) { return 180 / M_PI * radian; }
-   constexpr double deg_to_rad(double angle) { return M_PI / 180 * angle; }
-   inline double normalize(double angle) { return angle - floor(angle * (1 / 360)) * 360; }
-
-   inline double normal_K360(double K)
-   {
-      if (K < 0) K += 360;
-      if (K >= 360) K -= 360;
-      return K;
-   }
-
-   inline double direction(const point& A, const point& B)
-   {
-      const point displacement = B - A;
-      return normalize(rad_to_deg(atan2(displacement.x, displacement.y)));
-   }
-
-   inline double distance(const point& from, const point& to)
-   {
-      const point displacement = to - from;
-      return hypot(displacement.x, displacement.y);
-   }
-
 //   inline point to_cart(const polar& p)
 //   {
 //      const double rad = deg_to_rad(p.course);

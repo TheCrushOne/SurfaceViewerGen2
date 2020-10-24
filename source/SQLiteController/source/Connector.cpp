@@ -4,7 +4,8 @@
 
 #pragma comment(lib, "SQLiteWrapper.lib")
 
-using namespace database;
+using namespace SV;
+using namespace SV::database;
 
 void Connector::Connect(const char* baseFileName)
 {

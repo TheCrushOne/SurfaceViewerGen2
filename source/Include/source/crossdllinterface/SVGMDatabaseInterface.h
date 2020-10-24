@@ -7,9 +7,9 @@
 #include "common/central_class.h"
 #include "common/data_hash.h"
 
-namespace database
+namespace SV::database
 {
-   struct iSVGMDatabaseController : colreg::iReleasable
+   struct iSVGMDatabaseController : iReleasable
    {
       virtual void Connect(const char*) = 0;
       virtual void SaveScenarioData(const settings::unit_source_data&, const std::vector<std::vector<double>>&) = 0;
@@ -27,5 +27,5 @@ namespace database
 #define SVGMDBCEXPRTIMPRT __declspec(dllimport) // import DLL information
 #endif
 
-extern "C" SVGMDBCEXPRTIMPRT database::iSVGMDatabaseController * CreateSQLiteDatabaseController(central_pack*);
-extern "C" SVGMDBCEXPRTIMPRT database::iSVGMDatabaseController * CreateXMLDatabaseController(central_pack*);
+extern "C" SVGMDBCEXPRTIMPRT SV::database::iSVGMDatabaseController * CreateSQLiteDatabaseController(SV::central_pack*);
+extern "C" SVGMDBCEXPRTIMPRT SV::database::iSVGMDatabaseController * CreateXMLDatabaseController(SV::central_pack*);

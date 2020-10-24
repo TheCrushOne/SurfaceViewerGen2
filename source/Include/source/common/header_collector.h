@@ -3,6 +3,7 @@
 #include "settings/settings.h"
 #include "common/utils.h"
 #include "common/base_class.h"
+#include "common/base_types.h"
 #include "common/global.h"
 
 #include <algorithm>

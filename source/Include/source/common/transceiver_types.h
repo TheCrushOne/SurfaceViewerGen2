@@ -4,7 +4,7 @@
 #include <unordered_map>
 #include <functional>
 
-namespace transceiver
+namespace SV::transceiver
 {
    enum class JsonCommand : unsigned short
    {
@@ -23,15 +23,15 @@ namespace transceiver
 
 namespace
 {
-   static std::unordered_map<transceiver::JsonCommand, std::string> tokenMap = {
-      { transceiver::JsonCommand::JC_NEWSURFACE, "JC_NEWSURFACE" }
+   static std::unordered_map<SV::transceiver::JsonCommand, std::string> tokenMap = {
+      { SV::transceiver::JsonCommand::JC_NEWSURFACE, "JC_NEWSURFACE" }
    };
 }
 
-namespace transceiver
+namespace SV::transceiver
 {
-   inline std::string GetTokenByCommand(JsonCommand command) { return (tokenMap.find(command) != tokenMap.end() ? tokenMap.at(command) : "" ); }
-   inline JsonCommand GetCommandByToken(std::string& token)
+   inline std::string GetTokenByCommand(SV::transceiver::JsonCommand command) { return (tokenMap.find(command) != tokenMap.end() ? tokenMap.at(command) : "" ); }
+   inline SV::transceiver::JsonCommand GetCommandByToken(std::string& token)
    {
       for (auto& elem : tokenMap)
       {
@@ -39,6 +39,6 @@ namespace transceiver
             return elem.first;
       }
       // TODO: check!!!
-      return JsonCommand::JC_NEWSURFACE;
+      return SV::transceiver::JsonCommand::JC_NEWSURFACE;
    }
 }

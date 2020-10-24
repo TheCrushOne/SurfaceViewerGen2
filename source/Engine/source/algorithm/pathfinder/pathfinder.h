@@ -25,9 +25,9 @@ namespace SV::pathfinder
    public:
       ~PathFinder();
    public:
-      void FindLandPath(settings::route& route, const std::shared_ptr<RoutePointMatrix>& rawdata, const std::shared_ptr<Matrix<size_t>> coverageMatrix, bool multithread, bool* pathfound);
-      void FindAirPath(settings::route& route, const std::shared_ptr<RoutePointMatrix>& rawdata, size_t iterations, bool multithread);
+      void FindLandPath(settings::route& route, const SharedRoutePointMatrix& rawdata, const SharedUnsignedMatrix& coverageMatrix, bool multithread, bool* pathfound);
+      void FindAirPath(settings::route& route, const SharedRoutePointMatrix& rawdata, size_t iterations, bool multithread);
    private:
-      CG::route_line findUniversalPath(CG::route_point& start, CG::route_point& finish, path_finder_logic& logic, const std::shared_ptr<RoutePointMatrix> rawdata, std::shared_ptr<Matrix<size_t>> coverageMatrix, bool multithread, bool* pathFound);
+      CG::route_line findUniversalPath(const CG::route_point& start, const CG::route_point& finish, const path_finder_logic& logic, const SharedRoutePointMatrix& rawdata, const SharedUnsignedMatrix& coverageMatrix, bool multithread, bool* pathFound);
    };
 }

@@ -8,7 +8,8 @@
 #include <stdio.h>
 #include <png.h>
 
-using namespace converter;
+using namespace SV;
+using namespace SV::converter;
 
 #define VALID_CHECK_DLL_LOAD(dllName, funcName, guard) \
    guard.Create(SVGUtils::CurrentDllPath(dllName).c_str(), funcName); \
@@ -90,7 +91,7 @@ bool HeightMapConverter::writeToDestination(data_standart::iSurfaceVieverGenMapD
    return true;
 }
 
-navigation_dispatcher::iOrderPtr CreatePngHeightmapConverter(central_pack_ptr pack, navigation_dispatcher::iComServicePtr pService)
+navigation_dispatcher::iOrder* CreatePngHeightmapConverter(central_pack* pack, navigation_dispatcher::iComService* pService)
 {
    return new HeightMapConverter(pack, pService);
 }

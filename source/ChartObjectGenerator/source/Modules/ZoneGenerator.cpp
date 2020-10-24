@@ -1,14 +1,15 @@
 #include "stdafx.h"
 #include "ZoneGenerator.h"
 
-using namespace chart_object;
+using namespace SV;
+using namespace SV::chart_object;
 
-void ZoneGenerator::GenerateNoGoAreas(const converter::raw_data_ref& rawdata)
+void ZoneGenerator::GenerateNoGoAreas()
 {
 
 }
 
-void ZoneGenerator::GenerateNoFlyAreas(const converter::raw_data_ref& rawdata)
+void ZoneGenerator::GenerateNoFlyAreas()
 {
 
 }

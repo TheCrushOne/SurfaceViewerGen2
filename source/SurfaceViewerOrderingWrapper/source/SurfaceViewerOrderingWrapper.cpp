@@ -15,9 +15,10 @@
       Message(ICommunicator::MessageType::MT_ERROR, errMsg.c_str()); \
    }
 
-using namespace surface_ordering;
+using namespace SV;
+using namespace SV::surface_ordering;
 
-OrderingWrapper::OrderingWrapper(central_pack_ptr pack, const wchar_t* databasePath)
+OrderingWrapper::OrderingWrapper(central_pack* pack, const wchar_t* databasePath)
    : Central(pack)
    , m_hashDatabasePath(SVGUtils::wstringToString(databasePath))
 {
@@ -66,7 +67,7 @@ bool OrderingWrapper::ProcessOrder(const wchar_t* orderFileName, const wchar_t* 
    );
 }
 
-surface_ordering::iOrderingWrapper * CreateSurfaceViewerOrderingWrapper(central_pack_ptr pack, const wchar_t* basePath)
+iOrderingWrapper * CreateSurfaceViewerOrderingWrapper(central_pack* pack, const wchar_t* basePath)
 {
    return new OrderingWrapper(pack, basePath);
 }

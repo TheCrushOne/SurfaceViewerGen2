@@ -9,7 +9,8 @@
 #include "DataStandart/PathStorageDataStandartInterface.h"
 #include "datastandart/OptimizedPathStorageDataStandartInterface.h"
 
-using namespace data_standart;
+using namespace SV;
+using namespace SV::data_standart;
 
 namespace DataStandartFactoryTags
 {

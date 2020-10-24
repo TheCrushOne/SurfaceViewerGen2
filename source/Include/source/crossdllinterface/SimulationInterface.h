@@ -1,18 +1,19 @@
 #pragma once
 
+#include "colreg/SimulatorInterface.h"
 #include "colreg/ColregSimulation.h"
 #include "common/central_class.h"
 #include "navdisp\ComService.h"
 
-namespace ColregSimulation
+namespace SV::surface_simulation
 {
-   struct iSimulatorManager : colreg::iReleasable
+   struct iSimulatorManager : iReleasable
    {
       //! Подготовка менеджера симуляторов
       virtual void SetPropertyInterface(iPropertyInterface*) = 0;
 
       //! Получение симулятора в зависимости от расширения сценария и загрузка сценария
-      virtual iSimulator* Get(navigation_dispatcher::iComServicePtr) = 0;
+      virtual iSimulator* Get(navigation_dispatcher::iComService*) = 0;
    };
 }
 
@@ -23,4 +24,4 @@ namespace ColregSimulation
 #define SIMEXPRTIMPRT __declspec(dllimport) // import DLL information
 #endif
 
-extern "C" SIMEXPRTIMPRT ColregSimulation::iSimulatorManager * __cdecl CreateSimulationManager(central_pack*);
+extern "C" SIMEXPRTIMPRT SV::surface_simulation::iSimulatorManager * __cdecl CreateSimulationManager(SV::central_pack*);

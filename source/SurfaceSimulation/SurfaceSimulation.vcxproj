@@ -26,7 +26,8 @@
     </ClCompile>
     <ClCompile Include="source\RobotLogPlayer\RobotLogPlayer.cpp" />
     <ClCompile Include="source\RobotScenarioPlayer\RobotScenarioPlayer.cpp" />
-    <ClCompile Include="source\SimulationModel\ColregSimulationImpl.cpp" />
+    <ClCompile Include="source\SimulationModel\LayerChartObjectImpl.cpp" />
+    <ClCompile Include="source\SimulationModel\LayerUnitImpl.cpp" />
     <ClCompile Include="source\SimulatorBase.cpp" />
     <ClCompile Include="source\SimulatorManager.cpp" />
     <ClCompile Include="source\stdafx.cpp" />
@@ -39,7 +40,8 @@
     </ClInclude>
     <ClInclude Include="source\RobotLogPlayer\RobotLogPlayer.h" />
     <ClInclude Include="source\RobotScenarioPlayer\RobotScenarioPlayer.h" />
-    <ClInclude Include="source\SimulationModel\ColregSimulationImpl.h" />
+    <ClInclude Include="source\SimulationModel\LayerChartObjectImpl.h" />
+    <ClInclude Include="source\SimulationModel\LayerUnitImpl.h" />
     <ClInclude Include="source\SimulatorBase.h" />
     <ClInclude Include="source\SimulatorManager.h" />
     <ClInclude Include="source\stdafx.h" />

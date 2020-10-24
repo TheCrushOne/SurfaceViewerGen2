@@ -1,6 +1,6 @@
 #pragma once
 
-namespace colreg
+namespace SV::system
 {
    /*
    RAI для iReleasable объектов

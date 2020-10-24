@@ -19,7 +19,7 @@ void ChartLayer::Render(render::iRender* renderer)
       return;
    }
    const auto* sim = simulator::getSimulator();
-   if (!sim || sim->GetSimulatorScenarioState() < ColregSimulation::SCENARIO_STATUS::SS_MAPOBJ_PROCESSED)
+   if (!sim || sim->GetSimulatorScenarioState() < surface_simulation::SCENARIO_STATUS::SS_MAPOBJ_PROCESSED)
       return;
    const auto& simulationState = sim->GetState();
 
@@ -49,14 +49,14 @@ void ChartLayer::onLayerEnabledChanged()
 {
 }
 
-bool ChartLayer::synchronize_map(render::iRender* renderer, const SV::layer_provider::layer_chart_object_vct& chartObjects)
+bool ChartLayer::synchronize_map(render::iRender* renderer, const SV::layer_provider::layer_chart_object_vct* chartObjects)
 {
    //m_chartUSN = checker->GetObjectsUSN();
    renderer->Clear();
 
-   for (size_t iObj = 0; iObj < chartObjects.size(); ++iObj)
+   for (size_t iObj = 0; iObj < (*chartObjects).size(); ++iObj)
    {
-      const auto& obj = chartObjects.at(iObj);
+      const auto& obj = (*chartObjects).at(iObj);
       addChartObject(renderer, obj);
    }
 
@@ -137,27 +137,27 @@ iProperty* ChartLayer::GetProperties()
    return _props.get();
 }
 
-bool ChartLayer::OnScenarioScenarioStatusChanged(ColregSimulation::SCENARIO_STATUS status)
+bool ChartLayer::OnScenarioScenarioStatusChanged(surface_simulation::SCENARIO_STATUS status)
 {
    bool res = true;
    switch (status)
    {
-   case ColregSimulation::SCENARIO_STATUS::SS_MAP_CHECKOPENED:
+   case surface_simulation::SCENARIO_STATUS::SS_MAP_CHECKOPENED:
       res &= onScenarioCheckOpened();
       break;
-   case ColregSimulation::SCENARIO_STATUS::SS_MAP_PROCESSED:
+   case surface_simulation::SCENARIO_STATUS::SS_MAP_PROCESSED:
       res &= onScenarioMapProcessed();
       break;
-   case ColregSimulation::SCENARIO_STATUS::SS_MAPOBJ_PROCESSED:
+   case surface_simulation::SCENARIO_STATUS::SS_MAPOBJ_PROCESSED:
       res &= onScenarioMapObjProcessed();
       break;
-   case ColregSimulation::SCENARIO_STATUS::SS_PATHS_COUNTED:
+   case surface_simulation::SCENARIO_STATUS::SS_PATHS_COUNTED:
       res &= onScenarioPathFound();
       break;
-   case ColregSimulation::SCENARIO_STATUS::SS_OPT_PATHS_COUNTED:
+   case surface_simulation::SCENARIO_STATUS::SS_OPT_PATHS_COUNTED:
       res &= onScenarioOptPathFound();
       break;
-   case ColregSimulation::SCENARIO_STATUS::SS_NOT_LOADED:
+   case surface_simulation::SCENARIO_STATUS::SS_NOT_LOADED:
    default:
       break;
    }
@@ -166,7 +166,7 @@ bool ChartLayer::OnScenarioScenarioStatusChanged(ColregSimulation::SCENARIO_STAT
 
 bool ChartLayer::onScenarioCheckOpened()
 {
-   m_chartUSN = SV::CG::INVALID_ID;
+   m_chartUSN = INVALID_ID;
    return true;
 }
 
@@ -192,20 +192,20 @@ bool ChartLayer::onScenarioOptPathFound()
 
 void ChartLayer::initObjInfo()
 {
-   m_objInfo[CG::OBJECT_TYPE::OT_BORDER_AREA].color = RGB(250, 200, 100);
-   m_objInfo[CG::OBJECT_TYPE::OT_BORDER_AREA].width = 2;
-   m_objInfo[CG::OBJECT_TYPE::OT_BORDER_AREA].fill = render::FILL_TYPE::FT_NONE;
+   m_objInfo[chart_object::OBJECT_TYPE::OT_BORDER_AREA].color = RGB(250, 200, 100);
+   m_objInfo[chart_object::OBJECT_TYPE::OT_BORDER_AREA].width = 2;
+   m_objInfo[chart_object::OBJECT_TYPE::OT_BORDER_AREA].fill = render::FILL_TYPE::FT_NONE;
 
-   m_objInfo[CG::OBJECT_TYPE::OT_ISOLINE].color = RGB(0, 127, 255);
-   m_objInfo[CG::OBJECT_TYPE::OT_ISOLINE].width = 2;
+   m_objInfo[chart_object::OBJECT_TYPE::OT_ISOLINE].color = RGB(0, 127, 255);
+   m_objInfo[chart_object::OBJECT_TYPE::OT_ISOLINE].width = 2;
 
-   m_objInfo[CG::OBJECT_TYPE::OT_NO_GO_AREA].color = RGB(255, 0, 0);
-   m_objInfo[CG::OBJECT_TYPE::OT_NO_GO_AREA].width = 3;
-   m_objInfo[CG::OBJECT_TYPE::OT_NO_GO_AREA].style = render::LINE_STYLE::LL_SOLID;
-   m_objInfo[CG::OBJECT_TYPE::OT_NO_GO_AREA].fill = render::FILL_TYPE::FT_DIAGCROSS;
+   m_objInfo[chart_object::OBJECT_TYPE::OT_NO_GO_AREA].color = RGB(255, 0, 0);
+   m_objInfo[chart_object::OBJECT_TYPE::OT_NO_GO_AREA].width = 3;
+   m_objInfo[chart_object::OBJECT_TYPE::OT_NO_GO_AREA].style = render::LINE_STYLE::LL_SOLID;
+   m_objInfo[chart_object::OBJECT_TYPE::OT_NO_GO_AREA].fill = render::FILL_TYPE::FT_DIAGCROSS;
 
-   m_objInfo[CG::OBJECT_TYPE::OT_NO_FLY_AREA].color = RGB(200, 200, 0);
-   m_objInfo[CG::OBJECT_TYPE::OT_NO_FLY_AREA].width = 1;
-   m_objInfo[CG::OBJECT_TYPE::OT_NO_FLY_AREA].style = render::LINE_STYLE::LL_DASH_DOT;
-   m_objInfo[CG::OBJECT_TYPE::OT_NO_FLY_AREA].fill = render::FILL_TYPE::FT_FDIAGONAL;
+   m_objInfo[chart_object::OBJECT_TYPE::OT_NO_FLY_AREA].color = RGB(200, 200, 0);
+   m_objInfo[chart_object::OBJECT_TYPE::OT_NO_FLY_AREA].width = 1;
+   m_objInfo[chart_object::OBJECT_TYPE::OT_NO_FLY_AREA].style = render::LINE_STYLE::LL_DASH_DOT;
+   m_objInfo[chart_object::OBJECT_TYPE::OT_NO_FLY_AREA].fill = render::FILL_TYPE::FT_FDIAGONAL;
 }

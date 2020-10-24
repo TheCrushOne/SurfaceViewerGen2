@@ -23,20 +23,20 @@ public:
 protected:
    void createDirectXApp();
    void refresh() { /*this->OnIdle(-1);*/ }
-   void recountSimulationControlStatus(ColregSimulation::SCENARIO_STATUS status)
+   void recountSimulationControlStatus(SV::surface_simulation::SCENARIO_STATUS status)
    {
-      ScenarioDispather::GetInstance().OnScenarioScenarioStatusChanged(status);
-      m_runStatus = status >= ColregSimulation::SCENARIO_STATUS::SS_PATHS_COUNTED;
-      m_runStepStatus = status >= ColregSimulation::SCENARIO_STATUS::SS_PATHS_COUNTED;
-      m_pauseStatus = status >= ColregSimulation::SCENARIO_STATUS::SS_PATHS_COUNTED;
-      m_stopStatus = status >= ColregSimulation::SCENARIO_STATUS::SS_PATHS_COUNTED;
+      SV::ScenarioDispather::GetInstance().OnScenarioScenarioStatusChanged(status);
+      m_runStatus = status >= SV::surface_simulation::SCENARIO_STATUS::SS_PATHS_COUNTED;
+      m_runStepStatus = status >= SV::surface_simulation::SCENARIO_STATUS::SS_PATHS_COUNTED;
+      m_pauseStatus = status >= SV::surface_simulation::SCENARIO_STATUS::SS_PATHS_COUNTED;
+      m_stopStatus = status >= SV::surface_simulation::SCENARIO_STATUS::SS_PATHS_COUNTED;
       m_chooseScenario = true;
-      m_processMap = status >= ColregSimulation::SCENARIO_STATUS::SS_MAP_CHECKOPENED;
-      m_processMapObj = status >= ColregSimulation::SCENARIO_STATUS::SS_MAP_PROCESSED;
-      m_simplePaths = status >= ColregSimulation::SCENARIO_STATUS::SS_MAPOBJ_PROCESSED;
-      m_optPaths = status >= ColregSimulation::SCENARIO_STATUS::SS_MAPOBJ_PROCESSED;
+      m_processMap = status >= SV::surface_simulation::SCENARIO_STATUS::SS_MAP_CHECKOPENED;
+      m_processMapObj = status >= SV::surface_simulation::SCENARIO_STATUS::SS_MAP_PROCESSED;
+      m_simplePaths = status >= SV::surface_simulation::SCENARIO_STATUS::SS_MAPOBJ_PROCESSED;
+      m_optPaths = status >= SV::surface_simulation::SCENARIO_STATUS::SS_MAPOBJ_PROCESSED;
    }
-// Переопределение
+   // Переопределение
 public:
    virtual BOOL InitInstance();
    virtual BOOL OnIdle(LONG lCount);
@@ -44,7 +44,7 @@ public:
 
    void RaiseCheckEngine() { m_checkEngineStatus = true; refresh(); }
 
-// Реализация
+   // Реализация
    UINT  m_nAppLook;
    BOOL  m_bHiColorIcons;
    bool m_checkEngineStatus = false;
@@ -80,7 +80,7 @@ public:
    afx_msg void OnCreateFolder();
    afx_msg void OnSimulate();
    afx_msg void OnRename();
-   
+
    afx_msg void OnRun();
    afx_msg void OnRunStep();
    afx_msg void OnPause();

@@ -4,9 +4,9 @@
 #include "colreg/BaseRef.h"
 #include "common/central_class.h"
 
-namespace file_storage
+namespace SV::file_storage
 {
-   struct iFileStorageManager : colreg::iReleasable
+   struct iFileStorageManager : iReleasable
    {
       virtual void PrepareStorage(const wchar_t*) = 0;
    };
@@ -18,5 +18,4 @@ namespace file_storage
 #define FSMEXPRTIMPRT __declspec(dllimport) // import DLL information
 #endif
 
-
-extern "C" FSMEXPRTIMPRT file_storage::iFileStorageManager * CreateFileStorageManager(central_pack*);
+extern "C" FSMEXPRTIMPRT SV::file_storage::iFileStorageManager * CreateFileStorageManager(SV::central_pack*);

@@ -3,7 +3,7 @@
 #include "common/header_collector.h"
 #include "crossdllinterface/UnitDataSerializerInterface.h"
 
-namespace colreg
+namespace SV::serializer
 {
    struct tag
    {

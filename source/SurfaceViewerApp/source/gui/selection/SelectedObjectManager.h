@@ -7,59 +7,61 @@
 #include "gui/layers\RenderLayers.h"
 #include "scenario/ScenarioManager.h"
 
-
-class SelectObjectObserver : public AutoContainer< SelectObjectObserver>
+namespace SV
 {
-public:
-   static void SelectObject(iProperty* prop)
+   class SelectObjectObserver : public AutoContainer< SelectObjectObserver>
    {
-      for (auto& obj : _objects)
-         obj->OnObjectSelected(prop);
-   }
-protected:
-   virtual bool OnObjectSelected(iProperty* prop) = 0;
-};
+   public:
+      static void SelectObject(iProperty* prop)
+      {
+         for (auto& obj : _objects)
+            obj->OnObjectSelected(prop);
+      }
+   protected:
+      virtual bool OnObjectSelected(iProperty* prop) = 0;
+   };
 
-struct iSelected
-   : public FolderProperty
-   , public LayersContainer
-{
-   virtual void StartEdit(render::iRender* renderer, CPoint point, render::find_info info) {}
-   virtual void Edit(render::iRender* renderer, CPoint point) {}
-   virtual void EndEdit() {}
-   virtual void Delete() {}
-   virtual bool IsCanDelete() { return false; }
-   virtual bool IsUpdateable()const { return false; }
-};
+   struct iSelected
+      : public FolderProperty
+      , public LayersContainer
+   {
+      virtual void StartEdit(render::iRender* renderer, CPoint point, render::find_info info) {}
+      virtual void Edit(render::iRender* renderer, CPoint point) {}
+      virtual void EndEdit() {}
+      virtual void Delete() {}
+      virtual bool IsCanDelete() { return false; }
+      virtual bool IsUpdateable()const { return false; }
+   };
 
-using iSelectablePtr = std::unique_ptr< iSelected>;
+   using iSelectablePtr = std::unique_ptr< iSelected>;
 
-class SelectedObjectManager
-   : public Singleton< SelectedObjectManager>
-   , public ScenarioObserverBase
-{
-public:
-   SelectedObjectManager();
+   class SelectedObjectManager
+      : public Singleton< SelectedObjectManager>
+      , public ScenarioObserverBase
+   {
+   public:
+      SelectedObjectManager();
 
-   void Unselect();
-   bool Select(const render::find_info& info);
-   void Delete();
+      void Unselect();
+      bool Select(const render::find_info& info);
+      void Delete();
 
-   iSelected* GetSelected() { return _selected.get(); }
-   SVCG::id_type GetSelectedShip()const { return _selected_ship_id; }
-   SVCG::chart_object_id GetSelectedChartObj()const { return _selected_chart_id; }
-   render::FIND_OBJECT_TYPE GetSelectedObjectType() const { return _info.find_object_type; }
+      iSelected* GetSelected() { return _selected.get(); }
+      id_type GetSelectedShip()const { return _selected_ship_id; }
+      chart_object_id GetSelectedChartObj()const { return _selected_chart_id; }
+      render::FIND_OBJECT_TYPE GetSelectedObjectType() const { return _info.find_object_type; }
 
-   // NOTE: на всякий...
-   // TODO: починить!!!
-   bool OnScenarioScenarioStatusChanged(ColregSimulation::SCENARIO_STATUS status) override { /*Unselect();*/ return true; }
-   bool OnScenarioTimeChanged(double time) { Update();  return true; }
-   bool OnScenarioModified() { Update();  return true; }
-private:
-   void Update();
-private:
-   render::find_info _info;
-   iSelectablePtr _selected;
-   SVCG::id_type _selected_ship_id = SVCG::INVALID_ID;
-   SVCG::chart_object_id _selected_chart_id;
-};
+      // NOTE: на всякий...
+      // TODO: починить!!!
+      bool OnScenarioScenarioStatusChanged(surface_simulation::SCENARIO_STATUS status) override { /*Unselect();*/ return true; }
+      bool OnScenarioTimeChanged(double time) { Update();  return true; }
+      bool OnScenarioModified() { Update();  return true; }
+   private:
+      void Update();
+   private:
+      render::find_info _info;
+      iSelectablePtr _selected;
+      id_type _selected_ship_id = INVALID_ID;
+      chart_object_id _selected_chart_id;
+   };
+}

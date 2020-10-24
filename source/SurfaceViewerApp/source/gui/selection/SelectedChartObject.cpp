@@ -4,13 +4,15 @@
 #include "gui/layers/renderhelper.h"
 #include "gui/user_interface.h"
 
-SelectedChartObject::SelectedChartObject(colreg::id_type id, colreg::OBJECT_TYPE chart_object_type)
+using namespace SV;
+
+SelectedChartObject::SelectedChartObject(id_type id, chart_object::OBJECT_TYPE chart_object_type)
    : m_id{ id }
    , m_chart_object_type{ chart_object_type }
    , m_obj_id{ id }
 {
    // NOTE: загрузка инфы по выбранному объекту
-   auto pObj = simulator::getSimulator()->GetState().GetChartObject(m_obj_id);
+   auto* pObj = simulator::getSimulator()->GetState().GetChartObjectById(m_obj_id);
 
    //if (pObj && pObj->Get() && pObj->Get()->size)
    //{
@@ -27,12 +29,12 @@ SelectedChartObject::SelectedChartObject(colreg::id_type id, colreg::OBJECT_TYPE
       //m_points = std::vector<math::geo_points>{ pObj->geom_contour_vct.begin(), pObj->geom_contour_vct.end() };
 
       size_t i = 0;
-      for (const auto& p : pObj->prop_vct)
+      for (const auto& p : pObj->GetProps())
       {
          m_props[i].key = p.key;
          m_props[i].value = p.val;
          bool readonly = true/*check_chart_obj_type(obj.type, colreg::OT_XTE_AREA) && p.key && strcmp(p.key, "STATISTIC_INFO") == 0;*/;
-         m_props[i].prop_prop = std::make_unique< ValuePropertyHolder< prop_info, decltype(m_props[i].value)>>
+         m_props[i].prop_prop = std::make_unique<ValuePropertyHolder<prop_info, decltype(m_props[i].value)>>
             (p.key.c_str(), p.key.c_str(), readonly, VALUE_FORMAT_TYPE::VFT_NONE, &m_props[i], &prop_info::value, &SelectedChartObject::OnSimSettingChanged, this);
          m_info_folder->AddChild(m_props[i].prop_prop.get());
          ++i;
@@ -43,7 +45,7 @@ SelectedChartObject::SelectedChartObject(colreg::id_type id, colreg::OBJECT_TYPE
       SelectedObjectManager::GetInstance().Unselect();
    }
 
-   m_strType = colreg::chart_obj_type_to_str(m_chart_object_type);
+   m_strType = chart_object::chart_obj_type_to_str(m_chart_object_type);
    m_prop_type = std::make_unique< ValuePropertyHolder< SelectedChartObject, decltype(m_strType)>>
       ("Type", "Chart object type", true, VALUE_FORMAT_TYPE::VFT_NONE, this, &SelectedChartObject::m_strType, &SelectedChartObject::OnSimSettingChanged, this);
    m_info_folder->AddChild(m_prop_type.get());
@@ -81,7 +83,7 @@ void SelectedChartObject::OnSimSettingChanged()
 
 void SelectedChartObject::Render(render::iRender* renderer)
 {
-   if (colreg::check_chart_obj_type(colreg::OBJECT_TYPE::OT_AREAS, m_chart_object_type))
+   if (chart_object::check_chart_obj_type(chart_object::OBJECT_TYPE::OT_AREAS, m_chart_object_type))
    {
       for (auto& contour : m_points)
       {
@@ -89,7 +91,7 @@ void SelectedChartObject::Render(render::iRender* renderer)
          renderer->AddObject({ contour, { 4, render::LINE_STYLE::LL_DASH, render::FILL_TYPE::FT_NONE, user_interface::selectedColor, "", 0, 0, 200} });
       }
    }
-   else if (colreg::check_chart_obj_type(colreg::OT_LINES, m_chart_object_type))
+   else if (chart_object::check_chart_obj_type(chart_object::OT_LINES, m_chart_object_type))
    {
       for (auto& contour : m_points)
       {
@@ -100,7 +102,7 @@ void SelectedChartObject::Render(render::iRender* renderer)
    {
       for (size_t i = 0; i < contour.size(); ++i)
          renderer->AddObject({ { contour[i] }, { 5, render::LINE_STYLE::LL_SOLID, render::FILL_TYPE::FT_NONE, RGB(200, 0, 0), "" }
-                             , { render::FIND_TYPE::FT_FIND_FAST, (colreg::id_type) i, render::FIND_OBJECT_TYPE::FOT_SELECTED, SELECT_TYPE::ST_POINT } });
+                             , { render::FIND_TYPE::FT_FIND_FAST, static_cast<id_type>(i), render::FIND_OBJECT_TYPE::FOT_SELECTED, SELECT_TYPE::ST_POINT } });
    }
 
 }
@@ -111,7 +113,7 @@ void SelectedChartObject::StartEdit(render::iRender* renderer, CPoint point, ren
    //_index = findObjectPointIndex(_geoEdit);
 }
 
-size_t SelectedChartObject::findObjectPointIndex(const colreg::geo_point& geopt) const
+size_t SelectedChartObject::findObjectPointIndex(const CG::geo_point& geopt) const
 {
    std::vector<double> distances;
    distances.resize(m_points.size(), std::numeric_limits<double>::max());
@@ -121,8 +123,8 @@ size_t SelectedChartObject::findObjectPointIndex(const colreg::geo_point& geopt)
          distances[i] = std::min(distances[i], math::distance(m_points[i][jdx], geopt));
    }
 
-   double minDist = colreg::NO_VALUE;
-   size_t bestIndex = colreg::INVALID_INDEX;
+   double minDist = NO_VALUE;
+   size_t bestIndex = INVALID_INDEX;
    for (size_t i = 0; i < distances.size(); ++i)
    {
       if (distances[i] < minDist)
@@ -241,4 +243,3 @@ void SelectedChartObject::Delete()
    //colreg::check_chart_obj_type(colreg::OT_DYNAMIC_AREAS | colreg::OT_STATISTIC_AREA, _chart_object_type) ? cid.dynamic_id = _id : cid.static_id = _id;
    //ScenarioManager::GetInstance().RemoveObject(cid, _chart_object_type);
 }
-

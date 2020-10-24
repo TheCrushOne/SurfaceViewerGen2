@@ -68,9 +68,9 @@ chart_object_unit_vct WaveFrontline::generateIsolineLevel(const pathfinder::GeoM
    if (!rawdata.GetRowCount())
       return chart_object_unit_vct();
 
-   auto actValMtx = std::make_shared<pathfinder::Matrix<bool>>(rawdata.GetRowCount(), rawdata.GetColCount(), false);
-   auto inLineFlagMtx = std::make_shared<pathfinder::Matrix<bool>>(rawdata.GetRowCount(), rawdata.GetColCount(), false);
-   auto passedFlagMtx = std::make_shared<pathfinder::Matrix<bool>>(rawdata.GetRowCount(), rawdata.GetColCount(), false);
+   auto actValMtx = std::make_shared<pathfinder::BoolMatrix>(rawdata.GetRowCount(), rawdata.GetColCount(), false);
+   auto inLineFlagMtx = std::make_shared<pathfinder::BoolMatrix>(rawdata.GetRowCount(), rawdata.GetColCount(), false);
+   auto passedFlagMtx = std::make_shared<pathfinder::BoolMatrix>(rawdata.GetRowCount(), rawdata.GetColCount(), false);
 
    for (size_t rIdx = 0; rIdx < rawdata.GetRowCount(); rIdx++)
    {

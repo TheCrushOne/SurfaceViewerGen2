@@ -5,6 +5,8 @@
 #include <set>
 #include "common\utils.h"
 
+using namespace SV;
+
 namespace
 {
    struct maskData
@@ -52,7 +54,6 @@ void CPropertiesCtrl::ShowProperties(iProperty* prop, bool fullReload)
       _prop_struct.clear();
       RemoveAll();
    }
-   
 
    if (!prop)
    {
@@ -85,7 +86,6 @@ void CPropertiesCtrl::ShowProperties(iProperty* prop, bool fullReload)
    }
    AdjustLayout();
    UnlockWindowUpdate();
-
 }
 
 //====================================================================================================================================================

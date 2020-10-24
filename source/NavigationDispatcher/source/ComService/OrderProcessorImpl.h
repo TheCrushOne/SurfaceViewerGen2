@@ -4,25 +4,30 @@
 #include "navdisp/ComService.h"
 #include <map>
 
-class OrderProcessorImpl
-   : public navigation_dispatcher::iOrderProcessor
-   , private Central
+namespace SV::navigation_dispatcher
 {
-public:
-   OrderProcessorImpl(central_pack* pack, navigation_dispatcher::iComService* service)
-      : Central(pack)
-      , m_service(service)
-   {}
+   class OrderProcessorImpl
+      : public iOrderProcessor
+      , private Central
+   {
+   public:
+      OrderProcessorImpl(central_pack* pack, iComService* service)
+         : Central(pack)
+         , m_service(service)
+      {}
 
-   // iOrderProcessor
-   void AddOrder(navigation_dispatcher::iOrder* command) override final;
-   void ClearOrders() override final;
+      // iOrderProcessor
+      void AddOrder(iOrder* command) override final;
+      void ClearOrders() override final;
 
-   bool ProcessOrders(LPCSTR begCommandName = NULL) override final;
-protected:
-   bool processOrder(LPCSTR name, navigation_dispatcher::iOrder* order);
-private:
-   navigation_dispatcher::iComService* m_service;
-   std::map<std::string, navigation_dispatcher::iOrder*> m_commands;
-   //std::map<std::wstring, std::shared_ptr<Logger>>  m_loggers;
-};
+      bool ProcessOrders(LPCSTR begCommandName = NULL) override final;
+   protected:
+      bool processOrder(LPCSTR name, iOrder* order);
+   private:
+      iComService* m_service;
+      std::map<std::string, iOrder*> m_commands;
+      //std::map<std::wstring, std::shared_ptr<Logger>>  m_loggers;
+   };
+
+   typedef std::shared_ptr<OrderProcessorImpl> SharedOrderProcessorImpl;
+}

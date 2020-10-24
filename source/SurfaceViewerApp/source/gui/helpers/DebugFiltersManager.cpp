@@ -5,6 +5,8 @@
 #include "colreg\ColregSimulation.h"
 #include "simulator/simulator.h"
 
+using namespace SV;
+
 DebugFiltersManager::DebugFiltersManager()
 {
    prepareFilters();

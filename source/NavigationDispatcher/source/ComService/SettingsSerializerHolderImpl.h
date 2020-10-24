@@ -15,7 +15,7 @@
       return; \
    }
 
-namespace navigation_dispatcher
+namespace SV::navigation_dispatcher
 {
    class SettingsSerializerHolderImpl
       : public settings::iSettingsSerializerHolder
@@ -36,6 +36,8 @@ namespace navigation_dispatcher
       bool m_loaded = false;
       iComService* m_services;
       settings::application_settings m_settings;
-      colreg::ModuleGuard<colreg::iSettingsSerializer> m_settingsSerializer;
+      system::ModuleGuard<serializer::iSettingsSerializer> m_settingsSerializer;
    };
+
+   typedef std::shared_ptr<SettingsSerializerHolderImpl> SharedSettingsSerializerHolderImpl;
 }

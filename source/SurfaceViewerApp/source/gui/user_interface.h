@@ -6,7 +6,7 @@
 
 typedef DWORD COLORREF;
 
-namespace user_interface
+namespace SV::user_interface
 {
    enum OUTPUT_TYPE
    {
@@ -18,7 +18,6 @@ namespace user_interface
       OT_PERFORMANCE,
       OT_SIZE
    };
-
 
    enum class EDIT_MODE
    {
@@ -55,8 +54,8 @@ namespace user_interface
 
    struct objects_to_draw
    {
-      std::vector<SVCG::geo_point> units;
-      std::vector<std::vector<SVCG::geo_point>> chart_objects;
+      CG::geo_contour units;
+      CG::geo_contour_vct chart_objects;
    };
 
    objects_to_draw GetObjectsInsideScreen();

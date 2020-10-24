@@ -5,7 +5,7 @@
 #include "common/communicator.h"
 #include "common/central_class.h"
 
-namespace database
+namespace SV::database
 {
    class Connector : public Central
    {

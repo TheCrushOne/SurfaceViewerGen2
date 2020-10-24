@@ -4,7 +4,7 @@
 #include <string>
 #include <unordered_map>
 
-namespace colreg
+namespace SV::serializer
 {
    enum class PathfindingSettingsFieldIndex : unsigned short
    {

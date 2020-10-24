@@ -10,13 +10,14 @@
 #include "json/json_wrapper_impl.h"
 
 namespace fs = std::filesystem;
-using namespace logger;
+using namespace SV;
+using namespace SV::logger;
 
 UniversalLogger::UniversalLogger(central_pack* pack)
    : Central(pack)
 {}
 
-bool UniversalLogger::LogThreadResearchResult(const ThreadResearchComplexStorage& meta)
+bool UniversalLogger::LogThreadResearchResult(const research::ThreadResearchComplexStorage& meta)
 {
    time_t rawtime;
    struct tm* timeinfo;
@@ -36,7 +37,7 @@ bool UniversalLogger::LogThreadResearchResult(const ThreadResearchComplexStorage
    return true;
 }
 
-void UniversalLogger::logThreadResearchResult(const ThreadResearchComplexStorage& meta, const std::wstring str)
+void UniversalLogger::logThreadResearchResult(const research::ThreadResearchComplexStorage& meta, const std::wstring str)
 {
    return;
    auto filePath = std::wstring(/*GetPack()->paths->logger_folder_path*/) + L"//" + str + L".dat";
@@ -55,7 +56,7 @@ void UniversalLogger::logThreadResearchResult(const ThreadResearchComplexStorage
    fil.close();
 }
 
-void UniversalLogger::logThreadResearchMeta(const ThreadResearchComplexStorage& meta, const std::wstring str)
+void UniversalLogger::logThreadResearchMeta(const research::ThreadResearchComplexStorage& meta, const std::wstring str)
 {
    return;
    auto filePath = std::wstring(/*GetPack()->paths->logger_folder_path*/) + L"//" + str + L".meta";

@@ -2,7 +2,7 @@
 
 #include "SurfaceInterfaces.h"
 
-namespace colreg
+namespace SV::serializer
 {
    struct iSettingsSerializer : iReleasable
    {
@@ -46,5 +46,5 @@ namespace colreg
 #define SETSEREXPRTIMPRT __declspec(dllimport) // import DLL information
 #endif
 
-extern "C" SETSEREXPRTIMPRT colreg::iSettingsSerializer * CreateXMLSettingsSerializer();
-extern "C" SETSEREXPRTIMPRT colreg::iSettingsSerializer * CreateJsonSettingsSerializer();
+extern "C" SETSEREXPRTIMPRT SV::serializer::iSettingsSerializer * CreateXMLSettingsSerializer();
+extern "C" SETSEREXPRTIMPRT SV::serializer::iSettingsSerializer * CreateJsonSettingsSerializer();

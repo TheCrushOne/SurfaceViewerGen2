@@ -31,6 +31,8 @@
 
 #include <afxdisp.h>        // MFC Automation classes
 
+#include <windows.h>
+
 // HACK: переопределяем мин и макс для ухода к стл
 #undef min
 #undef max

@@ -1,52 +1,54 @@
 #pragma once
 #include <windef.h>
 #include "Selection\SelectedObjectManager.h"
+#include "colreg/SimulatorInterface.h"
 
-
-class CProgressViewWnd
-   : public CDockablePane
-   , SelectObjectObserver
-   , public ScenarioObserverBase
+namespace SV
 {
-public:
-   bool OnObjectSelected(iProperty* prop) override;
-protected:
+   class CProgressViewWnd
+      : public CDockablePane
+      , SelectObjectObserver
+      , public ScenarioObserverBase
+   {
+   public:
+      bool OnObjectSelected(iProperty* prop) override;
+   protected:
 
-   bool OnScenarioTimeChanged(double time) override;
-   void OnReleasedCaptureSlider(NMHDR* pNMHDR, LRESULT* pResult);
-   void OnClickedSetButton();
-   void OnUpdateSetButton(CCmdUI* pCmdUI);
-   afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
-   afx_msg void OnSize(UINT nType, int cx, int cy);
-   afx_msg BOOL OnEraseBkgnd(CDC* pDC);
-   DECLARE_MESSAGE_MAP()
+      bool OnScenarioTimeChanged(double time) override;
+      void OnReleasedCaptureSlider(NMHDR* pNMHDR, LRESULT* pResult);
+      void OnClickedSetButton();
+      void OnUpdateSetButton(CCmdUI* pCmdUI);
+      afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
+      afx_msg void OnSize(UINT nType, int cx, int cy);
+      afx_msg BOOL OnEraseBkgnd(CDC* pDC);
+      DECLARE_MESSAGE_MAP()
 
-public:
-   virtual ~CProgressViewWnd() = default;
-   // lock drag&drop feature
-   virtual BOOL OnBeforeFloat(CRect& /*rectFloat*/, AFX_DOCK_METHOD/*dockMethod*/) { return false; }
-   virtual BOOL CanAcceptPane(const CBasePane* pBar) const { return false; }
-   bool OnScenarioScenarioStatusChanged(ColregSimulation::SCENARIO_STATUS status) override;
-   bool OnScenarioSimulationStatusChanged(ColregSimulation::SIMULATION_STATUS status) override { return true; }
-private:
-   bool onScenarioCheckOpened();
-   bool onScenarioMapProcessed();
-   bool onScenarioMapObjProcessed();
-   bool onScenarioPathFound();
-   bool onScenarioOptPathFound();
+   public:
+      virtual ~CProgressViewWnd() = default;
+      // lock drag&drop feature
+      virtual BOOL OnBeforeFloat(CRect& /*rectFloat*/, AFX_DOCK_METHOD/*dockMethod*/) { return false; }
+      virtual BOOL CanAcceptPane(const CBasePane* pBar) const { return false; }
+      bool OnScenarioScenarioStatusChanged(surface_simulation::SCENARIO_STATUS status) override;
+      bool OnScenarioSimulationStatusChanged(surface_simulation::SIMULATION_STATUS status) override { return true; }
+   private:
+      bool onScenarioCheckOpened();
+      bool onScenarioMapProcessed();
+      bool onScenarioMapObjProcessed();
+      bool onScenarioPathFound();
+      bool onScenarioOptPathFound();
 
-   void AdjustLayout();
-   void adjustElementLayout();
-   inline ColregSimulation::iSimulator* getSimulator();
-   inline CTime timestampToTime(double stamp);
-   inline double timeToTimestamp(CTime time);
-   HWND createSlider(HWND hWndParent, UINT uId);
-   HWND createEditBox(HWND hWndParent, UINT uId);
-   HWND createButton(HWND hWndParent, UINT uId);
-private:
-   HWND m_slider;
-   HWND m_editbox;
-   HWND m_button;
-   bool active;
-};
-
+      void AdjustLayout();
+      void adjustElementLayout();
+      inline surface_simulation::iSimulator* getSimulator();
+      inline CTime timestampToTime(double stamp);
+      inline double timeToTimestamp(CTime time);
+      HWND createSlider(HWND hWndParent, UINT uId);
+      HWND createEditBox(HWND hWndParent, UINT uId);
+      HWND createButton(HWND hWndParent, UINT uId);
+   private:
+      HWND m_slider;
+      HWND m_editbox;
+      HWND m_button;
+      bool active;
+   };
+}

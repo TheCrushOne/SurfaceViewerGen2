@@ -20,6 +20,8 @@
 #pragma comment (lib, "Mswsock.lib")
 #pragma comment (lib, "AdvApi32.lib")
 
+using namespace SV;
+
 TransceiverImpl::TransceiverImpl(central_pack* pack)
    : Central(pack)
 {}

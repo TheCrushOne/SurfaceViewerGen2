@@ -6,7 +6,8 @@
 
 #include <filesystem>
 
-using namespace data_standart;
+using namespace SV;
+using namespace SV::data_standart;
 
 #define VALID_CHECK_DLL_LOAD(dllName, funcName, guard) \
    guard.Create(SVGUtils::CurrentDllPath(dllName).c_str(), funcName); \

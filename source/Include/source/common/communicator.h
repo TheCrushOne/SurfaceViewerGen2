@@ -36,22 +36,24 @@
 //   virtual bool stdCallConv GetTerminateFlag() = 0;
 //   virtual bool stdCallConv UpdateUI() = 0;
 //};
-
-class Communicable
+namespace SV
 {
-public:
-   bool Message(ICommunicator::MessageType t, const char* msg, ...)
+   class Communicable
    {
-      char str[512];
-      va_list list;
-      va_start(list, msg);
-      vsprintf(str, msg, list);
-      va_end(list);
-      auto comm = GetCommunicator();
-      return comm->Message(t, str);
-   }
-   virtual void SetCommunicator(ICommunicator* comm) = 0;
-   virtual ICommunicator* GetCommunicator() = 0;
-//protected:
-   //ICommunicator* m_communicator;
-};
+   public:
+      bool Message(ICommunicator::MessageType t, const char* msg, ...)
+      {
+         char str[512];
+         va_list list;
+         va_start(list, msg);
+         vsprintf(str, msg, list);
+         va_end(list);
+         auto comm = GetCommunicator();
+         return comm->Message(t, str);
+      }
+      virtual void SetCommunicator(ICommunicator* comm) = 0;
+      virtual ICommunicator* GetCommunicator() = 0;
+      //protected:
+         //ICommunicator* m_communicator;
+   };
+}

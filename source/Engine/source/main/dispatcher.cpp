@@ -33,6 +33,7 @@
 
 
 //using namespace QtConcurrent;
+using namespace SV;
 
 Dispatcher::Dispatcher(/*GlViewerDlg::ViewerCluster cluster
                      , std::shared_ptr<VisualizationWnd> visulizationWnd

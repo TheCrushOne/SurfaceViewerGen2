@@ -8,7 +8,8 @@
 #include <algorithm>
 #include <limits>
 
-using namespace chart_object;
+using namespace SV;
+using namespace SV::chart_object;
 
 ChartObjectGenerator::ChartObjectGenerator(central_pack *pack, navigation_dispatcher::iComService* service)
    : OrderBase(pack, service)
@@ -72,7 +73,7 @@ void ChartObjectGenerator::prepareLocalStorage()
    m_chartStorage.clear();
 }
 
-navigation_dispatcher::iOrderPtr CreateObjectListGenerator(central_pack_ptr pack, navigation_dispatcher::iComServicePtr pService)
+navigation_dispatcher::iOrder* CreateObjectListGenerator(central_pack* pack, navigation_dispatcher::iComService* pService)
 {
    return new ChartObjectGenerator(pack, pService);
 }

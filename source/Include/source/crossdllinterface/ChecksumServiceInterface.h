@@ -8,9 +8,9 @@
 #include "common/header_collector.h"
 #include "common/central_class.h"
 
-namespace checksum
+namespace SV::checksum
 {
-   struct iChecksumService : colreg::iReleasable
+   struct iChecksumService : iReleasable
    {
       virtual const char* CalcHash(const char* filename) = 0;
    };
@@ -22,4 +22,4 @@ namespace checksum
 #define CHCKEXPRTIMPRT __declspec(dllimport) // import DLL information
 #endif
 
-extern "C" CHCKEXPRTIMPRT checksum::iChecksumService * CreateChecksumService(central_pack_ptr);
+extern "C" CHCKEXPRTIMPRT SV::checksum::iChecksumService * CreateChecksumService(SV::central_pack*);

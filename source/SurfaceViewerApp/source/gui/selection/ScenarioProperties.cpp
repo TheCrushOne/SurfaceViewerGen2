@@ -5,6 +5,8 @@
 #define CRSCENPATHSTT(prStruct, obj, field, sifi) PROPHELPER_CREATEHOLDER_S(m_prop_pathfinding_settings[static_cast<size_t>(sifi)], prStruct, obj, field, ScenarioProperties::scenarioPathfindingSettingsMeta, sifi, &ScenarioProperties::OnPathfindingSettingChanged)
 #define CRSCENRESSTT(prStruct, obj, field, sifi) PROPHELPER_CREATEHOLDER_S(m_prop_research_settings[static_cast<size_t>(sifi)], prStruct, obj, field, ScenarioProperties::scenarioResearchSettingsMeta, sifi, &ScenarioProperties::OnResearchSettingChanged)
 
+using namespace SV;
+
 ScenarioProperties::ScenarioProperties()
 {
    //const auto* disp = dispatcher::getDispatcher();

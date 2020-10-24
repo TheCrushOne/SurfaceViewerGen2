@@ -4,14 +4,15 @@
 #include "RobotLogPlayer/RobotLogPlayer.h"
 #include "RobotScenarioPlayer/RobotScenarioPlayer.h"
 
-using namespace ColregSimulation;
+using namespace SV;
+using namespace SV::surface_simulation;
 
 void SimulatorManager::SetPropertyInterface(iPropertyInterface* prop)
 {
    m_prop = prop;
 }
 
-ColregSimulation::iSimulator* SimulatorManager::Get(navigation_dispatcher::iComServicePtr service)
+surface_simulation::iSimulator* SimulatorManager::Get(navigation_dispatcher::iComService* service)
 {
    // TODO: реализовать проверку через базу по настройкам
    auto type = SIMULATION_PLAYER_TYPE::SPT_SCENARIO;
@@ -22,28 +23,28 @@ ColregSimulation::iSimulator* SimulatorManager::Get(navigation_dispatcher::iComS
    return m_sims[stType].get();
 }
 
-iSimulatorPtr SimulatorManager::createSimulationPlayer(SIMULATION_PLAYER_TYPE type, navigation_dispatcher::iComServicePtr service)
+iSimulatorPtr SimulatorManager::createSimulationPlayer(SIMULATION_PLAYER_TYPE type, navigation_dispatcher::iComService* service)
 {
    auto deleterFun = [](auto* s) { s->Release(); };
    SimulatorBase* sim = nullptr;
    switch (type)
    {
    case SIMULATION_PLAYER_TYPE::SPT_SCENARIO:
-      sim = new ColregSimulation::RobotScenarioPlayer(GetPack(), m_prop, service);
+      sim = new surface_simulation::RobotScenarioPlayer(GetPack(), m_prop, service);
       break;
    case SIMULATION_PLAYER_TYPE::SPT_LOG:
-      sim = new ColregSimulation::RobotLogPlayer(GetPack(), m_prop, service);
+      sim = new surface_simulation::RobotLogPlayer(GetPack(), m_prop, service);
       break;
    default:
       ATLASSERT(false);
    }
    //sim->Init(GetPack());
    sim->SetSimulationType(type);
-   ATLASSERT(sim && "ColregSimulation type isn't implemented");
+   ATLASSERT(sim && "surface_simulation type isn't implemented");
    return iSimulatorPtr(sim ? sim : nullptr, deleterFun);
 }
 
-extern "C" SIMEXPRTIMPRT ColregSimulation::iSimulatorManager * __cdecl CreateSimulationManager(central_pack * pack)
+extern "C" SIMEXPRTIMPRT surface_simulation::iSimulatorManager * __cdecl CreateSimulationManager(central_pack * pack)
 {
    return new SimulatorManager(pack);
 }

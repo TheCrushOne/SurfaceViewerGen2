@@ -12,6 +12,8 @@ static char THIS_FILE[] = __FILE__;
 #define new DEBUG_NEW
 #endif
 
+using namespace SV;
+
 CAppStatusView* view = nullptr;
 
 void user_interface::SetProgress(unsigned int progress)

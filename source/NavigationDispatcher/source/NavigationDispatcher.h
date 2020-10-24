@@ -3,7 +3,7 @@
 #include "crossdllinterface/NavigationDispatcherInterface.h"
 #include "DataStandartManager\DataStandartManager.h"
 
-namespace navigation_dispatcher
+namespace SV::navigation_dispatcher
 {
    class NavigationDispatcher
       : public iNavigationDispatcher

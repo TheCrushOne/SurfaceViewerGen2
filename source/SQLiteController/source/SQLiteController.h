@@ -7,12 +7,12 @@
 #include "Connector.h"
 #include "colreg/ModuleGuard.h"
 
-namespace database
+namespace SV::database
 {
    class SQLiteController : public iSVGMDatabaseController, public Central
    {
    public:
-      SQLiteController(central_pack_ptr pack);
+      SQLiteController(central_pack* pack);
       void Connect(const char*) override final;
       void SaveScenarioData(const settings::unit_source_data& unitData, const std::vector<std::vector<double>>& coordGrid) override final;
       void SaveAppSettings() override final;
@@ -39,8 +39,8 @@ namespace database
       void loadUnitData(settings::unit_source_data& settings);
    private:
       std::unique_ptr<Connector> m_connector;
-      colreg::ModuleGuard<data_share::iDataShareProvider, central_pack_ptr> m_shareProvider;
-      colreg::ModuleGuard<colreg::iUnitDataSerializer> m_unitDataSerializer;
-      colreg::ModuleGuard<colreg::iSettingsSerializer> m_settingsSerializer;
+      system::ModuleGuard<data_share::iDataShareProvider, central_pack*> m_shareProvider;
+      system::ModuleGuard<serializer::iUnitDataSerializer> m_unitDataSerializer;
+      system::ModuleGuard<serializer::iSettingsSerializer> m_settingsSerializer;
    };
 }

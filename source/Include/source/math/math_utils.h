@@ -7,8 +7,8 @@
 #include <algorithm>
 #include <limits>
 #include "point.h"
-#include "colreg/CommonStructs.h"
-#include "SVCG/base_geometry.h"
+#include "SVCG/geo_point.h"
+
 
 constexpr double MILE = 1852.0; // Метров в миле
 constexpr double METERS_TO_MILE = 1. / MILE;
@@ -20,8 +20,9 @@ constexpr double RAD_TO_DEG = 180. / M_PI;
 constexpr double KNOOT_TO_MS = MILE / 3600.;
 constexpr double MS_TO_KNOOT = 3600 / MILE;
 constexpr double MIN_TO_RAD = 1. / 60.;
+constexpr double meters_in_mile = 1852.;
 
-namespace
+namespace 
 {
    /**
    * \struct straight
@@ -34,7 +35,7 @@ namespace
       double C;
    };
 
-   inline straight create_straight(const SVCG::geo_point& A, const SVCG::geo_point& B)
+   inline straight create_straight(const SV::CG::geo_point& A, const SV::CG::geo_point& B)
    {
       straight s;
       s.A = A.lat - B.lat;
@@ -44,9 +45,9 @@ namespace
    }
 
    //! точка пересечения прямых a и b
-   inline SVCG::geo_point intersection(const straight& a, const straight& b)
+   inline SV::CG::geo_point intersection(const straight& a, const straight& b)
    {
-      return SVCG::geo_point{ (a.C*b.A - b.C*a.A) / (b.B*a.A - a.B*b.A), (b.C*a.B - a.C*b.B) / (a.A*b.B - b.A*a.B) };
+      return SV::CG::geo_point{ (a.C*b.A - b.C*a.A) / (b.B*a.A - a.B*b.A), (b.C*a.B - a.C*b.B) / (a.A*b.B - b.A*a.B) };
    }
 
    //! пересекаются ли AB и CD по одной из координат
@@ -57,7 +58,8 @@ namespace
       return std::max(a, c) <= std::min(b, d);
    }
 }
-namespace math
+
+namespace SV::math
 {
    //typedef SVCG::geo_point geo_point;
    //typedef std::vector<geo_point> geo_contour;
@@ -69,9 +71,32 @@ namespace math
          , rightBottom{ -360. , -360. }
       {}
 
-      SVCG::geo_point leftTop;
-      SVCG::geo_point rightBottom;
+      CG::geo_point leftTop;
+      CG::geo_point rightBottom;
    };
+
+   constexpr double rad_to_deg(double radian) { return 180 / M_PI * radian; }
+   constexpr double deg_to_rad(double angle) { return M_PI / 180 * angle; }
+   inline double normalize(double angle) { return angle - floor(angle * (1 / 360)) * 360; }
+
+   inline double normal_K360(double K)
+   {
+      if (K < 0) K += 360;
+      if (K >= 360) K -= 360;
+      return K;
+   }
+
+   inline double direction(const point& A, const point& B)
+   {
+      const point displacement = B - A;
+      return normalize(rad_to_deg(atan2(displacement.x, displacement.y)));
+   }
+
+   inline double distance(const point& from, const point& to)
+   {
+      const point displacement = to - from;
+      return hypot(displacement.x, displacement.y);
+   }
 
    template<class T> T sqr(T x) { return x*x; }
 
@@ -114,11 +139,11 @@ namespace math
    }
 
    // Нормализация направления 360
-   inline double normal_K360(double K)
+   /*inline double normal_K360(double K)
    {
       K -= (int)(K / 360) * 360.;
       return K < 0 ? 360 + K : K;
-   }
+   }*/
 
    // Нормализация направления +/- 180
    inline double normal_K180(double K)
@@ -173,14 +198,14 @@ namespace math
    }
 
    // Направление от точки A к B, градусы
-   inline double direction(const SVCG::geo_point& A, const SVCG::geo_point& B)
+   inline double direction(const CG::geo_point& A, const CG::geo_point& B)
    {
       double dw = (B.lon - A.lon) * cos(grad_to_rad(0.5*(B.lat + A.lat)));
       return math::normal_K360(math::rad_to_grad(atan2(dw, (B.lat - A.lat))));
    }
 
    // Разность курсов по 3-м точкам
-   inline double calc_DK(const SVCG::geo_point& A, const SVCG::geo_point& B, const SVCG::geo_point& C)
+   inline double calc_DK(const CG::geo_point& A, const CG::geo_point& B, const CG::geo_point& C)
    {
       return calc_DK(direction(A, B), direction(B, C));
    }
@@ -280,7 +305,7 @@ namespace math
 //    }
 
    
-   inline void distance_direction(const SVCG::geo_point& A, const SVCG::geo_point& B, double& dist, double& dir)
+   inline void distance_direction(const CG::geo_point& A, const CG::geo_point& B, double& dist, double& dir)
    {
       double LatMed = grad_to_rad(0.5*(A.lat + B.lat));
       double cosLatMed = cos(LatMed);
@@ -292,31 +317,31 @@ namespace math
    }
 
    // Вычисляет квадрат расстояние от A до B, мили
-   inline double distance_sqr(const SVCG::geo_point& A, const SVCG::geo_point& B)
+   inline double distance_sqr(const CG::geo_point& A, const CG::geo_point& B)
    {
       double LatMed = grad_to_rad(0.5*(A.lat + B.lat));
       return ( sqr(A.lat - B.lat) + sqr((A.lon - B.lon) * cos(LatMed))) * 60*60;
    }
 
    // Вычисляет расстояние от A до B, мили
-   inline double distance(const SVCG::geo_point& A, const SVCG::geo_point& B)
+   inline double distance(const CG::geo_point& A, const CG::geo_point& B)
    {
       return sqrt( distance_sqr( A, B ) );
    }
 
    // Вычисляет расстояние от A до B в прямоугольной системе координат
-   inline double distance(const point& A, const point& B)
+   /*inline double distance(const point& A, const point& B)
    {
       const point displacement = A - B;
       return hypot(displacement.x, displacement.y);
-   }
+   }*/
 
    // Вычисляет направление от A до B в прямоугольной системе координат
-   inline double direction(const point& A, const point& B)
+   /*inline double direction(const point& A, const point& B)
    {
       const point displacement = B - A;
       return normal_K360(rad_to_grad(atan2(displacement.x, displacement.y)));
-   }
+   }*/
 
    template< typename TPoint >
    inline typename std::enable_if<!std::is_arithmetic<TPoint>::value, bool>::type
@@ -338,14 +363,14 @@ namespace math
    \param[in] course в градусах
    \return geo_point
    */
-   inline SVCG::geo_point calc_point(const SVCG::geo_point& A, double dist, double course)
+   inline CG::geo_point calc_point(const CG::geo_point& A, double dist, double course)
    {
       dist *= MIN_TO_RAD;
       const auto courseRad = math::grad_to_rad(course);
       double dLat = dist*cos(courseRad);
       double LatMed = grad_to_rad(0.5*(A.lat + A.lat + dLat));
       double dLon = dist * sin(courseRad) / cos(LatMed);
-      return SVCG::geo_point(A.lat + dLat, A.lon + dLon);
+      return CG::geo_point(A.lat + dLat, A.lon + dLon);
    }
 
    // Возращает скалярное произведение отрезков AB и AC
@@ -383,7 +408,7 @@ namespace math
 
    // Возвращает сторону расположение точки С от отрезка AB
    template< typename TPoint >
-   typename std::enable_if<!std::is_convertible<TPoint, SVCG::geo_point>::value, SIDE>::type
+   typename std::enable_if<!std::is_convertible<TPoint, CG::geo_point>::value, SIDE>::type
    side(const TPoint& A, const TPoint& B, const TPoint& C, double eps = 1e-6)
    {     
       double vp = cross_product_dir_geo(A, B, C);
@@ -391,10 +416,10 @@ namespace math
    }
 
    template< class TPoint1, class TPoint2, class TPoint3 >
-   typename std::enable_if<std::is_convertible<TPoint1, SVCG::geo_point>::value, SIDE>::type
+   typename std::enable_if<std::is_convertible<TPoint1, CG::geo_point>::value, SIDE>::type
       side(const TPoint1& A, const TPoint2& B, const TPoint3& C, double eps = 1e-6)
    {
-      double vp = cross_product_dir_geo<geo_point>(A, B, C);
+      double vp = cross_product_dir_geo<CG::geo_point>(A, B, C);
       return isEqual(vp, 0., eps) ? SIDE::S_MIDDLE : ((vp > 0) ? SIDE::S_LEFT : SIDE::S_RIGHT);
    }
    
@@ -406,7 +431,7 @@ namespace math
       return isEqual(sp, 0., eps) ? REL_POS::P_MIDDLE : ((sp > 0) ? REL_POS::P_INFRONT : REL_POS::P_BEHIND);
    }
    
-   inline REL_POS rel_pos(const SVCG::geo_point& A, const SVCG::geo_point& B, const SVCG::geo_point& C, double eps = 1e-3)
+   inline REL_POS rel_pos(const CG::geo_point& A, const CG::geo_point& B, const CG::geo_point& C, double eps = 1e-3)
    {
       const auto distAB = distance(A, B)* MILE;
       const auto dirAB = grad_to_rad(direction(A, B));
@@ -418,21 +443,21 @@ namespace math
       return isEqual(sp, 0., eps) ? REL_POS::P_MIDDLE : ((sp > 0) ? REL_POS::P_INFRONT : REL_POS::P_BEHIND);
    }
 
-   using VectorPoints = std::vector<SVCG::geo_point>;
+   //using VectorPoints = std::vector<CG::geo_point>;
 
    struct Arc
    {
-      inline SVCG::geo_point& start()              { return _arc[0]; }
-      inline SVCG::geo_point& end()                { return _arc[1]; }
-      inline SVCG::geo_point& center()             { return _arc[2]; }
+      inline CG::geo_point& start()              { return _arc[0]; }
+      inline CG::geo_point& end()                { return _arc[1]; }
+      inline CG::geo_point& center()             { return _arc[2]; }
       inline double& offset()                      { return _offset; }
 
-      inline const SVCG::geo_point& start()  const { return _arc[0]; }
-      inline const SVCG::geo_point& end()    const { return _arc[1]; }
-      inline const SVCG::geo_point& center() const { return _arc[2]; }
+      inline const CG::geo_point& start()  const { return _arc[0]; }
+      inline const CG::geo_point& end()    const { return _arc[1]; }
+      inline const CG::geo_point& center() const { return _arc[2]; }
       inline const double& offset()          const { return _offset; }
    private:
-      using ArcPoints = SVCG::geo_point[3];
+      using ArcPoints = CG::geo_point[3];
       ArcPoints _arc;
       double _offset;   //расстояние от угловой точки до точки start/end
    };
@@ -441,7 +466,7 @@ namespace math
    \return true - eсли окружность вписывается
    \param[out] arc дуга
    */
-   inline bool inscribe_arc_to_angle(const SVCG::geo_point& A, const SVCG::geo_point& B, const SVCG::geo_point& C, double radius, Arc& arc)
+   inline bool inscribe_arc_to_angle(const CG::geo_point& A, const CG::geo_point& B, const CG::geo_point& C, double radius, Arc& arc)
    {
       ATLASSERT(!(A == B || A == C || B == C));
 
@@ -466,7 +491,7 @@ namespace math
    \param[out] arc[1] касательная к BC
    \param[out] arc[2] центр окружности
    */
-   inline bool inscribe_arc_to_angle(const SVCG::geo_point& A, double dir, const SVCG::geo_point& C, double radius, Arc& arc)
+   inline bool inscribe_arc_to_angle(const CG::geo_point& A, double dir, const CG::geo_point& C, double radius, Arc& arc)
    {
       auto angle1 = dir;
       auto angle2 = direction(A, C);
@@ -495,7 +520,7 @@ namespace math
    }
 
    // Вычисление точек касательных двух окружностей (параллельные)
-   inline bool tangents_between_circles_parallel(const SVCG::geo_point& c1, const SVCG::geo_point& c2, double r1, double r2, SVCG::geo_point& p11, SVCG::geo_point& p12, SVCG::geo_point& p21, SVCG::geo_point& p22)
+   inline bool tangents_between_circles_parallel(const CG::geo_point& c1, const CG::geo_point& c2, double r1, double r2, CG::geo_point& p11, CG::geo_point& p12, CG::geo_point& p21, CG::geo_point& p22)
    {
       const auto distBetweenCentres = distance(c1, c2);
       const auto angleBetweenCentres = direction(r2 > r1 ? c2 : c1, r2 > r1 ? c1 : c2); //направление от бОльшего к меньшему
@@ -532,7 +557,7 @@ namespace math
    }
 
    // Вычисление точек касательных двух окружностей (диагональные)
-   inline bool tangents_between_circles_diagonal(const SVCG::geo_point& c1, const SVCG::geo_point& c2, double r1, double r2, SVCG::geo_point& p11, SVCG::geo_point& p12, SVCG::geo_point& p21, SVCG::geo_point& p22)
+   inline bool tangents_between_circles_diagonal(const CG::geo_point& c1, const CG::geo_point& c2, double r1, double r2, CG::geo_point& p11, CG::geo_point& p12, CG::geo_point& p21, CG::geo_point& p22)
    {
       const auto distBetweenCentres = distance(c1, c2);
       const auto angleBetweenCentres = direction(c1, c2);
@@ -580,7 +605,7 @@ namespace math
    };
 
 
-   inline geo_rect get_rect_bound(const SVCG::geo_contour& points)
+   inline geo_rect get_rect_bound(const CG::geo_contour& points)
    {
       geo_rect rectBound;
       for (const auto & p : points)
@@ -609,13 +634,13 @@ namespace math
 
    
    //! точка пересечения прямых через точки AB и BC
-   inline SVCG::geo_point intersection(const SVCG::geo_point& A, const SVCG::geo_point& B, const SVCG::geo_point& C, const SVCG::geo_point& D)
+   inline CG::geo_point intersection(const CG::geo_point& A, const CG::geo_point& B, const CG::geo_point& C, const CG::geo_point& D)
    {
       return intersection( create_straight(A, B), create_straight(C, D));
    }
 
    //! точка пересечения прямых заданных точкой A и направленим dirA и точкой B и направленим dirB (направление в градусах).
-   inline SVCG::geo_point intersection(const SVCG::geo_point& A, double dirA, const SVCG::geo_point& B, double dirB)
+   inline CG::geo_point intersection(const CG::geo_point& A, double dirA, const CG::geo_point& B, double dirB)
    {
       return intersection(create_straight(A, calc_point(A, 1., dirA)), create_straight(B, calc_point(B, 1., dirB)));
    }
@@ -623,7 +648,7 @@ namespace math
    /* Пересечение двух отрезков заданных точками AB и CD
    \return Пересекеются ли отрезки
    */
-   inline bool is_segments_intersection(const SVCG::geo_point& A, const SVCG::geo_point& B, const SVCG::geo_point& C, const SVCG::geo_point& D)
+   inline bool is_segments_intersection(const CG::geo_point& A, const CG::geo_point& B, const CG::geo_point& C, const CG::geo_point& D)
    {  
       return is_intersect_coord(A.lat, B.lat, C.lat, D.lat) && is_intersect_coord(A.lon, B.lon, C.lon, D.lon)
          && side(A, B, C) != side(A, B, D) && side(C, D, A) != side(C, D, B);
@@ -658,7 +683,7 @@ namespace math
       return true;
    }
 
-   inline bool point_projection_on_segment(const SVCG::geo_point& A, const SVCG::geo_point& B, const SVCG::geo_point& C, SVCG::geo_point& pProj, double eps = 1e-6)
+   inline bool point_projection_on_segment(const CG::geo_point& A, const CG::geo_point& B, const CG::geo_point& C, CG::geo_point& pProj, double eps = 1e-6)
    {
       if (rel_pos(A, B, C, eps) == REL_POS::P_BEHIND)
          return false;
@@ -708,7 +733,7 @@ namespace math
 
    
    //! Находится ли точка check внутри сектора с центром center от startAngle до endAngle (угол сектора < 180)
-   inline INSIDE_SECTOR_RES is_inside_sector(const SVCG::geo_point& center, const SVCG::geo_point& startAngle, const SVCG::geo_point& endAngle, const SVCG::geo_point& check, double eps = 1e-10)
+   inline INSIDE_SECTOR_RES is_inside_sector(const CG::geo_point& center, const CG::geo_point& startAngle, const CG::geo_point& endAngle, const CG::geo_point& check, double eps = 1e-10)
    {
       const auto sideSector = side(center, startAngle, endAngle, eps);
       const auto s1 = side(center, check, startAngle, eps);
@@ -721,7 +746,7 @@ namespace math
    }
 
    //! Находится ли точка check внутри или в радиусе R метров от границы сектора с центром center от startAngle до endAngle (угол сектора < 180)
-   inline INSIDE_SECTOR_RES is_near_sector(const SVCG::geo_point& center, const SVCG::geo_point& startAngle, const SVCG::geo_point& endAngle, const SVCG::geo_point& check, double R, double eps = 1e-10)
+   inline INSIDE_SECTOR_RES is_near_sector(const CG::geo_point& center, const CG::geo_point& startAngle, const CG::geo_point& endAngle, const CG::geo_point& check, double R, double eps = 1e-10)
    {
       R *= METERS_TO_MILE;
       if( math::distance(startAngle, check) < R || math::distance(endAngle, check) < R)
@@ -744,7 +769,7 @@ namespace math
    /*
    Пересекает ли отрезок p1-p2 сектор с центром center от startAngle до endAngle
    */
-   inline bool is_intersect_sector(const SVCG::geo_point& center, const SVCG::geo_point& startAngle, const SVCG::geo_point& endAngle, const SVCG::geo_point& p1, const SVCG::geo_point& p2, double eps = 1e-10)
+   inline bool is_intersect_sector(const CG::geo_point& center, const CG::geo_point& startAngle, const CG::geo_point& endAngle, const CG::geo_point& p1, const CG::geo_point& p2, double eps = 1e-10)
    {
       const auto sideSector = side(center, startAngle, endAngle, eps );
       const auto sideP1_End = side(center, p1, endAngle, eps);
@@ -816,9 +841,9 @@ Y1 |--/
 //Transform.h использует math_utils, поэтому по человечески не получилось
 #include "transform.h"
 
-namespace math
+namespace SV::math
 {
-   inline double dist_to_segment(const SVCG::geo_point& A, const SVCG::geo_point& B, const SVCG::geo_point& C)
+   inline double dist_to_segment(const CG::geo_point& A, const CG::geo_point& B, const CG::geo_point& C)
    {
       math::GeoToCartasianTransform transform(C, 0.0);
       const auto mA = transform.ToLocal(A);

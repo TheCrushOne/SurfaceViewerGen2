@@ -1,7 +1,6 @@
 #pragma once
 
 #include "CommonStructs.h"
-#include "SVCG/base_geometry.h"
 #include "BaseRef.h"
 #include <string>
 #include <vector>

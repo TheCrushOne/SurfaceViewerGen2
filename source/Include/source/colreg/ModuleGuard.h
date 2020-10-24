@@ -1,7 +1,7 @@
 #pragma once
 #include "ReleaseGuard.h"
 
-namespace colreg
+namespace SV::system
 {
    template<typename TInterface, typename... TCreationArgs>
    class ModuleGuard

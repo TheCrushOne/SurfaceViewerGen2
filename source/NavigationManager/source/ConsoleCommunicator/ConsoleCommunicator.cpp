@@ -2,6 +2,8 @@
 #include "ConsoleCommunicator.h"
 #include <iostream>
 
+using namespace SV;
+
 bool stdCallConv ConsoleCommunicator::Message(ICommunicator::MessageType t, const char* msg, ...)
 {
    va_list list;

@@ -4,7 +4,8 @@
 #include "rulertool.h"
 #include "createobjecttool.h"
 //#include "colreg/ChartSafetyStructs.h"
-using namespace user_interface;
+using namespace SV;
+using namespace SV::user_interface;
 
 iMouseToolPtr create_mouse_tool(EDIT_MODE type, render::iRender* renderer, unsigned long long int userData)
 {

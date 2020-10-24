@@ -3,7 +3,7 @@
 #include <sstream>
 #include <iomanip>
 
-namespace xml_properties
+namespace SV::xml_properties
 {
    struct FormatType
    {
@@ -93,7 +93,6 @@ namespace xml_properties
       inline static const void* stringToValue<const void*>(const char* pValue) { return reinterpret_cast<const void*>(pValue); }
    };
 
-
    class ValueProperty : private FormatType
    {
    public:
@@ -112,7 +111,6 @@ namespace xml_properties
          _value = getFormatedValue<Type>(cvalue);
       }
 
-
       const char* GetCharValue() const
       {
          return _value.c_str();
@@ -121,7 +119,6 @@ namespace xml_properties
       {
          _value = pvalue;
       }
-
 
       template<typename Type>
       Type GetSubValue() const
@@ -134,7 +131,6 @@ namespace xml_properties
          _subvalue = getFormatedValue<Type>(cvalue);
       }
 
-
       const char* GetCharSubValue() const
       {
          return _subvalue.c_str();
@@ -143,7 +139,6 @@ namespace xml_properties
       {
          _subvalue = pvalue;
       }
-
 
       const char* GetDesc() const
       {
@@ -154,7 +149,6 @@ namespace xml_properties
          _desc = std::string(cdesc);
       }
 
-
       const char* GetName() const
       {
          return _name.c_str();
@@ -163,7 +157,6 @@ namespace xml_properties
       {
          _name = std::string(cname);
       }
-
 
       bool IsEmpty() const
       {
@@ -176,6 +169,3 @@ namespace xml_properties
       std::string  _subvalue;
    };
 }
-
-
-

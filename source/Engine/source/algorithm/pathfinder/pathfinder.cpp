@@ -27,7 +27,7 @@ PathFinder::~PathFinder()
 /*void fly(Route& route)
 {}*/
 
-void PathFinder::FindAirPath(settings::route& route, const std::shared_ptr<RoutePointMatrix>& rawdata, size_t iterations, bool multithread)
+void PathFinder::FindAirPath(settings::route& route, const SharedRoutePointMatrix& rawdata, size_t iterations, bool multithread)
 {
    CG::route_line exp_route;
    CG::route_line waypointList;
@@ -40,7 +40,7 @@ void PathFinder::FindAirPath(settings::route& route, const std::shared_ptr<Route
    for (auto& item : waypointList)
       item = rawdata->Get(item.row, item.col);
    
-   aff_checker checker = [](const std::shared_ptr<RoutePointMatrix>& data, std::shared_ptr<Matrix<size_t>>& coverageMatrix, size_t row, size_t col) -> bool
+   aff_checker checker = [](const SharedRoutePointMatrix& data, const SharedUnsignedMatrix& coverageMatrix, size_t row, size_t col) -> bool
    {
       //Q_UNUSED(coverageMatrix);
       return data->Get(row, col).fly == FlyZoneAffilation::FZA_FORBIDDEN;
@@ -61,7 +61,7 @@ void PathFinder::FindAirPath(settings::route& route, const std::shared_ptr<Route
    for (size_t idx = 0; idx < waypointList.size() - 1; idx++)
    {
       bool found = false;
-      auto matrix = std::make_shared<Matrix<size_t>>(rawdata->GetRowCount(), rawdata->GetColCount(), 0);
+      auto matrix = std::make_shared<UnsignedMatrix>(rawdata->GetRowCount(), rawdata->GetColCount(), 0);
       CG::route_line path = findUniversalPath(waypointList.at(idx), waypointList.at(idx + 1), logic, rawdata, matrix, multithread, &found);
       //if (!found)
          //Q_ASSERT(false);
@@ -80,7 +80,7 @@ void PathFinder::FindAirPath(settings::route& route, const std::shared_ptr<Route
    route.route_list = exp_route;
 }
 
-void PathFinder::FindLandPath(settings::route& route, const std::shared_ptr<RoutePointMatrix>& rawdata, const std::shared_ptr<Matrix<size_t>> coverageMatrix, bool multithread, bool *pathfound)
+void PathFinder::FindLandPath(settings::route& route, const SharedRoutePointMatrix& rawdata, const SharedUnsignedMatrix& coverageMatrix, bool multithread, bool *pathfound)
 {
    CG::route_line exp_route;
    CG::route_line waypointList;
@@ -88,7 +88,7 @@ void PathFinder::FindLandPath(settings::route& route, const std::shared_ptr<Rout
    waypointList.insert(waypointList.end(), route.control_point_list.begin(), route.control_point_list.end());
    waypointList.emplace_back(route.finish);
    ATLASSERT(waypointList.size() >= 2);
-   aff_checker checker = [](const std::shared_ptr<RoutePointMatrix>& data, std::shared_ptr<Matrix<size_t>>& covMatrix, size_t row, size_t col) -> bool
+   aff_checker checker = [](const SharedRoutePointMatrix& data, const SharedUnsignedMatrix& covMatrix, size_t row, size_t col) -> bool
    {
       return data->Get(row, col).go == GoZoneAffilation::GZA_FORBIDDEN || covMatrix->Get(row, col) == 0;
    };
@@ -114,7 +114,7 @@ void PathFinder::FindLandPath(settings::route& route, const std::shared_ptr<Rout
    route.route_list = exp_route;
 }
 
-CG::route_line PathFinder::findUniversalPath(CG::route_point& start, CG::route_point& finish, path_finder_logic& logic, const std::shared_ptr<RoutePointMatrix> rawdata, std::shared_ptr<Matrix<size_t>> coverageMatrix, bool multithread, bool* pathFound)
+CG::route_line PathFinder::findUniversalPath(const CG::route_point& start, const CG::route_point& finish, const path_finder_logic& logic, const SharedRoutePointMatrix& rawdata, const SharedUnsignedMatrix& coverageMatrix, bool multithread, bool* pathFound)
 {
    CG::route_line exp_route;
    /*auto countDist = [](RoutePoint& p1, RoutePoint& p2)->double
@@ -148,7 +148,7 @@ CG::route_line PathFinder::findUniversalPath(CG::route_point& start, CG::route_p
    //qint64 beginFullTime = CURTIME_MS();
    //qint64 beginCreateMatrixTime = CURTIME_MS();
    // NOTE: волновая матрица
-   auto pointScore = std::make_shared<Matrix<size_t>>(rawdata->GetRowCount(), rawdata->GetColCount(), 0);
+   auto pointScore = std::make_shared<UnsignedMatrix>(rawdata->GetRowCount(), rawdata->GetColCount(), 0);
    ////XFM::CreateMatrix(m_pointScore, m_rowCount, m_colCount);
    ////TP_MATRIX_CREATE(pointScore, m_rowCount, m_colCount, size_t);
    //qint64 endCreateMatrixTime = CURTIME_MS();
@@ -159,7 +159,7 @@ CG::route_line PathFinder::findUniversalPath(CG::route_point& start, CG::route_p
 
    for (size_t ridx = 0; ridx < pointScore->GetRowCount(); ridx++)
       for (size_t cidx = 0; cidx < pointScore->GetColCount(); cidx++)
-         pointScore->Set(ridx, cidx, logic.checker(rawdata, coverageMatrix, ridx, cidx) ? /*ULONG_LONG_MAX*/ULLONG_MAX : 0);
+         pointScore->Set(ridx, cidx, logic.GetChecker()(rawdata, coverageMatrix, ridx, cidx) ? ULLONG_MAX : 0);
    pointScore->Set(stCurRow, stCurCol, 1);
    //m_pointScore[stCurRow][stCurCol] = 1;
    bool find = false;
@@ -215,7 +215,7 @@ CG::route_line PathFinder::findUniversalPath(CG::route_point& start, CG::route_p
                      find = true;
                      break;
                   }
-               }               
+               }
             }
          }
       }

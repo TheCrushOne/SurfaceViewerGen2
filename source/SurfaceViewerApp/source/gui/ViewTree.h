@@ -3,21 +3,23 @@
 
 /////////////////////////////////////////////////////////////////////////////
 // Окно CViewTree
-
-class CViewTree : public CTreeCtrl
+namespace SV
 {
-// Создание
-public:
-	CViewTree() noexcept;
+   class CViewTree : public CTreeCtrl
+   {
+      // Создание
+   public:
+      CViewTree() noexcept;
 
-// Переопределение
-protected:
-	virtual BOOL OnNotify(WPARAM wParam, LPARAM lParam, LRESULT* pResult);
+      // Переопределение
+   protected:
+      virtual BOOL OnNotify(WPARAM wParam, LPARAM lParam, LRESULT* pResult);
 
-// Реализация
-public:
-	virtual ~CViewTree();
+      // Реализация
+   public:
+      virtual ~CViewTree();
 
-protected:
-	DECLARE_MESSAGE_MAP()
-};
+   protected:
+      DECLARE_MESSAGE_MAP()
+   };
+}

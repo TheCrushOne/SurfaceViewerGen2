@@ -1,10 +1,10 @@
 #pragma once
 
 #include "common/central_class.h"
-#include "common/chart_object.h"
+#include "common/chart_object_unit.h"
 #include "ModuleBase.h"
 
-namespace chart_object
+namespace SV::chart_object
 {
    class ZoneGenerator : public ModuleBase
    {
@@ -13,8 +13,8 @@ namespace chart_object
          : ModuleBase(pack, service)
       {}
 
-      void GenerateNoGoAreas(const converter::raw_data_ref& rawdata);
-      void GenerateNoFlyAreas(const converter::raw_data_ref& rawdata);
+      void GenerateNoGoAreas();
+      void GenerateNoFlyAreas();
    private:
    };
 }

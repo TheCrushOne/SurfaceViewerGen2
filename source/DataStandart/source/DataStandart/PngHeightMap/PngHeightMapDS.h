@@ -6,7 +6,7 @@
 
 #include <png.h>
 
-namespace data_standart
+namespace SV::data_standart
 {
    class PngHeightMapDataStandart
       : public iPngHeightMapDataStandart

@@ -95,9 +95,11 @@ namespace SV::settings
    struct pathfinding_settings
    {
       level_settings lvl_stt;
+      bool use_multithread_computing;
 
       pathfinding_settings()
          : lvl_stt(level_settings())
+         , use_multithread_computing(false)
       {}
    };
 
@@ -105,14 +107,14 @@ namespace SV::settings
    template<typename T>
    struct range_data
    {
-      T min;
-      T max;
+      T min_val;
+      T max_val;
       T step;
       std::vector<T> values;
 
       range_data()
-         : min(static_cast<T>(0))
-         , max(static_cast<T>(0))
+         : min_val(static_cast<T>(0))
+         , max_val(static_cast<T>(0))
          , step(static_cast<T>(0))
          , values(std::vector<T>{})
       {}
@@ -122,8 +124,8 @@ namespace SV::settings
       {
          if (!values.empty() || step == 0)
             return;
-         T cur = min;
-         while (cur <= max)
+         T cur = min_val;
+         while (cur <= max_val)
          {
             values.emplace_back(cur);
             cur += step;

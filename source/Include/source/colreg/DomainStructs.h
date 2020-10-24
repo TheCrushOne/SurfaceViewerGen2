@@ -1,8 +1,8 @@
 #pragma once
 #include "CommonStructs.h"
-#include "SVCG/base_geometry.h"
+#include "SVCG/geo_point.h"
 
-namespace colreg
+namespace SV::domain
 {
    enum class DOGT_POLYGON_PART
    {
@@ -57,8 +57,8 @@ namespace colreg
       domain_border_info() = default;
 
       double    width;
-      SVCG::geo_point left;
-      SVCG::geo_point right;
+      CG::geo_point left;
+      CG::geo_point right;
    };
 
 #pragma pack (pop)

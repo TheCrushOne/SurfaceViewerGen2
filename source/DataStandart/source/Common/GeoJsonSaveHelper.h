@@ -7,7 +7,7 @@
 
 #include "json/json_wrapper.h"
 
-namespace geojson_save_helper
+namespace SV::geojson_save_helper
 {
    inline Json::Value prop_to_json(const properties::simple_prop& prop)
    {

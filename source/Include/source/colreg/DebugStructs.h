@@ -2,9 +2,9 @@
 
 #include "BaseRef.h"
 #include "CommonStructs.h"
-#include "SVCG/base_geometry.h"
+#include "SVCG/base_structs.h"
 
-namespace dbg
+namespace SV::dbg
 {
    //const size_t        DEFAULT_COLOR = 255;
    //const size_t        DEFAULT_PIX_SIZE = 3;

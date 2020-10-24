@@ -67,6 +67,9 @@ namespace SV::data_standart
    private:
       void resolvePathDee();
       LPCSTR getPath() override final { return m_dataStandartData.folder.c_str(); }
+      static CG::route_point routePointRead(const Json::Value& j);
+      static settings::route routeRead(const Json::Value& jroute);
+      static void pathListRead(std::vector<settings::route>& route_list, const Json::Value& jroute_list);
    private:
       pathfinder::route_data m_paths;
    };

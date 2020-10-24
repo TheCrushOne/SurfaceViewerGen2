@@ -2,7 +2,7 @@
 
 #include "common/central_class.h"
 #include "common/pathfinder_structs.h"
-#include "common/chart_object.h"
+#include "common/chart_object_unit.h"
 #include "ModuleBase.h"
 
 namespace SV::chart_object
@@ -10,7 +10,7 @@ namespace SV::chart_object
    class CoverageGenerator : public ModuleBase
    {
    public:
-      CoverageGenerator(central_pack_ptr pack, navigation_dispatcher::iComServicePtr service)
+      CoverageGenerator(central_pack* pack, navigation_dispatcher::iComService* service)
          : ModuleBase(pack, service)
       {}
 

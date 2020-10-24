@@ -5,11 +5,11 @@
 #include "math/math_utils.h"
 #include "Debug/DebugInfoImpl.h"
 
-using namespace ColregSimulation;
+using namespace SV;
+using namespace SV::surface_simulation;
 
-RobotScenarioPlayer::RobotScenarioPlayer(central_pack_ptr pack, iPropertyInterface* prop, navigation_dispatcher::iComServicePtr service)
+RobotScenarioPlayer::RobotScenarioPlayer(central_pack* pack, iPropertyInterface* prop, navigation_dispatcher::iComService* service)
    : SimulatorBase(pack, prop, service)
-   , m_gridMeta({})
 {
    //m_debugInfo = dbg::CreateDebugInfoManager();
 }
@@ -51,18 +51,18 @@ bool RobotScenarioPlayer::IsRunning() const
 
 size_t RobotScenarioPlayer::GetControlPointsCount() const
 {
-   return m_dronesIdxVct.size();
+   return 0/*m_dronesIdxVct.size()*/;
 }
 
-const control_point_info& RobotScenarioPlayer::GetControlPointInfo(size_t controlPntIdx) const
+/*const control_point_info& RobotScenarioPlayer::GetControlPointInfo(size_t controlPntIdx) const
 {
    return control_point_info{ 0 };
-}
+}*/
 
 bool RobotScenarioPlayer::PlayFrom(size_t controlPointIdx)
 {
    if (m_data.current_step >= m_data.step_count)
-      return;
+      return false;
    m_data.current_step = controlPointIdx;
    return true;
 }
@@ -95,9 +95,9 @@ bool RobotScenarioPlayer::SaveLogPair(const char* filename) const
    return false;
 }
 
-const ColregSimulation::SIMULATION_PLAYER_TYPE RobotScenarioPlayer::GetSimulationType()
+const surface_simulation::SIMULATION_PLAYER_TYPE RobotScenarioPlayer::GetSimulationType()
 {
-   return ColregSimulation::SIMULATION_PLAYER_TYPE::SPT_LOG;
+   return surface_simulation::SIMULATION_PLAYER_TYPE::SPT_LOG;
 }
 
 void RobotScenarioPlayer::ReloadSettings()
@@ -137,46 +137,7 @@ void RobotScenarioPlayer::LogResearchResult()
    }
 }
 
-size_t RobotScenarioPlayer::GetUnitCount(UNIT_TYPE type) const
-{
-   switch (type)
-   {
-   case UNIT_TYPE::UT_DRONE:
-      return m_data.unit_data.air_units.size();
-   case UNIT_TYPE::UT_ROVER:
-      return m_data.unit_data.land_units.size();
-   }
-   return 0;
-}
 
-const iUnit* RobotScenarioPlayer::GetUnitById(SVCG::id_type id) const
-{
-   /*bool find = false;
-   auto idChecker = [this, id, &find](ColregSimulation::UNIT_TYPE type) -> const iUnit*
-   {
-      for (size_t idx = 0; idx < GetUnitCount(type); idx++)
-      {
-         if (GetUnitByIdx(type, idx)->GetInfo().id == id)
-         {
-            find = true;
-            return GetUnitByIdx(type, idx);
-         }
-      }
-      return nullptr;
-   };
-   const iUnit* res = nullptr;
-   res = idChecker(ColregSimulation::UNIT_TYPE::UT_DRONE) ? idChecker(ColregSimulation::UNIT_TYPE::UT_DRONE)
-      : (idChecker(ColregSimulation::UNIT_TYPE::UT_ROVER) ? idChecker(ColregSimulation::UNIT_TYPE::UT_ROVER)
-      : idChecker(ColregSimulation::UNIT_TYPE::UT_SHIP));
-
-   return res;*/
-   return nullptr;
-}
-
-const settings::unit_data_element& RobotScenarioPlayer::GetUnitByIdx(UNIT_TYPE type, size_t idx) const
-{
-   return const_cast<RobotScenarioPlayer*>(this)->getUnitByIdx(type, idx);
-}
 
 double RobotScenarioPlayer::GetTime() const
 {
@@ -188,38 +149,8 @@ const settings::map_settings& RobotScenarioPlayer::GetChartGridMeta() const
    return GetAppSettings().map_stt;
 }
 
-const math::geo_contour_vct_ref RobotScenarioPlayer::GetChartObjects() const
-{
-   return const_cast<const math::geo_contour_vct_ref>(m_chartObjects.geom_contour_vct);
-}
-
-const chart_object::chart_object_unit RobotScenarioPlayer::GetChartObject(SVCG::chart_object_id id) const
-{
-   for (auto& chartObject : GetChartObjects())
-   {
-      if (chartObject.id == id)
-         return chartObject;
-   }
-   return nullptr;
-}
-
-bool RobotScenarioPlayer::PrepareDataForSave(const bool focused, const SVCG::geo_contour_vct& ships, const chart_object::chart_object_unit_vct& chart_objects) const
+bool RobotScenarioPlayer::PrepareDataForSave(const bool focused, const CG::geo_contour_vct& ships, const chart_object::chart_object_unit_vct& chart_objects) const
 {
    return false;
 }
 
-settings::unit_data_element& RobotScenarioPlayer::getUnitByIdx(UNIT_TYPE type, size_t idx)
-{
-   settings::unit_data_element spike;
-   switch (type)
-   {
-   case UNIT_TYPE::UT_ROVER:
-      return m_data.unit_data.land_units.at(idx);
-   case UNIT_TYPE::UT_DRONE:
-      return m_data.unit_data.air_units.at(idx);
-   case UNIT_TYPE::UT_SHIP:
-   default:
-   }
-   ATLASSERT(false);
-   return spike;
-}

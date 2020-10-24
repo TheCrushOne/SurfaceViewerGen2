@@ -6,6 +6,8 @@
 #include <commctrl.h>
 #include "resource.h"
 
+using namespace SV;
+
 BEGIN_MESSAGE_MAP(CPipeplineStatusWnd, CDockablePane)
    ON_WM_CREATE()
    ON_WM_SIZE()

@@ -53,7 +53,9 @@
 #define UNT_SEL_DAT_RES_STR_RL(val) DAT_RES_STR_RL(request_storage::selectReqList.at(request_storage::RequestToken::RT_SELUNTDAT), "1", val)
 
 #define STT_SEL_DAT_RES_STR_RL(token, val) DAT_RES_STR_RL(request_storage::selectReqList.at(request_storage::RequestToken::RT_SELSCNSTT), request_storage::settingsTokenList.at(token).c_str(), val)
-using namespace database;
+
+using namespace SV;
+using namespace SV::database;
 
 #define VALID_CHECK_DLL_LOAD(dllName, funcName, guard, ...) \
    guard.Create(SVGUtils::CurrentDllPath(dllName).c_str(), funcName, __VA_ARGS__); \
@@ -101,7 +103,7 @@ bool launchSelectRequest(Connector* conn, request_storage::SelectRequestToken to
    return launchResultExistenceRequest(conn, request_storage::selectReqList.at(token), args...);
 }
 
-SQLiteController::SQLiteController(central_pack_ptr pack)
+SQLiteController::SQLiteController(central_pack* pack)
    : Central(pack)
    , m_connector(std::make_unique<Connector>(pack))
 {

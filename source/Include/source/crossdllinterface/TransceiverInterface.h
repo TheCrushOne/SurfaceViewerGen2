@@ -5,12 +5,12 @@
 #include "common/central_class.h"
 #include <functional>
 
-namespace transceiver
+namespace SV::transceiver
 {
-   struct iTransceiver : colreg::iReleasable
+   struct iTransceiver : iReleasable
    {
       virtual void Init(const transceiver_info&) = 0;
-      virtual void Send(transceiver::JsonCommand, const char*) = 0;
+      virtual void Send(JsonCommand, const char*) = 0;
    };
 }
 
@@ -20,4 +20,4 @@ namespace transceiver
 #define TRANSEXPRTIMPRT __declspec(dllimport) // import DLL information
 #endif
 
-extern "C" TRANSEXPRTIMPRT transceiver::iTransceiver * CreateTransceiver(central_pack * pack);
+extern "C" TRANSEXPRTIMPRT SV::transceiver::iTransceiver * CreateTransceiver(SV::central_pack * pack);

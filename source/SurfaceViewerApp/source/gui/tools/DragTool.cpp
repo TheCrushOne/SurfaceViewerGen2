@@ -3,7 +3,8 @@
 //#include "Colreg\simulator.h"
 #include "gui/selection\SelectedObjectManager.h"
 
-using namespace user_interface;
+using namespace SV;
+using namespace SV::user_interface;
 
 void DragTool::MouseMove(CPoint point)
 {
@@ -103,7 +104,7 @@ void DragTool::MouseLeave()
 }
 
 
-inline const char* route_type_to_string(ColregSimulation::ROUTE_TYPE _type) { return ""; }
+inline const char* route_type_to_string(surface_simulation::ROUTE_TYPE _type) { return ""; }
 
 bool DragTool::processFindInfo(const render::find_info& find)
 {
@@ -145,7 +146,7 @@ bool DragTool::processFindInfo(const render::find_info& find)
       title << "Ship : " << find.id;
       user_info ui;
       ui.value = find.user_data;
-      description << "Type: " << route_type_to_string((ColregSimulation::ROUTE_TYPE)ui.type) << "\n";
+      description << "Type: " << route_type_to_string((surface_simulation::ROUTE_TYPE)ui.type) << "\n";
       description << "Route point: " << ui.index << "\n";
 
       break;
@@ -155,10 +156,10 @@ bool DragTool::processFindInfo(const render::find_info& find)
       title << "Ship  " << find.id;
       user_info ui;
       ui.value = find.user_data;
-      description << "Type          : " << route_type_to_string((ColregSimulation::ROUTE_TYPE)ui.type) << "\n";
+      description << "Type          : " << route_type_to_string((surface_simulation::ROUTE_TYPE)ui.type) << "\n";
       description << "segment       : " << ui.index << "\n";
 
-      //const auto route_info = ScenarioManager::GetInstance().GetRoute((ColregSimulation::ROUTE_TYPE)ui.type, find.id);
+      //const auto route_info = ScenarioManager::GetInstance().GetRoute((surface_simulation::ROUTE_TYPE)ui.type, find.id);
       //ATLASSERT(route_info.route.size() > (size_t)(ui.index + 1));
 
       //description << "speed         : " << get_formated_value(route_info.route[ui.index + 1].speed, VALUE_FORMAT_TYPE::VFT_SPEED).c_str() << "\n";

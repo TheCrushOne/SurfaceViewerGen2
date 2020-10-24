@@ -49,6 +49,9 @@
     <Filter Include="layer_provider">
       <UniqueIdentifier>{7f7288eb-eba2-4e09-97e0-3ea74e3e9a82}</UniqueIdentifier>
     </Filter>
+    <Filter Include="simulation">
+      <UniqueIdentifier>{9e8cf20f-8b97-4eb5-8834-92c2c56f6837}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\crossdllinterface\SettingsSerializerInterface.h">
@@ -428,6 +431,33 @@
     </ClInclude>
     <ClInclude Include="source\common\object_type.h">
       <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="source\SVCG\polar_point.h">
+      <Filter>SVCG</Filter>
+    </ClInclude>
+    <ClInclude Include="source\colreg\SimulationStateInterface.h">
+      <Filter>colreg</Filter>
+    </ClInclude>
+    <ClInclude Include="source\colreg\SimulatorInterface.h">
+      <Filter>colreg</Filter>
+    </ClInclude>
+    <ClInclude Include="source\colreg\SimulationTypes.h">
+      <Filter>colreg</Filter>
+    </ClInclude>
+    <ClInclude Include="source\colreg\SimulationStructs.h">
+      <Filter>colreg</Filter>
+    </ClInclude>
+    <ClInclude Include="source\common\matrix_object.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="source\simulation\LayerChartObjectInterface.h">
+      <Filter>simulation</Filter>
+    </ClInclude>
+    <ClInclude Include="source\simulation\LayerEntityInterface.h">
+      <Filter>simulation</Filter>
+    </ClInclude>
+    <ClInclude Include="source\simulation\LayerUnitInterface.h">
+      <Filter>simulation</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

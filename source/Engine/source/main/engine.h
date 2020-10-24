@@ -20,19 +20,21 @@
 //template<class T>
 //struct GlobalExperimentStatistic;
 
-namespace engine
+namespace SV::engine
 {
-   class Engine : public iEngine, public Central
+   class Engine
+      : public iEngine
+      , public Central
    {
    public:
       Engine(central_pack* pack);
    public:
       void LaunchResearch(std::function<void(void)>) override final;
-      const TimeResearchComplexStorage& GetTimeResearchResult() const override final { return m_timeResStorage; }
-      const LengthResearchComplexStorage& GetLengthResearchResult() const override final { return m_lengthResStorage; }
-      const ThreadResearchComplexStorage& GetThreadResearchResult() const override final { return m_threadResStorage; }
+      const research::TimeResearchComplexStorage& GetTimeResearchResult() const override final { return m_timeResStorage; }
+      const research::LengthResearchComplexStorage& GetLengthResearchResult() const override final { return m_lengthResStorage; }
+      const research::ThreadResearchComplexStorage& GetThreadResearchResult() const override final { return m_threadResStorage; }
 
-      void ProcessPathFind(const ColregSimulation::scenario_data&, const pathfinder::GeoMatrix&, std::shared_ptr<settings::application_settings>, std::function<void(void)>) override final;
+      void ProcessPathFind(const pathfinder::path_finder_indata&, const pathfinder::GeoMatrix&, std::shared_ptr<settings::application_settings>, std::function<void(void)>) override final;
       const pathfinder::route_data& GetLastProcessedPaths() const override final { return m_pathfinder->GetPaths(); }
       void Release() override final { delete this; }
    private:
@@ -43,10 +45,10 @@ namespace engine
       void logThreadResearchResult();
 
       void threadResNextStep();
-      void generateResScenarioData(ColregSimulation::scenario_data&, const settings::research_settings&, const ThreadResearchComplexStorage::SuperCell::Index&);
+      void generateResScenarioData(pathfinder::path_finder_indata&, const settings::research_settings&, const research::ThreadResearchComplexStorage::SuperCell::Index&);
 
-      void processPathFind(const ColregSimulation::scenario_data&, const pathfinder::GeoMatrix&, std::function<void(void)>);
-      void processPathFindInternal(const ColregSimulation::scenario_data&, pathfinder::path_finder_settings, std::function<void(void)>);
+      void processPathFind(const pathfinder::path_finder_indata&, const pathfinder::GeoMatrix&, std::function<void(void)>);
+      void processPathFindInternal(const pathfinder::path_finder_indata&, std::function<void(void)>);
       void generateResMap(size_t mapSize);
       pathfinder::check_fly_zone_result checkFlyZone(const pathfinder::GeoMatrix&, int, int);
       void convertMap(const pathfinder::GeoMatrix&, std::shared_ptr<pathfinder::RoutePointMatrix>);
@@ -69,10 +71,10 @@ namespace engine
       std::function<void(void)> m_endRoundCallback;
 
       // TODO: восстановить
-      TimeResearchComplexStorage m_timeResStorage;
-      LengthResearchComplexStorage m_lengthResStorage;
+      research::TimeResearchComplexStorage m_timeResStorage;
+      research::LengthResearchComplexStorage m_lengthResStorage;
 
-      ThreadResearchComplexStorage m_threadResStorage;
+      research::ThreadResearchComplexStorage m_threadResStorage;
       size_t m_threadTaskCurrentIdx;
    };
 }

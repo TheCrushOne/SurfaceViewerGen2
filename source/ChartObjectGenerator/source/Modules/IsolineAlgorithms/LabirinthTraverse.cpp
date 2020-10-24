@@ -6,9 +6,10 @@
 
 using namespace SV;
 using namespace SV::chart_object;
+
 std::recursive_mutex g_labirinthTraverseMutex;
 
-inline bool pointCheck(const std::shared_ptr<pathfinder::Matrix<bool>>& actValMtx, const std::shared_ptr<pathfinder::Matrix<bool>>& inLineFlagMtx, const std::shared_ptr<pathfinder::Matrix<bool>>& passedFlagMtx, CG::route_point& res, TraversalDirection dir, size_t rIdx, size_t cIdx)
+inline bool pointCheck(const pathfinder::SharedBoolMatrix& actValMtx, const pathfinder::SharedBoolMatrix& inLineFlagMtx, const pathfinder::SharedBoolMatrix& passedFlagMtx, CG::route_point& res, TraversalDirection dir, size_t rIdx, size_t cIdx)
 {
    int toff = static_cast<int>(rIdx) + traversalOffset.at(dir).first.first;
    int tofs = static_cast<int>(cIdx) + traversalOffset.at(dir).first.second;
@@ -38,9 +39,9 @@ chart_object_unit_vct LabirinthTraverse::generateIsolineLevel(const pathfinder::
    // TODO: установить минимальные ограничения
    if (!rawRowCount || !rawColCount)
       return chart_object_unit_vct();
-   auto actValMtx = std::make_shared<pathfinder::Matrix<bool>>(rawRowCount, rawColCount, false);
-   auto inLineFlagMtx = std::make_shared<pathfinder::Matrix<bool>>(rawRowCount, rawColCount, false);
-   auto passedFlagMtx = std::make_shared<pathfinder::Matrix<bool>>(rawRowCount, rawColCount, false);
+   auto actValMtx = std::make_shared<pathfinder::BoolMatrix>(rawRowCount, rawColCount, false);
+   auto inLineFlagMtx = std::make_shared<pathfinder::BoolMatrix>(rawRowCount, rawColCount, false);
+   auto passedFlagMtx = std::make_shared<pathfinder::BoolMatrix>(rawRowCount, rawColCount, false);
 
    for (size_t rIdx = 0; rIdx < rawRowCount; rIdx++)
    {

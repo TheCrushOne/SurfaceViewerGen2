@@ -9,7 +9,8 @@
 #include "json/json_wrapper_impl.h"
 
 namespace fs = std::filesystem;
-using namespace file_storage;
+using namespace SV;
+using namespace SV::file_storage;
 
 void FileStorageManager::PrepareStorage(const wchar_t* metaFileName)
 {

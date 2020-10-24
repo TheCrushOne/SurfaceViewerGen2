@@ -3,9 +3,11 @@
 #include "common/communicator.h"
 #include "colreg/ColregSimulation.h"
 #include "colreg/ModuleGuard.h"
+#include "colreg/SimulationStateInterface.h"
+#include "colreg/SimulatorInterface.h"
 #include "crossdllinterface/SVGMDatabaseInterface.h"
 #include "common/simulation_structs.h"
-#include "common/chart_object.h"
+#include "common/chart_object_unit.h"
 #include "crossdllinterface\UniversalLoggerInterface.h"
 #include "crossdllinterface\EngineInterface.h"
 #include "crossdllinterface\TaskInterface.h"
@@ -16,23 +18,41 @@
 #include "datastandart/ChartObjectDataStandartInterface.h"
 
 #include "navdisp\OrderBase.h"
+#include "colreg\SimulationStructs.h"
 
-namespace ColregSimulation
+#include "SimulationModel/LayerChartObjectImpl.h"
+#include "SimulationModel/LayerUnitImpl.h"
+
+#include "simulation\LayerUnitInterface.h"
+#include "simulation\LayerChartObjectInterface.h"
+
+namespace SV::surface_simulation
 {
-   constexpr double DefaultUnitSpeed = 10.;
-
    class SimulatorBase
       : public iSimulator
+      , public iSimulationState
       , public Central
    {
+      struct scenario_data
+      {
+         //settings::unit_source_data unit_data;
+         std::vector<LayerChartObjectImpl> chart_objects;
+         //layer_provider::layer_chart_object_vct chart_objects;
+         std::vector<LayerRoverImpl> land_unit_objects;
+         std::vector<LayerDroneImpl> air_unit_objects;
+         //layer_provider::layer_unit_object_vct land_unit_objects;
+         //layer_provider::layer_unit_object_vct air_unit_objects;
+         size_t step_count;
+         size_t current_step;
+      };
    public:
-      SimulatorBase(central_pack_ptr, iPropertyInterface*, navigation_dispatcher::iComServicePtr);
+      SimulatorBase(central_pack*, iPropertyInterface*, navigation_dispatcher::iComService*);
 
       virtual ~SimulatorBase() {}
 
       void Release() override final { delete this; }
 
-      //dbg::iDebugInfo* GetDebugInfo() const override final { return m_debugInfo; }
+      // iSimulator impl
       bool CheckOpenScenario() override;
       bool LoadProcessedMap() override;
       bool LoadProcessedMapObjects() override;
@@ -40,7 +60,7 @@ namespace ColregSimulation
       bool LoadProcessedOptPaths() override;
       //virtual const std::shared_ptr<settings::application_settings>& GetAppSettings() const override final { return GetSettings(); }
 
-      inline void SetSimulationType(const ColregSimulation::SIMULATION_PLAYER_TYPE type) { m_simulationType = type; }
+      inline void SetSimulationType(const surface_simulation::SIMULATION_PLAYER_TYPE type) { m_simulationType = type; }
       void SetAppSettings(const settings::application_settings& settings) override final { m_settings = settings; }
       const settings::application_settings& GetAppSettings() const override final { return m_settings; }
 
@@ -48,30 +68,48 @@ namespace ColregSimulation
       virtual SIMULATION_STATUS GetSimulatorSimulationState() const override final { return m_simulationStatus; }
       virtual void SetSimulatorScenarioState(SCENARIO_STATUS status) override final { m_scenarioStatus = status; }
       virtual void SetSimulatorSimulationState(SIMULATION_STATUS status) override final { m_simulationStatus = status; }
+
+      // iSimulationState impl
+      size_t GetUnitCount(UNIT_TYPE type) const override final { return m_data.chart_objects.size(); };
+
+      const iLayerUnit* GetUnitByIdx(UNIT_TYPE type, size_t idx) const override final;
+      const iLayerUnit* GetUnitById(id_type id) const override final;
+
+      size_t GetChartObjectCount() const override final;
+
+      const iLayerChartObject* GetChartObjectByIdx(size_t idx) const override final;
+      const iLayerChartObject* GetChartObjectById(chart_object_id id) const override final;
    protected:
-      void processRecountRouteVisualizeMeta(std::vector<settings::unit_data_element>&);
+      void processRecountRouteVisualizeMeta(layer_provider::layer_unit_object_vct&);
       void calcStepCount();
+      surface_simulation::iLayerUnit* getUnitByIdx(UNIT_TYPE type, size_t idx);
       //void deserializeStandartAttrs()
    protected:
-      settings::application_settings m_settings;
-      chart_object::chart_object_unit_vct m_chartObjects;
+      scenario_data m_data;
+
       std::shared_ptr<file_utils::global_path_storage> m_paths;
+
+      settings::application_settings m_settings;
+
       iPropertyInterface* m_prop;
       std::wstring m_orderCacheFolder, m_currentConfig;
 
-      ColregSimulation::SIMULATION_PLAYER_TYPE m_simulationType = ColregSimulation::SIMULATION_PLAYER_TYPE::SPT_SIZE;
-      scenario_data m_data;
-      colreg::ModuleGuard<database::iSVGMDatabaseController, central_pack*> m_databaseController;
-      colreg::ModuleGuard<engine::iEngine, central_pack_ptr> m_engine;
-      colreg::ModuleGuard<logger::iUniversalLogger, central_pack_ptr> m_logger;
+      surface_simulation::SIMULATION_PLAYER_TYPE m_simulationType = surface_simulation::SIMULATION_PLAYER_TYPE::SPT_SIZE;
+      
+      system::ModuleGuard<database::iSVGMDatabaseController, central_pack*> m_databaseController;
+      system::ModuleGuard<engine::iEngine, central_pack*> m_engine;
+      system::ModuleGuard<logger::iUniversalLogger, central_pack*> m_logger;
 
-      colreg::ModuleGuard<data_standart::iDataStandart, central_pack_ptr, LPCSTR, navigation_dispatcher::iComService*> m_mapDS;
-      colreg::ModuleGuard<data_standart::iDataStandart, central_pack_ptr, LPCSTR, navigation_dispatcher::iComService*> m_mapObjDS;
-      colreg::ModuleGuard<data_standart::iDataStandart, central_pack_ptr, LPCSTR, navigation_dispatcher::iComService*> m_pathDS;
-      colreg::ModuleGuard<data_standart::iDataStandart, central_pack_ptr, LPCSTR, navigation_dispatcher::iComService*> m_optPathDS;
+      system::ModuleGuard<data_standart::iDataStandart, central_pack*, LPCSTR, navigation_dispatcher::iComService*> m_mapDS;
+      system::ModuleGuard<data_standart::iDataStandart, central_pack*, LPCSTR, navigation_dispatcher::iComService*> m_mapObjDS;
+      system::ModuleGuard<data_standart::iDataStandart, central_pack*, LPCSTR, navigation_dispatcher::iComService*> m_pathDS;
+      system::ModuleGuard<data_standart::iDataStandart, central_pack*, LPCSTR, navigation_dispatcher::iComService*> m_optPathDS;
       SCENARIO_STATUS m_scenarioStatus = SCENARIO_STATUS::SS_NOT_LOADED;
       SIMULATION_STATUS m_simulationStatus = SIMULATION_STATUS::SS_STOP;
       //dbg::iDebugInfo* m_debugInfo = nullptr;
-      navigation_dispatcher::iComServicePtr m_service = nullptr;
+      navigation_dispatcher::iComService* m_service = nullptr;
+
+      std::vector<std::vector<double>> m_coordGrid;
+      chart_grid_meta m_gridMeta = {};
    };
 }

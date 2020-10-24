@@ -1,8 +1,5 @@
 #pragma once
 
-#include "base_geometry.h"
-
-namespace SVCG
+namespace SV::CG
 {
-
 }

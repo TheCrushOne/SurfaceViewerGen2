@@ -7,10 +7,10 @@
 
 namespace
 {
-   colreg::ModuleGuard<ColregSimulation::iSimulatorManager, central_pack*> _simMgr;
-   std::shared_ptr<ICommunicator> comm = std::make_shared<CommunicatorWnd>();
-   std::shared_ptr<central_pack> pack = std::make_shared<central_pack>(comm);
-   ColregSimulation::iSimulator* _simulator = nullptr;
+   SV::system::ModuleGuard<SV::surface_simulation::iSimulatorManager, SV::central_pack*> _simMgr;
+   std::shared_ptr<SV::ICommunicator> comm = std::make_shared<SV::CommunicatorWnd>();
+   std::shared_ptr<SV::central_pack> pack = std::make_shared<SV::central_pack>(comm);
+   SV::surface_simulation::iSimulator* _simulator = nullptr;
 
    bool createSimulationManager()
    {
@@ -18,27 +18,27 @@ namespace
       {
          return true;
       }
-      //const fpath simulatorPath = fpath::get_module_folder().append("ColregSimulation.dll");
+      //const fpath simulatorPath = fpath::get_module_folder().append("surface_simulation.dll");
       bool retval = _simMgr.Create(SVGUtils::CurrentDllPath("SurfaceSimulation").c_str(), "CreateSimulationManager", pack.get());
       if (!_simMgr.IsValid())
       {
-         user_interface::RaiseError();
+         SV::user_interface::RaiseError();
          std::string errMsg = std::string("Can't load '") + "SurfaceSimulation" + "'!";
-         user_interface::SetOutputText(user_interface::OT_ERROR, errMsg.c_str());
+         SV::user_interface::SetOutputText(SV::user_interface::OT_ERROR, errMsg.c_str());
          return false;
       }
       return retval;
    }
 }
 
-namespace simulator
+namespace SV::simulator
 {
    ICommunicator* GetCommunicator()
    {
       return pack->comm.get();
    }
 
-   ColregSimulation::iSimulator* getSimulator()
+   surface_simulation::iSimulator* getSimulator()
    {
       return _simulator;
    }
@@ -57,7 +57,7 @@ namespace simulator
    }
 
    // TODO: раскомментить, если понадобится
-   bool simulatorInit(navigation_dispatcher::iComServicePtr service)
+   bool simulatorInit(navigation_dispatcher::iComService* service)
    {
       if (!_simMgr.IsValid())
          createSimulationManager();
@@ -115,9 +115,9 @@ namespace simulator
       return true;
    }
 
-   colreg::geo_point getCenter()
+   CG::geo_point getCenter()
    {
-      colreg::geo_point center{ 0., 0. };
+      CG::geo_point center{ 0., 0. };
       if (!_simulator)
          return center;
 

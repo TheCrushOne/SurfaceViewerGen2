@@ -3,6 +3,8 @@
 #include "simulator\simulator.h"
 #include "SVCG/positioning.h"
 
+using namespace SV;
+
 namespace
 {
    NetLayer layer;
@@ -47,14 +49,14 @@ void NetLayer::createCells(render::iRender* renderer)
 
    for (size_t rowIdx = 1; rowIdx < meta.row_count - 1; rowIdx++)
    {
-      const auto p1 = SVCG::RoutePointToPositionPoint({ static_cast<int>(rowIdx), 0 }, envStt);
-      const auto p2 = SVCG::RoutePointToPositionPoint({ static_cast<int>(rowIdx), static_cast<int>(meta.col_count) - 1 }, envStt);
+      const auto p1 = transfercase::RoutePointToPositionPoint({ static_cast<int>(rowIdx), 0 }, envStt);
+      const auto p2 = transfercase::RoutePointToPositionPoint({ static_cast<int>(rowIdx), static_cast<int>(meta.col_count) - 1 }, envStt);
       renderer->AddObject({ { p1,p2 }, {1, render::LINE_STYLE::LL_SOLID, render::FILL_TYPE::FT_NONE, gridLight, ""} });
    }
    for (size_t colIdx = 1; colIdx < meta.col_count - 1; colIdx++)
    {
-      const auto p1 = SVCG::RoutePointToPositionPoint({ 0, static_cast<int>(colIdx) }, envStt);
-      const auto p2 = SVCG::RoutePointToPositionPoint({ static_cast<int>(meta.row_count) - 1, static_cast<int>(colIdx) }, envStt);
+      const auto p1 = transfercase::RoutePointToPositionPoint({ 0, static_cast<int>(colIdx) }, envStt);
+      const auto p2 = transfercase::RoutePointToPositionPoint({ static_cast<int>(meta.row_count) - 1, static_cast<int>(colIdx) }, envStt);
       renderer->AddObject({ { p1,p2 }, {1, render::LINE_STYLE::LL_SOLID, render::FILL_TYPE::FT_NONE, gridLight, ""} });
    }
 }

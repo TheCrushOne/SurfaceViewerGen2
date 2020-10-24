@@ -3,7 +3,7 @@
 #include <string>
 #include <functional>
 
-namespace file_utils
+namespace SV::file_utils
 {
    inline std::string replaceExtension(const std::string& data, const char* base, const char* nw)
    {

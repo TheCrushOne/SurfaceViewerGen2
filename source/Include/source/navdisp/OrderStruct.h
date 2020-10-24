@@ -3,7 +3,7 @@
 #include <comutil.h>
 #include <thread>
 
-namespace navigation_dispatcher
+namespace SV::navigation_dispatcher
 {
    struct command_loop
    {

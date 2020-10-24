@@ -49,16 +49,6 @@ namespace colreg
 
    
 
-   
-
-
-   //! Polar coordinates point structure
-   //struct polar
-   //{
-   //   double course;   ///< Course to the point, azimuth
-   //   double distance; ///< Distance to the point, miles
-   //};
-
    //struct int_pos
    //{
    //   int_pos() = default;

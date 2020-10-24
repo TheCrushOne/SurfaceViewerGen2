@@ -1,7 +1,8 @@
 #include "stdafx.h"
 #include "MCManager.h"
 
-using namespace pathfinder;
+using namespace SV;
+using namespace SV::pathfinder;
 
 MultithreadComputingManager::MultithreadComputingManager(central_pack* pack)
    : Central(pack)

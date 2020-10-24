@@ -1,7 +1,7 @@
 #pragma once
 #include "AlgorithmBase.h"
 
-namespace chart_object
+namespace SV::chart_object
 {
    enum class TraversalDirection : unsigned short
    {
@@ -36,10 +36,10 @@ namespace chart_object
    class LabirinthTraverse : public AlgorithmBase
    {
    public:
-      LabirinthTraverse(central_pack_ptr pack, navigation_dispatcher::iComServicePtr service)
+      LabirinthTraverse(central_pack* pack, navigation_dispatcher::iComService* service)
          : AlgorithmBase(pack, service)
       {}
 
-      chart_object::chart_object_unit_vct generateIsolineLevel(const pathfinder::GeoMatrix& rawdata, double height, int H) override final;
+      chart_object_unit_vct generateIsolineLevel(const pathfinder::GeoMatrix& rawdata, double height, int H) override final;
    };
 }

@@ -3,7 +3,8 @@
 #include "common/simulation_structs.h"
 #include "navdisp\OrderCreation.h"
 
-using namespace engine;
+using namespace SV;
+using namespace SV::engine;
 
 std::condition_variable opt_cv;
 std::mutex opt_cv_m;
@@ -11,9 +12,7 @@ std::mutex opt_cv_m;
 OptPathfinderExternal::OptPathfinderExternal(central_pack* pack, navigation_dispatcher::iComService* pService)
    : OrderBase(pack, pService)
    , m_engine(std::make_shared<engine::Engine>(pack))
-{
-
-}
+{}
 
 bool OptPathfinderExternal::processCommand()
 {
@@ -46,7 +45,7 @@ bool OptPathfinderExternal::processCommand()
 bool OptPathfinderExternal::readFromSource(data_standart::iSurfaceVieverGenMapDataStandart* src)
 {
    m_data = src->GetData();
-   m_scenarioData.unit_data = src->GetUnitData();
+   m_indata.unit_data = src->GetUnitData();
    m_settings = std::make_shared<settings::application_settings>(GetService()->GetSettingsSerializerHolder()->GetSettings());
    return true;
 }
@@ -59,7 +58,7 @@ bool OptPathfinderExternal::writeToDestination(data_standart::iOptimizedPathStor
 
 bool OptPathfinderExternal::processData()
 {
-   m_engine->ProcessPathFind(m_scenarioData, m_data, m_settings, [this]() { opt_cv.notify_all(); });
+   m_engine->ProcessPathFind(m_indata, m_data, m_settings, [this]() { opt_cv.notify_all(); });
    return true;
 }
 

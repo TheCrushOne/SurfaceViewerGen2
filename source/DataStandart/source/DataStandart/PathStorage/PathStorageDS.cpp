@@ -68,7 +68,7 @@ const pathfinder::route_data& PathStorageDataStandart::GetData()
    return m_paths;
 }
 
-CG::route_point routePointRead(const Json::Value& j)
+CG::route_point PathStorageDataStandart::routePointRead(const Json::Value& j)
 {
    CG::route_point point;
    point.col = j[tag::col].asInt();
@@ -80,7 +80,7 @@ CG::route_point routePointRead(const Json::Value& j)
    return point;
 }
 
-settings::route routeRead(const Json::Value& jroute)
+settings::route PathStorageDataStandart::routeRead(const Json::Value& jroute)
 {
    settings::route route;
    route.start = routePointRead(jroute[tag::start]);
@@ -92,7 +92,7 @@ settings::route routeRead(const Json::Value& jroute)
    return route;
 }
 
-void pathListRead(std::vector<settings::route>& route_list, const Json::Value& jroute_list)
+void PathStorageDataStandart::pathListRead(std::vector<settings::route>& route_list, const Json::Value& jroute_list)
 {
    for (const auto& jroute : jroute_list)
       route_list.emplace_back(routeRead(jroute));

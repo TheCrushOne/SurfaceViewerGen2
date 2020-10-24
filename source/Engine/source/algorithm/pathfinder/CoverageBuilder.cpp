@@ -1,13 +1,16 @@
 #include "stdafx.h"
 #include "CoverageBuilder.h"
 
-std::shared_ptr<pathfinder::Matrix<size_t>> CoverageBuilder::BuildLandCoverage(size_t rowCount, size_t colCount, pathfinder::strategy_settings strategySettings, std::vector<settings::route>& airRoutes)
+using namespace SV;
+using namespace SV::pathfinder;
+
+pathfinder::SharedUnsignedMatrix CoverageBuilder::BuildLandCoverage(size_t rowCount, size_t colCount, pathfinder::strategy_settings strategySettings, std::vector<settings::route>& airRoutes)
 {
    auto countDist = [](int x1, int y1, int x2, int y2)->double
    {
       return sqrt(pow(y2 - y1, 2.) + pow(x2 - x1, 2.));
    };
-   auto coverageMatrix = std::make_shared<pathfinder::Matrix<size_t>>(rowCount, colCount, 0);
+   auto coverageMatrix = std::make_shared<pathfinder::UnsignedMatrix>(rowCount, colCount, 0);
    int radius = static_cast<int>(strategySettings.radius) + 2;   // NOTE: костыль
 
    for (size_t airIdx = 0; airIdx < airRoutes.size(); airIdx++)
@@ -80,7 +83,7 @@ bool CoverageBuilder::LandPathCoverage(size_t rowCount, size_t colCount, pathfin
    {
        return sqrt(pow(y2 - y1, 2.) + pow(x2 - x1, 2.));
    };
-   auto coverageMatrix = std::make_shared<pathfinder::Matrix<size_t>>(rowCount, colCount, 0);
+   auto coverageMatrix = std::make_shared<pathfinder::UnsignedMatrix>(rowCount, colCount, 0);
    int radius = static_cast<int>(settings.radius) + 2;   // NOTE: костыль
 
    for (size_t airIdx = 0; airIdx < airRoutes.size(); airIdx++)

@@ -26,7 +26,7 @@ namespace SV::navigation_dispatcher
       virtual iOrderProcessor* GetOrderProcessor() = 0;
       virtual database::iSVGMDatabaseController* GetDatabaseController() = 0;
       virtual checksum::iChecksumService* GetChecksumService() = 0;
-      virtual colreg::iUnitDataSerializer* GetUnitDataSerializer() = 0;
+      virtual serializer::iUnitDataSerializer* GetUnitDataSerializer() = 0;
       virtual python_wrapper::iPythonWrapper* GetPythonWrapper() = 0;
    };
 }

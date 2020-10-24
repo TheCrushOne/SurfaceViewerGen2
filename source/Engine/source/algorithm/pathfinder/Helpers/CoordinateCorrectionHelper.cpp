@@ -3,23 +3,23 @@
 
 using namespace SV;
 
-inline bool isInRowSafeRange(const std::shared_ptr<pathfinder::RoutePointMatrix>& rawdata, int rowIdx)
+inline bool isInRowSafeRange(const pathfinder::SharedRoutePointMatrix& rawdata, int rowIdx)
 {
    return rowIdx >= 0 && rowIdx < static_cast<int>(rawdata->GetRowCount());
 }
 
-inline bool isInColSafeRange(const std::shared_ptr<pathfinder::RoutePointMatrix>& rawdata, int colIdx)
+inline bool isInColSafeRange(const pathfinder::SharedRoutePointMatrix& rawdata, int colIdx)
 {
    return colIdx >= 0 && colIdx < static_cast<int>(rawdata->GetColCount());
 }
 
-inline void frontlineCheckEmplace(const std::shared_ptr<pathfinder::RoutePointMatrix>& rawdata, std::vector<std::pair<size_t, size_t>>& storage, size_t row, size_t col)
+inline void frontlineCheckEmplace(const pathfinder::SharedRoutePointMatrix& rawdata, std::vector<std::pair<size_t, size_t>>& storage, size_t row, size_t col)
 {
    if (isInRowSafeRange(rawdata, static_cast<int>(row)) && isInColSafeRange(rawdata, static_cast<int>(col)))
       storage.emplace_back(std::make_pair(row, col));
 }
 
-CG::route_point CoordinateCorrectionHelper::CorrectPoint(const std::shared_ptr<pathfinder::RoutePointMatrix>& rawdata, int row, int col, affilationCheckerMtd checker, ICommunicator* communicator)
+CG::route_point CoordinateCorrectionHelper::CorrectPoint(const pathfinder::SharedRoutePointMatrix& rawdata, int row, int col, affilationCheckerMtd checker, ICommunicator* communicator)
 {
    auto rowCount = rawdata->GetRowCount();
    auto colCount = rawdata->GetColCount();
@@ -44,7 +44,7 @@ CG::route_point CoordinateCorrectionHelper::CorrectPoint(const std::shared_ptr<p
 
    if (!checker(rawdata, row, col))
    {
-      auto pointScore = std::make_shared<pathfinder::Matrix<size_t>>(rawdata->GetRowCount(), rawdata->GetColCount(), 0);
+      auto pointScore = std::make_shared<pathfinder::UnsignedMatrix>(rawdata->GetRowCount(), rawdata->GetColCount(), 0);
       std::vector<std::pair<size_t, size_t>> frontline = { { row, col } };
       while (!stuck && !found)
       {

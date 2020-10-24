@@ -21,6 +21,8 @@
 
 #define MAX_LEN 1000
 
+using namespace SV;
+
 int print_help()
 {
    _tprintf(_T("Usage: NavigationManager.exe [config].xml [begin order name] [base folder]\n"));
@@ -41,7 +43,7 @@ int _tmain(int argc, _TCHAR* argv[])
    }
    std::shared_ptr<ICommunicator> comm = std::make_shared<ConsoleCommunicator>();
    std::shared_ptr<central_pack> pack = std::make_shared<central_pack>(comm);
-   colreg::ModuleGuard<navigation_dispatcher::iNavigationDispatcher, central_pack*> m_navigationDispatcher;
+   system::ModuleGuard<navigation_dispatcher::iNavigationDispatcher, central_pack*> m_navigationDispatcher;
    VALID_CHECK_DLL_LOAD("NavigationDispatcher", "CreateNavigationDispatcher", m_navigationDispatcher, pack.get());
 
    if (m_navigationDispatcher->ProcessCommand(argVct.at(2).c_str(), argc == 4 ? argVct.at(3).c_str() : NULL, argVct.at(1).c_str()) == 1)

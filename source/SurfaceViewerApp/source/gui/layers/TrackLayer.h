@@ -1,30 +1,32 @@
 #pragma once
 #include "RenderLayers.h"
 
-
-class TrackLayer : public LayersContainer
+namespace SV
 {
-public:
-   TrackLayer()
-      : m_step{ 1. }
-   {}
-
-   void SetStep(double step) { m_step = step; }
-
-   void Render(render::iRender* renderer) override
+   class TrackLayer : public LayersContainer
    {
-      renderTracks(renderer);
-   }
+   public:
+      TrackLayer()
+         : m_step{ 1. }
+      {}
 
-private:
-   void renderTracks(render::iRender* renderer);
+      void SetStep(double step) { m_step = step; }
 
-private:
-   double m_step;
+      void Render(render::iRender* renderer) override
+      {
+         renderTracks(renderer);
+      }
 
-   bool m_renderSourceRoute = true;
-   bool m_renderControlPoints = true;
+   private:
+      void renderTracks(render::iRender* renderer);
 
-   iPropertyPtr   m_prop_renderSourceRoute;
-   iPropertyPtr   m_prop_renderControlPoints;
-};
+   private:
+      double m_step;
+
+      bool m_renderSourceRoute = true;
+      bool m_renderControlPoints = true;
+
+      iPropertyPtr   m_prop_renderSourceRoute;
+      iPropertyPtr   m_prop_renderControlPoints;
+   };
+}

@@ -14,13 +14,15 @@
    { \
       GetCommunicator()->RaiseError(); \
       std::string errMsg = std::string("Can't load '") + dllName + "'!"; \
-      Message(ICommunicator::MessageType::MT_ERROR, errMsg.c_str()); \
+      Message(SV::ICommunicator::MessageType::MT_ERROR, errMsg.c_str()); \
       return; \
    }
 
-namespace navigation_dispatcher
+namespace SV::navigation_dispatcher
 {
-   class CommandServicesImpl : public iComService, public Central
+   class CommandServicesImpl
+      : public iComService
+      , public Central
    {
    public:
       CommandServicesImpl(central_pack* pack, const char* baseFolder)
@@ -65,8 +67,9 @@ namespace navigation_dispatcher
       checksum::iChecksumService* GetChecksumService() override final
       {
          return m_checksumService;
+
       }
-      colreg::iUnitDataSerializer* GetUnitDataSerializer() override final
+      serializer::iUnitDataSerializer* GetUnitDataSerializer() override final
       {
          return m_unitDataSerializer;
       }
@@ -76,15 +79,15 @@ namespace navigation_dispatcher
       }
       void Release() override final { delete this; }
    private:
-      std::shared_ptr<DataStandartFactoryImpl>                                   m_dataStandartFactory;
-      std::shared_ptr<OrderFactoryImpl>                                          m_orderFactory;
-      std::shared_ptr<ConfigDispatcherImpl>                                      m_configDispatcher;
-      std::shared_ptr<SettingsSerializerHolderImpl>                              m_settingsSerializer;
-      std::shared_ptr<OrderProcessorImpl>                                        m_orderProcessor;
-      colreg::ModuleGuard<database::iSVGMDatabaseController, central_pack_ptr>   m_databaseController;
-      colreg::ModuleGuard<checksum::iChecksumService, central_pack_ptr>          m_checksumService;
-      colreg::ModuleGuard<colreg::iUnitDataSerializer>                           m_unitDataSerializer;
-      colreg::ModuleGuard<python_wrapper::iPythonWrapper, central_pack_ptr>      m_pythonWrapper;
+      SharedDataStandartFactoryImpl                                              m_dataStandartFactory;
+      SharedOrderFactoryImpl                                                     m_orderFactory;
+      SharedConfigDispatcherImpl                                                 m_configDispatcher;
+      SharedSettingsSerializerHolderImpl                                         m_settingsSerializer;
+      SharedOrderProcessorImpl                                                   m_orderProcessor;
+      system::ModuleGuard<database::iSVGMDatabaseController, central_pack*>      m_databaseController;
+      system::ModuleGuard<checksum::iChecksumService, central_pack*>             m_checksumService;
+      system::ModuleGuard<serializer::iUnitDataSerializer>                       m_unitDataSerializer;
+      system::ModuleGuard<python_wrapper::iPythonWrapper, central_pack*>         m_pythonWrapper;
    };
 
    // extern functions implementation
@@ -102,7 +105,7 @@ namespace navigation_dispatcher
    }
 }
 
-extern "C" NDEXPRTIMPRT navigation_dispatcher::iComService * CreateExternalComService(central_pack* pack, const char* baseFolder)
+extern "C" NDEXPRTIMPRT SV::navigation_dispatcher::iComService * CreateExternalComService(SV::central_pack* pack, const char* baseFolder)
 {
-   return new navigation_dispatcher::CommandServicesImpl(pack, baseFolder);
+   return new SV::navigation_dispatcher::CommandServicesImpl(pack, baseFolder);
 }

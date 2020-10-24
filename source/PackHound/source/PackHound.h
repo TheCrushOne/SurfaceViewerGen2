@@ -5,7 +5,7 @@
 #include "navdisp\OrderBase.h"
 #include "navdisp\OrderStruct.h"
 
-namespace pack_hound
+namespace SV::pack_hound
 {
    class PackHound
       : public navigation_dispatcher::OrderBase<navigation_dispatcher::OrderType::OT_PACKHOUND, navigation_dispatcher::packhound_order>

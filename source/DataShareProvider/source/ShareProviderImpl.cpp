@@ -4,7 +4,8 @@
 #include <iostream>
 #include <fstream>
 
-using namespace data_share;
+using namespace SV;
+using namespace SV::data_share;
 
 //ShareProviderImpl::ShareProviderImpl() {}
 

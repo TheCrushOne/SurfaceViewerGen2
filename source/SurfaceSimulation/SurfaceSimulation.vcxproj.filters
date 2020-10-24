@@ -30,14 +30,17 @@
     <ClCompile Include="source\SimulatorBase.cpp" />
     <ClCompile Include="source\stdafx.cpp" />
     <ClCompile Include="source\SimulatorManager.cpp" />
-    <ClCompile Include="source\SimulationModel\ColregSimulationImpl.cpp">
-      <Filter>SimulationModel</Filter>
-    </ClCompile>
     <ClCompile Include="source\Debug\DebugInfoImpl.cpp">
       <Filter>Debug</Filter>
     </ClCompile>
     <ClCompile Include="..\Include\source\colreg\ThirdParty\tinyxml2\tinyxml2.cpp">
       <Filter>ThirdParty\tinyxml2</Filter>
+    </ClCompile>
+    <ClCompile Include="source\SimulationModel\LayerChartObjectImpl.cpp">
+      <Filter>SimulationModel</Filter>
+    </ClCompile>
+    <ClCompile Include="source\SimulationModel\LayerUnitImpl.cpp">
+      <Filter>SimulationModel</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -50,14 +53,17 @@
     <ClInclude Include="source\SimulatorBase.h" />
     <ClInclude Include="source\stdafx.h" />
     <ClInclude Include="source\SimulatorManager.h" />
-    <ClInclude Include="source\SimulationModel\ColregSimulationImpl.h">
-      <Filter>SimulationModel</Filter>
-    </ClInclude>
     <ClInclude Include="source\Debug\DebugInfoImpl.h">
       <Filter>Debug</Filter>
     </ClInclude>
     <ClInclude Include="..\Include\source\colreg\ThirdParty\tinyxml2\tinyxml2.h">
       <Filter>ThirdParty\tinyxml2</Filter>
+    </ClInclude>
+    <ClInclude Include="source\SimulationModel\LayerChartObjectImpl.h">
+      <Filter>SimulationModel</Filter>
+    </ClInclude>
+    <ClInclude Include="source\SimulationModel\LayerUnitImpl.h">
+      <Filter>SimulationModel</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

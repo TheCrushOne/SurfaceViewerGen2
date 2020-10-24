@@ -28,7 +28,7 @@ ConnectionManager::ConnectionManager(std::shared_ptr<Engine>& engine)
    , m_engine(engine)
    , m_info({ "127.0.0.1", "27015", "8080", [this](const char* txt) { this->callback(txt); } })
 {
-   m_info.data_callback_map[transceiver::JsonCommand::JC_NEWSURFACE] = [this](const char* txt) { this->parseIncomingCommand(txt); };
+   m_info.data_callback_map[SV::transceiver::JsonCommand::JC_NEWSURFACE] = [this](const char* txt) { this->parseIncomingCommand(txt); };
    createTransceiver();
    createDataShareProvider();
 }

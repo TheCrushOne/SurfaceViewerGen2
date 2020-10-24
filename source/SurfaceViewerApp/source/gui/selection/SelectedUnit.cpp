@@ -4,10 +4,74 @@
 #include "property_helper.h"
 #include "gui/layers/RenderHelper.h"
 #include "gui/layers/TrackLayerHelper.h"
+#include "simulation/LayerUnitInterface.h"
+#include "simulation/LayerChartObjectInterface.h"
 
 #define CRSHIPINFO(iPropPtr, prStruct, obj, field, sifi) PROPHELPER_CREATEHOLDER_S(iPropPtr, prStruct, obj, field, SelectedShip::shipInfoMeta, sifi, &SelectedShip::OnShipInfoChanged)
 
-SelectedUnit::SelectedUnit(colreg::id_type id, ColregSimulation::UNIT_TYPE type)
+using namespace SV;
+
+static const render::object_info selected_drone_domain_info
+{
+   3,
+   render::LINE_STYLE::LL_SOLID,
+   render::FILL_TYPE::FT_NULL,
+   user_interface::selectedColor,
+   "",
+   0,
+   0,
+   user_interface::selectedAlpha
+};
+
+static const render::object_info selected_rover_domain_info
+{
+   3,
+   render::LINE_STYLE::LL_SOLID,
+   render::FILL_TYPE::FT_NULL,
+   user_interface::selectedColor,
+   "",
+   0,
+   0,
+   user_interface::selectedAlpha
+};
+
+static const render::object_info selected_ship_domain_info
+{
+   3,
+   render::LINE_STYLE::LL_SOLID,
+   render::FILL_TYPE::FT_NULL,
+   user_interface::selectedColor,
+   "",
+   0,
+   0,
+   user_interface::selectedAlpha
+};
+
+static const render::object_info selected_drone_track_info
+{
+   1,
+   render::LINE_STYLE::LL_DASH,
+   render::FILL_TYPE::FT_NONE,
+   RGB(110, 20, 20)
+};
+
+static const render::object_info selected_rover_track_info
+{
+   1,
+   render::LINE_STYLE::LL_DASH,
+   render::FILL_TYPE::FT_NONE,
+   RGB(110, 20, 20)
+};
+
+static const render::object_info selected_ship_track_info
+{
+   1,
+   render::LINE_STYLE::LL_DASH,
+   render::FILL_TYPE::FT_NONE,
+   RGB(110, 20, 20)
+};
+
+SelectedUnit::SelectedUnit(id_type id, surface_simulation::UNIT_TYPE type)
    : m_id{ id }
 {
    const auto* sim = simulator::getSimulator();
@@ -27,13 +91,13 @@ SelectedUnit::SelectedUnit(colreg::id_type id, ColregSimulation::UNIT_TYPE type)
    }
 }
 
-const ColregSimulation::iSimulationState& SelectedUnit::getState() const
+const surface_simulation::iSimulationState& SelectedUnit::getState() const
 {
    const auto* sim = simulator::getSimulator();
    return sim->GetState();
 }
 
-void SelectedUnit::mountUnitInfo(const ColregSimulation::iUnit* selected)
+void SelectedUnit::mountUnitInfo(const surface_simulation::iLayerUnit* selected)
 {
    m_info = selected->GetInfo();
    m_ship_info_folder = std::make_unique<FolderProperty>("Unit info");
@@ -50,27 +114,27 @@ void SelectedUnit::mountUnitInfo(const ColregSimulation::iUnit* selected)
    AddChild(m_ship_info_folder.get());
 }
 
-void SelectedUnit::mountTrackPointInfo(const ColregSimulation::iUnit* selected)
+void SelectedUnit::mountTrackPointInfo(const surface_simulation::iLayerUnit* selected)
 {
    
 }
 
-void SelectedUnit::mountSimSettings(const ColregSimulation::iUnit* selected)
+void SelectedUnit::mountSimSettings(const surface_simulation::iLayerUnit* selected)
 {
 
 }
 
-void SelectedUnit::mountColregSettings(const ColregSimulation::iUnit* selected)
+void SelectedUnit::mountColregSettings(const surface_simulation::iLayerUnit* selected)
 {
    
 }
 
-void SelectedUnit::mountSolution(const ColregSimulation::iUnit* selected)
+void SelectedUnit::mountSolution(const surface_simulation::iLayerUnit* selected)
 {
 
 }
 
-void SelectedUnit::mountModel(const ColregSimulation::iUnit* selected)
+void SelectedUnit::mountModel(const surface_simulation::iLayerUnit* selected)
 {
 
 }
@@ -84,35 +148,35 @@ void SelectedUnit::Render(render::iRender* renderer)
 void SelectedDrone::renderDomain(render::iRender* renderer) const
 {
    const auto* selected = getSelectedUnit();
-   RenderDomain(render::FIND_OBJECT_TYPE::FOT_DRONE_DOMAIN, renderer, selected, selected->GetPos().point, 0., { 3, render::LINE_STYLE::LL_SOLID, render::FILL_TYPE::FT_NULL, user_interface::selectedColor, "", 0, 0, user_interface::selectedAlpha });
+   RenderDomain(render::FIND_OBJECT_TYPE::FOT_DRONE_DOMAIN, renderer, selected, selected->GetPos(), 0., selected_drone_domain_info);
 }
 
 void SelectedDrone::renderTrack(render::iRender* renderer) const
 {
    const auto* selected = getSelectedUnit();
-   TrackLayerHelper::renderRoute(renderer, selected->GetInfo().id, selected->GetRoute(ColregSimulation::ROUTE_TYPE::RT_SOURSE)->route, { 1, render::LINE_STYLE::LL_DASH, render::FILL_TYPE::FT_NONE, RGB(110, 20, 20) }, ColregSimulation::ROUTE_TYPE::RT_SOURSE);
+   TrackLayerHelper::renderRoute(renderer, selected->GetInfo().id, selected->GetRoute(surface_simulation::ROUTE_TYPE::RT_SOURSE), selected_drone_track_info, surface_simulation::ROUTE_TYPE::RT_SOURSE);
 }
 
 void SelectedRover::renderDomain(render::iRender* renderer) const
 {
    const auto& selected = getSelectedUnit();
-   RenderDomain(render::FIND_OBJECT_TYPE::FOT_ROVER_DOMAIN, renderer, selected, selected->GetPos().point, 0., { 3, render::LINE_STYLE::LL_SOLID, render::FILL_TYPE::FT_NULL, user_interface::selectedColor, "", 0, 0, user_interface::selectedAlpha });
+   RenderDomain(render::FIND_OBJECT_TYPE::FOT_ROVER_DOMAIN, renderer, selected, selected->GetPos(), 0., selected_rover_domain_info);
 }
 
 void SelectedRover::renderTrack(render::iRender* renderer) const
 {
    const auto* selected = getSelectedUnit();
-   TrackLayerHelper::renderRoute(renderer, selected->GetInfo().id, selected->GetRoute(ColregSimulation::ROUTE_TYPE::RT_SOURSE)->route, { 1, render::LINE_STYLE::LL_DASH, render::FILL_TYPE::FT_NONE, RGB(110, 20, 20) }, ColregSimulation::ROUTE_TYPE::RT_SOURSE);
+   TrackLayerHelper::renderRoute(renderer, selected->GetInfo().id, selected->GetRoute(surface_simulation::ROUTE_TYPE::RT_SOURSE), selected_rover_track_info, surface_simulation::ROUTE_TYPE::RT_SOURSE);
 }
 
 void SelectedShip::renderDomain(render::iRender* renderer) const
 {
    const auto& selected = getSelectedUnit();
-   RenderDomain(render::FIND_OBJECT_TYPE::FOT_SHIP_DOMAIN, renderer, selected, selected->GetPos().point, 0., { 3, render::LINE_STYLE::LL_SOLID, render::FILL_TYPE::FT_NULL, user_interface::selectedColor, "", 0, 0, user_interface::selectedAlpha });
+   RenderDomain(render::FIND_OBJECT_TYPE::FOT_SHIP_DOMAIN, renderer, selected, selected->GetPos(), 0., selected_ship_domain_info);
 }
 
 void SelectedShip::renderTrack(render::iRender* renderer) const
 {
    const auto* selected = getSelectedUnit();
-   TrackLayerHelper::renderRoute(renderer, selected->GetInfo().id, selected->GetRoute(ColregSimulation::ROUTE_TYPE::RT_SOURSE)->route, { 1, render::LINE_STYLE::LL_DASH, render::FILL_TYPE::FT_NONE, RGB(110, 20, 20) }, ColregSimulation::ROUTE_TYPE::RT_SOURSE);
+   TrackLayerHelper::renderRoute(renderer, selected->GetInfo().id, selected->GetRoute(surface_simulation::ROUTE_TYPE::RT_SOURSE), selected_ship_track_info, surface_simulation::ROUTE_TYPE::RT_SOURSE);
 }

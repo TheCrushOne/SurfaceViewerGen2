@@ -3,26 +3,28 @@
 #include "gui\user_interface.h"
 #include "colreg/ChartSafetyStructs.h"
 
+using namespace SV;
 namespace
 {
-   bool is_non_default_scales(const colreg::domain_scales& scales)
+   /*bool is_non_default_scales(const colreg::domain_scales& scales)
    {
       return (scales.forward_scale != 1.0 && scales.forward_scale != colreg::NO_VALUE) ||
          (scales.left_scale != 1.0 && scales.left_scale != colreg::NO_VALUE) ||
          (scales.backward_scale != 1.0 && scales.backward_scale != colreg::NO_VALUE) ||
          (scales.forward_scale != 1.0 && scales.forward_scale != colreg::NO_VALUE);
-   }
+   }*/
 }
-void TrackLayerHelper::RenderShiptrack(render::iRender* renderer, const colreg::track_full_info_ref* track, const render::object_info& info, int trackLinesIntervalSeconds, bool renderXTE)
+void TrackLayerHelper::RenderShiptrack(render::iRender* renderer, const CG::layer_provider::trajectory_point_vct* track, const render::object_info& info, int trackLinesIntervalSeconds, bool renderXTE)
 {
-   if (!track || !track->size)
+   if (!track || !track->size())
       return;
-   double lastTrackLineTime = track->points[0].time;
-   for (size_t i = 0; i < track->size; ++i)
+   double lastTrackLineTime = track->at(0).time;
+   for (size_t i = 0; i < track->size(); ++i)
    {
-      renderer->AddObject({ {track->points[i].pos}, info });
+      auto& cur = track->at(i);
+      renderer->AddObject({ {cur.pos}, info });
 
-      if (/*track->chart_context && */(i < (track->size - 1)))
+      if (/*track->chart_context && */(i < (track->size() - 1)))
       {
          // TODO: refact
          auto newInfo = info;
@@ -32,11 +34,12 @@ void TrackLayerHelper::RenderShiptrack(render::iRender* renderer, const colreg::
             newInfo.color = color;
             newInfo.alpha = 100;
             newInfo.width += 2;
-            renderer->AddObject({ {track->points[i].pos}, newInfo });
+            renderer->AddObject({ {cur.pos}, newInfo });
          }
       }
 
-      if (track->domain_border && i && (i < (track->size - 1)))
+      // TODO: разобраться что это
+      /*if (track->domain_border && i && (i < (track->size - 1)))
       {
          render::object_info newInfo;
 
@@ -46,61 +49,60 @@ void TrackLayerHelper::RenderShiptrack(render::iRender* renderer, const colreg::
 
          renderer->AddObject({ { track->domain_border[i - 1].left, track->domain_border[i].left }, newInfo });
          renderer->AddObject({ { track->domain_border[i - 1].right, track->domain_border[i].right }, newInfo });
-      }
+      }*/
 
-      if (trackLinesIntervalSeconds > 0 && i && (track->points[i].time - lastTrackLineTime + 1) >= trackLinesIntervalSeconds)
+      if (trackLinesIntervalSeconds > 0 && i && (cur.time - lastTrackLineTime + 1) >= trackLinesIntervalSeconds)
       {
          const auto dist = math::distance(renderer->PixelToGeo(math::point{}), renderer->PixelToGeo(math::point{ 5., 0. }));
-         auto course = track->points[i].course != colreg::NO_VALUE ? track->points[i].course : track->points[i].heading;
-         auto ptLeft = math::calc_point(track->points[i].pos, dist, course - 90);
-         auto ptRight = math::calc_point(track->points[i].pos, dist, course + 90);
+         auto course = cur.heading;
+         auto ptLeft = math::calc_point(cur.pos, dist, course - 90);
+         auto ptRight = math::calc_point(cur.pos, dist, course + 90);
          renderer->AddObject({ {ptLeft, ptRight}, info });
-         lastTrackLineTime = track->points[i].time;
+         lastTrackLineTime = cur.time;
       }
 
-      if (renderXTE && i < track->size - 1)
+      if (renderXTE && i < track->size() - 1)
       {
          auto xteInfo = info;
          xteInfo.width = 5;
          xteInfo.color = RGB(200, 0, 0);
-         const auto course = track->points[i].course;
-         renderer->AddObject({ {math::calc_point(track->points[i].pos, track->points[i].left_XTE, course - 90)}, xteInfo });
+         const auto course = cur.course;
+         renderer->AddObject({ {math::calc_point(cur.pos, cur.left_XTE, course - 90)}, xteInfo });
          xteInfo.color = RGB(0, 0, 200);
-         renderer->AddObject({ {math::calc_point(track->points[i].pos, track->points[i].right_XTE, course + 90)}, xteInfo });
+         renderer->AddObject({ {math::calc_point(cur.pos, cur.right_XTE, course + 90)}, xteInfo });
       }
    }
 }
 
 
-void TrackLayerHelper::renderRoute(render::iRender* renderer, colreg::id_type id, const colreg::route_ref* route, const render::object_info& info, ColregSimulation::ROUTE_TYPE type)
+void TrackLayerHelper::renderRoute(render::iRender* renderer, id_type id, const CG::layer_provider::trajectory_point_vct& route, const render::object_info& info, surface_simulation::ROUTE_TYPE type)
 {
-   using namespace colreg;
-   if (!route || route->size < 2)
+   if (route.size() < 2)
       return;
-   const auto ft = type == ColregSimulation::ROUTE_TYPE::RT_SUB_OPTIMAL ? render::FIND_TYPE::FT_NONE : render::FIND_TYPE::FT_FIND_FAST;
+   const auto ft = type == surface_simulation::ROUTE_TYPE::RT_SUB_OPTIMAL ? render::FIND_TYPE::FT_NONE : render::FIND_TYPE::FT_FIND_FAST;
    user_interface::user_info ui;
    ui.data = 0;
 
-   for (size_t i = 0; i < route->size; i++)
+   for (size_t i = 0; i < route.size(); i++)
    {
-      const route_point& rp = route->arr[i];
-      if (i < route->size - 1)
+      const CG::layer_provider::trajectory_point& cur = route.at(i);
+      if (i < route.size() - 1)
       {
-         const route_point& rpNext = route->arr[i + 1];
+         const CG::layer_provider::trajectory_point& next = route.at(i + 1);
 
          ui.type = (char)type;
          ui.index = (short)i;
 
-         renderRouteSegment(renderer, id, ui.value, rp, rpNext, info, type);
+         renderRouteSegment(renderer, id, ui.value, cur, next, info, type);
       }
 
       std::stringstream s;  s << id << " - " << i;
-      if (type == ColregSimulation::ROUTE_TYPE::RT_CONTROL)
+      if (type == surface_simulation::ROUTE_TYPE::RT_CONTROL)
       {
          std::string imagePath = SVGUtils::CurrentCurrentPath() + "\\res\\glyphicon\\flag.png";
          COLORREF clrDanger = 255;
          renderer->AddObject({
-              { rp.pos }
+              { cur.pos }
             , { 32, render::LINE_STYLE::LL_SOLID, render::FILL_TYPE::FT_NONE, clrDanger, s.str().c_str(), 0, 0, 255, imagePath.c_str(), render::ANCHOR_TYPE::AT_BOTTOMLEFT }
             , {}
             , .0
@@ -110,7 +112,7 @@ void TrackLayerHelper::renderRoute(render::iRender* renderer, colreg::id_type id
       else
       {
          renderer->AddObject({
-              {rp.pos}
+              { cur.pos }
             , { 5, render::LINE_STYLE::LL_SOLID, render::FILL_TYPE::FT_NONE, info.color, /*s.str().c_str()*/""}
             , { ft, id, render::FIND_OBJECT_TYPE::FOT_ROUTE_POINT, ui.value }
          });
@@ -118,28 +120,28 @@ void TrackLayerHelper::renderRoute(render::iRender* renderer, colreg::id_type id
 
    }
    ui.type = (char)type;
-   ui.index = (short)(route->size - 1);
-   std::stringstream s;  s << route->size - 1;
-   renderer->AddObject({ { route->arr[route->size - 1].pos }
+   ui.index = (short)(route.size() - 1);
+   std::stringstream s;  s << route.size() - 1;
+   renderer->AddObject({ { route.at(route.size() - 1).pos }
                         , { 5, render::LINE_STYLE::LL_SOLID, render::FILL_TYPE::FT_NONE, info.color, /*s.str().c_str()*/""}
                         , { ft, id, render::FIND_OBJECT_TYPE::FOT_ROUTE_POINT, ui.value } });
 }
 
-void TrackLayerHelper::renderRouteSegment(render::iRender* renderer, colreg::id_type id, size_t index, const colreg::route_point& rp1, const colreg::route_point& rp2, const render::object_info& info, ColregSimulation::ROUTE_TYPE type)
+void TrackLayerHelper::renderRouteSegment(render::iRender* renderer, id_type id, size_t index, const CG::layer_provider::trajectory_point& rp1, const CG::layer_provider::trajectory_point& rp2, const render::object_info& info, surface_simulation::ROUTE_TYPE type)
 {
-   const auto ft = type == ColregSimulation::ROUTE_TYPE::RT_SUB_OPTIMAL ? render::FIND_TYPE::FT_NONE : render::FIND_TYPE::FT_FIND_FAST;
+   const auto ft = type == surface_simulation::ROUTE_TYPE::RT_SUB_OPTIMAL ? render::FIND_TYPE::FT_NONE : render::FIND_TYPE::FT_FIND_FAST;
 
    const auto dir = math::direction(rp1.pos, rp2.pos);
    if (rp2.left_XTE < 100000)
    {
-      const colreg::route_point rpLeft1 = math::calc_point(rp1.pos, rp2.left_XTE, dir - 90);
-      const colreg::route_point rpLeft2 = math::calc_point(rp2.pos, rp2.left_XTE, dir - 90);
+      const CG::layer_provider::trajectory_point rpLeft1 = math::calc_point(rp1.pos, rp2.left_XTE, dir - 90);
+      const CG::layer_provider::trajectory_point rpLeft2 = math::calc_point(rp2.pos, rp2.left_XTE, dir - 90);
       renderer->AddObject({ { rpLeft1.pos, rpLeft2.pos }, {1, render::LINE_STYLE::LL_DOT, render::FILL_TYPE::FT_NONE, info.color, ""} });
    }
    if (rp2.right_XTE < 100000)
    {
-      const colreg::route_point rpRight1 = math::calc_point(rp1.pos, rp2.right_XTE, dir + 90);
-      const colreg::route_point rpRight2 = math::calc_point(rp2.pos, rp2.right_XTE, dir + 90);
+      const CG::layer_provider::trajectory_point rpRight1 = math::calc_point(rp1.pos, rp2.right_XTE, dir + 90);
+      const CG::layer_provider::trajectory_point rpRight2 = math::calc_point(rp2.pos, rp2.right_XTE, dir + 90);
       renderer->AddObject({ { rpRight1.pos, rpRight2.pos }, {1, render::LINE_STYLE::LL_DOT, render::FILL_TYPE::FT_NONE, info.color, "" } });
    }
    renderer->AddObject({ { rp1.pos, rp2.pos }
@@ -147,10 +149,10 @@ void TrackLayerHelper::renderRouteSegment(render::iRender* renderer, colreg::id_
                            , { ft, id, render::FIND_OBJECT_TYPE::FOT_ROUTE_SEGMENT, index } });
 }
 
-void TrackLayerHelper::renderRouteZone(render::iRender* renderer, const std::function<RouteZoneWidthGetFunc>& func, const colreg::route_ref* route, COLORREF color)
+void TrackLayerHelper::renderRouteZone(render::iRender* renderer, const std::function<RouteZoneWidthGetFunc>& func, const CG::layer_provider::trajectory_point_vct* route, COLORREF color)
 {
    using namespace colreg;
-   if (!route || route->size < 2)
+   if (!route || route->size() < 2)
       return;
 
    //const ROUTE_ZONE_TYPE zones[] = { ROUTE_ZONE_TYPE::RZT_IN_ROUTE, ROUTE_ZONE_TYPE::RZT_CLOSE_TO_ROUTE, ROUTE_ZONE_TYPE::RZT_NEAR_TO_ROUTE };
@@ -161,15 +163,15 @@ void TrackLayerHelper::renderRouteZone(render::iRender* renderer, const std::fun
    oi.fill = render::FILL_TYPE::FT_SOLID;
    oi.style = render::LINE_STYLE::LL_DOT;
    oi.width = 1;
-   for (size_t i = 0; i < route->size - 1; i++)
+   for (size_t i = 0; i < route->size() - 1; i++)
    {
-      const route_point& rp = route->arr[i];
-      const route_point& rpNext = route->arr[i + 1];
-      const auto dir = math::direction(rp.pos, rpNext.pos);
+      const CG::layer_provider::trajectory_point& cur = route->at(i);
+      const CG::layer_provider::trajectory_point& next = route->at(i + 1);
+      const auto dir = math::direction(cur.pos, next.pos);
       //TODO: calc directions and save to and cos into
 
-      const auto dirDeltaPrev = i ? math::calc_DK(dir, math::direction(route->arr[i - 1], route->arr[i])) / 2 : 0.0;
-      const auto dirDeltaNext = ((i + 2) < route->size) ? math::calc_DK(dir, math::direction(route->arr[i + 1], route->arr[i + 2])) / 2 : 0.0;
+      const auto dirDeltaPrev = i ? math::calc_DK(dir, math::direction(route->at(i - 1), route->at(i))) / 2 : 0.0;
+      const auto dirDeltaNext = ((i + 2) < route->size()) ? math::calc_DK(dir, math::direction(route->at(i + 1), route->at(i + 2))) / 2 : 0.0;
 
       const auto cosPrev = cos(math::grad_to_rad(dirDeltaPrev));
       const auto cosNext = cos(math::grad_to_rad(dirDeltaNext));

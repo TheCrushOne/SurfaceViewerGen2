@@ -2,80 +2,83 @@
 
 #include "research_types.h"
 
-struct TimeData
+namespace SV::research
 {
-   __int64 start;
-   __int64 finish;
-   __int64 diff;
-
-   void apply() { diff = finish - start; }
-};
-
-struct TimeResearchComplexStorage
-{
-   struct StorageCell
+   struct TimeData
    {
-      struct Index
-      {
+      __int64 start;
+      __int64 finish;
+      __int64 diff;
 
-      } index;
-      struct Result
-      {
-
-      } result;
+      void apply() { diff = finish - start; }
    };
 
-   std::vector<StorageCell> data;
-};
-
-struct LengthResearchComplexStorage
-{
-   struct StorageCell
+   struct TimeResearchComplexStorage
    {
-      struct Index
+      struct StorageCell
       {
+         struct Index
+         {
 
-      } index;
-      struct Result
-      {
+         } index;
+         struct Result
+         {
 
-      } result;
+         } result;
+      };
+
+      std::vector<StorageCell> data;
    };
 
-   std::vector<StorageCell> data;
-};
-
-struct ThreadResearchComplexStorage
-{
-   struct SuperCell
+   struct LengthResearchComplexStorage
    {
-      struct Index
+      struct StorageCell
       {
-         size_t thread_pool_idx;
-         size_t task_pool_idx;
-         size_t fly_count_idx;
-         size_t length_idx;
+         struct Index
+         {
 
-         size_t thread_pool_value;
-         size_t task_pool_value;
-         size_t fly_count_value;
-         double length_value;
-      } index;
+         } index;
+         struct Result
+         {
 
-      struct Result
-      {
-         TimeData time;
-      } result;
+         } result;
+      };
+
+      std::vector<StorageCell> data;
    };
 
-   struct Info
+   struct ThreadResearchComplexStorage
    {
-      settings::range_data<size_t> thread_pool_range;
-      settings::range_data<size_t> task_pool_range;
-      settings::range_data<size_t> fly_count_range;
-      settings::range_data<double> length_range;
-   };
+      struct SuperCell
+      {
+         struct Index
+         {
+            size_t thread_pool_idx;
+            size_t task_pool_idx;
+            size_t fly_count_idx;
+            size_t length_idx;
 
-   std::vector<SuperCell> data;
-   Info info;
-};
+            size_t thread_pool_value;
+            size_t task_pool_value;
+            size_t fly_count_value;
+            double length_value;
+         } index;
+
+         struct Result
+         {
+            TimeData time;
+         } result;
+      };
+
+      struct Info
+      {
+         settings::range_data<size_t> thread_pool_range;
+         settings::range_data<size_t> task_pool_range;
+         settings::range_data<size_t> fly_count_range;
+         settings::range_data<double> length_range;
+      };
+
+      std::vector<SuperCell> data;
+      Info info;
+   };
+}

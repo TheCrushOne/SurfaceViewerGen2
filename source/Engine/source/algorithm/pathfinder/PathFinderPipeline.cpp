@@ -30,7 +30,7 @@ PathFinderPipeline::~PathFinderPipeline()
 
 // NOTE: желательно и лаунчер запускать в своем потоке
 // WARNING: распараллелено!!!
-void PathFinderPipeline::FindPath(std::function<void(void)> callback, const std::shared_ptr<RoutePointMatrix> rawdata, std::shared_ptr<path_finder_indata> indata)
+void PathFinderPipeline::FindPath(std::function<void(void)> callback, std::shared_ptr<settings::application_settings> settings, const SharedRoutePointMatrix rawdata, std::shared_ptr<path_finder_indata> indata)
 {
    // NOTE: итерация шага стратегий
    m_iterations = 2;
@@ -41,7 +41,7 @@ void PathFinderPipeline::FindPath(std::function<void(void)> callback, const std:
    m_indata = indata;
    m_rowCount = rawdata->GetRowCount();
    m_colCount = rawdata->GetColCount();
-   m_appSettings = std::make_shared<settings::application_settings>();
+   m_settings = settings;
 
    if (m_indata->settings.multithread)
       findPathMultiThread();
@@ -168,7 +168,7 @@ void PathFinderPipeline::buildLandCoverage()
    }
 }
 
-bool PathFinderPipeline::checkLandCoverage(std::shared_ptr<Matrix<size_t>> coverageMatrix)
+bool PathFinderPipeline::checkLandCoverage(const SharedUnsignedMatrix& coverageMatrix)
 {
    ATLASSERT(coverageMatrix->GetRowCount() == m_currentCoverage->GetRowCount());
    ATLASSERT(coverageMatrix->GetColCount() == m_currentCoverage->GetColCount());

@@ -3,37 +3,39 @@
 #include "colreg/ColregSimulation.h"
 #include "simulator/simulator.h"
 
-inline const char* route_type_to_string(ColregSimulation::ROUTE_TYPE _type)
+using namespace SV;
+
+inline const char* route_type_to_string(surface_simulation::ROUTE_TYPE _type)
 {
    switch (_type)
    {
-   case ColregSimulation::ROUTE_TYPE::RT_COLREG:
+   case surface_simulation::ROUTE_TYPE::RT_COLREG:
       return "COLREG";
-   case ColregSimulation::ROUTE_TYPE::RT_SIMULAION:
+   case surface_simulation::ROUTE_TYPE::RT_SIMULAION:
       return "SIMULATION";
-   case ColregSimulation::ROUTE_TYPE::RT_SOURSE:
+   case surface_simulation::ROUTE_TYPE::RT_SOURSE:
       return "SOURCE";
-   case ColregSimulation::ROUTE_TYPE::RT_DISIGION:
+   case surface_simulation::ROUTE_TYPE::RT_DISIGION:
       return "DISIGION";
    }
    return "";
 }
 
-SelectRouteBase::SelectRouteBase(colreg::id_type id, size_t data)
+SelectRouteBase::SelectRouteBase(id_type id, size_t data)
    : _id{ id }
 {
    user_interface::user_info ui;
    ui.value = data;
 
    _index = ui.index;
-   _format_type = (ColregSimulation::ROUTE_TYPE)ui.type;
+   _format_type = (surface_simulation::ROUTE_TYPE)ui.type;
 
    const auto* sim = simulator::getSimulator();
    if (!sim)
       return;
    const auto& simulationState = sim->GetState();
    auto& route = simulationState.GetUnitById(id)->GetRoute(_format_type)->route;
-   _route = std::vector<colreg::route_point>{ route->begin(), route->end()};
+   _route = CG::route_line{ route->begin(), route->end()};
 //   _route = ScenarioManager::GetInstance().GetRoute(_format_type, id).route;
 
    _ship_info_folder = std::make_unique< FolderProperty>("Ship info");
@@ -58,7 +60,7 @@ SelectRouteBase::SelectRouteBase(colreg::id_type id, size_t data)
 
 }
 
-SelectedRoutePoint::SelectedRoutePoint(colreg::id_type id, size_t data)
+SelectedRoutePoint::SelectedRoutePoint(id_type id, size_t data)
    : SelectRouteBase{ id, data }
 {
    if (_index < _route.size())
@@ -70,11 +72,11 @@ SelectedRoutePoint::SelectedRoutePoint(colreg::id_type id, size_t data)
       _prop_index = std::make_unique< ValuePropertyHolder< SelectedRoutePoint, decltype(_index)>>
          ("Index", "Index of the route segment", true, VALUE_FORMAT_TYPE::VFT_NONE, this, &SelectedRoutePoint::_index, &SelectedRoutePoint::OnSimSettingChanged, this);
 
-      _prop_radius = std::make_unique< ValuePropertyHolder< colreg::route_point, decltype(_point.radius)>>
-         ("radius", "circulation radius", false, VALUE_FORMAT_TYPE::VFT_DISTANCE, &_point, &colreg::route_point::radius, &SelectedRoutePoint::OnSimSettingChanged, this);
+      /*_prop_radius = std::make_unique<ValuePropertyHolder<CG::route_point, decltype(_point.radius)>>
+         ("radius", "circulation radius", false, VALUE_FORMAT_TYPE::VFT_DISTANCE, &_point, &colreg::route_point::radius, &SelectedRoutePoint::OnSimSettingChanged, this);*/
 
       _point_folder->AddChild(_prop_index.get());
-      _point_folder->AddChild(_prop_radius.get());
+      //_point_folder->AddChild(_prop_radius.get());
 
       AddChild(_point_folder.get());
    }
@@ -89,7 +91,7 @@ void SelectedRoutePoint::OnSimSettingChanged()
 
 void SelectedRoutePoint::Render(render::iRender* renderer)
 {
-   renderer->AddObject({ { _point.pos }, { 8, render::LINE_STYLE::LL_SOLID, render::FILL_TYPE::FT_NONE , user_interface::selectedColor, "", 0, 0, user_interface::selectedAlpha }
+   renderer->AddObject({ { _point }, { 8, render::LINE_STYLE::LL_SOLID, render::FILL_TYPE::FT_NONE , user_interface::selectedColor, "", 0, 0, user_interface::selectedAlpha }
                         ,{render::FIND_TYPE::FT_FIND_FAST, 0, render::FIND_OBJECT_TYPE::FOT_SELECTED, 0 } });
 }
 

@@ -13,6 +13,8 @@
 #define new DEBUG_NEW
 #endif
 
+using namespace SV;
+
 CMainFrame* pFrame;
 void user_interface::SetStatusBarText(const wchar_t* text)
 {

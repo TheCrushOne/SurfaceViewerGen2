@@ -2,17 +2,17 @@
 #include "OrderProcessorImpl.h"
 #include "common/utils.h"
 
+using namespace SV;
+using namespace SV::navigation_dispatcher;
+
 void OrderProcessorImpl::ClearOrders()
 {
-   //m_loggers.clear();
    m_commands.clear();
 }
 
-void OrderProcessorImpl::AddOrder(/*size_t id, */navigation_dispatcher::iOrder* command)
+void OrderProcessorImpl::AddOrder(navigation_dispatcher::iOrder* command)
 {
    m_commands.insert(std::make_pair(std::to_string(m_commands.size()), command));
-   //return m_commands[std::to_string(id)];
-   //addLoggerForCommand(it.first->first.c_str(), command->GetType());
 }
 
 bool OrderProcessorImpl::ProcessOrders(LPCSTR begCommandName)
@@ -47,8 +47,5 @@ bool OrderProcessorImpl::processOrder(LPCSTR name, navigation_dispatcher::iOrder
    else
       GetPack()->comm->Message(ICommunicator::MessageType::MT_INFO, orderTypeStrFinished.c_str());
 
-   //m_loggers[name].reset();
-   // NOTE: shared_ptr dee
-   //order.reset();
    return result;
 }

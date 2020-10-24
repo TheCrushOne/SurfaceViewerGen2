@@ -1,7 +1,8 @@
 #include "stdafx.h"
 #include "XMLDatabaseController.h"
 
-using namespace database;
+using namespace SV;
+using namespace SV::database;
 
 XMLDatabaseController::XMLDatabaseController(central_pack* pack)
    : Central(pack)

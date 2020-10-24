@@ -18,10 +18,10 @@ private:
    void callback(const char*);
    void parseIncomingCommand(const char*);
 private:
-   colreg::ModuleGuard<transceiver::iTransceiver> m_transceiver;
-   colreg::ModuleGuard<data_share::iDataShareProvider> m_shareProvider;
+   SV::system::ModuleGuard<SV::transceiver::iTransceiver> m_transceiver;
+   SV::system::ModuleGuard<SV::data_share::iDataShareProvider> m_shareProvider;
    std::shared_ptr<Infoboard>& m_infoboard;
    std::shared_ptr<Engine>& m_engine;
-   transceiver::transceiver_info m_info;
+   SV::transceiver::transceiver_info m_info;
    double** m_rawdata;
 };

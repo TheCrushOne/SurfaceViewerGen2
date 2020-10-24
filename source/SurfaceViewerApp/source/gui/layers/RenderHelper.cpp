@@ -3,11 +3,13 @@
 #include "colreg/domain_utils.h"
 #include "math/math_utils.h"
 
-void RenderUnitContour(render::iRender* renderer, ColregSimulation::UNIT_TYPE type, const SVCG::ship_info& ship_info, const SVCG::trajectory_point& center, const render::object_info& info)
+using namespace SV;
+
+void RenderUnitContour(render::iRender* renderer, surface_simulation::UNIT_TYPE type, const layer_provider::ship_info& ship_info, const CG::layer_provider::trajectory_point& center, const render::object_info& info)
 {
    switch (type)
    {
-   case ColregSimulation::UNIT_TYPE::UT_SHIP:
+   case surface_simulation::UNIT_TYPE::UT_SHIP:
    {
       const auto heading = center.heading;
       const auto L = ship_info.length * METERS_TO_MILE;
@@ -26,7 +28,7 @@ void RenderUnitContour(render::iRender* renderer, ColregSimulation::UNIT_TYPE ty
                            , {render::FIND_TYPE::FT_FIND_FAST, ship_info.id, render::FIND_OBJECT_TYPE::FOT_ROVER } });
       break;
    }
-   case ColregSimulation::UNIT_TYPE::UT_ROVER:
+   case surface_simulation::UNIT_TYPE::UT_ROVER:
    {
       const auto heading = center.heading;
       std::string imagePath = SVGUtils::CurrentCurrentPath() + "\\res\\glyphicon\\citroen.png";
@@ -38,7 +40,7 @@ void RenderUnitContour(render::iRender* renderer, ColregSimulation::UNIT_TYPE ty
                            , heading });
       break;
    }
-   case ColregSimulation::UNIT_TYPE::UT_DRONE:
+   case surface_simulation::UNIT_TYPE::UT_DRONE:
    {
       const auto heading = center.heading;
       std::string imagePath = SVGUtils::CurrentCurrentPath() + "\\res\\glyphicon\\helicopter.png";
@@ -56,7 +58,7 @@ void RenderUnitContour(render::iRender* renderer, ColregSimulation::UNIT_TYPE ty
 }
 
 
-void RenderDomain(render::FIND_OBJECT_TYPE fot, render::iRender* renderer, const ColregSimulation::iUnit* unit, const SVCG::trajectory_point& center, double timeFromNow, const render::object_info& info/*, const colreg::domain_scales* scales*/)
+void RenderDomain(render::FIND_OBJECT_TYPE fot, render::iRender* renderer, const surface_simulation::iUnit* unit, const CG::layer_provider::trajectory_point& center, double timeFromNow, const render::object_info& info/*, const colreg::domain_scales* scales*/)
 {
    // TODO: включить при необходимости
    /*auto domainTopology = unit->GetDomainTopology(timeFromNow, scales);
@@ -76,13 +78,13 @@ void RenderDomain(render::FIND_OBJECT_TYPE fot, render::iRender* renderer, const
                         , { render::FIND_TYPE::FT_FIND_FAST, unit->GetInfo().id, fot } });*/
 }
 
-void RenderArrow(render::iRender* renderer, const SVCG::geo_point& pTo, double direction, const render::object_info& info, double sizeKoef)
+void RenderArrow(render::iRender* renderer, const CG::geo_point& pTo, double direction, const render::object_info& info, double sizeKoef)
 {
    const auto length = math::distance(renderer->PixelToGeo(math::point{}), renderer->PixelToGeo(math::point{ 5., 5. })) * sizeKoef;
 
-   SVCG::geo_point& pStart = math::calc_point(pTo, length * 3, direction + 180);
-   SVCG::geo_point& p1 = math::calc_point(pStart, length, direction + 90);
-   SVCG::geo_point& p2 = math::calc_point(pStart, length, direction - 90);
+   CG::geo_point& pStart = math::calc_point(pTo, length * 3, direction + 180);
+   CG::geo_point& p1 = math::calc_point(pStart, length, direction + 90);
+   CG::geo_point& p2 = math::calc_point(pStart, length, direction - 90);
 
    renderer->AddObject({ {p1, pTo, p2}, info });
 }

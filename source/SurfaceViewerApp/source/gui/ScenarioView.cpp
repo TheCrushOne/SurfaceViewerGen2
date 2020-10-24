@@ -10,7 +10,9 @@
 #include "simulator\simulator.h"
 //#include "Selection\SelectetObjectManager.h"
 #include "scenario\ScenarioManager.h"
+#include "colreg/SimulationStateInterface.h"
 
+using namespace SV;
 
 namespace
 {
@@ -25,7 +27,7 @@ void user_interface::InvalidateView()
 
 void user_interface::SetCenter(double lt, double ln)
 {
-   pView->GetRenderer()->SetCenter(SVCG::geo_point{ lt, ln });
+   pView->GetRenderer()->SetCenter(CG::geo_point{ lt, ln });
 }
 
 void user_interface::ShowToolTip(const wchar_t* title, const wchar_t* description)
@@ -45,21 +47,21 @@ user_interface::objects_to_draw user_interface::GetObjectsInsideScreen()
       return {};
    const auto& simulationState = sim->GetState();
 
-   SVCG::geo_contour unitCoords;
-   auto unitSummator = [&unitCoords](ColregSimulation::UNIT_TYPE type, const ColregSimulation::iSimulationState& state)
+   CG::geo_contour unitCoords;
+   auto unitSummator = [&unitCoords](surface_simulation::UNIT_TYPE type, const surface_simulation::iSimulationState& state)
    {
       for (size_t idx = 0; idx < state.GetUnitCount(type); idx++)
       {
-         const auto& unit = state.GetUnitByIdx(type, idx);
-         const auto& center = unit.pos;
+         const auto* unit = state.GetUnitByIdx(type, idx);
+         const auto& center = unit->GetPos();
          if (pView->GetRenderer()->IsNeedRender({ center }))
             unitCoords.emplace_back(center);
       }
    };
 
-   unitSummator(ColregSimulation::UNIT_TYPE::UT_DRONE, simulationState);
-   unitSummator(ColregSimulation::UNIT_TYPE::UT_ROVER, simulationState);
-   unitSummator(ColregSimulation::UNIT_TYPE::UT_SHIP, simulationState);
+   unitSummator(surface_simulation::UNIT_TYPE::UT_DRONE, simulationState);
+   unitSummator(surface_simulation::UNIT_TYPE::UT_ROVER, simulationState);
+   unitSummator(surface_simulation::UNIT_TYPE::UT_SHIP, simulationState);
 
    return { unitCoords, pView->GetRenderer()->GetObjectsInsideScreenPts() };
 }
@@ -166,7 +168,7 @@ int ScenarioView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
    //_renderer->SetScale(30);
    _renderer->SetScale(300);
-   _renderer->SetCenter(SVCG::geo_point{ 0, 0 });
+   _renderer->SetCenter(CG::geo_point{ 0, 0 });
 
    _layers = std::make_unique<LayersContainer>();
 
@@ -268,27 +270,27 @@ void ScenarioView::OnRButtonUp(UINT /* nFlags */, CPoint point)
    OnContextMenu(this, point);
 }
 
-bool ScenarioView::OnScenarioScenarioStatusChanged(ColregSimulation::SCENARIO_STATUS status)
+bool ScenarioView::OnScenarioScenarioStatusChanged(surface_simulation::SCENARIO_STATUS status)
 {
    bool res = true;
    switch (status)
    {
-   case ColregSimulation::SCENARIO_STATUS::SS_MAP_CHECKOPENED:
+   case surface_simulation::SCENARIO_STATUS::SS_MAP_CHECKOPENED:
       res &= onScenarioCheckOpened();
       break;
-   case ColregSimulation::SCENARIO_STATUS::SS_MAP_PROCESSED:
+   case surface_simulation::SCENARIO_STATUS::SS_MAP_PROCESSED:
       res &= onScenarioMapProcessed();
       break;
-   case ColregSimulation::SCENARIO_STATUS::SS_MAPOBJ_PROCESSED:
+   case surface_simulation::SCENARIO_STATUS::SS_MAPOBJ_PROCESSED:
       res &= onScenarioMapObjProcessed();
       break;
-   case ColregSimulation::SCENARIO_STATUS::SS_PATHS_COUNTED:
+   case surface_simulation::SCENARIO_STATUS::SS_PATHS_COUNTED:
       res &= onScenarioPathFound();
       break;
-   case ColregSimulation::SCENARIO_STATUS::SS_OPT_PATHS_COUNTED:
+   case surface_simulation::SCENARIO_STATUS::SS_OPT_PATHS_COUNTED:
       res &= onScenarioOptPathFound();
       break;
-   case ColregSimulation::SCENARIO_STATUS::SS_NOT_LOADED:
+   case surface_simulation::SCENARIO_STATUS::SS_NOT_LOADED:
    default:
       break;
    }
@@ -299,7 +301,7 @@ bool ScenarioView::OnScenarioScenarioStatusChanged(ColregSimulation::SCENARIO_ST
 bool ScenarioView::onScenarioCheckOpened()
 {
    _renderer->Clear();
-   SVCG::geo_point center = simulator::getCenter();
+   CG::geo_point center = simulator::getCenter();
    if (!center.lat && !center.lon)
       _needResetCenter = true;
    else
@@ -337,17 +339,17 @@ void ScenarioView::setTimer()
    SetTimer(0, 1000 / ScenarioManager::GetInstance(simulator::GetPack()).GetTimeScale(), NULL);
 }
 
-bool ScenarioView::OnScenarioSimulationStatusChanged(ColregSimulation::SIMULATION_STATUS status)
+bool ScenarioView::OnScenarioSimulationStatusChanged(surface_simulation::SIMULATION_STATUS status)
 {
    switch (status)
    {
-   case ColregSimulation::SIMULATION_STATUS::SS_RUN:
+   case surface_simulation::SIMULATION_STATUS::SS_RUN:
       setTimer();
       break;
-   case ColregSimulation::SIMULATION_STATUS::SS_PAUSE:
+   case surface_simulation::SIMULATION_STATUS::SS_PAUSE:
       KillTimer(0);
       break;
-   case ColregSimulation::SIMULATION_STATUS::SS_STOP:
+   case surface_simulation::SIMULATION_STATUS::SS_STOP:
       KillTimer(0);
       break;
    }
@@ -364,7 +366,7 @@ void ScenarioView::OnTimer(UINT_PTR nIDEvent)
 
       if (_needResetCenter)
       {
-         SVCG::geo_point center = simulator::getCenter();
+         CG::geo_point center = simulator::getCenter();
          if (center.lat || center.lon)
          {
             _needResetCenter = false;

@@ -4,19 +4,19 @@
 #include "Modules\IsolineGenerator.h"
 #include "Modules\CoverageGenerator.h"
 #include "Modules\ZoneGenerator.h"
-#include "common/chart_object.h"
+#include "common/chart_object_unit.h"
 #include "datastandart\SVGenMapDataStandartInterface.h"
 #include "datastandart\ChartObjectDataStandartInterface.h"
 #include "navdisp\OrderBase.h"
 #include "navdisp\OrderStruct.h"
 
-namespace chart_object
+namespace SV::chart_object
 {
    class ChartObjectGenerator
       : public navigation_dispatcher::OrderBase<navigation_dispatcher::OrderType::OT_GENOBJLIST, navigation_dispatcher::chart_object_gen_order>
    {
    public:
-      ChartObjectGenerator(central_pack *pack, navigation_dispatcher::iComService* service);
+      ChartObjectGenerator(central_pack* pack, navigation_dispatcher::iComService* service);
       void Release() override final { delete this; }
    private:
       virtual bool processCommand() override final;

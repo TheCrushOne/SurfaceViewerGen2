@@ -18,4 +18,4 @@ namespace SV::data_standart
 #define CHARTOBJEXPRTIMPRT __declspec(dllimport) // import DLL information
 #endif
 
-extern "C" CHARTOBJEXPRTIMPRT SV::data_standart::iDataStandart * CreatePathStorageDataStandart(central_pack * pack, LPCWSTR base_folder, SV::navigation_dispatcher::iComService * pService);
+extern "C" CHARTOBJEXPRTIMPRT SV::data_standart::iDataStandart * CreatePathStorageDataStandart(SV::central_pack * pack, LPCWSTR base_folder, SV::navigation_dispatcher::iComService * pService);

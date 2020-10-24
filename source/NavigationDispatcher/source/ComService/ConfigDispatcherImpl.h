@@ -5,7 +5,7 @@
 #include "navdisp/ComService.h"
 #include "colreg/XmlProperties/xml_property_container.h"
 
-namespace navigation_dispatcher
+namespace SV::navigation_dispatcher
 {
    class ConfigDispatcherImpl : public iConfigDispatcher, public Central
    {
@@ -37,4 +37,6 @@ namespace navigation_dispatcher
    private:
       iComService* m_services;
    };
+
+   typedef std::shared_ptr<ConfigDispatcherImpl> SharedConfigDispatcherImpl;
 }

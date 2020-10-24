@@ -5,7 +5,8 @@
 #include <filesystem>
 #include <fstream>
 
-using namespace data_standart;
+using namespace SV;
+using namespace SV::data_standart;
 
 void PngHeightMapDataStandart::resolvePathDee()
 {

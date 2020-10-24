@@ -1,8 +1,10 @@
 #pragma once
 #include "colreg/CommonStructs.h"
+#include "SVCG/polar_point.h"
+#include "SVCG/geo_point.h"
 #include <cmath>
 
-namespace math
+namespace SV::math
 {
    /**
    * \class Transform
@@ -12,13 +14,13 @@ namespace math
    class Transform : protected TransforImpl
    {
    public:
-      Transform(const geo_point& center, double course)
+      Transform(const CG::geo_point& center, double course)
          : _center(center)
          , _course(course)
       {}
       Transform(){}
 
-      void SetCenter(const geo_point& center, double course)
+      void SetCenter(const CG::geo_point& center, double course)
       {
          _center = center;
          _course = course;
@@ -42,8 +44,8 @@ namespace math
    */
    struct GeoToPolar
    {
-      inline colreg::polar toLocal(const geo_point& p, const geo_point& center, double course) const{ return { direction(center, p) - course, distance(center, p) }; }
-      inline geo_point toGlobal(const colreg::polar& p, const geo_point& center, double course) const{ return calc_point(center, p.distance, p.course + course); }
+      inline CG::polar_point toLocal(const CG::geo_point& p, const CG::geo_point& center, double course) const{ return { direction(center, p) - course, distance(center, p) }; }
+      inline CG::geo_point toGlobal(const CG::polar_point& p, const CG::geo_point& center, double course) const{ return calc_point(center, p.distance, p.course + course); }
    };
 
    /**
@@ -52,13 +54,13 @@ namespace math
    */
    struct GeoToPolarMetric
    {
-      inline colreg::polar toLocal(const geo_point& p, const geo_point& center, double course) const 
+      inline CG::polar_point toLocal(const CG::geo_point& p, const CG::geo_point& center, double course) const
       { 
          double dir, dist;
          distance_direction(center, p, dist, dir);
          return{ math::normal_K180(dir - course), dist * MILE }; 
       }
-      inline geo_point toGlobal(const colreg::polar& p, const geo_point& center, double course) const { return calc_point(center, p.distance * METERS_TO_MILE, p.course + course); }
+      inline CG::geo_point toGlobal(const CG::polar_point& p, const CG::geo_point& center, double course) const { return calc_point(center, p.distance * METERS_TO_MILE, p.course + course); }
    };
 
 
@@ -69,7 +71,7 @@ namespace math
    struct GeoToCartesian
    {
       //GeoToCartesian
-      inline point toLocal(const colreg::geo_point& p, const colreg::geo_point& center, double angle)const
+      inline point toLocal(const CG::geo_point& p, const CG::geo_point& center, double angle)const
       {
          const double course = math::grad_to_rad(math::direction(center, p) + angle);
          const double dist = math::distance(center, p);
@@ -77,13 +79,13 @@ namespace math
       }
 
       //CartesianToGeo
-      inline geo_point toGlobal(const point& canonic, const colreg::geo_point& center, double angle)const
+      inline CG::geo_point toGlobal(const point& canonic, const CG::geo_point& center, double angle)const
       {
          return calc_point(center, std::hypot(canonic.x, canonic.y), rad_to_grad(std::atan2(canonic.x, canonic.y)) - angle);
       }
    };
 
-   using GeoToPolarTransform = Transform<GeoToPolar, colreg::polar, colreg::geo_point>; 
-   using GeoToPolarMetricTransform = Transform<GeoToPolarMetric, colreg::polar, colreg::geo_point>;
-   using GeoToCartasianTransform = Transform<GeoToCartesian, math::point, colreg::geo_point>;
+   using GeoToPolarTransform = Transform<GeoToPolar, CG::polar_point, CG::geo_point>;
+   using GeoToPolarMetricTransform = Transform<GeoToPolarMetric, CG::polar_point, CG::geo_point>;
+   using GeoToCartasianTransform = Transform<GeoToCartesian, math::point, CG::geo_point>;
 }

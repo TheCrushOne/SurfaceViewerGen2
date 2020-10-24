@@ -2,6 +2,8 @@
 
 #include "common/base_types.h"
 
+#define _BIT_(n) (1i64 << n)
+
 namespace SV::chart_object
 {
    //! Типы опасных объектов карты

@@ -1,9 +1,9 @@
 #pragma once
 
 #include <functional>
-#include "common/chart_object.h"
+#include "common/chart_object_unit.h"
 
-namespace chart_object
+namespace SV::chart_object
 {
    struct iGeneratorModule
    {

@@ -20,7 +20,7 @@ namespace SV
       bool OnScenarioTimeChanged(double time) override { return true; }
       bool OnScenarioModified() { m_chartUSN = INVALID_ID; return true; }
 
-      iProperty* GetProperties() override;
+      iPropertyModify* GetProperties() override;
 
    private:
       bool onScenarioCheckOpened();
@@ -38,14 +38,14 @@ namespace SV
 
       std::unordered_map<SV::chart_object::OBJECT_TYPE, render::object_info> m_objInfo;
 
-      iPropertyPtr _props;
+      iPropertyModifyPtr _props;
 
       bool _showDepthChartObjects = true;
-      iPropertyPtr _prop_showDepthChartObjects;
+      iPropertyModifyPtr _prop_showDepthChartObjects;
       void OnShowDepthChartObjectsChanged();
 
       float _minScale2ShowDepthObjects = 50.;
-      iPropertyPtr _prop_minScale2ShowDepthObjects;
+      iPropertyModifyPtr _prop_minScale2ShowDepthObjects;
       size_t m_chartUSN = INVALID_ID;
    };
 }

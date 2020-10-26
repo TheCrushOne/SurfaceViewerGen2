@@ -1,21 +1,19 @@
 #pragma once
+
 #include <map>
 #include "gui/selection/SelectedObjectManager.h"
-#include "gui/selection/property.h"
+#include "properties/PropertyModify.h"
 
 namespace SV
 {
    class CPropertiesCtrl : public CMFCPropertyGridCtrl
    {
    public:
-      void ShowProperties(iProperty* property, bool fullReload = false);
-
+      void ShowProperties(iPropertyInterface* property, bool fullReload = false);
    private:
-
-      CMFCPropertyGridProperty* createMaskedProperty(iProperty* const& child);
+      CMFCPropertyGridProperty* createMaskedProperty(iPropertyInterface* const& child);
       virtual void OnPropertyChanged(CMFCPropertyGridProperty* pProp) const;
    private:
-
       struct prop_item;
       using props_structure = std::map< std::string, prop_item >;
 
@@ -30,11 +28,10 @@ namespace SV
          CMFCPropertyGridProperty* grid_prop = nullptr;
          props_structure prop_childs;
       };
-
    private:
       void addFolder(iPropertyInterface* folder, CMFCPropertyGridProperty* pFolderProp, props_structure* pStruct);
 
       props_structure   _prop_struct;
-      iProperty* _selected = nullptr;
+      iPropertyInterface* _selected = nullptr;
    };
 }

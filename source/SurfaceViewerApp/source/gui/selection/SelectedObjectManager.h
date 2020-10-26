@@ -1,6 +1,7 @@
 #pragma once
 #include "common\base_class.h"
-#include "property.h"
+#include "properties/PropertyModify.h"
+#include "properties/FolderPropertyHolder.h"
 //#include "colreg/ChartSafetyStructs.h"
 //#include "ColregSimulation.h"
 #include "common\observer.h"
@@ -9,20 +10,21 @@
 
 namespace SV
 {
-   class SelectObjectObserver : public AutoContainer< SelectObjectObserver>
+   class SelectObjectObserver
+      : public AutoContainer< SelectObjectObserver>
    {
    public:
-      static void SelectObject(iProperty* prop)
+      static void SelectObject(iPropertyInterface* prop)
       {
          for (auto& obj : _objects)
             obj->OnObjectSelected(prop);
       }
    protected:
-      virtual bool OnObjectSelected(iProperty* prop) = 0;
+      virtual bool OnObjectSelected(iPropertyInterface* prop) = 0;
    };
 
    struct iSelected
-      : public FolderProperty
+      : public FolderPropertyHolder
       , public LayersContainer
    {
       virtual void StartEdit(render::iRender* renderer, CPoint point, render::find_info info) {}
@@ -30,13 +32,13 @@ namespace SV
       virtual void EndEdit() {}
       virtual void Delete() {}
       virtual bool IsCanDelete() { return false; }
-      virtual bool IsUpdateable()const { return false; }
+      virtual bool IsUpdateable() const { return false; }
    };
 
    using iSelectablePtr = std::unique_ptr< iSelected>;
 
    class SelectedObjectManager
-      : public Singleton< SelectedObjectManager>
+      : public Singleton<SelectedObjectManager>
       , public ScenarioObserverBase
    {
    public:

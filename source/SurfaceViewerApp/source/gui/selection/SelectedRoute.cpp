@@ -38,7 +38,7 @@ SelectRouteBase::SelectRouteBase(id_type id, size_t data)
    
 //   _route = ScenarioManager::GetInstance().GetRoute(_format_type, id).route;
 
-   m_ship_info_folder = std::make_unique< FolderProperty>("Ship info");
+   m_ship_info_folder = std::make_unique<FolderPropertyHolder>("Ship info");
 
    m_prop_id = std::make_unique< ValuePropertyHolder< SelectRouteBase, decltype(m_id)>>
       ("ID", "Ship ID", true, VALUE_FORMAT_TYPE::VFT_NONE, this, &SelectRouteBase::m_id, &SelectRouteBase::OnEmpty, this);
@@ -46,7 +46,7 @@ SelectRouteBase::SelectRouteBase(id_type id, size_t data)
    m_ship_info_folder->AddChild(m_prop_id.get());
 
 
-   m_route_info_folder = std::make_unique< FolderProperty>("Route info");
+   m_route_info_folder = std::make_unique<FolderPropertyHolder>("Route info");
 
    m_typeName = route_type_to_string(m_format_type);
 
@@ -66,7 +66,7 @@ SelectedRoutePoint::SelectedRoutePoint(id_type id, size_t data)
    {
       m_point = m_route[m_index];
 
-      m_point_folder = std::make_unique<FolderProperty>("Route point info");
+      m_point_folder = std::make_unique<FolderPropertyHolder>("Route point info");
 
       m_prop_index = std::make_unique< ValuePropertyHolder< SelectedRoutePoint, decltype(m_index)>>
          ("Index", "Index of the route segment", true, VALUE_FORMAT_TYPE::VFT_NONE, this, &SelectedRoutePoint::m_index, &SelectedRoutePoint::OnSimSettingChanged, this);
@@ -144,7 +144,7 @@ SelectedRouteSegment::SelectedRouteSegment(id_type id, size_t data)
    m_distance = math::distance(m_pointFrom, m_pointTo);
    m_xte_left = m_route[m_index + 1].left_XTE;
    m_xte_right = m_route[m_index + 1].right_XTE;
-   m_segment_folder = std::make_unique< FolderProperty>("Route segment info");
+   m_segment_folder = std::make_unique<FolderPropertyHolder>("Route segment info");
 
    m_prop_index = std::make_unique<ValuePropertyHolder<SelectedRouteSegment, decltype(m_index)>>
       ("Index", "Index of the route segment", true, VALUE_FORMAT_TYPE::VFT_NONE, this, &SelectedRouteSegment::m_index, &SelectedRouteSegment::OnSimSettingChanged, this);

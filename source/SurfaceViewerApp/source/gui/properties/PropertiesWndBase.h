@@ -18,7 +18,8 @@ namespace SV
 
    // Простое окно с тулбаром и пропертями
 
-   class CPropertiesWndBase : public CDockablePane
+   class CPropertiesWndBase
+      : public CDockablePane
    {
    public:
       void SetVSDotNetLook(BOOL bSet)
@@ -26,7 +27,7 @@ namespace SV
          m_wndPropList.SetVSDotNetLook(bSet);
          m_wndPropList.SetGroupNameFullWidth(bSet);
       }
-      void ShowProperties(iProperty* pProp, bool fullReload = false) { m_wndPropList.ShowProperties(pProp, fullReload); }
+      void ShowProperties(iPropertyInterface* pProp, bool fullReload = false) { m_wndPropList.ShowProperties(pProp, fullReload); }
 
       virtual ~CPropertiesWndBase() = default;
 

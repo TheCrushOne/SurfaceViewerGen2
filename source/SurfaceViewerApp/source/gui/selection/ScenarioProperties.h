@@ -1,6 +1,6 @@
 #pragma once
 #include "SelectedObjectManager.h"
-#include "property_helper.h"
+#include "properties/property_helper.h"
 
 namespace SV
 {
@@ -85,17 +85,17 @@ namespace SV
 
       //void addDebugFilter(const dbg::debug_info_node& node, FolderProperty* folder);
    private:
-      std::unique_ptr<FolderProperty> m_scenario_pathfinding_settings_folder;
+      std::unique_ptr<FolderPropertyHolder> m_scenario_pathfinding_settings_folder;
 
-      std::unique_ptr<FolderProperty> m_scenario_pathfinding_settings_level_folder;
+      std::unique_ptr<FolderPropertyHolder> m_scenario_pathfinding_settings_level_folder;
 
-      std::unique_ptr<FolderProperty> m_scenario_research_settings_folder;
-      std::unique_ptr<FolderProperty> m_scenario_research_settings_countrange_folder;
-      std::unique_ptr<FolderProperty> m_scenario_research_settings_lengthrange_folder;
+      std::unique_ptr<FolderPropertyHolder> m_scenario_research_settings_folder;
+      std::unique_ptr<FolderPropertyHolder> m_scenario_research_settings_countrange_folder;
+      std::unique_ptr<FolderPropertyHolder> m_scenario_research_settings_lengthrange_folder;
 
       //settings properties
-      std::vector<iPropertyPtr> m_prop_pathfinding_settings;
-      std::vector<iPropertyPtr> m_prop_research_settings;
+      std::vector<iPropertyModifyPtr> m_prop_pathfinding_settings;
+      std::vector<iPropertyModifyPtr> m_prop_research_settings;
 
       settings::application_settings m_settings;
    };

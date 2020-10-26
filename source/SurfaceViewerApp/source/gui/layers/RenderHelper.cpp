@@ -1,11 +1,11 @@
 #include "stdafx.h"
-#include "renderhelper.h"
+#include "RenderHelper.h"
 #include "colreg/domain_utils.h"
 #include "math/math_utils.h"
 
 using namespace SV;
 
-void RenderUnitContour(render::iRender* renderer, surface_simulation::UNIT_TYPE type, const layer_provider::ship_info& ship_info, const CG::layer_provider::trajectory_point& center, const render::object_info& info)
+void SV::RenderUnitContour(render::iRender* renderer, surface_simulation::UNIT_TYPE type, const layer_provider::ship_info& ship_info, const CG::layer_provider::trajectory_point& center, const render::object_info& info)
 {
    switch (type)
    {
@@ -58,7 +58,7 @@ void RenderUnitContour(render::iRender* renderer, surface_simulation::UNIT_TYPE 
 }
 
 
-void RenderDomain(render::FIND_OBJECT_TYPE fot, render::iRender* renderer, const surface_simulation::iLayerUnit* unit, const CG::layer_provider::trajectory_point& center, double timeFromNow, const render::object_info& info/*, const colreg::domain_scales* scales*/)
+void SV::RenderDomain(render::FIND_OBJECT_TYPE fot, render::iRender* renderer, const surface_simulation::iLayerUnit* unit, const CG::layer_provider::trajectory_point& center, double timeFromNow, const render::object_info& info/*, const colreg::domain_scales* scales*/)
 {
    // TODO: включить при необходимости
    /*auto domainTopology = unit->GetDomainTopology(timeFromNow, scales);
@@ -78,7 +78,7 @@ void RenderDomain(render::FIND_OBJECT_TYPE fot, render::iRender* renderer, const
                         , { render::FIND_TYPE::FT_FIND_FAST, unit->GetInfo().id, fot } });*/
 }
 
-void RenderArrow(render::iRender* renderer, const CG::geo_point& pTo, double direction, const render::object_info& info, double sizeKoef)
+void SV::RenderArrow(render::iRender* renderer, const CG::geo_point& pTo, double direction, const render::object_info& info, double sizeKoef)
 {
    const auto length = math::distance(renderer->PixelToGeo(math::point{}), renderer->PixelToGeo(math::point{ 5., 5. })) * sizeKoef;
 

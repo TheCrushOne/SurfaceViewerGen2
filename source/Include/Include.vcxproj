@@ -20,7 +20,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\colreg\BaseRef.h" />
-    <ClInclude Include="source\colreg\BaseRefHolder.h" />
     <ClInclude Include="source\colreg\ChartSafetyInterface.h" />
     <ClInclude Include="source\colreg\ChartSafetyStructs.h" />
     <ClInclude Include="source\colreg\ColregContainers.h" />
@@ -44,6 +43,7 @@
     <ClInclude Include="source\colreg\ModelStructs.h" />
     <ClInclude Include="source\colreg\ModuleGuard.h" />
     <ClInclude Include="source\colreg\PropertyInterface.h" />
+    <ClInclude Include="source\colreg\PropertyStructs.h" />
     <ClInclude Include="source\colreg\ReleaseGuard.h" />
     <ClInclude Include="source\colreg\RouteModelSettings.h" />
     <ClInclude Include="source\colreg\SettingsSerializer.h" />

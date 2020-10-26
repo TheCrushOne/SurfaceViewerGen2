@@ -1,5 +1,6 @@
 #pragma once
 #include "RenderLayers.h"
+#include "colreg/PropertyInterface.h"
 
 namespace SV
 {
@@ -26,7 +27,7 @@ namespace SV
       bool m_renderSourceRoute = true;
       bool m_renderControlPoints = true;
 
-      iPropertyPtr   m_prop_renderSourceRoute;
-      iPropertyPtr   m_prop_renderControlPoints;
+      iPropertyInterfacePtr m_prop_renderSourceRoute;
+      iPropertyInterfacePtr m_prop_renderControlPoints;
    };
 }

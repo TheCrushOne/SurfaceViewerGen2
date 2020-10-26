@@ -1,5 +1,7 @@
 #pragma once
 
+#include <string>
+
 namespace SV
 {
    enum class PROPERTY_TYPE

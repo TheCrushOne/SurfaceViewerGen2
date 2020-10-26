@@ -59,7 +59,7 @@ namespace SV
       };*/
    public:
       CPipeplineStatusWnd() : m_statusesModel(columnMeta, m_records, columnSize), m_wndStatuses(m_statusesModel) {}
-      bool OnObjectSelected(iProperty* prop) override;
+      bool OnObjectSelected(iPropertyInterface* prop) override;
    protected:
       bool OnScenarioTimeChanged(double time)override;
       //bool OnScenarioStatusChanged(CSENARIO_STATUS status)override;

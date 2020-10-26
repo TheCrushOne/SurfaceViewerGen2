@@ -1,7 +1,7 @@
 #pragma once
 
 #include "ReleaseGuard.h"
-#include "BaseRefHolder.h"
+//#include "BaseRefHolder.h"
 #include "ColregInterfaces.h"
 #include "ChartSafetyInterface.h"
 

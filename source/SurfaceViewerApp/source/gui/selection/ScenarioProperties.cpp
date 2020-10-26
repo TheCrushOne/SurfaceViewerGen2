@@ -23,10 +23,10 @@ ScenarioProperties::ScenarioProperties()
 void ScenarioProperties::prepareScenarioPathfindingSettingsFolder()
 {
    const auto* sim = simulator::getSimulator();
-   m_scenario_pathfinding_settings_folder = std::make_unique<FolderProperty>("Pathfinding settings");
+   m_scenario_pathfinding_settings_folder = std::make_unique<FolderPropertyHolder>("Pathfinding settings");
    m_prop_pathfinding_settings.resize(ScenarioPathfindingSettingsFieldIndex::SPSFI_END);
 
-   m_scenario_pathfinding_settings_level_folder = std::make_unique<FolderProperty>("Level settings");
+   m_scenario_pathfinding_settings_level_folder = std::make_unique<FolderPropertyHolder>("Level settings");
    CRSCENPATHSTT(settings::level_settings, m_settings.pth_stt.lvl_stt, max_air_height, ScenarioPathfindingSettingsFieldIndex::SPSFI_MAXAIRHEIGHT);
    CRSCENPATHSTT(settings::level_settings, m_settings.pth_stt.lvl_stt, max_land_height, ScenarioPathfindingSettingsFieldIndex::SPSFI_MAXLANDHEIGHT);
    CRSCENPATHSTT(settings::level_settings, m_settings.pth_stt.lvl_stt, min_land_height, ScenarioPathfindingSettingsFieldIndex::SPSFI_MINLANDHEIGHT);
@@ -49,15 +49,15 @@ void ScenarioProperties::prepareScenarioPathfindingSettingsFolder()
 void ScenarioProperties::prepareScenarioResearchSettingsFolder()
 {
    const auto* sim = simulator::getSimulator();
-   m_scenario_research_settings_folder = std::make_unique<FolderProperty>("Research settings");
+   m_scenario_research_settings_folder = std::make_unique<FolderPropertyHolder>("Research settings");
    m_prop_research_settings.resize(ScenarioResearchSettingsFieldIndex::SRSFI_END);
 
-   m_scenario_research_settings_countrange_folder = std::make_unique<FolderProperty>("Count range");
+   m_scenario_research_settings_countrange_folder = std::make_unique<FolderPropertyHolder>("Count range");
    CRSCENRESSTT(settings::range_data<size_t>, m_settings.res_stt.fly_count_range, min_val, ScenarioResearchSettingsFieldIndex::SRSFI_COUTNRANGE_MIN);
    CRSCENRESSTT(settings::range_data<size_t>, m_settings.res_stt.fly_count_range, max_val, ScenarioResearchSettingsFieldIndex::SRSFI_COUTNRANGE_MAX);
    CRSCENRESSTT(settings::range_data<size_t>, m_settings.res_stt.fly_count_range, step, ScenarioResearchSettingsFieldIndex::SRSFI_COUTNRANGE_STEP);
    
-   m_scenario_research_settings_lengthrange_folder = std::make_unique<FolderProperty>("Length range");
+   m_scenario_research_settings_lengthrange_folder = std::make_unique<FolderPropertyHolder>("Length range");
    CRSCENRESSTT(settings::range_data<double>, m_settings.res_stt.length_range, min_val, ScenarioResearchSettingsFieldIndex::SRSFI_LEGNTHRANGE_MIN);
    CRSCENRESSTT(settings::range_data<double>, m_settings.res_stt.length_range, max_val, ScenarioResearchSettingsFieldIndex::SRSFI_LEGNTHRANGE_MAX);
    CRSCENRESSTT(settings::range_data<double>, m_settings.res_stt.length_range, step, ScenarioResearchSettingsFieldIndex::SRSFI_LEGNTHRANGE_STEP);

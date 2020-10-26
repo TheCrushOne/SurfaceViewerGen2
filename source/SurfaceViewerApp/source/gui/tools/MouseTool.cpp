@@ -7,7 +7,7 @@
 using namespace SV;
 using namespace SV::user_interface;
 
-iMouseToolPtr create_mouse_tool(EDIT_MODE type, render::iRender* renderer, unsigned long long int userData)
+iMouseToolPtr SV::create_mouse_tool(EDIT_MODE type, render::iRender* renderer, unsigned long long int userData)
 {
    switch (type)
    {

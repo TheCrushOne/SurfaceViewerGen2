@@ -28,16 +28,16 @@ namespace SV
       CG::geo_contour_vct m_point_vct;
       properties::simple_prop_vct m_prop_vct;
 
-      std::unique_ptr<FolderProperty> m_info_folder;
-      iPropertyPtr m_prop_id;
-      iPropertyPtr m_prop_type;
+      std::unique_ptr<FolderPropertyHolder> m_info_folder;
+      iPropertyInterfacePtr m_prop_id;
+      iPropertyInterfacePtr m_prop_type;
 
       static constexpr size_t MAX_PROPS = 20;
       struct prop_info
       {
          std::string key;
          std::string value;
-         iPropertyPtr prop_prop;
+         iPropertyInterfacePtr prop_prop;
       };
       prop_info m_props[MAX_PROPS];
 

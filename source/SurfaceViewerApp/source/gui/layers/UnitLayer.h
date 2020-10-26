@@ -3,7 +3,8 @@
 
 namespace SV
 {
-   class UnitLayer : public LayersContainer
+   class UnitLayer
+      : public LayersContainer
    {
    public:
       void Render(render::iRender* renderer) override;
@@ -15,7 +16,7 @@ namespace SV
       //void renderSuggestions(render::iRender* renderer, const colreg::statefull::suggestions_ref* suggestions);
 
       bool m_renderVector = true;
-      iPropertyPtr m_prop_renderVector;
+      iPropertyInterfacePtr m_prop_renderVector;
 
       double m_arrowDist = 0.5;
    };

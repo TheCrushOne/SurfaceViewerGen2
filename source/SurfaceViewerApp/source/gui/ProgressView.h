@@ -11,7 +11,7 @@ namespace SV
       , public ScenarioObserverBase
    {
    public:
-      bool OnObjectSelected(iProperty* prop) override;
+      bool OnObjectSelected(iPropertyInterface* prop) override;
    protected:
 
       bool OnScenarioTimeChanged(double time) override;

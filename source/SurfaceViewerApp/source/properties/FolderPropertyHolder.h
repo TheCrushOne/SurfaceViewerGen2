@@ -13,11 +13,11 @@ namespace SV
       FolderPropertyHolder()
          : PropertyModifyImpl{ "General", "", true, VALUE_FORMAT_TYPE::VFT_NONE }
       {}
-      const char* get_value()const override { return ""; }
-      void set_value(const char* c)override {}
+      const char* get_value() const override { return ""; }
+      void set_value(const char* c) override {}
 
       // TODO: fix!!!
-      const prop_interface_vct* get_childs() const override final { return nullptr; }
+      const prop_interface_vct* get_childs() const override final { return &m_childs; }
       //const simple_prop_vct get_childs()const override
       //{
          //return prop_ref(reinterpret_cast<const iPropertyInterface*>(_childs.data()), _childs.size());
@@ -27,12 +27,12 @@ namespace SV
       {
          return &_childs;
       }*/
-      PROPERTY_TYPE get_type()const override { return PROPERTY_TYPE::PT_FOLRDER; }
-      void AddChild(iProperty* child)
+      PROPERTY_TYPE get_type() const override { return PROPERTY_TYPE::PT_FOLRDER; }
+      void AddChild(iPropertyInterface* child)
       {
-         _childs.push_back(child);
+         m_childs.push_back(child);
       }
    private:
-      VectorProperties _childs;
+      prop_interface_vct m_childs;
    };
 }

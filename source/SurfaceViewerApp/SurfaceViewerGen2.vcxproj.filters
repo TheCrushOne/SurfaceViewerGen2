@@ -344,9 +344,6 @@
     <ClInclude Include="source\properties\ValuePropertyHolder.h">
       <Filter>properties</Filter>
     </ClInclude>
-    <ClInclude Include="source\properties\property_structs.h">
-      <Filter>properties</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\stdafx.cpp" />

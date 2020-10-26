@@ -43,10 +43,9 @@ namespace
    };
 }
 
-
 //====================================================================================================================================================
 
-void CPropertiesCtrl::ShowProperties(iProperty* prop, bool fullReload)
+void CPropertiesCtrl::ShowProperties(iPropertyInterface* prop, bool fullReload)
 {
    _selected = prop;
    if (fullReload)
@@ -90,13 +89,13 @@ void CPropertiesCtrl::ShowProperties(iProperty* prop, bool fullReload)
 
 //====================================================================================================================================================
 
-void CPropertiesCtrl::addFolder(iProperty* folder, CMFCPropertyGridProperty* pFolderProp, props_structure* parentStruct)
+void CPropertiesCtrl::addFolder(iPropertyInterface* folder, CMFCPropertyGridProperty* pFolderProp, props_structure* parentStruct)
 {
    if (!folder)
       return;
    if (folder->get_type() == PROPERTY_TYPE::PT_FOLRDER)
    {
-      auto* childs = folder->get_child_list();
+      auto* childs = folder->get_childs();
       
       bool newFolderCreated = false;
       props_structure* currentPropStruct = nullptr;
@@ -248,7 +247,7 @@ void CPropertiesCtrl::addFolder(iProperty* folder, CMFCPropertyGridProperty* pFo
 
 //====================================================================================================================================================
 
-CMFCPropertyGridProperty* CPropertiesCtrl::createMaskedProperty(iProperty* const &child)
+CMFCPropertyGridProperty* CPropertiesCtrl::createMaskedProperty(iPropertyInterface* const &child)
 {
    CMFCPropertyGridProperty* nw = nullptr;
    auto valueMaskIt = valueMask.find(child->get_value_format_type());
@@ -301,7 +300,7 @@ void CPropertiesCtrl::OnPropertyChanged(CMFCPropertyGridProperty* pProp) const
    if (pProp)
    {
       const auto & name = pProp->GetName();
-      iProperty* prop = (iProperty*)pProp->GetData();
+      iPropertyInterface* prop = reinterpret_cast<iPropertyInterface*>(pProp->GetData());
       switch (prop->get_type())
       {
       case PROPERTY_TYPE::PT_BOOL:
@@ -327,7 +326,6 @@ void CPropertiesCtrl::OnPropertyChanged(CMFCPropertyGridProperty* pProp) const
                break;
             }
          }
-
 
          break;
       }

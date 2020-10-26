@@ -28,15 +28,15 @@ namespace SV
       id_type m_id;
       layer_provider::ship_info m_info;
 
-      std::unique_ptr<FolderProperty> m_ship_info_folder;
-      iPropertyPtr m_prop_id;
-      iPropertyPtr m_prop_ais;
-      iPropertyPtr m_prop_length;
-      iPropertyPtr m_prop_width;
-      iPropertyPtr m_prop_draft;
-      iPropertyPtr m_prop_safety_contour;
-      iPropertyPtr m_prop_deadweight;
-      iPropertyPtr m_prop_telegraph;
+      std::unique_ptr<FolderPropertyHolder> m_ship_info_folder;
+      iPropertyModifyPtr m_prop_id;
+      iPropertyModifyPtr m_prop_ais;
+      iPropertyModifyPtr m_prop_length;
+      iPropertyModifyPtr m_prop_width;
+      iPropertyModifyPtr m_prop_draft;
+      iPropertyModifyPtr m_prop_safety_contour;
+      iPropertyModifyPtr m_prop_deadweight;
+      iPropertyModifyPtr m_prop_telegraph;
    };
 
    class SelectedDrone : public SelectedUnit

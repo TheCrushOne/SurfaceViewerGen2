@@ -115,7 +115,7 @@ BOOL CPipeplineStatusWnd::OnEraseBkgnd(CDC* pDC)
    return CWnd::OnEraseBkgnd(pDC);
 }
 
-bool CPipeplineStatusWnd::OnObjectSelected(iProperty* prop)
+bool CPipeplineStatusWnd::OnObjectSelected(iPropertyInterface* prop)
 {
    return true;
 }

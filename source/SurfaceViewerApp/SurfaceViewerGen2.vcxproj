@@ -379,7 +379,6 @@
     <ClInclude Include="source\properties\PropertyModifyImpl.h" />
     <ClInclude Include="source\properties\PropertyModify.h" />
     <ClInclude Include="source\properties\property_helper.h" />
-    <ClInclude Include="source\properties\property_structs.h" />
     <ClInclude Include="source\properties\ValuePropertyHolder.h" />
     <ClInclude Include="source\render\GDIRender.h" />
     <ClInclude Include="source\render\Render.h" />

@@ -81,9 +81,6 @@
     <ClInclude Include="source\colreg\BaseRef.h">
       <Filter>colreg</Filter>
     </ClInclude>
-    <ClInclude Include="source\colreg\BaseRefHolder.h">
-      <Filter>colreg</Filter>
-    </ClInclude>
     <ClInclude Include="source\colreg\ColregHelper.h">
       <Filter>colreg</Filter>
     </ClInclude>
@@ -458,6 +455,9 @@
     </ClInclude>
     <ClInclude Include="source\simulation\LayerUnitInterface.h">
       <Filter>simulation</Filter>
+    </ClInclude>
+    <ClInclude Include="source\colreg\PropertyStructs.h">
+      <Filter>colreg</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

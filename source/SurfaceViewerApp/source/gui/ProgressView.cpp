@@ -203,7 +203,7 @@ BOOL CProgressViewWnd::OnEraseBkgnd(CDC* pDC)
    return CWnd::OnEraseBkgnd(pDC);
 }
 
-bool CProgressViewWnd::OnObjectSelected(iProperty* prop)
+bool CProgressViewWnd::OnObjectSelected(iPropertyInterface* prop)
 {
    return true;
 }

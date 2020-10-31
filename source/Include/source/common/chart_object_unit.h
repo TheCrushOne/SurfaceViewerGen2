@@ -1,7 +1,6 @@
 #pragma once
 
 #include <vector>
-#include "SVCG/base_structs.h"
 #include "common/properties.h"
 #include "common/object_type.h"
 #include "SVCG/geo_point.h"

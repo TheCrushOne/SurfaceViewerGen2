@@ -4,7 +4,6 @@
 #include <cmath>
 
 #include "CommonStructs.h"
-#include "DomainInterface.h"
 
 namespace colreg
 {

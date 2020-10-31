@@ -2,6 +2,8 @@
 #include "simulation/LayerUnitInterface.h"
 #include "layer_provider\trajectory_point.h"
 #include "colreg/SimulationTypes.h"
+#include "common/central_class.h"
+#include "common/servicable.h"
 
 namespace SV::surface_simulation
 {
@@ -26,15 +28,17 @@ namespace SV::surface_simulation
    //};
    constexpr double DefaultUnitSpeed = 10.;
 
-   class LayerUnitImpl : public iLayerUnit
+   class LayerUnitImpl
+      : public iLayerUnit
    {
    public:
-      LayerUnitImpl()
+      LayerUnitImpl(const settings::application_settings& settings)
+         : m_settings(settings)
       {
          createDomain(.5);
       }
 
-      properties::simple_prop_vct* GetProps() const override final { return nullptr; }
+      const properties::simple_prop_vct* GetProps() const override final { return &m_props; }
       layer_provider::ship_info GetInfo() const override final { return m_info; }
       //const colreg::domain_scales& GetDomainScales() const override final { return m_domainScales; }
       const CG::layer_provider::trajectory_point& GetPos() const override final { return m_srcRoute.at(m_currentPositionIdx); }
@@ -52,6 +56,8 @@ namespace SV::surface_simulation
    protected:
       void createDomain(double);
    private:
+      properties::simple_prop_vct m_props;
+      const settings::application_settings& m_settings;
       layer_provider::ship_info m_info;
       //colreg::domain_scales m_domainScales;
       //colreg::domain_geometry_ref m_domainRef;
@@ -70,18 +76,24 @@ namespace SV::surface_simulation
    class LayerShipImpl : public iLayerShip, public LayerUnitImpl
    {
    public:
-      LayerShipImpl() {}
+      LayerShipImpl(const settings::application_settings& settings)
+         : LayerUnitImpl(settings)
+      {}
    };
 
    class LayerRoverImpl : public iLayerRover, public LayerUnitImpl
    {
    public:
-      LayerRoverImpl() {}
+      LayerRoverImpl(const settings::application_settings& settings)
+         : LayerUnitImpl(settings)
+      {}
    };
 
    class LayerDroneImpl : public iLayerDrone, public LayerUnitImpl
    {
    public:
-      LayerDroneImpl() {}
+      LayerDroneImpl(const settings::application_settings& settings)
+         : LayerUnitImpl(settings)
+      {}
    };
 }

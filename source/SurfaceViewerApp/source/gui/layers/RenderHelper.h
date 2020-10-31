@@ -1,6 +1,5 @@
 #pragma once
 #include "RenderLayers.h"
-#include "colreg/ColregSimulation.h"
 #include "simulation\LayerUnitInterface.h"
 
 namespace SV

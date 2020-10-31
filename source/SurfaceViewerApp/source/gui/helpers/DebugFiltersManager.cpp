@@ -1,8 +1,5 @@
 #include "stdafx.h"
 #include "DebugFiltersManager.h"
-//#include "Core\DebugInfoImpl.h"
-//#include "colreg\Simulator.h"
-#include "colreg\ColregSimulation.h"
 #include "simulator/simulator.h"
 
 using namespace SV;

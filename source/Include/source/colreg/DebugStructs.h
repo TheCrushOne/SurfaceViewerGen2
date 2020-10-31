@@ -2,7 +2,6 @@
 
 #include "BaseRef.h"
 #include "CommonStructs.h"
-#include "SVCG/base_structs.h"
 
 namespace SV::dbg
 {

@@ -1,10 +1,8 @@
 #pragma once
-#include "crossdllinterface\TaskInterface.h"
 #include "crossdllinterface\SVGMDatabaseInterface.h"
 #include "crossdllinterface\SettingsSerializerInterface.h"
 #include "crossdllinterface\UnitDataSerializerInterface.h"
 #include "colreg/ModuleGuard.h"
-#include "common/converter_structs.h"
 #include "datastandart\DataStandart.h"
 #include "datastandart\PngHeightMapDataStandartInterface.h"
 #include "datastandart\SVGenMapDataStandartInterface.h"

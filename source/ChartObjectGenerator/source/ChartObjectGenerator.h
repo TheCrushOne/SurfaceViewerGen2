@@ -1,6 +1,5 @@
 #pragma once
 
-#include "crossdllinterface\TaskInterface.h"
 #include "Modules\IsolineGenerator.h"
 #include "Modules\CoverageGenerator.h"
 #include "Modules\ZoneGenerator.h"

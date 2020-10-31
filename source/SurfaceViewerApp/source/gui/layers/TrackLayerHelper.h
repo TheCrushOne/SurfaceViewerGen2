@@ -1,6 +1,5 @@
 #pragma once
 #include "RenderLayers.h"
-#include "colreg/ColregSimulation.h"
 #include "layer_provider/trajectory_point.h"
 #include "colreg/SimulationTypes.h"
 

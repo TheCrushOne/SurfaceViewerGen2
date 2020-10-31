@@ -1,11 +1,10 @@
 #pragma once
 
-#include "SurfaceInterfaces.h"
-#include "common/database_misc.h"
 #include "common/file_storage.h"
 #include "common/communicator.h"
 #include "common/central_class.h"
 #include "common/data_hash.h"
+#include "colreg/BaseRef.h"
 
 namespace SV::database
 {

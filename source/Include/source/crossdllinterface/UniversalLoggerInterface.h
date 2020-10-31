@@ -1,9 +1,9 @@
 #pragma once
 
 #include "common/communicator.h"
-#include "SurfaceInterfaces.h"
 #include "common/research_structs.h"
 #include "common/central_class.h"
+#include "colreg/BaseRef.h"
 
 namespace SV::logger
 {

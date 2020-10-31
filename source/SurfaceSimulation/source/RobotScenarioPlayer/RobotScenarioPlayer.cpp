@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "RobotScenarioPlayer.h"
-#include "colreg\ColregContainers.h"
 #include "SVCG/positioning.h"
 #include "math/math_utils.h"
 #include "Debug/DebugInfoImpl.h"
@@ -49,10 +48,10 @@ bool RobotScenarioPlayer::IsRunning() const
    return false;
 }
 
-size_t RobotScenarioPlayer::GetControlPointsCount() const
-{
-   return 0/*m_dronesIdxVct.size()*/;
-}
+//size_t RobotScenarioPlayer::GetControlPointsCount() const
+//{
+   //return 0/*m_dronesIdxVct.size()*/;
+//}
 
 /*const control_point_info& RobotScenarioPlayer::GetControlPointInfo(size_t controlPntIdx) const
 {

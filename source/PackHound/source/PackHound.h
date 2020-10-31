@@ -1,6 +1,5 @@
 #pragma once
 
-#include "crossdllinterface\TaskInterface.h"
 #include "common\central_class.h"
 #include "navdisp\OrderBase.h"
 #include "navdisp\OrderStruct.h"

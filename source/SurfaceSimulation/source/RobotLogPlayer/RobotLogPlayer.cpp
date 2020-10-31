@@ -22,10 +22,10 @@ bool RobotLogPlayer::IsRunning() const
    return false;
 }
 
-size_t RobotLogPlayer::GetControlPointsCount() const
-{
-   return 0;
-}
+//size_t RobotLogPlayer::GetControlPointsCount() const
+//{
+   //return 0;
+//}
 
 /*const control_point_info& RobotLogPlayer::GetControlPointInfo(size_t controlPntIdx) const
 {

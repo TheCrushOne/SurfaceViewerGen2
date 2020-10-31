@@ -1,5 +1,4 @@
 #pragma once
-#include "common/converter_structs.h"
 #include "common/central_class.h"
 #include "common/servicable.h"
 #include "common/chart_object_unit.h"

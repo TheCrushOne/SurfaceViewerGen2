@@ -1,7 +1,7 @@
 #pragma once
 
-#include "SurfaceInterfaces.h"
 #include "common/central_class.h"
+#include "colreg/BaseRef.h"
 
 namespace SV::surface_ordering
 {

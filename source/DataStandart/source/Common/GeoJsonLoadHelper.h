@@ -58,7 +58,11 @@ namespace SV::geojson_load_helper
       Json::Value root;
       std::ifstream fStr(filename);
 
-      fStr >> root;
+      Json::CharReaderBuilder builder;
+      builder["collectComments"] = false;
+      JSONCPP_STRING errs;
+      bool ok = parseFromStream(builder, fStr, &root, &errs);
+
       return root;
    }
 }

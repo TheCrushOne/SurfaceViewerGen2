@@ -6,6 +6,6 @@ namespace SV::surface_simulation
 {
    struct iLayerEntity
    {
-      virtual properties::simple_prop_vct* GetProps() const = 0;
+      virtual const properties::simple_prop_vct* GetProps() const = 0;
    };
 }

@@ -1,6 +1,5 @@
 #pragma once
 #include "SelectedObjectManager.h"
-#include "colreg/ColregSimulation.h"
 #include "colreg/SimulationStateInterface.h"
 
 namespace SV

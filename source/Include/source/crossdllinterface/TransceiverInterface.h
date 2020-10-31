@@ -1,8 +1,8 @@
 #pragma once
 
-#include "SurfaceInterfaces.h"
 #include "common/transceiver_types.h"
 #include "common/central_class.h"
+#include "colreg/BaseRef.h"
 #include <functional>
 
 namespace SV::transceiver

@@ -60,9 +60,6 @@
     <ClInclude Include="source\crossdllinterface\UnitDataSerializerInterface.h">
       <Filter>crossdllinterface</Filter>
     </ClInclude>
-    <ClInclude Include="source\crossdllinterface\SurfaceInterfaces.h">
-      <Filter>crossdllinterface</Filter>
-    </ClInclude>
     <ClInclude Include="source\crossdllinterface\TransceiverInterface.h">
       <Filter>crossdllinterface</Filter>
     </ClInclude>
@@ -90,9 +87,6 @@
     <ClInclude Include="source\colreg\ColregSettings.h">
       <Filter>colreg</Filter>
     </ClInclude>
-    <ClInclude Include="source\colreg\ColregSimulation.h">
-      <Filter>colreg</Filter>
-    </ClInclude>
     <ClInclude Include="source\colreg\CommonRefs.h">
       <Filter>colreg</Filter>
     </ClInclude>
@@ -105,16 +99,7 @@
     <ClInclude Include="source\colreg\domain_utils.h">
       <Filter>colreg</Filter>
     </ClInclude>
-    <ClInclude Include="source\colreg\DomainInterface.h">
-      <Filter>colreg</Filter>
-    </ClInclude>
     <ClInclude Include="source\colreg\DomainStructs.h">
-      <Filter>colreg</Filter>
-    </ClInclude>
-    <ClInclude Include="source\colreg\FileSystemHelper.h">
-      <Filter>colreg</Filter>
-    </ClInclude>
-    <ClInclude Include="source\colreg\GoodMarinePracticeSettings.h">
       <Filter>colreg</Filter>
     </ClInclude>
     <ClInclude Include="source\colreg\MathModelInterface.h">
@@ -124,9 +109,6 @@
       <Filter>colreg</Filter>
     </ClInclude>
     <ClInclude Include="source\colreg\MemoryOverload.h">
-      <Filter>colreg</Filter>
-    </ClInclude>
-    <ClInclude Include="source\colreg\ModelInterface.h">
       <Filter>colreg</Filter>
     </ClInclude>
     <ClInclude Include="source\colreg\ModelStructs.h">
@@ -141,22 +123,7 @@
     <ClInclude Include="source\colreg\ReleaseGuard.h">
       <Filter>colreg</Filter>
     </ClInclude>
-    <ClInclude Include="source\colreg\RouteModelSettings.h">
-      <Filter>colreg</Filter>
-    </ClInclude>
-    <ClInclude Include="source\colreg\SettingsSerializer.h">
-      <Filter>colreg</Filter>
-    </ClInclude>
-    <ClInclude Include="source\colreg\StateFullColregInterface.h">
-      <Filter>colreg</Filter>
-    </ClInclude>
     <ClInclude Include="source\colreg\TinyFixedStack.h">
-      <Filter>colreg</Filter>
-    </ClInclude>
-    <ClInclude Include="source\colreg\WeatherInterface.h">
-      <Filter>colreg</Filter>
-    </ClInclude>
-    <ClInclude Include="source\colreg\XMLSettingsSerializer.h">
       <Filter>colreg</Filter>
     </ClInclude>
     <ClInclude Include="source\SVCG\route_point.h">
@@ -198,9 +165,6 @@
     <ClInclude Include="source\crossdllinterface\SVGMDatabaseInterface.h">
       <Filter>crossdllinterface</Filter>
     </ClInclude>
-    <ClInclude Include="source\common\database_misc.h">
-      <Filter>common</Filter>
-    </ClInclude>
     <ClInclude Include="source\database\sqlite3.h">
       <Filter>database</Filter>
     </ClInclude>
@@ -231,31 +195,16 @@
     <ClInclude Include="source\crossdllinterface\SimulationInterface.h">
       <Filter>crossdllinterface</Filter>
     </ClInclude>
-    <ClInclude Include="source\colreg\ChartSafetyInterface.h">
-      <Filter>colreg</Filter>
-    </ClInclude>
     <ClInclude Include="source\colreg\ChartSafetyStructs.h">
       <Filter>colreg</Filter>
     </ClInclude>
     <ClInclude Include="source\crossdllinterface\EngineInterface.h">
       <Filter>crossdllinterface</Filter>
     </ClInclude>
-    <ClInclude Include="source\colreg\ColregContainers.h">
-      <Filter>colreg</Filter>
-    </ClInclude>
-    <ClInclude Include="source\common\simulation_structs.h">
-      <Filter>common</Filter>
-    </ClInclude>
-    <ClInclude Include="source\common\converter_structs.h">
-      <Filter>common</Filter>
-    </ClInclude>
     <ClInclude Include="source\crossdllinterface\UniversalLoggerInterface.h">
       <Filter>crossdllinterface</Filter>
     </ClInclude>
     <ClInclude Include="source\common\research_structs.h">
-      <Filter>common</Filter>
-    </ClInclude>
-    <ClInclude Include="source\common\research_types.h">
       <Filter>common</Filter>
     </ClInclude>
     <ClInclude Include="source\crossdllinterface\FileStorageInterface.h">
@@ -272,9 +221,6 @@
     </ClInclude>
     <ClInclude Include="source\common\dispatcher_command.h">
       <Filter>common</Filter>
-    </ClInclude>
-    <ClInclude Include="source\crossdllinterface\TaskInterface.h">
-      <Filter>crossdllinterface</Filter>
     </ClInclude>
     <ClInclude Include="source\common\global.h">
       <Filter>common</Filter>
@@ -330,9 +276,6 @@
     <ClInclude Include="source\datastandart\PathStorageDataStandartInterface.h">
       <Filter>datastandart</Filter>
     </ClInclude>
-    <ClInclude Include="source\common\enum_class.h">
-      <Filter>common</Filter>
-    </ClInclude>
     <ClInclude Include="source\datastandart\DataStandartStruct.h">
       <Filter>datastandart</Filter>
     </ClInclude>
@@ -366,9 +309,6 @@
     <ClInclude Include="source\crossdllinterface\ChecksumServiceInterface.h">
       <Filter>crossdllinterface</Filter>
     </ClInclude>
-    <ClInclude Include="source\crossdllinterface\MCMInterface.h">
-      <Filter>crossdllinterface</Filter>
-    </ClInclude>
     <ClInclude Include="source\crossdllinterface\SurfaceViewerOrderingWrapperInterface.h">
       <Filter>crossdllinterface</Filter>
     </ClInclude>
@@ -394,12 +334,6 @@
       <Filter>crossdllinterface</Filter>
     </ClInclude>
     <ClInclude Include="source\SVCG\enhanced_geometry.h">
-      <Filter>SVCG</Filter>
-    </ClInclude>
-    <ClInclude Include="source\SVCG\base_structs.h">
-      <Filter>SVCG</Filter>
-    </ClInclude>
-    <ClInclude Include="source\SVCG\base_types.h">
       <Filter>SVCG</Filter>
     </ClInclude>
     <ClInclude Include="source\common\base_types.h">
@@ -458,6 +392,9 @@
     </ClInclude>
     <ClInclude Include="source\colreg\PropertyStructs.h">
       <Filter>colreg</Filter>
+    </ClInclude>
+    <ClInclude Include="source\crossdllinterface\MCMInterface.h">
+      <Filter>crossdllinterface</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

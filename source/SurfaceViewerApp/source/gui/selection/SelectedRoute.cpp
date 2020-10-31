@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "selectedroute.h"
-#include "colreg/ColregSimulation.h"
 #include "simulator/simulator.h"
 
 using namespace SV;

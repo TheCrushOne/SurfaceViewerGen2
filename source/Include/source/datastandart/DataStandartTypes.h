@@ -4,7 +4,6 @@
 #include <vector>
 #include <functional>
 #include <unordered_map>
-#include "common/enum_class.h"
 #include "navdisp/NavDispTypes.h"
 
 namespace SV::data_standart

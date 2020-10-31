@@ -30,8 +30,11 @@ void LayerUnitImpl::createDomain(double radius)
 
 void LayerUnitImpl::SetSrcRoute(const settings::route& src)
 {
+   const auto& env_stt = m_settings.env_stt;
+   for (const auto& cpt : src.control_point_list)
+      m_controlPoints.emplace_back(transfercase::RoutePointToPositionPoint(cpt, env_stt));
    for (const auto& rpt : src.route_list)
-      m_srcRoute.emplace_back(transfercase::RoutePointToPositionPoint(rpt));
+      m_srcRoute.emplace_back(transfercase::RoutePointToPositionPoint(rpt, env_stt));
    for (size_t idx = 0; idx < m_srcRoute.size(); idx++)
    {
       auto& cur = m_srcRoute[idx];

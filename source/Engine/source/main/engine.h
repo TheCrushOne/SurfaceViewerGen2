@@ -7,7 +7,6 @@
 #include "crossdllinterface\EngineInterface.h"
 #include "algorithm\pathfinder\PathFinderPipeline.h"
 //#include "base/instance.h"
-#include "common/simulation_structs.h"
 #include "common/research_structs.h"
 #include "common/central_class.h"
 #include "settings/settings.h"

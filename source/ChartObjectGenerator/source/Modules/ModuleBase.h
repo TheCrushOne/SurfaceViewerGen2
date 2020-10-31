@@ -4,7 +4,6 @@
 #include "common/servicable.h"
 #include "common/chart_object_unit.h"
 #include "GeneratorModuleInterface.h"
-#include "common/converter_structs.h"
 
 namespace SV::chart_object
 {

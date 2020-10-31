@@ -1,6 +1,7 @@
 #pragma once
 
-#include "research_types.h"
+#include <vector>
+#include "settings/settings.h"
 
 namespace SV::research
 {

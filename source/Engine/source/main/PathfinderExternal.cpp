@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "PathfinderExternal.h"
-#include "common/simulation_structs.h"
 #include "navdisp\OrderCreation.h"
 
 using namespace SV;

@@ -1,6 +1,5 @@
 #pragma once
 #include "colreg/ModuleGuard.h"
-#include "colreg/ColregSimulation.h"
 #include "common/file_storage.h"
 #include "common/central_class.h"
 #include "navdisp/ComService.h"

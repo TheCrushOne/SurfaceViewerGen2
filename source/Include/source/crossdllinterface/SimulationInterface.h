@@ -1,7 +1,6 @@
 #pragma once
 
 #include "colreg/SimulatorInterface.h"
-#include "colreg/ColregSimulation.h"
 #include "common/central_class.h"
 #include "navdisp\ComService.h"
 

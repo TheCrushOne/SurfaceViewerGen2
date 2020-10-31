@@ -11,10 +11,11 @@ namespace SV::surface_simulation
 
       //layer_provider::ship_info GetInfo() const override final { return m_info; }
       const layer_provider::layer_chart_object* GetContourData() const override final { return &m_chartObject; }
-      properties::simple_prop_vct* GetProps() const override final { return nullptr; }
+      const properties::simple_prop_vct* GetProps() const override final { return &m_props; }
 
       void SetSrcRoute(const SV::layer_provider::layer_chart_object& src) { m_chartObject = src; }
    private:
+      properties::simple_prop_vct m_props;
       SV::layer_provider::layer_chart_object m_chartObject;
    };
 }

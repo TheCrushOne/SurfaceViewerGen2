@@ -3,7 +3,6 @@
 #include "common/communicator.h"
 #include "colreg/BaseRef.h"
 #include "common/pathfinder_structs.h"
-#include "common/simulation_structs.h"
 #include "common/research_structs.h"
 #include "common/header_collector.h"
 #include "common/central_class.h"

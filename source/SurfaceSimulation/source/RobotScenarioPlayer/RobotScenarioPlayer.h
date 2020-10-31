@@ -18,7 +18,7 @@ namespace SV::surface_simulation
       void Stop() override final;
       void Reset() override final;
       bool IsRunning() const override final;
-      size_t GetControlPointsCount() const override final;
+      //size_t GetControlPointsCount() const override final;
       //const control_point_info& GetControlPointInfo(size_t controlPntIdx) const override final;
       bool PlayFrom(size_t controlPointIdx) override final;
       bool NextControlPoint() override final;

@@ -38,7 +38,7 @@ namespace SV::surface_simulation
       virtual bool IsRunning() const = 0;
 
       //!  оличество контрольных точек (состо€ний) симул€тора
-      virtual size_t GetControlPointsCount() const = 0;
+      //virtual size_t GetLandUnitControlPointsCount() const = 0;
 
       //! ѕолучить контрольную точку по индексу
       //virtual const control_point_info& GetControlPointInfo(size_t controlPntIdx) const = 0;

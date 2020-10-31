@@ -9,7 +9,9 @@
 
 namespace SV::database
 {
-   class SQLiteController : public iSVGMDatabaseController, public Central
+   class SQLiteController
+      : public iSVGMDatabaseController
+      , public Central
    {
    public:
       SQLiteController(central_pack* pack);

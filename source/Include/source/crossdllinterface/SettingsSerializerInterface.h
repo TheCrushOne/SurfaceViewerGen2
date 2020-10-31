@@ -1,6 +1,6 @@
 #pragma once
 
-#include "SurfaceInterfaces.h"
+#include "colreg/BaseRef.h"
 
 namespace SV::serializer
 {

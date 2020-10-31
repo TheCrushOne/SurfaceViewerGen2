@@ -1,5 +1,7 @@
 #pragma once
 
+#include "common/central_class.h"
+#include "common/servicable.h"
 #include "common/communicator.h"
 //#include "colreg/ColregSimulation.h"
 #include "colreg/PropertyInterface.h"
@@ -7,11 +9,9 @@
 #include "colreg/SimulationStateInterface.h"
 #include "colreg/SimulatorInterface.h"
 #include "crossdllinterface/SVGMDatabaseInterface.h"
-#include "common/simulation_structs.h"
 #include "common/chart_object_unit.h"
 #include "crossdllinterface\UniversalLoggerInterface.h"
 #include "crossdllinterface\EngineInterface.h"
-#include "crossdllinterface\TaskInterface.h"
 
 #include "datastandart/SVGenMapDataStandartInterface.h"
 #include "datastandart/PathStorageDataStandartInterface.h"
@@ -33,6 +33,7 @@ namespace SV::surface_simulation
       : public iSimulator
       , public iSimulationState
       , public Central
+      , public Servicable
    {
       struct scenario_data
       {

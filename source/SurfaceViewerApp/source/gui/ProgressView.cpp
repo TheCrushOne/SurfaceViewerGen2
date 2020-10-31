@@ -115,7 +115,7 @@ bool CProgressViewWnd::onScenarioPathFound()
    {
       CSliderCtrl* slider = ((CSliderCtrl*)GetDlgItem(IDC_SIMULATION_SLIDER));
       slider->SetPos(getSimulator()->GetCurrentControlPointIdx());
-      slider->SetRange(0, getSimulator()->GetControlPointsCount());
+      //slider->SetRange(0, getSimulator()->GetControlPointsCount());
       slider->Invalidate();
    }
    return true;
@@ -244,8 +244,8 @@ void CProgressViewWnd::OnClickedSetButton()
    ATLASSERT(sim);
    ((CDateTimeCtrl*)GetDlgItem(IDC_SIMULATION_TIME))->GetTime(time);
    double timeVal = timeToTimestamp(time);
-   for (size_t iControlPnt = 0; iControlPnt < sim->GetControlPointsCount(); ++iControlPnt)
-   {
+   //for (size_t iControlPnt = 0; iControlPnt < sim->GetControlPointsCount(); ++iControlPnt)
+   //{
       //TODO: восстановить!!!
       //const surface_simulation::control_point_info& ctrlPt = sim->GetControlPointInfo(iControlPnt);
       /*if (ctrlPt.time > timeVal)
@@ -260,7 +260,7 @@ void CProgressViewWnd::OnClickedSetButton()
          user_interface::InvalidateView();
          return;
       }*/
-   }
+   //}
 }
 
 void CProgressViewWnd::OnUpdateSetButton(CCmdUI* pCmdUI)

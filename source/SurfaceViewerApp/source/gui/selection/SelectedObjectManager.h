@@ -55,7 +55,7 @@ namespace SV
 
       // NOTE: на всякий...
       // TODO: починить!!!
-      bool OnScenarioScenarioStatusChanged(surface_simulation::SCENARIO_STATUS status) override { /*Unselect();*/ return true; }
+      bool OnScenarioScenarioStatusChanged(surface_simulation::SCENARIO_STATUS status) override { Unselect(); Update(); return true; }
       bool OnScenarioTimeChanged(double time) { Update();  return true; }
       bool OnScenarioModified() { Update();  return true; }
    private:

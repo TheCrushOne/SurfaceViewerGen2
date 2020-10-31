@@ -9,7 +9,6 @@
 
 #include "resource.h"       // основные символы
 #include "colreg\ModuleGuard.h"
-#include "colreg/ColregSimulation.h"
 #include "scenario/ScenarioManager.h"
 
 // CSurfaceViewerGen2App:

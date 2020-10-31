@@ -91,6 +91,7 @@ void CPropertiesCtrl::ShowProperties(iPropertyInterface* prop, bool fullReload)
 
 void CPropertiesCtrl::addFolder(iPropertyInterface* folder, CMFCPropertyGridProperty* pFolderProp, props_structure* parentStruct)
 {
+   // TODO: починить
    if (!folder)
       return;
    if (folder->get_type() == PROPERTY_TYPE::PT_FOLRDER)
@@ -191,8 +192,13 @@ void CPropertiesCtrl::addFolder(iPropertyInterface* folder, CMFCPropertyGridProp
          else //property alread added
          {
             childItem = childPropIt->second.grid_prop;
-
-            if (child->get_type() == PROPERTY_TYPE::PT_TEXT_LIST)
+            
+            /*if (child->get_type() == PROPERTY_TYPE::PT_FOLRDER)
+            {
+               addFolder(child, );
+               // NOTE: ничего не делаем
+            }
+            else*/ if (child->get_type() == PROPERTY_TYPE::PT_TEXT_LIST)
             {
                const auto list = child->get_list();
                const auto indx = atoi(child->get_value());

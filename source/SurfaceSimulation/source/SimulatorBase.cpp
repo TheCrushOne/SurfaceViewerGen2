@@ -29,8 +29,8 @@ struct tag
 
 SimulatorBase::SimulatorBase(central_pack* pack, iPropertyInterface* prop, navigation_dispatcher::iComService* service)
    : Central(pack)
+   , Servicable(service)
    , m_prop(prop)
-   , m_service(service)
    , m_gridMeta({})
 {
    m_orderCacheFolder = std::filesystem::absolute(std::filesystem::current_path().generic_wstring() + L"\\..\\..\\..\\cache\\order_heap\\");
@@ -115,11 +115,11 @@ bool SimulatorBase::LoadProcessedMapObjects()
 }
 
 template<typename UnitType>
-void routeMover(const std::vector<settings::route>& src, std::vector<UnitType>& dst)
+void routeMover(const settings::application_settings& settings, const std::vector<settings::route>& src, std::vector<UnitType>& dst)
 {
    for (const auto& pt : src)
    {
-      UnitType unit;
+      UnitType unit(settings);
       unit.SetSrcRoute(pt);
       dst.emplace_back(unit);
    }
@@ -131,8 +131,8 @@ bool SimulatorBase::LoadProcessedPaths()
    m_currentConfig = m_orderCacheFolder + L"process_path_find.xml";
    deserializeStandartAttrs(pathDS, SVGUtils::wstringToString(m_currentConfig).c_str(), data_standart::DataStandartType::DST_PATHS);
    auto& rt = pathDS->GetData();
-   routeMover<LayerDroneImpl>(rt.air_routes, m_data.air_unit_objects);
-   routeMover<LayerRoverImpl>(rt.land_routes, m_data.land_unit_objects);
+   routeMover<LayerDroneImpl>(m_settings, rt.air_routes, m_data.air_unit_objects);
+   routeMover<LayerRoverImpl>(m_settings, rt.land_routes, m_data.land_unit_objects);
    calcStepCount();
    SetSimulatorScenarioState(SCENARIO_STATUS::SS_PATHS_COUNTED);
    SetSimulatorSimulationState(SIMULATION_STATUS::SS_STOP);

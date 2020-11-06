@@ -86,7 +86,8 @@ void ChartLayer::addChartObject(render::iRender* renderer, const SV::surface_sim
    //}
 
    int r = 0, g = 0, b = 0;
-   const auto* props = obj->GetProps();
+   //const auto* props = obj->GetProps();
+   const auto* props = &contour_data->prop_vct;
    bool colorOverride = false;
    if (props)
    {

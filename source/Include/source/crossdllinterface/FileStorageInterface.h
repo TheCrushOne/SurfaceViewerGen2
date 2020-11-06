@@ -8,7 +8,7 @@ namespace SV::file_storage
 {
    struct iFileStorageManager : iReleasable
    {
-      virtual void PrepareStorage(const wchar_t*) = 0;
+      virtual void PrepareStorage(const char*) = 0;
    };
 }
 

@@ -6,26 +6,21 @@
 namespace SV
 {
    template< class T, typename Type >
-   class ValuePropertyHolder
-      : public PropertyModifyImpl
-      , private xml_properties::FormatType
+   class ValuePropertyHolder : public Property, private xml_properties::FormatType
    {
       typedef Type(T::* pValue);
       using CallBackFunctor = std::function<void()>;
 
    public:
       template<class CallBack, class... Args>
-      ValuePropertyHolder(const char* name, const char* description, bool readonly, VALUE_FORMAT_TYPE type, T* holder, pValue pvalue, CallBack async_task, Args... args)
-         : PropertyModifyImpl(name, description, readonly, type)
-         , _holder(holder)
-         , _pvalue(pvalue)
+      ValuePropertyHolder(const char* name, const char* description, bool readonly, VALUE_FORMAT_TYPE type, T* holder, pValue pvalue, CallBack async_task, Args... args) : Property(name, description, readonly, type), _holder(holder), _pvalue(pvalue)
       {
          _callBackFunctor = std::bind(async_task, args...);
       }
 
       ~ValuePropertyHolder() {}
 
-      const char* get_value() const override
+      const char* get_value()const override
       {
          std::stringstream buffer;
          buffer.setf(std::ios_base::boolalpha | std::ios_base::fixed);
@@ -41,7 +36,7 @@ namespace SV
          return _value.c_str();
       }
 
-      void set_value(const char* value) override
+      void set_value(const char* value)override
       {
          //       if (_value == value)
          //       {
@@ -52,7 +47,7 @@ namespace SV
             _callBackFunctor();
       }
 
-      PROPERTY_TYPE get_type() const override
+      PROPERTY_TYPE get_type()const override
       {
          if constexpr (std::is_enum<Type>::value != 0)
             return PROPERTY_TYPE::PT_TEXT_LIST;
@@ -60,16 +55,19 @@ namespace SV
             return _list.empty() ? getType<Type>() : PROPERTY_TYPE::PT_TEXT_LIST;
       }
    private:
-      template<class Type>
+      template< class Type >
       PROPERTY_TYPE getType() const { return PROPERTY_TYPE::PT_VALUE; }
 
-      template<>
-      PROPERTY_TYPE getType<bool>() const { return PROPERTY_TYPE::PT_BOOL; }
+      template <>
+      PROPERTY_TYPE getType<bool>()const { return PROPERTY_TYPE::PT_BOOL; }
+
+      template <>
+      PROPERTY_TYPE getType<COLORREF>()const { return PROPERTY_TYPE::PT_COLOR; }
 
    private:
       T* _holder;
-      pValue _pvalue = nullptr;
-      CallBackFunctor _callBackFunctor = nullptr;
-      mutable std::string _value;
+      pValue				_pvalue = nullptr;
+      CallBackFunctor   _callBackFunctor = nullptr;
+      mutable std::string       _value;
    };
 }

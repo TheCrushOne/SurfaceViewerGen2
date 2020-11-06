@@ -30,24 +30,24 @@ namespace SV
    \brief Базовая структура для передачи векторов в интерфейсах
    Создавать можно через BaseRefHolder
    */
-   //template<typename T>
-   //struct base_ref
-   //{
-   //   base_ref() = default;
+   template<typename T>
+   struct base_ref
+   {
+      base_ref() = default;
 
-   //   base_ref(const T* p, size_t sz)
-   //      : arr{ p }
-   //      , size{ sz }
-   //   {}
+      base_ref(const T* p, size_t sz)
+         : arr{ p }
+         , size{ sz }
+      {}
 
-   //   const T* arr = nullptr;
-   //   size_t size = 0;
+      const T* arr = nullptr;
+      size_t size = 0;
 
-   //   const T* begin()const{ return arr; }
-   //   const T* end()const  { return arr + size; }
-   //   const T& back()const { return arr[size-1]; }
-   //   const T& operator[](size_t index) const { return arr[index]; }
-   //};
+      const T* begin()const{ return arr; }
+      const T* end()const  { return arr + size; }
+      const T& back()const { return arr[size-1]; }
+      const T& operator[](size_t index) const { return arr[index]; }
+   };
 
    /*
    \brief Базовый интерфейс для возвращения векторов в интерфейсах

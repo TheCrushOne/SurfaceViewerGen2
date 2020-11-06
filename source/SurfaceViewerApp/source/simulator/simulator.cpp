@@ -77,7 +77,7 @@ namespace SV::simulator
 
       if (_simulator == nullptr)
       {
-         AfxMessageBox(L"Error! Simulator haven`t been started!");
+         AfxMessageBox("Error! Simulator haven`t been started!");
          return false;
       }
       //_simulator->GetDebugInfo();

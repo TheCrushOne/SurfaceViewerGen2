@@ -299,7 +299,7 @@ void GDIRender::renderObjects(CDC* dc, pixelObjects& objects)
          textPix.y /= obj.pixels.size();
          const auto ptText = GeoToPixel(obj.points[(int)(obj.points.size() * .5)]);
          // TODO: вот тут странно отвалилось
-         dc->TextOutW(textPix.x + obj.info.text_offset_x, textPix.y + obj.info.text_offset_y, (_bstr_t)obj.info.text.c_str(), obj.info.text.size());
+         dc->TextOut(textPix.x + obj.info.text_offset_x, textPix.y + obj.info.text_offset_y, obj.info.text.c_str(), obj.info.text.size());
       }
    }
 

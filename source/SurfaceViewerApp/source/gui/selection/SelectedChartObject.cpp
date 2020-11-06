@@ -18,7 +18,7 @@ SelectedChartObject::SelectedChartObject(id_type id, chart_object::OBJECT_TYPE c
    //{
    //   _chart_object_type = pObj->Get()->arr[0].type;
    //}
-   m_info_folder = std::make_unique<FolderPropertyHolder>("chart object info");
+   m_info_folder = std::make_unique<FolderProperty>("chart object info");
    m_prop_id = std::make_unique<ValuePropertyHolder<SelectedChartObject, decltype(m_id)>>
       ("ID", "Chart object id", true, VALUE_FORMAT_TYPE::VFT_NONE, this, &SelectedChartObject::m_id, &SelectedChartObject::OnSimSettingChanged, this);
    m_info_folder->AddChild(m_prop_id.get());

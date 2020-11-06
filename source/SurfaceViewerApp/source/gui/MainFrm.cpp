@@ -16,7 +16,7 @@
 using namespace SV;
 
 CMainFrame* pFrame;
-void user_interface::SetStatusBarText(const wchar_t* text)
+void user_interface::SetStatusBarText(const char* text)
 {
    pFrame->SetPanelText(text);
 }
@@ -102,7 +102,7 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
       return -1;      // не удалось создать
    }
 
-   m_wndSimulationToolBar.SetWindowText(L"Simulation");
+   m_wndSimulationToolBar.SetWindowText("Simulation");
 
    CString strToolBarName;
    bNameValid = strToolBarName.LoadString(IDS_TOOLBAR_STANDARD);
@@ -254,13 +254,13 @@ BOOL CMainFrame::CreateDockingWindows()
       return FALSE; // не удалось создать
    }
 
-   if (!m_wndProgressView.Create(L"Progress", this, CRect(0, 0, 200, 60), FALSE, ID_VIEW_PROGRESS, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_RIGHT | CBRS_FLOAT_MULTI))
+   if (!m_wndProgressView.Create("Progress", this, CRect(0, 0, 200, 60), FALSE, ID_VIEW_PROGRESS, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_RIGHT | CBRS_FLOAT_MULTI))
    {
       TRACE0("Failed to create Progress window\n");
       return FALSE; // failed to create
    }
 
-   if (!m_wndStatuses.Create(L"Statuses", this, CRect(0, 0, 200, 60), FALSE, ID_WND_STATUSES, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_RIGHT | CBRS_FLOAT_MULTI))
+   if (!m_wndStatuses.Create("Statuses", this, CRect(0, 0, 200, 60), FALSE, ID_WND_STATUSES, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_RIGHT | CBRS_FLOAT_MULTI))
    {
       TRACE0("Failed to create Statuses window\n");
       return FALSE; // failed to create
@@ -309,7 +309,7 @@ void CMainFrame::SetOutputText(user_interface::OUTPUT_TYPE mode, const char* tex
    m_wndOutput.SetOutputText(mode, text, color, bold, italic);
 }
 
-void CMainFrame::SetPanelText(const wchar_t* text)
+void CMainFrame::SetPanelText(const char* text)
 {
    m_wndStatusBar.SetPaneText(0, text);
 }

@@ -30,7 +30,7 @@ namespace SV::data_standart
          static constexpr char is_control[] = "is_control";
       };
    public:
-      PathStorageDataStandart(central_pack* pack, LPCWSTR base_folder, navigation_dispatcher::iComService* pService)
+      PathStorageDataStandart(central_pack* pack, LPCSTR base_folder, navigation_dispatcher::iComService* pService)
          : DataStandart(pack, base_folder, pService)
       {}
    public:

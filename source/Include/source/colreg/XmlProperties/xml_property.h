@@ -90,14 +90,20 @@ namespace SV::xml_properties
       }
 
       template<>
-      inline static const void* stringToValue<const void*>(const char* pValue) { return reinterpret_cast<const void*>(pValue); }
+      inline static const void* stringToValue<const void*>(const char* pValue)
+      {
+         return reinterpret_cast<const void*>(pValue);
+      }
    };
 
    class ValueProperty : private FormatType
    {
    public:
       ValueProperty() = default;
-      ValueProperty(const char* pname, const char* pdesc) : _name(pname), _desc(pdesc) {  }
+      ValueProperty(const char* pname, const char* pdesc)
+         : _name(pname)
+         , _desc(pdesc)
+      {  }
    public:
 
       template<typename Type>

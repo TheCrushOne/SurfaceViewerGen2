@@ -158,7 +158,7 @@ HWND CProgressViewWnd::createSlider(HWND hWndParent, UINT uId)
    CRect rcl;
    ::GetClientRect(hWndParent, &rcl);
 
-   HWND hWndLV = CreateWindow(L"msctls_trackbar32", L"",
+   HWND hWndLV = CreateWindow("msctls_trackbar32", "",
       WS_CHILD | WS_BORDER | WS_VISIBLE | ES_LEFT | TBS_AUTOTICKS,
       0, 0, (int)(rcl.Width() * 0.5), rcl.Height(),
       hWndParent, (HMENU)uId, GetModuleHandle(NULL), NULL);
@@ -171,11 +171,11 @@ HWND CProgressViewWnd::createEditBox(HWND hWndParent, UINT uId)
    CRect rcl;
    ::GetClientRect(hWndParent, &rcl);
 
-   HWND hWndLV = CreateWindow(L"SysDateTimePick32", L"",
+   HWND hWndLV = CreateWindow("SysDateTimePick32", "",
       DTS_RIGHTALIGN | WS_TABSTOP | WS_CHILD | WS_BORDER | WS_VISIBLE,
       (int)(rcl.Width() * .25), 0, (int)(rcl.Height() * .25), rcl.Height(),
       hWndParent, (HMENU)uId, GetModuleHandle(NULL), NULL);
-   ((CDateTimeCtrl*)GetDlgItem(IDC_SIMULATION_TIME))->SetFormat(L"dd-MM-yy HH:mm:ss");
+   ((CDateTimeCtrl*)GetDlgItem(IDC_SIMULATION_TIME))->SetFormat("dd-MM-yy HH:mm:ss");
    return hWndLV;
 }
 
@@ -184,7 +184,7 @@ HWND CProgressViewWnd::createButton(HWND hWndParent, UINT uId)
    CRect rcl;
    ::GetClientRect(hWndParent, &rcl);
 
-   HWND hWndLV = CreateWindow(L"BUTTON", L"Set",
+   HWND hWndLV = CreateWindow("BUTTON", "Set",
       WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON,
       (int)(rcl.Width() * 3. / 4.), 0, (int)(rcl.Width() * .25), rcl.Height(),
       hWndParent, (HMENU)uId, GetModuleHandle(NULL), NULL);
@@ -203,7 +203,7 @@ BOOL CProgressViewWnd::OnEraseBkgnd(CDC* pDC)
    return CWnd::OnEraseBkgnd(pDC);
 }
 
-bool CProgressViewWnd::OnObjectSelected(iPropertyInterface* prop)
+bool CProgressViewWnd::OnObjectSelected(iProperty* prop)
 {
    return true;
 }
@@ -222,7 +222,7 @@ void CProgressViewWnd::OnReleasedCaptureSlider(NMHDR* pNMHDR, LRESULT* pResult)
    auto sim = getSimulator();
    if (!sim->PlayFrom(slider->GetPos()))
    {
-      AfxMessageBox(L"Error! Play from isn`t supported or simulation have failed!");
+      AfxMessageBox("Error! Play from isn`t supported or simulation have failed!");
       return;
    }
    simulator::simulatorStep();

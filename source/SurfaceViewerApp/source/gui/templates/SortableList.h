@@ -196,8 +196,7 @@ BOOL CListCtrl_Sortable<DataRecord, ItemData>::OnGetDispInfo(NMHDR* pNMHDR, LRES
    if (pNMW->item.mask & LVIF_TEXT)
    {
       const std::string& result = m_dataModel.GetCellText(key, col);
-      std::wstring wresult = SVGUtils::stringToWstring(result.c_str());
-      wcsncpy_s(pNMW->item.pszText, MAX_PATH, wresult.c_str(), pNMW->item.cchTextMax);
+      strncpy_s(pNMW->item.pszText, MAX_PATH, result.c_str(), pNMW->item.cchTextMax);
    }
 
    return FALSE;
@@ -231,10 +230,8 @@ namespace {
       CListCtrl* control = ps.m_control;
       CString left = control->GetItemText(item1->rowIdx, ps.m_columnIdx);
       CString right = control->GetItemText(item2->rowIdx, ps.m_columnIdx);
-      std::wstring wcleft(left.GetString());
-      std::wstring wcright(right.GetString());
-      std::string cleft = SVGUtils::wstringToString(wcleft);
-      std::string cright = SVGUtils::wstringToString(wcright);
+      std::string cleft(left.GetString());
+      std::string cright(right.GetString());
       if (model.GetColDataValueType(ps.m_columnIdx) == DVT_NUMERIC)
          return ps.m_ascending ? atof(cleft.c_str()) >= atof(cright.c_str()) : atof(cleft.c_str()) < atof(cright.c_str());
       else
@@ -264,8 +261,7 @@ void CListCtrl_Sortable<DataRecord, ItemData>::LoadData()
       for (size_t col = 0; col < m_dataModel.GetColCount(); ++col)
       {
          const std::string& title = m_dataModel.GetColTitle(col);
-         std::wstring wtitle = SVGUtils::stringToWstring(title);
-         bool ins = InsertColumn(col, wtitle.c_str(), LVCFMT_LEFT, 100) != -1;
+         bool ins = InsertColumn(col, title.c_str(), LVCFMT_LEFT, 100) != -1;
          ATLASSERT(ins);
       }
    }
@@ -281,7 +277,7 @@ void CListCtrl_Sortable<DataRecord, ItemData>::LoadData()
          if (idx == -1)
          {
             idx = GetItemCount();
-            InsertItem(idx, L"");
+            InsertItem(idx, "");
          }
          if (m_dataModel.IsCheckBoxes())
             SetCheck(idx, true);
@@ -302,10 +298,7 @@ void CListCtrl_Sortable<DataRecord, ItemData>::LoadData()
       }
       SetItemData(idx, reinterpret_cast<DWORD_PTR>(rec.second.item));
       for (size_t col = 0; col < m_dataModel.GetColCount(); ++col)
-      {
-         std::wstring witem = SVGUtils::stringToWstring(rec.second.record.m_data.at(col).c_str());
-         SetItemText(idx, col, witem.c_str());
-      }
+         SetItemText(idx, col, rec.second.record.m_data.at(col).c_str());
    }
    clearOldRecords();
 
@@ -374,10 +367,9 @@ void CListCtrl_Sortable<DataRecord, ItemData>::clearOldRecords()
 template<template<typename> typename DataRecord, typename ItemData>
 int CListCtrl_Sortable<DataRecord, ItemData>::findByKey(size_t cidx, std::string key)
 {
-   std::wstring wkey = SVGUtils::stringToWstring(key);
    for (size_t ridx = 0; ridx < GetItemCount(); ridx++)
    {
-      if (std::wstring(GetItemText(ridx, cidx).GetString()).compare(wkey) == 0)
+      if (std::string(GetItemText(ridx, cidx).GetString()).compare(key) == 0)
          return ridx;
    }
    ATLASSERT(false);

@@ -6,21 +6,23 @@
 
 namespace SV::surface_ordering
 {
-   class OrderingWrapper : public iOrderingWrapper, public Central
+   class OrderingWrapper
+      : public iOrderingWrapper
+      , public Central
    {
    public:
-      OrderingWrapper(central_pack* pack, const wchar_t* databasePath);
+      OrderingWrapper(central_pack* pack, const char* databasePath);
 
-      void prepareCommandFromTemplate(std::wstring sourcePath, std::wstring dstPath, std::unordered_map<std::string, std::wstring> dict);
+      void prepareCommandFromTemplate(std::string sourcePath, std::string dstPath, std::unordered_map<std::string, std::string> dict);
 
-      bool ProcessOrder(const wchar_t* orderFile, const wchar_t* begCommand, std::unordered_map<std::string, std::wstring>& dict) override final;
+      bool ProcessOrder(const char* orderFile, const char* begCommand, std::unordered_map<std::string, std::string>& dict) override final;
       void Release() override { delete this; }
    private:
       system::ModuleGuard<navigation_dispatcher::iNavigationDispatcher, central_pack*> m_navigationDispatcher;
       std::string m_hashDatabasePath;
 
-      std::wstring m_cacheFolder;
-      std::wstring m_orderCacheFolder;
-      std::wstring m_orderHeapFolder;
+      std::string m_cacheFolder;
+      std::string m_orderCacheFolder;
+      std::string m_orderHeapFolder;
    };
 }

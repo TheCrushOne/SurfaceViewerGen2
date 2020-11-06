@@ -5,7 +5,8 @@
 
 namespace SV
 {
-   class CFileViewToolBar : public CMFCToolBar
+   class CFileViewToolBar
+      : public CMFCToolBar
    {
       virtual void OnUpdateCmdUI(CFrameWnd* /*pTarget*/, BOOL bDisableIfNoHndler)
       {
@@ -15,7 +16,8 @@ namespace SV
       virtual BOOL AllowShowOnList() const { return FALSE; }
    };
 
-   class CFileView : public CDockablePane
+   class CFileView
+      : public CDockablePane
    {
       // Создание
    public:
@@ -39,46 +41,46 @@ namespace SV
 
    protected:
       void fillScenariosFiles();
-      void addScenarios(HTREEITEM hRoot, const wchar_t* dir, bool bAddFolder);
+      void addScenarios(HTREEITEM hRoot, const char* dir, bool bAddFolder);
 
-      inline HTREEITEM getItem(HTREEITEM hRoot, const wchar_t* dir)
+      inline HTREEITEM getItem(HTREEITEM hRoot, const char* dir)
       {
          auto child = m_treeScenarios.GetNextItem(hRoot, TVGN_CHILD);
          while (child)
          {
-            std::wstring name(m_treeScenarios.GetItemText(child));
+            std::string name(m_treeScenarios.GetItemText(child));
             if (name == dir)
                return child;
             child = m_treeScenarios.GetNextItem(child, TVGN_NEXT);
          }
-         std::wstring wdir(dir);
+         std::string wdir(dir);
          HTREEITEM item = m_treeScenarios.InsertItem(wdir.c_str(), 0, 0, hRoot);
          return item;
       }
 
-      inline std::wstring getFileName(HTREEITEM hItem)
+      inline std::string getFileName(HTREEITEM hItem)
       {
-         std::wstring res = m_treeScenarios.GetItemText(hItem);
+         std::string res = m_treeScenarios.GetItemText(hItem);
 
          while (hItem = m_treeScenarios.GetParentItem(hItem))
-            res = std::wstring(m_treeScenarios.GetItemText(hItem)) + L"\\" + res;
+            res = std::string(m_treeScenarios.GetItemText(hItem)) + "\\" + res;
          return res;
       }
 
-      inline std::wstring getNewFolderName(HTREEITEM hParent)
+      inline std::string getNewFolderName(HTREEITEM hParent)
       {
          size_t index = 1;
-         const std::wstring newName = L"NewFolder_";
+         const std::string newName = "NewFolder_";
 
          while (true)
          {
-            std::wstringstream s;
+            std::stringstream s;
             s << newName.c_str() << index;
             bool find = false;
             auto child = m_treeScenarios.GetNextItem(hParent, TVGN_CHILD);
             while (child)
             {
-               std::wstring name = m_treeScenarios.GetItemText(child);
+               std::string name = m_treeScenarios.GetItemText(child);
                if (name == s.str())
                {
                   find = true;
@@ -94,20 +96,20 @@ namespace SV
       }
 
 
-      inline std::wstring getNewScenarioName(HTREEITEM hParent)
+      inline std::string getNewScenarioName(HTREEITEM hParent)
       {
          size_t index = 1;
-         const std::wstring newName = hParent == m_treeScenarios.GetRootItem() ? L"Colreg_scenario" : m_treeScenarios.GetItemText(hParent);
+         const std::string newName = hParent == m_treeScenarios.GetRootItem() ? "Colreg_scenario" : m_treeScenarios.GetItemText(hParent);
 
          while (true)
          {
-            std::wstringstream s;
+            std::stringstream s;
             s << newName.c_str() << "_" << index << ".xml";
             bool find = false;
             auto child = m_treeScenarios.GetNextItem(hParent, TVGN_CHILD);
             while (child)
             {
-               std::wstring name = m_treeScenarios.GetItemText(child);
+               std::string name = m_treeScenarios.GetItemText(child);
                if (name == s.str())
                {
                   find = true;
@@ -134,13 +136,13 @@ namespace SV
       //afx_msg void OnScenarioOpen();
       //afx_msg void OnScenarioDelete();
       //afx_msg void OnScenarioEdit();
-     //afx_msg void OnProperties();
-     //afx_msg void OnFileOpen();
-     //afx_msg void OnFileOpenWith();
-     //afx_msg void OnDummyCompile();
-     //afx_msg void OnEditCut();
-     //afx_msg void OnEditCopy();
-     //afx_msg void OnEditClear();
+      //afx_msg void OnProperties();
+      //afx_msg void OnFileOpen();
+      //afx_msg void OnFileOpenWith();
+      //afx_msg void OnDummyCompile();
+      //afx_msg void OnEditCut();
+      //afx_msg void OnEditCopy();
+      //afx_msg void OnEditClear();
       afx_msg void OnPaint();
       afx_msg void OnSetFocus(CWnd* pOldWnd);
       afx_msg void OnNMDblclkTree1(NMHDR* pNMHDR, LRESULT* pResult);

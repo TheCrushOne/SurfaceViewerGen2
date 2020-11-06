@@ -43,7 +43,7 @@ void CTestView::OnDraw(CDC* pDC)
 	GetClientRect(rect);
 	rect.DeflateRect(10, 10);
 	pDC->FillSolidRect(rect, _bYellow ? RGB(255, 255, 0) : RGB(0, 255, 0));
-	pDC->DrawText(L"This is a test view", -1, rect, DT_CENTER | DT_VCENTER);
+	pDC->DrawText("This is a test view", -1, rect, DT_CENTER | DT_VCENTER);
 }
 
 /////////////////////////////////////////////////////////////////////////////

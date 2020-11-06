@@ -13,7 +13,7 @@ namespace SV::data_standart
       , public DataStandart<DataStandartType::DST_PNGHM, png_hm_data_standart>
    {
    public:
-      PngHeightMapDataStandart(central_pack* pack, LPCWSTR base_folder, navigation_dispatcher::iComService* pService)
+      PngHeightMapDataStandart(central_pack* pack, LPCSTR base_folder, navigation_dispatcher::iComService* pService)
          : DataStandart(pack, base_folder, pService)
          , m_file(nullptr)
          , m_row_pointers(nullptr)

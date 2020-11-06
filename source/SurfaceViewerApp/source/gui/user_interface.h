@@ -29,9 +29,9 @@ namespace SV::user_interface
    };
 
    void InvalidateView();
-   void SetStatusBarText(const wchar_t* text);
+   void SetStatusBarText(const char* text);
    void SetProgress(unsigned int progress);
-   void ShowToolTip(const wchar_t* title, const wchar_t* description);
+   void ShowToolTip(const char* title, const char* description);
    void HideToolTip();
    void SetCenter(double lt, double ln);
    void RaiseError();

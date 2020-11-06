@@ -9,9 +9,9 @@ namespace SV
    }
    struct filter_info
    {
-      std::wstring name;
+      std::string name;
       bool visible = false;
-      std::unordered_map<std::wstring, filter_info> childs;
+      std::unordered_map<std::string, filter_info> childs;
    };
 
    class DebugFiltersManager
@@ -24,8 +24,8 @@ namespace SV
          return m_filters;
       }
 
-      void ShowFilter(const std::vector<std::wstring>& path, bool show);
-      bool IsFilterVisible(const std::vector<std::wstring>& path)const;
+      void ShowFilter(const std::vector<std::string>& path, bool show);
+      bool IsFilterVisible(const std::vector<std::string>& path)const;
 
    private:
       DebugFiltersManager();
@@ -33,7 +33,7 @@ namespace SV
       void addDebugFolder(const dbg::debug_info_node& node, filter_info& filter);
 
    private:
-      friend class Singleton< DebugFiltersManager>;
+      friend class Singleton<DebugFiltersManager>;
       filter_info m_filters;
    };
 }

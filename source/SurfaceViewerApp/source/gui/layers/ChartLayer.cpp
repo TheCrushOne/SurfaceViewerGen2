@@ -120,11 +120,11 @@ void ChartLayer::addChartObject(render::iRender* renderer, const SV::surface_sim
          renderer->AddObject({ {contour[i]}, ptInfo });
 }
 
-iPropertyModify* ChartLayer::GetProperties()
+iProperty* ChartLayer::GetProperties()
 {
    if (!_props)
    {
-      auto folderProps = std::make_unique<FolderPropertyHolder>("Chart Layer");
+      auto folderProps = std::make_unique<FolderProperty>("Chart Layer");
 
       folderProps->AddChild(GetLayerEnabledProperty());
       _prop_showDepthChartObjects = std::make_unique< ValuePropertyHolder< ChartLayer, decltype(_showDepthChartObjects)>>

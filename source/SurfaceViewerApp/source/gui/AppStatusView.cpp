@@ -62,7 +62,7 @@ int CAppStatusView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		TRACE0("Не удалось создать представление файлов\n");
 		return -1;      // не удалось создать
 	}
-	m_overallProgress.SetWindowTextW(L"Overall Progress");
+	m_overallProgress.SetWindowText("Overall Progress");
 	m_overallProgress.SetRange(0, 100);
 	m_overallProgress.SetStep(5);
 	m_overallProgress.SetPos(55);

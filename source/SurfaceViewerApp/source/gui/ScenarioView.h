@@ -24,7 +24,7 @@ namespace SV
          Invalidate(0);
          UpdateWindow();
       }
-      void ShowToolTip(const wchar_t* title, const wchar_t* description);
+      void ShowToolTip(const char* title, const char* description);
       void HideToolTip()
       {
          _tipCtrl->Activate(FALSE);

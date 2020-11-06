@@ -1,9 +1,8 @@
 #include "stdafx.h"
 #include "PropertiesCtrl.h"
-#include "gui/selection/SelectedObjectManager.h"
-#include "gui/MainFrm.h"
+#include "gui\Selection\SelectedObjectManager.h"
+#include "../MainFrm.h"
 #include <set>
-#include "common\utils.h"
 
 using namespace SV;
 
@@ -17,50 +16,47 @@ namespace
 
    const std::unordered_map<VALUE_FORMAT_TYPE, maskData> valueMask = {
       { VALUE_FORMAT_TYPE::VFT_NONE, { "" , "" } },
-      /*{ VALUE_FORMAT_TYPE::VFT_ANGLE, { "ddd d°"
-                                       , "___._°" } },*/
-      { VALUE_FORMAT_TYPE::VFT_SPEED, { "ddd dd kts"
-                                       ,   "___.__ kts" } },
-      { VALUE_FORMAT_TYPE::VFT_SPEED_MS, { "ddd dd m/s"
-                                       ,   "___.__ m/s" } },
-      { VALUE_FORMAT_TYPE::VFT_COURSE, { "ddd d°"
-                                       , "___._°" } },
-      { VALUE_FORMAT_TYPE::VFT_DISTANCE, { "ddd NM"
-                                       ,   "___ NM" } },
+      { VALUE_FORMAT_TYPE::VFT_SPEED, { "dd d kts"
+                                      , "__._ kts" } },
+      { VALUE_FORMAT_TYPE::VFT_SPEED_MS, { "dd d kts"
+                                        , "__._ m/s" } },
+      { VALUE_FORMAT_TYPE::VFT_COURSE, { "ddd dÂ°"
+                                       , "___._Â°" } },
+      { VALUE_FORMAT_TYPE::VFT_DISTANCE, { "dd dd NM"
+                                       ,   "__.__ NM" } },
       { VALUE_FORMAT_TYPE::VFT_DISTANCE_METERS, { "ddd m"
-                                       ,   "___ m" } },
+                                              ,   "___ m" } },
 
       { VALUE_FORMAT_TYPE::VFT_TIME_SEC, { "00000 s"
                                        ,   "_____ s" } },
 
-      { VALUE_FORMAT_TYPE::VFT_COORD_LAT, { "ddd dddd °"
-                                       ,   "___.____ °" } },
-      { VALUE_FORMAT_TYPE::VFT_COORD_LON, { "ddd dddd °"
-                                       ,   "___.____ °" } },
-
       { VALUE_FORMAT_TYPE::VFT_PERCENT, { "ddd %"
                                       ,   "___ %" } },
+      { VALUE_FORMAT_TYPE::VFT_COORD_LAT, { "+dd ddddÂ°"
+                                          , "___.____Â°" } },
+      { VALUE_FORMAT_TYPE::VFT_COORD_LON, { "+ddd ddddÂ°"
+                                          , "____.____Â°" } },
    };
 }
 
+
 //====================================================================================================================================================
 
-void CPropertiesCtrl::ShowProperties(iPropertyInterface* prop, bool fullReload)
+void CPropertiesCtrl::ShowProperties(iProperty* prop, bool fullReload)
 {
    _selected = prop;
-   if (fullReload)
+   // WARNING: Ð½Ðµ Ð¿Ñ€Ð¾Ñ…Ð¾Ð´Ð¸Ñ‚ AssertValid
+   /*if (fullReload)
    {
       _prop_struct.clear();
       RemoveAll();
-   }
+   }*/
 
    if (!prop)
-   {
       return;
-   }
 
    LockWindowUpdate();
-   auto* childs = prop->get_childs();
+   auto* childs = prop->get_child_list();
    std::set< std::string > addedFolders;
    for (auto child : *childs)
    {
@@ -69,17 +65,17 @@ void CPropertiesCtrl::ShowProperties(iPropertyInterface* prop, bool fullReload)
    }
 
    if (!fullReload)
-   {  //ïî÷èñòèì ñòàðûå ôîëäåðà, êîòîðûõ íåò â íîâîé ñòðóêòóðå
+   {  //Ã¯Ã®Ã·Ã¨Ã±Ã²Ã¨Ã¬ Ã±Ã²Ã Ã°Ã»Ã¥ Ã´Ã®Ã«Ã¤Ã¥Ã°Ã , ÃªÃ®Ã²Ã®Ã°Ã»Ãµ Ã­Ã¥Ã² Ã¢ Ã­Ã®Ã¢Ã®Ã© Ã±Ã²Ã°Ã³ÃªÃ²Ã³Ã°Ã¥
       for (auto it = _prop_struct.begin(); it != _prop_struct.end();)
       {
          if (addedFolders.find(it->first) == addedFolders.end())
          {
             DeleteProperty(it->second.grid_prop);
-            it = _prop_struct.erase(it); 
+            it = _prop_struct.erase(it);
          }
          else
          {
-            ++it; //òàêîé ôîëäåð åñòü â íîâîé ñòðóêòóðå
+            ++it; //Ã²Ã ÃªÃ®Ã© Ã´Ã®Ã«Ã¤Ã¥Ã° Ã¥Ã±Ã²Ã¼ Ã¢ Ã­Ã®Ã¢Ã®Ã© Ã±Ã²Ã°Ã³ÃªÃ²Ã³Ã°Ã¥
          }
       }
    }
@@ -89,41 +85,38 @@ void CPropertiesCtrl::ShowProperties(iPropertyInterface* prop, bool fullReload)
 
 //====================================================================================================================================================
 
-void CPropertiesCtrl::addFolder(iPropertyInterface* folder, CMFCPropertyGridProperty* pFolderProp, props_structure* parentStruct)
+void CPropertiesCtrl::addFolder(iProperty* folder, CMFCPropertyGridProperty* pFolderProp, props_structure* parentStruct)
 {
-   // TODO: ïî÷èíèòü
    if (!folder)
       return;
    if (folder->get_type() == PROPERTY_TYPE::PT_FOLRDER)
    {
-      auto* childs = folder->get_childs();
-      
+      auto* childs = folder->get_child_list();
+
       bool newFolderCreated = false;
       props_structure* currentPropStruct = nullptr;
       CMFCPropertyGridProperty* pSubFolder = nullptr;
       auto subFolderItemsIt = parentStruct->find(folder->get_name());
       if (subFolderItemsIt == parentStruct->end() || subFolderItemsIt->second.prop_type != PROPERTY_TYPE::PT_FOLRDER)
       {
-         if (subFolderItemsIt != parentStruct->end()) //ñâîéñòâî ñ òàêèì èìåíåì íàéäåíî , íî òèï îòëè÷àåòñÿ
+         if (subFolderItemsIt != parentStruct->end()) //Ã±Ã¢Ã®Ã©Ã±Ã²Ã¢Ã® Ã± Ã²Ã ÃªÃ¨Ã¬ Ã¨Ã¬Ã¥Ã­Ã¥Ã¬ Ã­Ã Ã©Ã¤Ã¥Ã­Ã® , Ã­Ã® Ã²Ã¨Ã¯ Ã®Ã²Ã«Ã¨Ã·Ã Ã¥Ã²Ã±Ã¿
          {
             DeleteProperty(subFolderItemsIt->second.grid_prop);
             parentStruct->erase(subFolderItemsIt);
          }
          newFolderCreated = true;
-         std::string name(folder->get_name());
-         std::wstring wname(name.begin(), name.end());
-         pSubFolder = new CMFCPropertyGridProperty(wname.c_str());
+         pSubFolder = new CMFCPropertyGridProperty(folder->get_name());
          currentPropStruct = &parentStruct->insert({ folder->get_name(), { pSubFolder, folder->get_type() } }).first->second.prop_childs;
          pFolderProp ? pFolderProp->AddSubItem(pSubFolder) : AddProperty(pSubFolder, FALSE);
       }
       else
-      { 
-         //èñïîëüçóåì ñóùåñòâóþùèé Folder
+      {
+         //Ã¨Ã±Ã¯Ã®Ã«Ã¼Ã§Ã³Ã¥Ã¬ Ã±Ã³Ã¹Ã¥Ã±Ã²Ã¢Ã³Ã¾Ã¹Ã¨Ã© Folder
          newFolderCreated = false;
          pSubFolder = subFolderItemsIt->second.grid_prop;
          currentPropStruct = &subFolderItemsIt->second.prop_childs;
       }
-      
+
       std::set< std::string > processedItems;
       for (auto& child : *childs)
       {
@@ -133,11 +126,11 @@ void CPropertiesCtrl::addFolder(iPropertyInterface* folder, CMFCPropertyGridProp
          }
          processedItems.insert(child->get_name());
          CMFCPropertyGridProperty* childItem = nullptr;
-         
+
          auto childPropIt = currentPropStruct->find(child->get_name());
-         if (childPropIt == currentPropStruct->end() || childPropIt->second.prop_type != child->get_type() )
+         if (childPropIt == currentPropStruct->end() || childPropIt->second.prop_type != child->get_type())
          {
-            if (childPropIt != currentPropStruct->end()) //ñâîéñòâî íàéäåíî, íî òèï îòëè÷àåòñÿ, íóæíî ïåðåñîçäàòü
+            if (childPropIt != currentPropStruct->end()) //Ã±Ã¢Ã®Ã©Ã±Ã²Ã¢Ã® Ã­Ã Ã©Ã¤Ã¥Ã­Ã®, Ã­Ã® Ã²Ã¨Ã¯ Ã®Ã²Ã«Ã¨Ã·Ã Ã¥Ã²Ã±Ã¿, Ã­Ã³Ã¦Ã­Ã® Ã¯Ã¥Ã°Ã¥Ã±Ã®Ã§Ã¤Ã Ã²Ã¼
             {
                DeleteProperty(childPropIt->second.grid_prop);
                currentPropStruct->erase(childPropIt);
@@ -152,9 +145,7 @@ void CPropertiesCtrl::addFolder(iPropertyInterface* folder, CMFCPropertyGridProp
             }
             case PROPERTY_TYPE::PT_BOOL:
             {
-               auto wname = SVGUtils::stringToWstring(child->get_name());
-               auto wdesc = SVGUtils::stringToWstring(child->get_description());
-               childItem = new CMFCPropertyGridProperty(wname.c_str(), !strcmp(child->get_value(), "0") ? (_variant_t)false : (_variant_t)true, wdesc.c_str());
+               childItem = new CMFCPropertyGridProperty(child->get_name(), !strcmp(child->get_value(), "0") ? (_variant_t)false : (_variant_t)true, child->get_description());
                break;
             }
             case PROPERTY_TYPE::PT_VALUE:
@@ -162,27 +153,24 @@ void CPropertiesCtrl::addFolder(iPropertyInterface* folder, CMFCPropertyGridProp
                childItem = createMaskedProperty(child);
                break;
             }
+            case PROPERTY_TYPE::PT_COLOR:
+            {
+               childItem = createColorProperty(child);
+               break;
+            }
             case PROPERTY_TYPE::PT_TEXT_LIST:
             {
                const auto list = child->get_list();
                const auto indx = atoi(child->get_value());
 
-               auto wname = SVGUtils::stringToWstring(child->get_name());
-               auto wdesc = SVGUtils::stringToWstring(child->get_description());
-               auto wlistelem = SVGUtils::stringToWstring(list[indx].c_str());
-               childItem = new CMFCPropertyGridProperty(wname.c_str(), wlistelem.c_str(), wdesc.c_str());
+               childItem = new CMFCPropertyGridProperty(child->get_name(), list[indx].c_str(), child->get_description());
                for (const auto& t : list)
-               {
-                  auto welem = SVGUtils::stringToWstring(t.c_str());
-                  childItem->AddOption(welem.c_str());
-               }
+                  childItem->AddOption(t.c_str());
                break;
             }
             default:
             {
-               auto wname = SVGUtils::stringToWstring(child->get_name());
-               auto wdesc = SVGUtils::stringToWstring(child->get_description());
-               childItem = new CMFCPropertyGridProperty(wname.c_str(), (_variant_t)child->get_value(), wdesc.c_str());
+               childItem = new CMFCPropertyGridProperty(child->get_name(), (_variant_t)child->get_value(), child->get_description());
             }
             }
 
@@ -192,47 +180,43 @@ void CPropertiesCtrl::addFolder(iPropertyInterface* folder, CMFCPropertyGridProp
          else //property alread added
          {
             childItem = childPropIt->second.grid_prop;
-            
-            /*if (child->get_type() == PROPERTY_TYPE::PT_FOLRDER)
-            {
-               addFolder(child, );
-               // NOTE: íè÷åãî íå äåëàåì
-            }
-            else*/ if (child->get_type() == PROPERTY_TYPE::PT_TEXT_LIST)
+
+            if (child->get_type() == PROPERTY_TYPE::PT_TEXT_LIST)
             {
                const auto list = child->get_list();
                const auto indx = atoi(child->get_value());
-
-               auto wlistelem = SVGUtils::stringToWstring(list[indx].c_str());
-               childItem->SetValue(wlistelem.c_str());
+               childItem->SetValue(list[indx].c_str());
+            }
+            else if (child->get_type() == PROPERTY_TYPE::PT_COLOR)
+            {
             }
             else
             {
                auto oldValType = childItem->GetValue().vt;
                auto newVal = (_variant_t)child->get_value();
-               newVal.ChangeType(oldValType); //íîâîå çíà÷åíèå äîëæíî ñîâïàäàòü ïî òèïó ñî ñòàðûì â ïëàíå VariantType , âíóòðåííåãî ïðåäñòàâëåíèÿ
+               newVal.ChangeType(oldValType); //Ã­Ã®Ã¢Ã®Ã¥ Ã§Ã­Ã Ã·Ã¥Ã­Ã¨Ã¥ Ã¤Ã®Ã«Ã¦Ã­Ã® Ã±Ã®Ã¢Ã¯Ã Ã¤Ã Ã²Ã¼ Ã¯Ã® Ã²Ã¨Ã¯Ã³ Ã±Ã® Ã±Ã²Ã Ã°Ã»Ã¬ Ã¢ Ã¯Ã«Ã Ã­Ã¥ VariantType , Ã¢Ã­Ã³Ã²Ã°Ã¥Ã­Ã­Ã¥Ã£Ã® Ã¯Ã°Ã¥Ã¤Ã±Ã²Ã Ã¢Ã«Ã¥Ã­Ã¨Ã¿
 
                childItem->SetValue(newVal);
             }
-            
+
          }
-         
+
          childItem->SetData((DWORD_PTR)child);
 
          if (childItem->GetValue().vt != VT_BOOL) //to skip internal MFC ASSERT
          {
             childItem->AllowEdit(child->is_read_only() ? FALSE : TRUE);
          }
-         
+
          childItem->Enable(child->is_read_only() ? FALSE : TRUE);
 
       }
       if (!newFolderCreated)
       {
-         //óäàëèì ëèøíèå àéòåìû, êîòîðûé ìîãëè îñòàòüñÿ îò ñòàðîãî âûäåëåííîãî îáúåêòà
+         //Ã³Ã¤Ã Ã«Ã¨Ã¬ Ã«Ã¨Ã¸Ã­Ã¨Ã¥ Ã Ã©Ã²Ã¥Ã¬Ã», ÃªÃ®Ã²Ã®Ã°Ã»Ã© Ã¬Ã®Ã£Ã«Ã¨ Ã®Ã±Ã²Ã Ã²Ã¼Ã±Ã¿ Ã®Ã² Ã±Ã²Ã Ã°Ã®Ã£Ã® Ã¢Ã»Ã¤Ã¥Ã«Ã¥Ã­Ã­Ã®Ã£Ã® Ã®Ã¡ÃºÃ¥ÃªÃ²Ã 
          for (auto it = currentPropStruct->begin(); it != currentPropStruct->end(); )
          {
-            if (processedItems.find(it->first ) == processedItems.end())
+            if (processedItems.find(it->first) == processedItems.end())
             {
                DeleteProperty(it->second.grid_prop);
                it = currentPropStruct->erase(it);
@@ -245,7 +229,7 @@ void CPropertiesCtrl::addFolder(iPropertyInterface* folder, CMFCPropertyGridProp
       }
       else
       {
-//         pSubFolder->Expand(FALSE);
+         //         pSubFolder->Expand(FALSE);
          pSubFolder->Expand();
       }
    }
@@ -253,37 +237,29 @@ void CPropertiesCtrl::addFolder(iPropertyInterface* folder, CMFCPropertyGridProp
 
 //====================================================================================================================================================
 
-CMFCPropertyGridProperty* CPropertiesCtrl::createMaskedProperty(iPropertyInterface* const &child)
+CMFCPropertyGridProperty* CPropertiesCtrl::createMaskedProperty(iProperty* const& child)
 {
    CMFCPropertyGridProperty* nw = nullptr;
    auto valueMaskIt = valueMask.find(child->get_value_format_type());
-   auto wname = SVGUtils::stringToWstring(child->get_name());
-   auto wdesc = SVGUtils::stringToWstring(child->get_description());
-   auto wvalue = SVGUtils::stringToWstring(child->get_value());
-
    if (valueMaskIt != valueMask.end()) //standard ?
    {
       auto& valMask = valueMaskIt->second;
-
-      auto weditmask = SVGUtils::stringToWstring(valMask.editMask.c_str());
-      auto wedittemplate = SVGUtils::stringToWstring(valMask.editTemplate.c_str());
-
       if (valMask.editMask.compare("") == 0)
-         nw = new CMFCPropertyGridProperty(wname.c_str(), (_variant_t)child->get_value(), wdesc.c_str());
+         nw = new CMFCPropertyGridProperty(child->get_name(), (_variant_t)child->get_value(), child->get_description());
       else
-         nw = new CMFCPropertyGridProperty(wname.c_str(), (_variant_t)child->get_value(), wdesc.c_str(), 0, weditmask.c_str(), wedittemplate.c_str());
+         nw = new CMFCPropertyGridProperty(child->get_name(), (_variant_t)child->get_value(), child->get_description(), 0, _T(valMask.editMask.c_str()), _T(valMask.editTemplate.c_str()));
    }
    else
    {
       switch (child->get_value_format_type())
       {
       case VALUE_FORMAT_TYPE::VFT_LOGFILE:
-         nw = new CMFCPropertyGridFileProperty(wname.c_str(), TRUE, wvalue.c_str(), L"log", 6, nullptr, wdesc.c_str());
+         nw = new CMFCPropertyGridFileProperty(child->get_name(), TRUE, child->get_value(), "log", 6, nullptr, child->get_description());
          //   nw->AllowEdit(FALSE);
          break;
 
       case VALUE_FORMAT_TYPE::VFT_FOLDERPATH:
-         nw = new CMFCPropertyGridFileProperty(wname.c_str(), wvalue.c_str(), 0, wdesc.c_str());
+         nw = new CMFCPropertyGridFileProperty(child->get_name(), child->get_value(), 0, child->get_description());
          //  nw->AllowEdit(FALSE);
          break;
 
@@ -294,6 +270,12 @@ CMFCPropertyGridProperty* CPropertiesCtrl::createMaskedProperty(iPropertyInterfa
    return nw;
 }
 
+CMFCPropertyGridProperty* CPropertiesCtrl::createColorProperty(iProperty* const& child)
+{
+   CustomColorProperty* nw = nullptr;
+   nw = new CustomColorProperty(child->get_name(), (COLORREF)child->get_value());
+   return nw;
+}
 
 //====================================================================================================================================================
 
@@ -305,8 +287,8 @@ void CPropertiesCtrl::OnPropertyChanged(CMFCPropertyGridProperty* pProp) const
 
    if (pProp)
    {
-      const auto & name = pProp->GetName();
-      iPropertyInterface* prop = reinterpret_cast<iPropertyInterface*>(pProp->GetData());
+      const auto& name = pProp->GetName();
+      iProperty* prop = reinterpret_cast<iProperty*>(pProp->GetData());
       switch (prop->get_type())
       {
       case PROPERTY_TYPE::PT_BOOL:
@@ -319,12 +301,10 @@ void CPropertiesCtrl::OnPropertyChanged(CMFCPropertyGridProperty* pProp) const
       {
          const auto& list = prop->get_list();
          USES_CONVERSION;
-         //CString svalue = W2A(pProp->GetValue().bstrVal);
-         std::wstring ws(pProp->GetValue().bstrVal, SysStringLen(pProp->GetValue().bstrVal));
-         std::string value(ws.begin(), ws.end());
+         CString svalue = W2A(pProp->GetValue().bstrVal);
          for (size_t i = 0; i < list.size(); ++i)
          {
-            if (list[i].compare(value) == 0)
+            if (list[i] == std::string(svalue))
             {
                std::stringstream s;
                s << i;
@@ -333,16 +313,24 @@ void CPropertiesCtrl::OnPropertyChanged(CMFCPropertyGridProperty* pProp) const
             }
          }
 
+
+         break;
+      }
+      case PROPERTY_TYPE::PT_COLOR:
+      {
+         CMFCPropertyGridColorProperty* nwProp = static_cast<CMFCPropertyGridColorProperty*>(pProp);
+         std::stringstream buffer;
+         buffer.setf(std::ios_base::boolalpha | std::ios_base::fixed);
+         buffer << nwProp->GetColor();
+         prop->set_value(buffer.str().c_str());
          break;
       }
       default:
       {
          USES_CONVERSION;
 
-         //CString svalue = W2A(pProp->GetValue().bstrVal);
-         std::wstring ws(pProp->GetValue().bstrVal, SysStringLen(pProp->GetValue().bstrVal));
-         std::string s(ws.begin(), ws.end());
-         prop->set_value(s.c_str());
+         CString svalue = W2A(pProp->GetValue().bstrVal);
+         prop->set_value(svalue);
       }
       }
    }

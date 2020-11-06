@@ -33,29 +33,29 @@ namespace SV::navigation_dispatcher
 
 #define DECLARE_TYPE(type, name) case (type): return (name);
 
-   inline LPCWSTR convert_order_type(OrderType type)
+   inline LPCSTR convert_order_type(OrderType type)
    {
       switch (type)
       {
-         DECLARE_TYPE(OT_PNGHMCONVERT, L"PngHMConvert")
-         DECLARE_TYPE(OT_GENOBJLIST, L"GenObjList")
-         DECLARE_TYPE(OT_PATHFIND, L"PathFind")
-         DECLARE_TYPE(OT_OPTPATH, L"OptPathFind")
-         DECLARE_TYPE(OT_PACKHOUND, L"PackHound")
+         DECLARE_TYPE(OT_PNGHMCONVERT, "PngHMConvert")
+         DECLARE_TYPE(OT_GENOBJLIST, "GenObjList")
+         DECLARE_TYPE(OT_PATHFIND, "PathFind")
+         DECLARE_TYPE(OT_OPTPATH, "OptPathFind")
+         DECLARE_TYPE(OT_PACKHOUND, "PackHound")
       }
 
       _ASSERT(!"Unknown command type");
-      return L"";
+      return "";
    }
 
 #undef DECLARE_TYPE
 
-   inline OrderType convert_command_name(LPCWSTR name)
+   inline OrderType convert_command_name(LPCSTR name)
    {
       for (int n = OT_UNKNOWN + 1; n != OT_MAX_VALUE; ++n)
       {
          OrderType type = static_cast<OrderType>(n);
-         if (wcscmp(name, convert_order_type(type)) == 0)
+         if (strcmp(name, convert_order_type(type)) == 0)
             return type;
       }
 

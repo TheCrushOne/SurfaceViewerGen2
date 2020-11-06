@@ -33,23 +33,19 @@ void ConfigDispatcherImpl::Dispatch(const char* configPath)
 void ConfigDispatcherImpl::readDataStandart(const xml_properties::PropertyItem& standart)
 {
    std::string type, name;
-   std::wstring wtype;
    standart[tag::type].Get(type);
    standart[tag::name].Get(name);
-   wtype = SVGUtils::stringToWstring(type);
-   auto* ds = m_services->GetDataStandartFactory()->CreateDataStandart(data_standart::convert_datastandart_name(wtype.c_str()), name.c_str());
+   auto* ds = m_services->GetDataStandartFactory()->CreateDataStandart(data_standart::convert_datastandart_name(type.c_str()), name.c_str());
    ds->DeserializeAttrs(standart[tag::params]);
 }
 
 void ConfigDispatcherImpl::readOrder(const xml_properties::PropertyItem& order)
 {
    std::string type, name;
-   std::wstring wtype;
    std::string id = order.GetAttribute(tag::id);
    order[tag::type].Get(type);
    order[tag::name].Get(name);
-   wtype = SVGUtils::stringToWstring(type);
-   auto* ord = m_services->GetOrderFactory()->CreateOrder(navigation_dispatcher::convert_command_name(wtype.c_str()), id.c_str());
+   auto* ord = m_services->GetOrderFactory()->CreateOrder(navigation_dispatcher::convert_command_name(type.c_str()), id.c_str());
    ord->DeserializeAttrs(order[tag::params]);
    m_services->GetOrderProcessor()->AddOrder(ord);
 }

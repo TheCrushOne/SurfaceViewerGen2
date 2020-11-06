@@ -110,7 +110,7 @@ void PathStorageDataStandart::readPathData()
    pathListRead(m_paths.land_routes, j[tag::land_routes]);
 }
 
-iDataStandart* CreatePathStorageDataStandart(central_pack* pack, LPCWSTR base_folder, navigation_dispatcher::iComService* pService)
+iDataStandart* CreatePathStorageDataStandart(central_pack* pack, LPCSTR base_folder, navigation_dispatcher::iComService* pService)
 {
    return new PathStorageDataStandart(pack, base_folder, pService);
 }

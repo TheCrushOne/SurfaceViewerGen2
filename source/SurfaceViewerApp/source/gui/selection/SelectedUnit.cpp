@@ -100,7 +100,7 @@ const surface_simulation::iSimulationState& SelectedUnit::getState() const
 void SelectedUnit::mountUnitInfo(const surface_simulation::iLayerUnit* selected)
 {
    m_info = selected->GetInfo();
-   m_ship_info_folder = std::make_unique<FolderPropertyHolder>("Unit info");
+   m_ship_info_folder = std::make_unique<FolderProperty>("Unit info");
 
    // TODO: переделать шип инфо
    //CRSHIPINFO(m_prop_id, colreg::ship_info, m_info, id, ShipInfoFieldIndex::SIFI_ID);

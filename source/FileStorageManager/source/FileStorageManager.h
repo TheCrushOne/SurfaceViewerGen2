@@ -11,13 +11,15 @@ namespace SV::file_storage
    {
       static constexpr char log_rel_path[] = "log_rel_path";
    };
-   class FileStorageManager : public iFileStorageManager, public Central
+   class FileStorageManager
+      : public iFileStorageManager
+      , public Central
    {
    public:
       FileStorageManager(central_pack* pack)
          : Central(pack)
       {}
       void Release() override final { delete this; }
-      void PrepareStorage(const wchar_t* metaFileName);
+      void PrepareStorage(const char* metaFileName);
    };
 }

@@ -18,18 +18,18 @@
 using namespace SV;
 using namespace SV::surface_ordering;
 
-OrderingWrapper::OrderingWrapper(central_pack* pack, const wchar_t* databasePath)
+OrderingWrapper::OrderingWrapper(central_pack* pack, const char* databasePath)
    : Central(pack)
-   , m_hashDatabasePath(SVGUtils::wstringToString(databasePath))
+   , m_hashDatabasePath(databasePath)
 {
-   m_cacheFolder = std::filesystem::absolute(std::filesystem::current_path().generic_wstring() + L"\\..\\..\\..\\cache\\");
-   m_orderCacheFolder = m_cacheFolder + L"order_heap\\";
-   m_orderHeapFolder = std::filesystem::absolute(std::filesystem::current_path().generic_wstring() + L"\\..\\..\\..\\order_heap\\");
+   m_cacheFolder = std::filesystem::absolute(std::filesystem::current_path().generic_string() + "\\..\\..\\..\\cache\\").generic_string();
+   m_orderCacheFolder = m_cacheFolder + "order_heap\\";
+   m_orderHeapFolder = std::filesystem::absolute(std::filesystem::current_path().generic_string() + "\\..\\..\\..\\order_heap\\").generic_string();
 
    VALID_CHECK_DLL_LOAD("NavigationDispatcher", "CreateNavigationDispatcher", m_navigationDispatcher, pack);
 }
 
-void OrderingWrapper::prepareCommandFromTemplate(std::wstring sourcePath, std::wstring dstPath, std::unordered_map<std::string, std::wstring> dict)
+void OrderingWrapper::prepareCommandFromTemplate(std::string sourcePath, std::string dstPath, std::unordered_map<std::string, std::string> dict)
 {
    std::filesystem::path dPath(dstPath);
    std::filesystem::create_directories(dPath.parent_path());
@@ -46,7 +46,7 @@ void OrderingWrapper::prepareCommandFromTemplate(std::wstring sourcePath, std::w
    for (auto& dictPair : dict)
    {
       std::string token = "\\$\\(" + dictPair.first + "\\)";
-      replace(fileData, token, SVGUtils::wstringToString(dictPair.second));
+      replace(fileData, token, dictPair.second);
    }
    file.close();
 
@@ -54,20 +54,20 @@ void OrderingWrapper::prepareCommandFromTemplate(std::wstring sourcePath, std::w
    ofile << fileData;
 }
 
-bool OrderingWrapper::ProcessOrder(const wchar_t* orderFileName, const wchar_t* begCommand, std::unordered_map<std::string, std::wstring>& dict)
+bool OrderingWrapper::ProcessOrder(const char* orderFileName, const char* begCommand, std::unordered_map<std::string, std::string>& dict)
 {
-   std::wstring srcOrderPath = m_orderHeapFolder + orderFileName;
-   std::wstring dstOrderPath = m_orderCacheFolder + orderFileName;
+   std::string srcOrderPath = m_orderHeapFolder + orderFileName;
+   std::string dstOrderPath = m_orderCacheFolder + orderFileName;
    prepareCommandFromTemplate(srcOrderPath, dstOrderPath, dict);
    return m_navigationDispatcher->ProcessCommand(
-      SVGUtils::wstringToString(dstOrderPath).c_str(),
-      begCommand ? SVGUtils::wstringToString(begCommand).c_str() : NULL,
+      dstOrderPath.c_str(),
+      begCommand ? begCommand : NULL,
       m_hashDatabasePath.c_str(),
       nullptr
    );
 }
 
-iOrderingWrapper * CreateSurfaceViewerOrderingWrapper(central_pack* pack, const wchar_t* basePath)
+iOrderingWrapper * CreateSurfaceViewerOrderingWrapper(central_pack* pack, const char* basePath)
 {
    return new OrderingWrapper(pack, basePath);
 }

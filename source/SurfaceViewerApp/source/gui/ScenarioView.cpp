@@ -30,7 +30,7 @@ void user_interface::SetCenter(double lt, double ln)
    pView->GetRenderer()->SetCenter(CG::geo_point{ lt, ln });
 }
 
-void user_interface::ShowToolTip(const wchar_t* title, const wchar_t* description)
+void user_interface::ShowToolTip(const char* title, const char* description)
 {
    pView->ShowToolTip(title, description);
 }
@@ -187,7 +187,7 @@ int ScenarioView::OnCreate(LPCREATESTRUCT lpCreateStruct)
    _tipCtrl = new CMFCToolTipCtrl(&params);
    _tipCtrl->Create(this);
    static CFont  font;
-   font.CreateFont(15, 10, 0, 0, 0, false, false, false, ANSI_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, ANTIALIASED_QUALITY, FF_MODERN, L"Courier New");
+   font.CreateFont(15, 10, 0, 0, 0, false, false, false, ANSI_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, ANTIALIASED_QUALITY, FF_MODERN, "Courier New");
    _tipCtrl->SetFont(&font);
    _tipCtrl->SetDelayTime(1000);
 
@@ -202,7 +202,7 @@ void ScenarioView::SetMouseTool(user_interface::EDIT_MODE mode, unsigned long lo
    _mouseTool = create_mouse_tool(mode, _renderer.get(), userData);
 }
 
-void ScenarioView::ShowToolTip(const wchar_t* title, const wchar_t* description)
+void ScenarioView::ShowToolTip(const char* title, const char* description)
 {
    _tipCtrl->AddTool(this, description);
 

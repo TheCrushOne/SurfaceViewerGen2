@@ -124,13 +124,13 @@ void DebugFiltersView::OnSize(UINT nType, int cx, int cy)
 
 void DebugFiltersView::fillSubFilters(HTREEITEM hParent, const filter_info& filter)
 {
-   std::unordered_map< std::wstring, HTREEITEM > currentChilds;
+   std::unordered_map<std::string, HTREEITEM> currentChilds;
 
    auto child = m_treeFilters.GetNextItem(hParent, TVGN_CHILD);
    while (child)
    {
       auto curChild = child;
-      std::wstring wname = m_treeFilters.GetItemText(child);
+      std::string wname = m_treeFilters.GetItemText(child);
 
       child = m_treeFilters.GetNextItem(child, TVGN_NEXT);
 
@@ -175,7 +175,7 @@ void DebugFiltersView::fillClassView()
 {
    const auto& filters = DebugFiltersManager::GetInstance().GetFilters();
 
-   HTREEITEM hRoot = m_treeFilters.GetRootItem() ? m_treeFilters.GetRootItem() : m_treeFilters.InsertItem(L"DEBUG FILTERS", 0, 0);
+   HTREEITEM hRoot = m_treeFilters.GetRootItem() ? m_treeFilters.GetRootItem() : m_treeFilters.InsertItem("DEBUG FILTERS", 0, 0);
 
    m_treeFilters.LockWindowUpdate();
    fillSubFilters(hRoot, filters);

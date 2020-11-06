@@ -29,7 +29,6 @@ void ChartObjectDataStandart::SetData(const chart_object::chart_object_unit_vct&
 void ChartObjectDataStandart::saveObjectData()
 {
    std::string dataFilePath = getDataFilePath();
-   std::wstring wDat = SVGUtils::stringToWstring(dataFilePath);
 
    //m_service->GetPythonWrapper()->RunScript();
 
@@ -37,7 +36,7 @@ void ChartObjectDataStandart::saveObjectData()
    root[tag::static_obj] = geojson_save_helper::couvct_to_json(m_objectVecJunc.static_objects);
    root[tag::dynamic_obj] = geojson_save_helper::couvct_to_json(m_objectVecJunc.dynamic_objects);
 
-   json_wrapper::to_file(root, wDat.c_str());
+   json_wrapper::to_file(root, dataFilePath.c_str());
    root.clear();
 }
 
@@ -46,9 +45,8 @@ void ChartObjectDataStandart::readObjectData()
    m_objectVecJunc.static_objects.clear();
    m_objectVecJunc.dynamic_objects.clear();
    std::string dataFilePath = getDataFilePath();
-   std::wstring wDat = SVGUtils::stringToWstring(dataFilePath);
 
-   Json::Value root = geojson_load_helper::from_file(wDat.c_str());
+   Json::Value root = geojson_load_helper::from_file(dataFilePath.c_str());
 
    m_objectVecJunc.static_objects = geojson_load_helper::json_to_couvct(root[tag::static_obj]);
    m_objectVecJunc.dynamic_objects = geojson_load_helper::json_to_couvct(root[tag::dynamic_obj]);
@@ -61,7 +59,7 @@ const geom_object_vec_junc& ChartObjectDataStandart::GetData()
    return m_objectVecJunc;
 }
 
-iDataStandart* CreateChartObjectDataStandart(central_pack* pack, LPCWSTR base_folder, navigation_dispatcher::iComService* pService)
+iDataStandart* CreateChartObjectDataStandart(central_pack* pack, LPCSTR base_folder, navigation_dispatcher::iComService* pService)
 {
    return new ChartObjectDataStandart(pack, base_folder, pService);
 }

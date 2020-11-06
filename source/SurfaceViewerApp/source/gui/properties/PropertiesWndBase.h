@@ -27,7 +27,7 @@ namespace SV
          m_wndPropList.SetVSDotNetLook(bSet);
          m_wndPropList.SetGroupNameFullWidth(bSet);
       }
-      void ShowProperties(iPropertyInterface* pProp, bool fullReload = false) { m_wndPropList.ShowProperties(pProp, fullReload); }
+      void ShowProperties(iProperty* pProp, bool fullReload = false) { m_wndPropList.ShowProperties(pProp, fullReload); }
 
       virtual ~CPropertiesWndBase() = default;
 

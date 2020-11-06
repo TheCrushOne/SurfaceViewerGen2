@@ -75,11 +75,11 @@ Dispatcher::~Dispatcher()
 //   return m_rawmap;
 //}
 
-void Dispatcher::LoadScenario(const wchar_t* name)
+void Dispatcher::LoadScenario(const char* name)
 {
    m_fileStorage = std::make_shared<file_utils::global_path_storage>(name);
 
-   loadHeightMap(SVGUtils::wstringToString(m_fileStorage->map_path.path).c_str());
+   loadHeightMap(m_fileStorage->map_path.path.c_str());
 }
 
 void Dispatcher::onScenarioLoad()

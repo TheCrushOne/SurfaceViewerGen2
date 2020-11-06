@@ -14,7 +14,8 @@
 
 namespace SV
 {
-   class CMainFrame : public CFrameWndEx
+   class CMainFrame
+      : public CFrameWndEx
    {
 
    protected: // создать только из сериализации
@@ -41,7 +42,7 @@ namespace SV
 #endif
 
       void SetOutputText(user_interface::OUTPUT_TYPE mode, const char* text, COLORREF color = 0, bool bold = false, bool italic = false);
-      void CMainFrame::SetPanelText(const wchar_t* text);
+      void CMainFrame::SetPanelText(const char* text);
 
    protected:  // встроенные члены панели элементов управления
       CMFCMenuBar       m_wndMenuBar;

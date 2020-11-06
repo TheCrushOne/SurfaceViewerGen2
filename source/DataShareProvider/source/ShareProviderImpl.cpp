@@ -9,7 +9,7 @@ using namespace SV::data_share;
 
 //ShareProviderImpl::ShareProviderImpl() {}
 
-void ShareProviderImpl::Share(const wchar_t* fileName, const std::vector<std::vector<double>>& data)
+void ShareProviderImpl::Share(const char* fileName, const std::vector<std::vector<double>>& data)
 {
    return;
    settings::map_settings mapstt;// = GetSettings()->map_stt;
@@ -24,7 +24,7 @@ void ShareProviderImpl::Share(const wchar_t* fileName, const std::vector<std::ve
    fil.close();
 }
 
-void ShareProviderImpl::GetShared(const wchar_t* fileName, std::vector<std::vector<double>>& data)
+void ShareProviderImpl::GetShared(const char* fileName, std::vector<std::vector<double>>& data)
 {
    return;
    settings::map_settings mapstt;// = GetSettings()->map_stt;

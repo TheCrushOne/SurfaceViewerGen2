@@ -182,12 +182,11 @@ void COutputWnd::SetOutputText(user_interface::OUTPUT_TYPE mode, const char* tex
    const auto textSize = strlen(text);
    int len = wnd.GetTextLength();
    wnd.SetSel(len, -1);
-   std::wstring str = SVGUtils::stringToWstring(text);
-   wnd.ReplaceSel(str.c_str());
+   wnd.ReplaceSel(text);
    len = wnd.GetTextLength();
    const auto lineCount = wnd.GetLineCount();
    wnd.SetSel(len - textSize - lineCount, len - lineCount);
    wnd.SetSelectionCharFormat(cf);
    wnd.SetSel(wnd.GetTextLength(), -1);
-   wnd.ReplaceSel(L"\r\n");
+   wnd.ReplaceSel("\r\n");
 }

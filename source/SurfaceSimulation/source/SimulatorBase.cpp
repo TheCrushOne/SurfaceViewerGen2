@@ -66,10 +66,8 @@ void deserializeStandartAttrs(Standart* standart, const char* configPath, data_s
    auto checkDataStandart = [](const xml_properties::PropertyItem& properties, Standart* ds, data_standart::DataStandartType expected)
    {
       std::string type;
-      std::wstring wtype;
       properties[tag::type].Get(type);
-      wtype = SVGUtils::stringToWstring(type);
-      if (data_standart::convert_datastandart_name(wtype.c_str()) == expected)
+      if (data_standart::convert_datastandart_name(type.c_str()) == expected)
          ds->DeserializeAttrs(properties[tag::params]);
    };
 

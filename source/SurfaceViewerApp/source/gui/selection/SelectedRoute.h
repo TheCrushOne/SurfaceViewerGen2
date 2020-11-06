@@ -14,12 +14,12 @@ namespace SV
       size_t m_index;
       surface_simulation::ROUTE_TYPE m_format_type;
 
-      std::unique_ptr<FolderPropertyHolder> m_ship_info_folder;
-      iPropertyInterfacePtr m_prop_id;
-      iPropertyInterfacePtr m_prop_name;
+      std::unique_ptr<FolderProperty> m_ship_info_folder;
+      iPropertyPtr m_prop_id;
+      iPropertyPtr m_prop_name;
 
-      std::unique_ptr<FolderPropertyHolder> m_route_info_folder;
-      iPropertyInterfacePtr m_route_type;
+      std::unique_ptr<FolderProperty> m_route_info_folder;
+      iPropertyPtr m_route_type;
 
       CG::geo_point m_geoEdit;
       CG::layer_provider::trajectory_point_vct m_route;
@@ -47,9 +47,9 @@ namespace SV
    private:
       CG::layer_provider::trajectory_point m_point;
 
-      std::unique_ptr<FolderPropertyHolder> m_point_folder;
-      iPropertyInterfacePtr m_prop_index;
-      iPropertyInterfacePtr m_prop_radius;
+      std::unique_ptr<FolderProperty> m_point_folder;
+      iPropertyPtr m_prop_index;
+      iPropertyPtr m_prop_radius;
    };
 
    class SelectedRouteSegment : public SelectRouteBase
@@ -74,13 +74,13 @@ namespace SV
       CG::layer_provider::trajectory_point m_pointFrom;
       CG::layer_provider::trajectory_point m_pointTo;
 
-      std::unique_ptr<FolderPropertyHolder> m_segment_folder;
-      iPropertyInterfacePtr m_prop_index;
-      iPropertyInterfacePtr m_prop_speed;
-      iPropertyInterfacePtr m_prop_direction;
-      iPropertyInterfacePtr m_prop_distance;
-      iPropertyInterfacePtr m_prop_xte_left;
-      iPropertyInterfacePtr m_prop_xte_right;
+      std::unique_ptr<FolderProperty> m_segment_folder;
+      iPropertyPtr m_prop_index;
+      iPropertyPtr m_prop_speed;
+      iPropertyPtr m_prop_direction;
+      iPropertyPtr m_prop_distance;
+      iPropertyPtr m_prop_xte_left;
+      iPropertyPtr m_prop_xte_right;
 
       enum SEGMENT_PART
       {

@@ -53,7 +53,7 @@ namespace SV::geojson_load_helper
       return rest;
    }
 
-   Json::Value from_file(LPCWSTR filename)
+   Json::Value from_file(LPCSTR filename)
    {
       Json::Value root;
       std::ifstream fStr(filename);

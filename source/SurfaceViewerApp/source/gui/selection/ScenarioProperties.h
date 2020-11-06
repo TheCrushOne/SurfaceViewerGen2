@@ -69,10 +69,10 @@ namespace SV
 
       enum ScenarioMapSettingsFieldIndex
       {
-         SSSFI_ROW_COUNT,
-         SSSFI_COL_COUNT,
+         SMSFI_ROW_COUNT,
+         SMSFI_COL_COUNT,
 
-         SSSFI_END,
+         SMSFI_END,
       };
 
       const std::unordered_map<ScenarioPathfindingSettingsFieldIndex, FieldMeta> scenarioPathfindingSettingsMeta = {
@@ -117,6 +117,13 @@ namespace SV
          { SESFI_MTX_ABS_BIAS, { "Abscissa bias", "Abscissa bias", VALUE_FORMAT_TYPE::VFT_NONE, false } },
       };
 
+      const std::unordered_map<ScenarioSimulationSettingsFieldIndex, FieldMeta> scenarioSimulationSettingsMeta = {
+      };
+
+      const std::unordered_map<ScenarioMapSettingsFieldIndex, FieldMeta> scenarioMapSettingsMeta = {
+         { SMSFI_ROW_COUNT, { "Row", "Map row count", VALUE_FORMAT_TYPE::VFT_NONE, false } },
+         { SMSFI_COL_COUNT, { "Col", "Map col count", VALUE_FORMAT_TYPE::VFT_NONE, false } },
+      };
    public:
       ScenarioProperties();
       void Render(render::iRender* renderer) override {}
@@ -138,32 +145,32 @@ namespace SV
       //void addDebugFilter(const dbg::debug_info_node& node, FolderProperty* folder);
    private:
       // pathfinding
-      std::unique_ptr<FolderPropertyHolder> m_scenario_pathfinding_settings_folder;
+      std::unique_ptr<FolderProperty> m_scenario_pathfinding_settings_folder;
 
-      std::unique_ptr<FolderPropertyHolder> m_scenario_pathfinding_settings_level_folder;
+      std::unique_ptr<FolderProperty> m_scenario_pathfinding_settings_level_folder;
 
       // research
-      std::unique_ptr<FolderPropertyHolder> m_scenario_research_settings_folder;
-      std::unique_ptr<FolderPropertyHolder> m_scenario_research_settings_countrange_folder;
-      std::unique_ptr<FolderPropertyHolder> m_scenario_research_settings_lengthrange_folder;
+      std::unique_ptr<FolderProperty> m_scenario_research_settings_folder;
+      std::unique_ptr<FolderProperty> m_scenario_research_settings_countrange_folder;
+      std::unique_ptr<FolderProperty> m_scenario_research_settings_lengthrange_folder;
 
       // environment
-      std::unique_ptr<FolderPropertyHolder> m_scenario_environment_settings_folder;
-      std::unique_ptr<FolderPropertyHolder> m_scenario_environment_settings_gcs_folder;
-      std::unique_ptr<FolderPropertyHolder> m_scenario_environment_settings_mtx_folder;
+      std::unique_ptr<FolderProperty> m_scenario_environment_settings_folder;
+      std::unique_ptr<FolderProperty> m_scenario_environment_settings_gcs_folder;
+      std::unique_ptr<FolderProperty> m_scenario_environment_settings_mtx_folder;
 
       // simulation
-      std::unique_ptr<FolderPropertyHolder> m_scenario_simulation_settings_folder;
+      std::unique_ptr<FolderProperty> m_scenario_simulation_settings_folder;
 
       // map
-      std::unique_ptr<FolderPropertyHolder> m_scenario_map_settings_folder;
+      std::unique_ptr<FolderProperty> m_scenario_map_settings_folder;
 
       //settings properties
-      std::vector<iPropertyModifyPtr> m_prop_pathfinding_settings;
-      std::vector<iPropertyModifyPtr> m_prop_research_settings;
-      std::vector<iPropertyModifyPtr> m_prop_environment_settings;
-      std::vector<iPropertyModifyPtr> m_prop_simulation_settings;
-      std::vector<iPropertyModifyPtr> m_prop_map_settings;
+      std::vector<iPropertyPtr> m_prop_pathfinding_settings;
+      std::vector<iPropertyPtr> m_prop_research_settings;
+      std::vector<iPropertyPtr> m_prop_environment_settings;
+      std::vector<iPropertyPtr> m_prop_simulation_settings;
+      std::vector<iPropertyPtr> m_prop_map_settings;
 
       settings::application_settings m_settings;
    };

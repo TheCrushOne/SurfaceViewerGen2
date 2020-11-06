@@ -92,7 +92,7 @@ HWND CPipeplineStatusWnd::createListView(HWND hWndParent, UINT uId)
    RECT rcl;
    ::GetClientRect(hWndParent, &rcl);
 
-   HWND hWndLV = CreateWindow(WC_LISTVIEW, L"",
+   HWND hWndLV = CreateWindow(WC_LISTVIEW, "",
       WS_CHILD | LVS_REPORT,
       0, 0, rcl.right - rcl.left, rcl.bottom - rcl.top - 50,
       hWndParent, (HMENU)uId, GetModuleHandle(NULL), NULL);
@@ -115,7 +115,7 @@ BOOL CPipeplineStatusWnd::OnEraseBkgnd(CDC* pDC)
    return CWnd::OnEraseBkgnd(pDC);
 }
 
-bool CPipeplineStatusWnd::OnObjectSelected(iPropertyInterface* prop)
+bool CPipeplineStatusWnd::OnObjectSelected(iProperty* prop)
 {
    return true;
 }
@@ -162,7 +162,6 @@ void CPipeplineStatusWnd::OnNMCustomDrawList(NMHDR* pNMHDR, LRESULT* pResult)
    *pResult = CDRF_DODEFAULT;
    if (CDDS_PREPAINT == pLVCD->nmcd.dwDrawStage)
       *pResult = CDRF_NOTIFYITEMDRAW;
-
    else if (CDDS_ITEMPREPAINT == pLVCD->nmcd.dwDrawStage)
    {
       COLORREF crText = RGB(0, 0, 0);

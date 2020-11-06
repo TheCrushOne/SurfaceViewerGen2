@@ -13,7 +13,7 @@ namespace SV
    struct iRenderLayer abstract
    {
       virtual void Render(render::iRender* renderer) = 0;
-      virtual iPropertyModify* GetProperties() { return nullptr; }
+      virtual iProperty* GetProperties() { return nullptr; }
       virtual ~iRenderLayer() = default;
    };
 
@@ -32,11 +32,11 @@ namespace SV
          }
       }
 
-      static iPropertyModify* GetLayerProperties()
+      static iProperty* GetLayerProperties()
       {
          if (!_properties)
          {
-            auto folderProps = std::make_unique<FolderPropertyHolder>("Layers Properties");
+            auto folderProps = std::make_unique<FolderProperty>("Layers Properties");
             for (auto& obj : _objects)
             {
                if (auto p = obj->GetProperties())
@@ -46,7 +46,7 @@ namespace SV
             }
 
             // TODO: разораться не одно ли это и то же
-            if (!folderProps->get_childs()->empty() && folderProps->get_childs()->size())
+            if (folderProps->get_childs().arr && folderProps->get_childs().size)
             {
                _properties = std::move(folderProps);
             }
@@ -58,10 +58,10 @@ namespace SV
       virtual bool isLayerEnabled() const { return _layerVisible; }
       virtual void onLayerEnabledChanged() {};
    private:
-      static iPropertyModifyPtr _properties;
+      static iPropertyPtr _properties;
 
       bool _layerVisible = true;
-      iPropertyModifyPtr _prop_layerEnabled;
+      iPropertyPtr _prop_layerEnabled;
 
       void OnRenderEnabled()
       {
@@ -69,7 +69,7 @@ namespace SV
          user_interface::InvalidateView();
       }
    protected:
-      iPropertyModify* GetLayerEnabledProperty()
+      iProperty* GetLayerEnabledProperty()
       {
          if (_prop_layerEnabled)
          {
@@ -84,7 +84,7 @@ namespace SV
    };
 
    // to remove __declspec(selectany) - need create cpp file with instance
-   __declspec(selectany) iPropertyModifyPtr LayersContainer::_properties;
+   __declspec(selectany) iPropertyPtr LayersContainer::_properties;
 
    //extern "C" __declspec(selectany) iPropGetter GetLayerProperties = &LayersContainer::GetLayerProperties;
 }

@@ -28,4 +28,4 @@ namespace SV::data_standart
 #define PNGHMEXPRTIMPRT __declspec(dllimport) // import DLL information
 #endif
 
-extern "C" PNGHMEXPRTIMPRT SV::data_standart::iDataStandart * CreatePngHeighMapDataStandart(SV::central_pack* pack, LPCWSTR base_folder, SV::navigation_dispatcher::iComService* pService);
+extern "C" PNGHMEXPRTIMPRT SV::data_standart::iDataStandart * CreatePngHeighMapDataStandart(SV::central_pack* pack, LPCSTR base_folder, SV::navigation_dispatcher::iComService* pService);

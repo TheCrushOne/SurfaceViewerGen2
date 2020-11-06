@@ -132,7 +132,7 @@ void PngHeightMapDataStandart::convertToRawData()
 
 #undef HEIGHT_CORRECTOR
 
-iDataStandart* CreatePngHeighMapDataStandart(central_pack* pack, LPCWSTR base_folder, navigation_dispatcher::iComService* pService)
+iDataStandart* CreatePngHeighMapDataStandart(central_pack* pack, LPCSTR base_folder, navigation_dispatcher::iComService* pService)
 {
    return new PngHeightMapDataStandart(pack, base_folder, pService);
 }

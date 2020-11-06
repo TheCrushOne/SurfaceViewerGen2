@@ -44,7 +44,7 @@ void DebugFiltersManager::addDebugFolder(const dbg::debug_info_node& node, filte
    //}
 }
 
-void DebugFiltersManager::ShowFilter(const std::vector<std::wstring>& path, bool show)
+void DebugFiltersManager::ShowFilter(const std::vector<std::string>& path, bool show)
 {
    //filter_info* filter = &m_filters;
    //for (const auto& name : path)
@@ -59,7 +59,7 @@ void DebugFiltersManager::ShowFilter(const std::vector<std::wstring>& path, bool
    //filter->visible = show;
 }
 
-bool DebugFiltersManager::IsFilterVisible(const std::vector<std::wstring>& path)const
+bool DebugFiltersManager::IsFilterVisible(const std::vector<std::string>& path)const
 {
    const filter_info* filter = &m_filters;
    for (const auto& name : path)

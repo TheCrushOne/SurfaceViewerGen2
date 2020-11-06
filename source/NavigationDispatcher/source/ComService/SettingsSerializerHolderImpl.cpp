@@ -17,7 +17,7 @@ settings::application_settings& SettingsSerializerHolderImpl::GetSettings(const 
 
 #define STT_DESERIALIZE(gtype, stype, msg_part) \
    if (!storage.gtype.empty()) \
-      m_settingsSerializer->Deserialize(SVGUtils::wstringToString(storage.gtype).c_str(), m_settings.stype); \
+      m_settingsSerializer->Deserialize(storage.gtype.c_str(), m_settings.stype); \
    else \
       GetPack()->comm->Message(ICommunicator::MessageType::MT_INFO, "type settings skipped to default");
 

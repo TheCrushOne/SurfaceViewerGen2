@@ -144,7 +144,7 @@ namespace SV
    public:
       ScenarioManager(central_pack*);
    public:
-      void CheckOpen(const wchar_t*, std::function<void(void)>);
+      void CheckOpen(const char*, std::function<void(void)>);
       void ProcessMap(std::function<void(void)>);
       void ProcessMapObjects(std::function<void(void)>);
       void ProcessPaths(std::function<void(void)>);
@@ -168,7 +168,7 @@ namespace SV
       }
       int GetTimeScale()const { return m_timeScale; }
 
-      std::wstring GetScenarioName() const { return m_pathStorage.meta_path.path; }
+      std::string GetScenarioName() const { return m_pathStorage.meta_path.path; }
 
       void ReSearch();
       void ReEstimate();
@@ -232,19 +232,19 @@ namespace SV
       bool m_pathCommandProcessed = false;
       bool m_optPathCommandProcessed = false;
 
-      std::wstring m_databaseFolder;
-      std::wstring m_cacheFolder;
+      std::string m_databaseFolder;
+      std::string m_cacheFolder;
 
       file_utils::global_path_storage m_pathStorage;
 
-      std::wstring m_svgmCacheFolder = L"\\svgm";
-      std::wstring m_objMapCacheFolder = L"\\obj";
-      std::wstring m_pathsCacheFolder = L"\\paths";
-      std::wstring m_optPathsCacheFolder = L"\\opt_paths";
+      std::string m_svgmCacheFolder = "\\svgm";
+      std::string m_objMapCacheFolder = "\\obj";
+      std::string m_pathsCacheFolder = "\\paths";
+      std::string m_optPathsCacheFolder = "\\opt_paths";
 
       system::ModuleGuard<transceiver::iTransceiver> m_transceiver;
       system::ModuleGuard<file_storage::iFileStorageManager> m_fsm;
-      system::ModuleGuard<surface_ordering::iOrderingWrapper, central_pack*, const wchar_t*> m_orderingWrapper;
+      system::ModuleGuard<surface_ordering::iOrderingWrapper, central_pack*, const char*> m_orderingWrapper;
       system::ModuleGuard<navigation_dispatcher::iComService, central_pack*, const char*> m_comService;
 
       transceiver::transceiver_info m_info;

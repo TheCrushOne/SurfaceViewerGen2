@@ -26,9 +26,9 @@ void BaseTool::MouseMove(CPoint point)
       return;
 
    const auto pix = _renderer->PixelToGeo(math::point{ (double)point.y, (double)point.x });
-   std::wstringstream s;
+   std::stringstream s;
    s.width(4);
-   s << L"Lat: " << pix.lat << L", Lon: " << pix.lon;
+   s << "Lat: " << pix.lat << ", Lon: " << pix.lon;
    SetStatusBarText(s.str().c_str());
 }
 
@@ -47,4 +47,3 @@ void BaseTool::MouseWheele(short zDelta, CPoint point)
    _renderer->SetCenter(geoCenterPos);
    InvalidateView();
 }
-

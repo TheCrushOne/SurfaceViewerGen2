@@ -349,16 +349,16 @@ void CSurfaceViewerGen2App::OnChooseScenario()
 {
    CFileDialog fileDialog(
       TRUE,
-      L"meta",
+      "meta",
       NULL,
       OFN_HIDEREADONLY,
-      L"Scenario Metadata Files (*.meta)|*.meta|",
+      "Scenario Metadata Files (*.meta)|*.meta|",
       AfxGetMainWnd()
    );
-   std::wstring cPath = std::filesystem::current_path().c_str();
-   cPath += L"\\..\\..\\..\\scenarios";
+   std::string cPath = std::filesystem::current_path().generic_string().c_str();
+   cPath += "\\..\\..\\..\\scenarios";
    // NOTE: CFileDialog почему-то не любит точки в путях...
-   auto fsPath = std::filesystem::absolute(cPath);
+   auto fsPath = std::filesystem::absolute(cPath).generic_string();
    fileDialog.m_ofn.lpstrInitialDir = fsPath.c_str();
    if (fileDialog.DoModal() == IDOK)
    {
@@ -578,8 +578,8 @@ void CSurfaceViewerGen2App::createDirectXApp()
    ZeroMemory(&pi, sizeof(pi));
 
    // start the program up
-   CreateProcess(L"lab.exe",   // the path
-      L"",            // Command line
+   CreateProcess("lab.exe",   // the path
+      "",            // Command line
       NULL,           // Process handle not inheritable
       NULL,           // Thread handle not inheritable
       FALSE,          // Set handle inheritance to FALSE

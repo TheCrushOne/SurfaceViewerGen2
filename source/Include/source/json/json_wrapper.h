@@ -6,7 +6,7 @@
 
 namespace json_wrapper
 {
-   inline bool to_file(Json::Value& object, const wchar_t* filename)
+   inline bool to_file(Json::Value& object, const char* filename)
    {
       Json::StreamWriterBuilder builder;
       builder.settings_["indentation"] = "  ";
@@ -14,7 +14,7 @@ namespace json_wrapper
       builder.settings_["precision"] = 10;
       const std::unique_ptr<Json::StreamWriter> writer(builder.newStreamWriter());
 
-      std::wstring fullFileName(filename);
+      std::string fullFileName(filename);
       try
       {
          std::ofstream fStr(fullFileName.c_str());

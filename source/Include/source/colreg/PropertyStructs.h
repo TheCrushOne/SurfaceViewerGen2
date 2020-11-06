@@ -10,6 +10,7 @@ namespace SV
       PT_BOOL,
       PT_TEXT,
       PT_TEXT_LIST,
+      PT_COLOR,
       PT_FOLRDER
    };
 

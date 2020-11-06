@@ -30,30 +30,30 @@ namespace SV::data_standart
 
 #define DECLARE_TYPE(type, name) case (type): return (name);
 
-   inline LPCWSTR convert_datastandart_type(DataStandartType type)
+   inline LPCSTR convert_datastandart_type(DataStandartType type)
    {
       switch (type)
       {
-         DECLARE_TYPE(DataStandartType::DST_PNGHM, L"PngHeightMap")
-         DECLARE_TYPE(DataStandartType::DST_SVGM, L"SurfaceViewerGenMap")
-         DECLARE_TYPE(DataStandartType::DST_OBJ, L"ObjectData")
-         DECLARE_TYPE(DataStandartType::DST_PATHS, L"PathData")
-         DECLARE_TYPE(DataStandartType::DST_OPTPATHS, L"OptPathData")
-         DECLARE_TYPE(DataStandartType::DST_PCKHND, L"PackHound")
+         DECLARE_TYPE(DataStandartType::DST_PNGHM, "PngHeightMap")
+         DECLARE_TYPE(DataStandartType::DST_SVGM, "SurfaceViewerGenMap")
+         DECLARE_TYPE(DataStandartType::DST_OBJ, "ObjectData")
+         DECLARE_TYPE(DataStandartType::DST_PATHS, "PathData")
+         DECLARE_TYPE(DataStandartType::DST_OPTPATHS, "OptPathData")
+         DECLARE_TYPE(DataStandartType::DST_PCKHND, "PackHound")
       }
 
       _ASSERT(!"Unknown data source type");
-      return L"";
+      return "";
    }
 
 #undef DECLARE_TYPE
 
-   inline DataStandartType convert_datastandart_name(LPCWSTR name)
+   inline DataStandartType convert_datastandart_name(LPCSTR name)
    {
       for (auto n = DataStandartType::DST_UNKNOWN + 1; n != DataStandartType::DST_MAX_VALUE; ++n)
       {
          DataStandartType type = static_cast<DataStandartType>(n);
-         if (wcscmp(name, convert_datastandart_type(type)) == 0)
+         if (strcmp(name, convert_datastandart_type(type)) == 0)
             return type;
       }
 

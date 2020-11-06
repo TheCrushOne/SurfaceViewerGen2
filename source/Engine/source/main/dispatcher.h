@@ -24,7 +24,7 @@ namespace SV
       void preparePathfindingView();
       void onScenarioLoad();
    public:
-      void LoadScenario(const wchar_t*);
+      void LoadScenario(const char*);
 
       //const std::shared_ptr<settings::application_settings> GetSettings();
       //std::shared_ptr<SVM::iMatrix<SurfaceElement>> GetRawMap();

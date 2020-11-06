@@ -20,16 +20,19 @@ ScenarioProperties::ScenarioProperties()
       m_settings = sim->GetAppSettings();
       prepareScenarioPathfindingSettingsFolder();
       prepareScenarioResearchSettingsFolder();
+      prepareScenarioEnvironmentSettingsFolder();
+      prepareScenarioSimulationSettingsFolder();
+      prepareScenarioMapSettingsFolder();
    }
 }
 
 void ScenarioProperties::prepareScenarioPathfindingSettingsFolder()
 {
    const auto* sim = simulator::getSimulator();
-   m_scenario_pathfinding_settings_folder = std::make_unique<FolderPropertyHolder>("Pathfinding settings");
+   m_scenario_pathfinding_settings_folder = std::make_unique<FolderProperty>("Pathfinding settings");
    m_prop_pathfinding_settings.resize(ScenarioPathfindingSettingsFieldIndex::SPSFI_END);
 
-   m_scenario_pathfinding_settings_level_folder = std::make_unique<FolderPropertyHolder>("Level settings");
+   m_scenario_pathfinding_settings_level_folder = std::make_unique<FolderProperty>("Level settings");
    CR_SCEN_PATH_STT(settings::level_settings, m_settings.pth_stt.lvl_stt, max_air_height, ScenarioPathfindingSettingsFieldIndex::SPSFI_MAXAIRHEIGHT);
    CR_SCEN_PATH_STT(settings::level_settings, m_settings.pth_stt.lvl_stt, max_land_height, ScenarioPathfindingSettingsFieldIndex::SPSFI_MAXLANDHEIGHT);
    CR_SCEN_PATH_STT(settings::level_settings, m_settings.pth_stt.lvl_stt, min_land_height, ScenarioPathfindingSettingsFieldIndex::SPSFI_MINLANDHEIGHT);
@@ -52,15 +55,15 @@ void ScenarioProperties::prepareScenarioPathfindingSettingsFolder()
 void ScenarioProperties::prepareScenarioResearchSettingsFolder()
 {
    const auto* sim = simulator::getSimulator();
-   m_scenario_research_settings_folder = std::make_unique<FolderPropertyHolder>("Research settings");
+   m_scenario_research_settings_folder = std::make_unique<FolderProperty>("Research settings");
    m_prop_research_settings.resize(ScenarioResearchSettingsFieldIndex::SRSFI_END);
 
-   m_scenario_research_settings_countrange_folder = std::make_unique<FolderPropertyHolder>("Count range");
+   m_scenario_research_settings_countrange_folder = std::make_unique<FolderProperty>("Count range");
    CR_SCEN_RES_STT(settings::range_data<size_t>, m_settings.res_stt.fly_count_range, min_val, ScenarioResearchSettingsFieldIndex::SRSFI_COUTNRANGE_MIN);
    CR_SCEN_RES_STT(settings::range_data<size_t>, m_settings.res_stt.fly_count_range, max_val, ScenarioResearchSettingsFieldIndex::SRSFI_COUTNRANGE_MAX);
    CR_SCEN_RES_STT(settings::range_data<size_t>, m_settings.res_stt.fly_count_range, step, ScenarioResearchSettingsFieldIndex::SRSFI_COUTNRANGE_STEP);
    
-   m_scenario_research_settings_lengthrange_folder = std::make_unique<FolderPropertyHolder>("Length range");
+   m_scenario_research_settings_lengthrange_folder = std::make_unique<FolderProperty>("Length range");
    CR_SCEN_RES_STT(settings::range_data<double>, m_settings.res_stt.length_range, min_val, ScenarioResearchSettingsFieldIndex::SRSFI_LEGNTHRANGE_MIN);
    CR_SCEN_RES_STT(settings::range_data<double>, m_settings.res_stt.length_range, max_val, ScenarioResearchSettingsFieldIndex::SRSFI_LEGNTHRANGE_MAX);
    CR_SCEN_RES_STT(settings::range_data<double>, m_settings.res_stt.length_range, step, ScenarioResearchSettingsFieldIndex::SRSFI_LEGNTHRANGE_STEP);
@@ -78,10 +81,16 @@ void ScenarioProperties::prepareScenarioResearchSettingsFolder()
          m_scenario_research_settings_folder->AddChild(m_prop_research_settings[idx].get());
    }
 
-   for (size_t idx = SRSFI_COUTNRANGE_MIN; idx < m_prop_pathfinding_settings.size(); idx++)
+   for (size_t idx = SRSFI_COUTNRANGE_MIN; idx <= SRSFI_COUTNRANGE_STEP; idx++)
    {
       if (m_prop_research_settings[idx].get())
-         m_scenario_pathfinding_settings_level_folder->AddChild(m_prop_pathfinding_settings[idx].get());
+         m_scenario_research_settings_countrange_folder->AddChild(m_prop_research_settings[idx].get());
+   }
+
+   for (size_t idx = SRSFI_LEGNTHRANGE_MIN; idx <= SRSFI_LEGNTHRANGE_STEP; idx++)
+   {
+      if (m_prop_research_settings[idx].get())
+         m_scenario_research_settings_lengthrange_folder->AddChild(m_prop_research_settings[idx].get());
    }
 
    m_scenario_research_settings_folder->AddChild(m_scenario_research_settings_countrange_folder.get());
@@ -92,20 +101,32 @@ void ScenarioProperties::prepareScenarioResearchSettingsFolder()
 
 void ScenarioProperties::prepareScenarioEnvironmentSettingsFolder()
 {
-   m_scenario_environment_settings_folder = std::make_unique<FolderPropertyHolder>("Environment settings");
+   m_scenario_environment_settings_folder = std::make_unique<FolderProperty>("Environment settings");
    m_prop_environment_settings.resize(ScenarioEnvironmentSettingsFieldIndex::SESFI_END);
 
-   m_scenario_environment_settings_gcs_folder = std::make_unique<FolderPropertyHolder>("Geographical coordinate system");
+   m_scenario_environment_settings_gcs_folder = std::make_unique<FolderProperty>("Geographical coordinate system");
    CR_SCEN_ENV_STT(settings::coordinate_system_info, m_settings.env_stt.gcs_info, angle, ScenarioEnvironmentSettingsFieldIndex::SESFI_GCS_ANGLE);
    CR_SCEN_ENV_STT(settings::coordinate_system_info, m_settings.env_stt.gcs_info, scale, ScenarioEnvironmentSettingsFieldIndex::SESFI_GCS_SCALE);
    CR_SCEN_ENV_STT(settings::coordinate_system_info, m_settings.env_stt.gcs_info, ordinate_bias, ScenarioEnvironmentSettingsFieldIndex::SESFI_GCS_ORD_BIAS);
    CR_SCEN_ENV_STT(settings::coordinate_system_info, m_settings.env_stt.gcs_info, abscissa_bias, ScenarioEnvironmentSettingsFieldIndex::SESFI_GCS_ABS_BIAS);
 
-   m_scenario_environment_settings_mtx_folder = std::make_unique<FolderPropertyHolder>("Matrix coordinate system");
+   m_scenario_environment_settings_mtx_folder = std::make_unique<FolderProperty>("Matrix coordinate system");
    CR_SCEN_ENV_STT(settings::coordinate_system_info, m_settings.env_stt.mtx_info, angle, ScenarioEnvironmentSettingsFieldIndex::SESFI_MTX_ANGLE);
    CR_SCEN_ENV_STT(settings::coordinate_system_info, m_settings.env_stt.mtx_info, scale, ScenarioEnvironmentSettingsFieldIndex::SESFI_MTX_SCALE);
    CR_SCEN_ENV_STT(settings::coordinate_system_info, m_settings.env_stt.mtx_info, ordinate_bias, ScenarioEnvironmentSettingsFieldIndex::SESFI_MTX_ORD_BIAS);
    CR_SCEN_ENV_STT(settings::coordinate_system_info, m_settings.env_stt.mtx_info, abscissa_bias, ScenarioEnvironmentSettingsFieldIndex::SESFI_MTX_ABS_BIAS);
+
+   for (size_t idx = SESFI_GCS_ANGLE; idx <= SESFI_GCS_ABS_BIAS; idx++)
+   {
+      if (m_prop_research_settings[idx].get())
+         m_scenario_environment_settings_gcs_folder->AddChild(m_prop_environment_settings[idx].get());
+   }
+
+   for (size_t idx = SESFI_MTX_ANGLE; idx <= SESFI_MTX_ABS_BIAS; idx++)
+   {
+      if (m_prop_research_settings[idx].get())
+         m_scenario_environment_settings_mtx_folder->AddChild(m_prop_environment_settings[idx].get());
+   }
 
    m_scenario_environment_settings_folder->AddChild(m_scenario_environment_settings_gcs_folder.get());
    m_scenario_environment_settings_folder->AddChild(m_scenario_environment_settings_mtx_folder.get());
@@ -115,11 +136,24 @@ void ScenarioProperties::prepareScenarioEnvironmentSettingsFolder()
 
 void ScenarioProperties::prepareScenarioSimulationSettingsFolder()
 {
+   m_scenario_simulation_settings_folder = std::make_unique<FolderProperty>("Simulation settings");
    AddChild(m_scenario_simulation_settings_folder.get());
 }
 
 void ScenarioProperties::prepareScenarioMapSettingsFolder()
 {
+   m_scenario_map_settings_folder = std::make_unique<FolderProperty>("Map settings");
+   m_prop_map_settings.resize(ScenarioMapSettingsFieldIndex::SMSFI_END);
+
+   CR_SCEN_MAP_STT(settings::map_settings, m_settings.map_stt, row_count, ScenarioMapSettingsFieldIndex::SMSFI_ROW_COUNT);
+   CR_SCEN_MAP_STT(settings::map_settings, m_settings.map_stt, col_count, ScenarioMapSettingsFieldIndex::SMSFI_COL_COUNT);
+
+   for (size_t idx = SMSFI_ROW_COUNT; idx < SMSFI_END; idx++)
+   {
+      if (m_prop_map_settings[idx].get())
+         m_scenario_map_settings_folder->AddChild(m_prop_map_settings[idx].get());
+   }
+
    AddChild(m_scenario_map_settings_folder.get());
 }
 

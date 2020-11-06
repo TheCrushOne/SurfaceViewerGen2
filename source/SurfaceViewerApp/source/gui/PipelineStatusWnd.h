@@ -58,8 +58,11 @@ namespace SV
          { colreg::SOLUTION_TYPE::ST_DANGER_SELECTING, RGB(192,192,192) },
       };*/
    public:
-      CPipeplineStatusWnd() : m_statusesModel(columnMeta, m_records, columnSize), m_wndStatuses(m_statusesModel) {}
-      bool OnObjectSelected(iPropertyInterface* prop) override;
+      CPipeplineStatusWnd()
+         : m_statusesModel(columnMeta, m_records, columnSize)
+         , m_wndStatuses(m_statusesModel)
+      {}
+      bool OnObjectSelected(iProperty* prop) override;
    protected:
       bool OnScenarioTimeChanged(double time)override;
       //bool OnScenarioStatusChanged(CSENARIO_STATUS status)override;

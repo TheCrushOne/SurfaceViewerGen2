@@ -70,12 +70,12 @@ namespace SV
       void recursive_set_check(HTREEITEM hRoot, bool check);
       void fillSubFilters(HTREEITEM hParent, const filter_info& filter);
 
-      inline HTREEITEM addChild(HTREEITEM hParent, const wchar_t* text)
+      inline HTREEITEM addChild(HTREEITEM hParent, const char* text)
       {
          auto child = m_treeFilters.GetNextItem(hParent, TVGN_CHILD);
          while (child)
          {
-            std::wstring wname = m_treeFilters.GetItemText(child);
+            std::string wname = m_treeFilters.GetItemText(child);
             if (wname == text)
                return child;
             child = m_treeFilters.GetNextItem(child, TVGN_NEXT);
@@ -83,16 +83,16 @@ namespace SV
          return m_treeFilters.InsertItem(text, hParent, 0);
       }
 
-      inline std::vector<std::wstring> getFilterPath(HTREEITEM hItem, bool show, bool showParent)
+      inline std::vector<std::string> getFilterPath(HTREEITEM hItem, bool show, bool showParent)
       {
-         std::vector<std::wstring> path;
-         path.push_back(std::wstring(m_treeFilters.GetItemText(hItem)));
+         std::vector<std::string> path;
+         path.push_back(std::string(m_treeFilters.GetItemText(hItem)));
 
          while (hItem = m_treeFilters.GetParentItem(hItem))
          {
             if (show && showParent)
                m_treeFilters.SetCheck(hItem, show);
-            path.push_back(std::wstring(m_treeFilters.GetItemText(hItem)));
+            path.push_back(std::string(m_treeFilters.GetItemText(hItem)));
          }
 
          path.pop_back();

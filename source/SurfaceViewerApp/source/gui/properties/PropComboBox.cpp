@@ -41,8 +41,7 @@ void PropComboBox::OnEditUpdate()
    WORD dStart = LOWORD(dwCurSel);
    WORD dEnd = HIWORD(dwCurSel);
 
-   std::wstring w_str(str);
-   std::string s_str(w_str.begin(), w_str.end());
+   std::string s_str(str);
    prepareComboBox(s_str.size() ? s_str.c_str() : nullptr);
 
    //if (!m_bAutoComplete)
@@ -84,8 +83,7 @@ void PropComboBox::prepareComboBox(const char* filter)
       std::string title = "ID: " + std::to_string(elem.first) + " " + elem.second;
       if ((!filter) || (title.find(filter) != std::string::npos))
       {
-         std::wstring wtitle(title.begin(), title.end());
-         CComboBox::AddString(wtitle.c_str());
+         CComboBox::AddString(title.c_str());
          CComboBox::SetItemData(CComboBox::GetCount() - 1, elem.first);
       }
    }

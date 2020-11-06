@@ -9,11 +9,12 @@
 namespace SV::data_standart
 {
    template <int TDataStandartType, typename TDataStandartData>
-   class DataStandart : public Central
+   class DataStandart
+      : public Central
    {
       enum { data_standart_type = TDataStandartType };
    protected:
-      DataStandart(central_pack* pack, LPCWSTR base_folder, navigation_dispatcher::iComService* pService)
+      DataStandart(central_pack* pack, LPCSTR base_folder, navigation_dispatcher::iComService* pService)
          : Central(pack)
          , m_baseFolder(base_folder)
          , m_service(pService)
@@ -35,7 +36,7 @@ namespace SV::data_standart
       }
       // Common
    protected:
-      std::wstring m_baseFolder;
+      std::string m_baseFolder;
       navigation_dispatcher::iComService* m_service;
       TDataStandartData m_dataStandartData;
    };

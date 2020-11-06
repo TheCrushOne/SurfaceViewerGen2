@@ -103,8 +103,8 @@ bool DragTool::processFindInfo(const render::find_info& find)
       return false;
 
    using namespace render;
-   std::wstringstream title;
-   std::wstringstream description;
+   std::stringstream title;
+   std::stringstream description;
 
    switch (find.find_object_type)
    {
@@ -144,11 +144,11 @@ bool DragTool::processFindInfo(const render::find_info& find)
       }
       case FIND_OBJECT_TYPE::FOT_ROUTE_SEGMENT:
       {
-         title << "Ship  " << find.id;
+         title << "Ship : " << find.id;
          user_info ui;
          ui.value = find.user_data;
-         description << "Type          : " << route_type_to_string((surface_simulation::ROUTE_TYPE)ui.type) << "\n";
-         description << "segment       : " << ui.index << "\n";
+         description << "Type : " << route_type_to_string((surface_simulation::ROUTE_TYPE)ui.type) << "\n";
+         description << "segment : " << ui.index << "\n";
 
          //const auto route_info = ScenarioManager::GetInstance().GetRoute((surface_simulation::ROUTE_TYPE)ui.type, find.id);
          //ATLASSERT(route_info.route.size() > (size_t)(ui.index + 1));

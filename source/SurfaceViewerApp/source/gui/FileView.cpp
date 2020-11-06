@@ -17,7 +17,7 @@ static char THIS_FILE[]=__FILE__;
 
 using namespace SV;
 
-const wchar_t* TEST_SCENARIOS_SRC_DIR = L"\\..\\..\\..\\scenarios";
+const char* TEST_SCENARIOS_SRC_DIR = "\\..\\..\\..\\scenarios";
 
 namespace
 {
@@ -42,12 +42,12 @@ namespace
       return result == 0;
    }
 
-   std::wstring ExePath()
+   std::string ExePath()
    {
-      wchar_t buffer[MAX_PATH];
+      char buffer[MAX_PATH];
       GetModuleFileName(NULL, buffer, MAX_PATH);
-      std::string::size_type pos = std::wstring(buffer).find_last_of(L"\\/");
-      return std::wstring(buffer).substr(0, pos);
+      std::string::size_type pos = std::string(buffer).find_last_of("\\/");
+      return std::string(buffer).substr(0, pos);
    }
 }
 
@@ -181,13 +181,13 @@ void CFileView::fillScenariosFiles()
 
 }
 
-void CFileView::addScenarios(HTREEITEM hRoot, const wchar_t* dir, bool bAddFolder)
+void CFileView::addScenarios(HTREEITEM hRoot, const char* dir, bool bAddFolder)
 {
-   WIN32_FIND_DATA	FindFileData;
-   HANDLE	hFind;
-   std::wstring findpath(dir);
+   WIN32_FIND_DATA FindFileData;
+   HANDLE hFind;
+   std::string findpath(dir);
    {
-      findpath += L"\\*";
+      findpath += "\\*";
       hFind = ::FindFirstFile(findpath.c_str(), &FindFileData);
       if (hFind != INVALID_HANDLE_VALUE)
       {
@@ -197,16 +197,16 @@ void CFileView::addScenarios(HTREEITEM hRoot, const wchar_t* dir, bool bAddFolde
             {
                if (FindFileData.cFileName[0] != '.')
                {
-                  std::wstring cfn = FindFileData.cFileName;
-                  std::wstring subdir = dir;
-                  subdir += L"\\";
+                  std::string cfn = FindFileData.cFileName;
+                  std::string subdir = dir;
+                  subdir += "\\";
                   subdir += cfn;
                   addScenarios(getItem(hRoot, cfn.c_str()), subdir.c_str(), bAddFolder);
                }
             }
             else if (!bAddFolder)
             {
-               std::wstring fname_w = FindFileData.cFileName;
+               std::string fname_w = FindFileData.cFileName;
                std::string fname(fname_w.begin(), fname_w.end());
                //fpath strFile(FindFileData.cFileName);
                // NOTE: отломан чек на xml
@@ -351,13 +351,13 @@ void CFileView::OnEndlabeledit(NMHDR* pNMHDR, LRESULT* pResult)
    *pResult = 0;
    newitem.mask = TVIF_TEXT;
 
-   std::wstring pathFrom(getFileName(hItemSel).begin(), getFileName(hItemSel).end());
+   std::string pathFrom(getFileName(hItemSel).begin(), getFileName(hItemSel).end());
 
    m_treeScenarios.SetItem(&newitem);
 
    if (hItemSel != nullptr)
    {
-      std::wstring pathTo(getFileName(newitem.hItem).begin(), getFileName(newitem.hItem).end());
+      std::string pathTo(getFileName(newitem.hItem).begin(), getFileName(newitem.hItem).end());
       SHRemane(pathFrom.c_str(), pathTo.c_str());
    }
 }

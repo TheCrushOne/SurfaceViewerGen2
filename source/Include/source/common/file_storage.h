@@ -12,6 +12,7 @@ namespace SV::file_utils
       return wdata;
    }
 
+   // NOTE: запаска на случай вайд чаров
    inline std::wstring replaceExtension(const std::wstring& data, const wchar_t* base, const wchar_t* nw)
    {
       std::wstring wdata = data;
@@ -19,34 +20,34 @@ namespace SV::file_utils
       return wdata;
    }
 
-   inline std::wstring replaceTailFile(const std::wstring& data)
+   inline std::string replaceTailFile(const std::string& data)
    {
-      std::wstring wdata = data;
-      wdata.replace(wdata.find_last_of(L"\\\\"), wdata.length(), L"");
+      std::string wdata = data;
+      wdata.replace(wdata.find_last_of("\\\\"), wdata.length(), "");
       return wdata;
       //data.replace(data.find_last_of(L"//"), sizeof(data) - 1, nw);
    }
 
-   inline std::wstring getFileName(const std::wstring& data)
+   inline std::string getFileName(const std::string& data)
    {
-      std::wstring result = data;
-      result.replace(result.find_last_of(L"."), result.length(), L"");
-      result.replace(0, result.find_last_of(L"\\\\"), L"");
+      std::string result = data;
+      result.replace(result.find_last_of("."), result.length(), "");
+      result.replace(0, result.find_last_of("\\\\"), "");
       return result;
    }
 
-   typedef std::function<std::wstring(const std::wstring&)> rapida_filename_translator;
+   typedef std::function<std::string(const std::string&)> rapida_filename_translator;
 
    struct path_storage_unit
    {
-      std::wstring base;
-      std::wstring path;
+      std::string base;
+      std::string path;
 
       rapida_filename_translator translator;
 
       void mount() { path = translator(base); }
-      void mount(const std::wstring& rpath) { path = rpath; }
-      void condition_mount(const std::wstring& rpath, bool cond) { path = cond ? rpath : translator(base); }
+      void mount(const std::string& rpath) { path = rpath; }
+      void condition_mount(const std::string& rpath, bool cond) { path = cond ? rpath : translator(base); }
 
       path_storage_unit(const path_storage_unit& ps)
          : base(ps.base)
@@ -54,7 +55,7 @@ namespace SV::file_utils
          , translator(ps.translator)
       {}
       path_storage_unit() {}
-      path_storage_unit(const std::wstring& base_path, const rapida_filename_translator& base_translator)
+      path_storage_unit(const std::string& base_path, const rapida_filename_translator& base_translator)
          : base(base_path)
          , translator(base_translator)
       {
@@ -65,7 +66,7 @@ namespace SV::file_utils
    struct global_path_storage
    {
       // base
-      std::wstring meta_file_name;
+      std::string meta_file_name;
       path_storage_unit meta_path;
       path_storage_unit scenario_path;
 
@@ -92,27 +93,27 @@ namespace SV::file_utils
 
       global_path_storage() {}
 
-      global_path_storage(std::wstring metaFileName)
+      global_path_storage(std::string metaFileName)
       {
          set_route_element(metaFileName);
       }
 
-      void set_route_element(std::wstring metaFileName)
+      void set_route_element(const std::string& metaFileName)
       {
          meta_file_name = metaFileName;
-         meta_path = path_storage_unit(meta_file_name, [](const std::wstring& base)->std::wstring { return base; });
-         scenario_path = path_storage_unit(meta_file_name, [](const std::wstring& base)->std::wstring { return replaceTailFile(base); });
-         pathfinder_settings_path = path_storage_unit(meta_file_name, [](const std::wstring& base)->std::wstring { return replaceExtension(base, L".meta", L".ps"); });
-         research_settings_path = path_storage_unit(meta_file_name, [](const std::wstring& base)->std::wstring { return replaceExtension(base, L".meta", L".rs"); } );
-         environment_settings_path = path_storage_unit(meta_file_name, [](const std::wstring& base)->std::wstring { return replaceExtension(base, L".meta", L".es"); });
-         map_settings_path = path_storage_unit(meta_file_name, [](const std::wstring& base)->std::wstring { return replaceExtension(base, L".meta", L".ms"); });
-         simulation_settings_path = path_storage_unit(meta_file_name, [](const std::wstring& base)->std::wstring { return replaceExtension(base, L".meta", L".ss"); });
-         map_path = path_storage_unit(meta_file_name, [](const std::wstring& base)->std::wstring { return replaceExtension(base, L".meta", L".png"); });
-         unit_data_path = path_storage_unit(meta_file_name, [](const std::wstring& base)->std::wstring { return replaceExtension(base, L".meta", L".udp"); });
-         coordinate_map_path = path_storage_unit(meta_file_name, [](const std::wstring& base)->std::wstring { return replaceExtension(base, L".meta", L".dat"); });
-         map_object_path = path_storage_unit(meta_file_name, [](const std::wstring& base)->std::wstring { return replaceExtension(base, L".meta", L".png"); });
-         database_path = path_storage_unit(meta_file_name, [](const std::wstring& base)->std::wstring { return replaceExtension(base, L".meta", L".db3"); });
-         logger_folder_path = path_storage_unit(meta_file_name, [](const std::wstring& base)->std::wstring { return base; });
+         meta_path = path_storage_unit(meta_file_name, [](const std::string& base)->std::string { return base; });
+         scenario_path = path_storage_unit(meta_file_name, [](const std::string& base)->std::string { return replaceTailFile(base); });
+         pathfinder_settings_path = path_storage_unit(meta_file_name, [](const std::string& base)->std::string { return replaceExtension(base, ".meta", ".ps"); });
+         research_settings_path = path_storage_unit(meta_file_name, [](const std::string& base)->std::string { return replaceExtension(base, ".meta", ".rs"); } );
+         environment_settings_path = path_storage_unit(meta_file_name, [](const std::string& base)->std::string { return replaceExtension(base, ".meta", ".es"); });
+         map_settings_path = path_storage_unit(meta_file_name, [](const std::string& base)->std::string { return replaceExtension(base, ".meta", ".ms"); });
+         simulation_settings_path = path_storage_unit(meta_file_name, [](const std::string& base)->std::string { return replaceExtension(base, ".meta", ".ss"); });
+         map_path = path_storage_unit(meta_file_name, [](const std::string& base)->std::string { return replaceExtension(base, ".meta", ".png"); });
+         unit_data_path = path_storage_unit(meta_file_name, [](const std::string& base)->std::string { return replaceExtension(base, ".meta", ".udp"); });
+         coordinate_map_path = path_storage_unit(meta_file_name, [](const std::string& base)->std::string { return replaceExtension(base, ".meta", ".dat"); });
+         map_object_path = path_storage_unit(meta_file_name, [](const std::string& base)->std::string { return replaceExtension(base, ".meta", ".png"); });
+         database_path = path_storage_unit(meta_file_name, [](const std::string& base)->std::string { return replaceExtension(base, ".meta", ".db3"); });
+         logger_folder_path = path_storage_unit(meta_file_name, [](const std::string& base)->std::string { return base; });
       }
    };
 }

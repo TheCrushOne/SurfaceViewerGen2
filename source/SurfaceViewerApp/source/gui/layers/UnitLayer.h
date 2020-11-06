@@ -1,5 +1,6 @@
 #pragma once
 #include "RenderLayers.h"
+#include "properties\PropertyModify.h"
 
 namespace SV
 {
@@ -16,7 +17,7 @@ namespace SV
       //void renderSuggestions(render::iRender* renderer, const colreg::statefull::suggestions_ref* suggestions);
 
       bool m_renderVector = true;
-      iPropertyInterfacePtr m_prop_renderVector;
+      iPropertyPtr m_prop_renderVector;
 
       double m_arrowDist = 0.5;
    };

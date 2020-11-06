@@ -18,7 +18,7 @@ namespace SV::data_standart
          static constexpr char col_count[] = "col_count";
       };
    public:
-      SurfaceViewerGenMapDataStandart(central_pack*, LPCWSTR, navigation_dispatcher::iComService*);
+      SurfaceViewerGenMapDataStandart(central_pack*, LPCSTR, navigation_dispatcher::iComService*);
       // iDataStandart
       // Common
       virtual bool Create() override final
@@ -61,7 +61,7 @@ namespace SV::data_standart
    private:
       // NOTE: путь до каталога
       size_t m_rowCount, m_colCount;
-      std::wstring m_baseFolderPath;
+      std::string m_baseFolderPath;
       pathfinder::GeoMatrix m_rawdata;
       settings::unit_source_data m_unitData;
       file_utils::global_path_storage m_storage;

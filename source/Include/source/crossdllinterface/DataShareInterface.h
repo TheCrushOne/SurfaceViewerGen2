@@ -7,8 +7,8 @@ namespace SV::data_share
 {
    struct iDataShareProvider : iReleasable
    {
-      virtual void Share(const wchar_t*, const std::vector<std::vector<double>>&) = 0;
-      virtual void GetShared(const wchar_t*, std::vector<std::vector<double>>&) = 0;
+      virtual void Share(const char*, const std::vector<std::vector<double>>&) = 0;
+      virtual void GetShared(const char*, std::vector<std::vector<double>>&) = 0;
    };
 }
 

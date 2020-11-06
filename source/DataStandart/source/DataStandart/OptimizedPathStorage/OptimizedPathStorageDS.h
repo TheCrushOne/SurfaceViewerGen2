@@ -11,7 +11,7 @@ namespace SV::data_standart
       , public DataStandart<DataStandartType::DST_OPTPATHS, optimized_path_storage_data_standart>
    {
    public:
-      OptimizedPathStorageDataStandart(central_pack* pack, LPCWSTR base_folder, navigation_dispatcher::iComService* pService)
+      OptimizedPathStorageDataStandart(central_pack* pack, LPCSTR base_folder, navigation_dispatcher::iComService* pService)
          : DataStandart(pack, base_folder, pService)
       {}
    public:

@@ -35,7 +35,7 @@ bool OrderProcessorImpl::ProcessOrders(LPCSTR begCommandName)
 
 bool OrderProcessorImpl::processOrder(LPCSTR name, navigation_dispatcher::iOrder* order)
 {
-   std::string orderType = SVGUtils::wstringToString(convert_order_type(order->GetType()));
+   std::string orderType(convert_order_type(order->GetType()));
    std::string orderTypeStrStart = orderType + "command started...";
    std::string orderTypeStrFailed = orderType + "command failed...";
    std::string orderTypeStrFinished = orderType + "command finished...";

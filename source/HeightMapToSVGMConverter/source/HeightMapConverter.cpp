@@ -53,14 +53,6 @@ bool HeightMapConverter::processCommand()
    if (!recordOrderHashResult())
       return false;
 
-   //auto ps = GetPathStorage();
-   //auto stt = GetSettings();
-
-   //m_settingsSerializer->Deserialize(SVGUtils::wstringToString(ps->pathfinder_settings_path).c_str(), stt->pth_stt);
-   //m_settingsSerializer->Deserialize(SVGUtils::wstringToString(ps->research_settings_path).c_str(), stt->res_stt);
-   //m_settingsSerializer->Deserialize(SVGUtils::wstringToString(ps->environment_settings_path).c_str(), stt->env_stt);
-   //m_unitDataSerializer->Deserialize(SVGUtils::wstringToString(ps->unit_data_path).c_str(), m_unitData);
-
    // NOTE: share provider вызываетcя из базы
    //m_databaseController->Init(GetPack());
    //m_databaseController->SaveScenarioData(m_unitData, m_rawData);

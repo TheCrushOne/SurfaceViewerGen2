@@ -1,8 +1,11 @@
 #include "stdafx.h"
 #include "SelectedChartObject.h"
+#include "properties/property_helper.h"
 //#include "simulator\simulator.h"
 //#include "gui/layers/renderhelper.h"
 //#include "gui/user_interface.h"
+
+#define CR_CHART_OBJECT_PROP(iPropPtr, field, name, description, prStruct, obj) PROPHELPER_CREATEHOLDER_L(iPropPtr, name, description, prStruct, obj, field, &SelectedChartObject::OnSimSettingChanged)
 
 using namespace SV;
 
@@ -18,10 +21,20 @@ SelectedChartObject::SelectedChartObject(id_type id, chart_object::OBJECT_TYPE c
    //{
    //   _chart_object_type = pObj->Get()->arr[0].type;
    //}
+   m_strType = chart_object::chart_obj_type_to_str(m_chart_object_type);
+
+   m_prop_id = std::make_unique<ValuePropertyHolder<SelectedChartObject, decltype(m_id)>>(
+      FieldMeta{ "ID", "Chart object id", VALUE_FORMAT_TYPE::VFT_NONE, false },
+      this, &SelectedChartObject::m_id, &SelectedChartObject::OnSimSettingChanged, this
+   );
+   m_prop_type = std::make_unique<ValuePropertyHolder<SelectedChartObject, decltype(m_strType)>>(
+      FieldMeta{ "Type", "Chart object type", VALUE_FORMAT_TYPE::VFT_NONE, false },
+      this, &SelectedChartObject::m_strType, & SelectedChartObject::OnSimSettingChanged, this
+   );
+
    m_info_folder = std::make_unique<FolderProperty>("chart object info");
-   m_prop_id = std::make_unique<ValuePropertyHolder<SelectedChartObject, decltype(m_id)>>
-      ("ID", "Chart object id", true, VALUE_FORMAT_TYPE::VFT_NONE, this, &SelectedChartObject::m_id, &SelectedChartObject::OnSimSettingChanged, this);
    m_info_folder->AddChild(m_prop_id.get());
+   m_info_folder->AddChild(m_prop_type.get());
 
    if (pObj)
    {
@@ -33,22 +46,17 @@ SelectedChartObject::SelectedChartObject(id_type id, chart_object::OBJECT_TYPE c
       {
          m_props[i].key = p.key;
          m_props[i].value = p.val;
-         bool readonly = true/*check_chart_obj_type(obj.type, colreg::OT_XTE_AREA) && p.key && strcmp(p.key, "STATISTIC_INFO") == 0;*/;
-         m_props[i].prop_prop = std::make_unique<ValuePropertyHolder<prop_info, decltype(m_props[i].value)>>
-            (p.key.c_str(), p.key.c_str(), readonly, VALUE_FORMAT_TYPE::VFT_NONE, &m_props[i], &prop_info::value, &SelectedChartObject::OnSimSettingChanged, this);
+         bool readonly = true;/*check_chart_obj_type(obj.type, colreg::OT_XTE_AREA) && p.key && strcmp(p.key, "STATISTIC_INFO") == 0;*/
+         m_props[i].prop_prop = std::make_unique<ValuePropertyHolder<prop_info, decltype(m_props[i].value)>>(
+            FieldMeta{ p.key.c_str(), p.key.c_str(), VALUE_FORMAT_TYPE::VFT_NONE, readonly }
+            , &m_props[i], &prop_info::value, &SelectedChartObject::OnSimSettingChanged, this
+         );
          m_info_folder->AddChild(m_props[i].prop_prop.get());
          ++i;
       }
    }
    else
-   {
       SelectedObjectManager::GetInstance().Unselect();
-   }
-
-   m_strType = chart_object::chart_obj_type_to_str(m_chart_object_type);
-   m_prop_type = std::make_unique<ValuePropertyHolder<SelectedChartObject, decltype(m_strType)>>
-      ("Type", "Chart object type", true, VALUE_FORMAT_TYPE::VFT_NONE, this, &SelectedChartObject::m_strType, &SelectedChartObject::OnSimSettingChanged, this);
-   m_info_folder->AddChild(m_prop_type.get());
 
    AddChild(m_info_folder.get());
 }

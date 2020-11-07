@@ -45,7 +45,7 @@ namespace SV
                }
             }
 
-            // TODO: разораться не одно ли это и то же
+            // TODO: разобраться не одно ли это и то же
             if (folderProps->get_childs().arr && folderProps->get_childs().size)
             {
                _properties = std::move(folderProps);
@@ -76,8 +76,10 @@ namespace SV
             return _prop_layerEnabled.get();
          }
 
-         _prop_layerEnabled = std::make_unique<ValuePropertyHolder<LayersContainer, decltype(_layerVisible)>>
-            ("Visible", "Enable or disable drawing this layer", false, VALUE_FORMAT_TYPE::VFT_NONE, this, &LayersContainer::_layerVisible, &LayersContainer::OnRenderEnabled, this);
+         _prop_layerEnabled = std::make_unique<ValuePropertyHolder<LayersContainer, decltype(_layerVisible)>>(
+            FieldMeta{ "Visible", "Enable or disable drawing this layer", VALUE_FORMAT_TYPE::VFT_NONE, false },
+            this, &LayersContainer::_layerVisible, &LayersContainer::OnRenderEnabled, this
+         );
 
          return _prop_layerEnabled.get();
       }

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "colreg/PropertyInterface.h"
+#include "colreg/PropertyStructs.h"
 #include <functional>
 
 namespace SV
@@ -28,26 +29,20 @@ namespace SV
       : public iProperty
    {
    public:
-      Property(const char* name, const char* description, bool readonly, VALUE_FORMAT_TYPE type)
-         : _name{ name }
-         , _description{ description }
-         , _readonly{ readonly }
-         , _format_type{ type }
+      Property(const FieldMeta& meta)
+         : m_meta{ meta }
       {}
 
-      const char* get_name()const override { return _name.c_str(); }
-      const char* get_description()const override { return _description.c_str(); }
-      VALUE_FORMAT_TYPE get_value_format_type()const override { return _format_type; }
-      bool is_read_only()const override { return _readonly; }
+      const char* get_name() const override { return m_meta.name.c_str(); }
+      const char* get_description()const override { return m_meta.description.c_str(); }
+      VALUE_FORMAT_TYPE get_value_format_type() const override { return m_meta.type; }
+      bool is_read_only()const override { return m_meta.readOnly; }
       const prop_ref get_childs()const override { return prop_ref(); }
       const VectorProperties* get_child_list()const override { return nullptr; };
       void set_list(const std::vector<std::string>& list) override { _list = list; }
       const std::vector<std::string>& get_list() const { return _list; }
    protected:
-      std::string _name;
-      std::string _description;
-      VALUE_FORMAT_TYPE _format_type;
-      bool _readonly;
+      FieldMeta m_meta;
       std::vector<std::string> _list;
    };
 }

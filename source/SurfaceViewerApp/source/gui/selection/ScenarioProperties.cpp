@@ -33,6 +33,7 @@ void ScenarioProperties::prepareScenarioPathfindingSettingsFolder()
    m_prop_pathfinding_settings.resize(ScenarioPathfindingSettingsFieldIndex::SPSFI_END);
 
    m_scenario_pathfinding_settings_level_folder = std::make_unique<FolderProperty>("Level settings");
+
    CR_SCEN_PATH_STT(settings::level_settings, m_settings.pth_stt.lvl_stt, max_air_height, ScenarioPathfindingSettingsFieldIndex::SPSFI_MAXAIRHEIGHT);
    CR_SCEN_PATH_STT(settings::level_settings, m_settings.pth_stt.lvl_stt, max_land_height, ScenarioPathfindingSettingsFieldIndex::SPSFI_MAXLANDHEIGHT);
    CR_SCEN_PATH_STT(settings::level_settings, m_settings.pth_stt.lvl_stt, min_land_height, ScenarioPathfindingSettingsFieldIndex::SPSFI_MINLANDHEIGHT);

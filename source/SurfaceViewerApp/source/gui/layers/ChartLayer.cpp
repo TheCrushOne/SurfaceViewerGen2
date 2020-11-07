@@ -128,13 +128,17 @@ iProperty* ChartLayer::GetProperties()
       auto folderProps = std::make_unique<FolderProperty>("Chart Layer");
 
       folderProps->AddChild(GetLayerEnabledProperty());
-      _prop_showDepthChartObjects = std::make_unique< ValuePropertyHolder< ChartLayer, decltype(_showDepthChartObjects)>>
-         ("Show Depth Objects", "Show Depth Chart Objects", false, VALUE_FORMAT_TYPE::VFT_NONE, this, &ChartLayer::_showDepthChartObjects, &ChartLayer::OnShowDepthChartObjectsChanged, this);
+      _prop_showDepthChartObjects = std::make_unique<ValuePropertyHolder<ChartLayer, decltype(_showDepthChartObjects)>>(
+         FieldMeta{ "Show Depth Objects", "Show Depth Chart Objects", VALUE_FORMAT_TYPE::VFT_NONE, false },
+         this, &ChartLayer::_showDepthChartObjects, &ChartLayer::OnShowDepthChartObjectsChanged, this
+      );
 
       folderProps->AddChild(_prop_showDepthChartObjects.get());
 
-      _prop_minScale2ShowDepthObjects = std::make_unique< ValuePropertyHolder< ChartLayer, decltype(_minScale2ShowDepthObjects)>>
-         ("Min. Scale 2 Show Depth Objects", "Minimum zoom scale to show depth objects", false, VALUE_FORMAT_TYPE::VFT_NONE, this, &ChartLayer::_minScale2ShowDepthObjects, &ChartLayer::OnShowDepthChartObjectsChanged, this);
+      _prop_minScale2ShowDepthObjects = std::make_unique<ValuePropertyHolder<ChartLayer, decltype(_minScale2ShowDepthObjects)>>(
+         FieldMeta{ "Min. Scale 2 Show Depth Objects", "Minimum zoom scale to show depth objects", VALUE_FORMAT_TYPE::VFT_NONE, false },
+         this, &ChartLayer::_minScale2ShowDepthObjects, &ChartLayer::OnShowDepthChartObjectsChanged, this
+      );
 
       folderProps->AddChild(_prop_minScale2ShowDepthObjects.get());
       _props = std::move(folderProps);

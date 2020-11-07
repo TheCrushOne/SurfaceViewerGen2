@@ -39,8 +39,10 @@ SelectRouteBase::SelectRouteBase(id_type id, size_t data)
 
    m_ship_info_folder = std::make_unique<FolderProperty>("Ship info");
 
-   m_prop_id = std::make_unique< ValuePropertyHolder< SelectRouteBase, decltype(m_id)>>
-      ("ID", "Ship ID", true, VALUE_FORMAT_TYPE::VFT_NONE, this, &SelectRouteBase::m_id, &SelectRouteBase::OnEmpty, this);
+   m_prop_id = std::make_unique< ValuePropertyHolder< SelectRouteBase, decltype(m_id)>>(
+      FieldMeta{ "ID", "Ship ID", VALUE_FORMAT_TYPE::VFT_NONE, true },
+      this, &SelectRouteBase::m_id, &SelectRouteBase::OnEmpty, this
+   );
 
    m_ship_info_folder->AddChild(m_prop_id.get());
 
@@ -49,8 +51,10 @@ SelectRouteBase::SelectRouteBase(id_type id, size_t data)
 
    m_typeName = route_type_to_string(m_format_type);
 
-   m_route_type = std::make_unique< ValuePropertyHolder< SelectRouteBase, decltype(m_typeName)>>
-      ("Type", "Route type", true, VALUE_FORMAT_TYPE::VFT_NONE, this, &SelectRouteBase::m_typeName, &SelectRouteBase::OnEmpty, this);
+   m_route_type = std::make_unique< ValuePropertyHolder< SelectRouteBase, decltype(m_typeName)>>(
+      FieldMeta{ "Type", "Route type", VALUE_FORMAT_TYPE::VFT_NONE, true },
+      this, &SelectRouteBase::m_typeName, &SelectRouteBase::OnEmpty, this
+   );
 
    m_route_info_folder->AddChild(m_route_type.get());
 
@@ -67,8 +71,10 @@ SelectedRoutePoint::SelectedRoutePoint(id_type id, size_t data)
 
       m_point_folder = std::make_unique<FolderProperty>("Route point info");
 
-      m_prop_index = std::make_unique< ValuePropertyHolder< SelectedRoutePoint, decltype(m_index)>>
-         ("Index", "Index of the route segment", true, VALUE_FORMAT_TYPE::VFT_NONE, this, &SelectedRoutePoint::m_index, &SelectedRoutePoint::OnSimSettingChanged, this);
+      m_prop_index = std::make_unique< ValuePropertyHolder< SelectedRoutePoint, decltype(m_index)>>(
+         FieldMeta{ "Index", "Index of the route segment", VALUE_FORMAT_TYPE::VFT_NONE, true },
+         this, &SelectedRoutePoint::m_index, &SelectedRoutePoint::OnSimSettingChanged, this
+      );
 
       /*_prop_radius = std::make_unique<ValuePropertyHolder<CG::route_point, decltype(_point.radius)>>
          ("radius", "circulation radius", false, VALUE_FORMAT_TYPE::VFT_DISTANCE, &_point, &colreg::route_point::radius, &SelectedRoutePoint::OnSimSettingChanged, this);*/
@@ -89,8 +95,11 @@ void SelectedRoutePoint::OnSimSettingChanged()
 
 void SelectedRoutePoint::Render(render::iRender* renderer)
 {
-   renderer->AddObject({ { m_point }, { 8, render::LINE_STYLE::LL_SOLID, render::FILL_TYPE::FT_NONE , user_interface::selectedColor, "", 0, 0, user_interface::selectedAlpha }
-                        ,{render::FIND_TYPE::FT_FIND_FAST, 0, render::FIND_OBJECT_TYPE::FOT_SELECTED, 0 } });
+   renderer->AddObject({
+      { m_point },
+      { 8, render::LINE_STYLE::LL_SOLID, render::FILL_TYPE::FT_NONE , user_interface::selectedColor, "", 0, 0, user_interface::selectedAlpha },
+      {render::FIND_TYPE::FT_FIND_FAST, 0, render::FIND_OBJECT_TYPE::FOT_SELECTED, 0 }
+   });
 }
 
 void SelectedRoutePoint::StartEdit(render::iRender* renderer, CPoint point, render::find_info info)
@@ -145,23 +154,35 @@ SelectedRouteSegment::SelectedRouteSegment(id_type id, size_t data)
    m_xte_right = m_route[m_index + 1].right_XTE;
    m_segment_folder = std::make_unique<FolderProperty>("Route segment info");
 
-   m_prop_index = std::make_unique<ValuePropertyHolder<SelectedRouteSegment, decltype(m_index)>>
-      ("Index", "Index of the route segment", true, VALUE_FORMAT_TYPE::VFT_NONE, this, &SelectedRouteSegment::m_index, &SelectedRouteSegment::OnSimSettingChanged, this);
+   m_prop_index = std::make_unique<ValuePropertyHolder<SelectedRouteSegment, decltype(m_index)>>(
+      FieldMeta{ "Index", "Index of the route segment", VALUE_FORMAT_TYPE::VFT_NONE, true },
+      this, &SelectedRouteSegment::m_index, &SelectedRouteSegment::OnSimSettingChanged, this
+   );
 
-   m_prop_speed = std::make_unique<ValuePropertyHolder<CG::layer_provider::trajectory_point, decltype(m_pointTo.speed)>>
-      ("speed", "speed on segment", false, VALUE_FORMAT_TYPE::VFT_SPEED, &m_pointTo, &CG::layer_provider::trajectory_point::speed, &SelectedRouteSegment::OnSimSettingChanged, this);
+   m_prop_speed = std::make_unique<ValuePropertyHolder<CG::layer_provider::trajectory_point, decltype(m_pointTo.speed)>>(
+      FieldMeta{ "speed", "speed on segment", VALUE_FORMAT_TYPE::VFT_SPEED, false }, 
+      &m_pointTo, &CG::layer_provider::trajectory_point::speed, &SelectedRouteSegment::OnSimSettingChanged, this
+   );
 
-   m_prop_direction = std::make_unique<ValuePropertyHolder<SelectedRouteSegment, decltype(m_direction)>>
-      ("direction", "segment direction", true, VALUE_FORMAT_TYPE::VFT_COURSE, this, &SelectedRouteSegment::m_direction, &SelectedRouteSegment::OnSimSettingChanged, this);
+   m_prop_direction = std::make_unique<ValuePropertyHolder<SelectedRouteSegment, decltype(m_direction)>>(
+      FieldMeta{ "direction", "segment direction", VALUE_FORMAT_TYPE::VFT_COURSE, true },
+      this, &SelectedRouteSegment::m_direction, &SelectedRouteSegment::OnSimSettingChanged, this
+   );
 
-   m_prop_distance = std::make_unique< ValuePropertyHolder<SelectedRouteSegment, decltype(m_distance)>>
-      ("distance", "segment distance", true, VALUE_FORMAT_TYPE::VFT_DISTANCE, this, &SelectedRouteSegment::m_distance, &SelectedRouteSegment::OnSimSettingChanged, this);
+   m_prop_distance = std::make_unique< ValuePropertyHolder<SelectedRouteSegment, decltype(m_distance)>>(
+      FieldMeta{ "distance", "segment distance", VALUE_FORMAT_TYPE::VFT_DISTANCE, true },
+      this, &SelectedRouteSegment::m_distance, &SelectedRouteSegment::OnSimSettingChanged, this
+   );
 
-   m_prop_xte_left = std::make_unique< ValuePropertyHolder<SelectedRouteSegment, decltype(m_xte_left)>>
-      ("xte left", "segment left XTE", false, VALUE_FORMAT_TYPE::VFT_DISTANCE, this, &SelectedRouteSegment::m_xte_left, &SelectedRouteSegment::OnSimSettingChanged, this);
+   m_prop_xte_left = std::make_unique< ValuePropertyHolder<SelectedRouteSegment, decltype(m_xte_left)>>(
+      FieldMeta{ "xte left", "segment left XTE", VALUE_FORMAT_TYPE::VFT_DISTANCE, false },
+      this, &SelectedRouteSegment::m_xte_left, &SelectedRouteSegment::OnSimSettingChanged, this
+   );
 
-   m_prop_xte_right = std::make_unique< ValuePropertyHolder<SelectedRouteSegment, decltype(m_xte_right)>>
-      ("xte right", "segment right XTE", false, VALUE_FORMAT_TYPE::VFT_DISTANCE, this, &SelectedRouteSegment::m_xte_right, &SelectedRouteSegment::OnSimSettingChanged, this);
+   m_prop_xte_right = std::make_unique< ValuePropertyHolder<SelectedRouteSegment, decltype(m_xte_right)>>(
+      FieldMeta{ "xte right", "segment right XTE", VALUE_FORMAT_TYPE::VFT_DISTANCE, false },
+      this, &SelectedRouteSegment::m_xte_right, &SelectedRouteSegment::OnSimSettingChanged, this
+   );
 
    m_segment_folder->AddChild(m_prop_index.get());
    m_segment_folder->AddChild(m_prop_direction.get());
@@ -183,13 +204,23 @@ void SelectedRouteSegment::OnSimSettingChanged()
 
 void SelectedRouteSegment::Render(render::iRender* renderer)
 {
-   renderer->AddObject({ { m_pointFrom.pos, m_pointTo.pos }, { 5, render::LINE_STYLE::LL_SOLID, render::FILL_TYPE::FT_NONE , user_interface::selectedColor, "", 0, 0, user_interface::selectedAlpha }
-                        ,{render::FIND_TYPE::FT_FIND_FAST, 0, render::FIND_OBJECT_TYPE::FOT_SELECTED, SP_SEGMENT } });
+   renderer->AddObject({ 
+      { m_pointFrom.pos, m_pointTo.pos },
+      { 5, render::LINE_STYLE::LL_SOLID, render::FILL_TYPE::FT_NONE , user_interface::selectedColor, "", 0, 0, user_interface::selectedAlpha },
+      { render::FIND_TYPE::FT_FIND_FAST, 0, render::FIND_OBJECT_TYPE::FOT_SELECTED, SP_SEGMENT }
+   });
 
-   renderer->AddObject({ { m_pointFrom.pos }, {8, render::LINE_STYLE::LL_SOLID, render::FILL_TYPE::FT_NULL, user_interface::selectedColor, "", 0, 0, user_interface::selectedAlpha }
-                        ,{render::FIND_TYPE::FT_FIND_FAST, 0, render::FIND_OBJECT_TYPE::FOT_SELECTED, SP_START_POINT } });
-   renderer->AddObject({ { m_pointTo.pos }, {8, render::LINE_STYLE::LL_SOLID, render::FILL_TYPE::FT_NULL, user_interface::selectedColor, "", 0, 0, user_interface::selectedAlpha}
-                        ,{render::FIND_TYPE::FT_FIND_FAST, 0, render::FIND_OBJECT_TYPE::FOT_SELECTED, SP_END_POINT } });
+   renderer->AddObject({
+      { m_pointFrom.pos },
+      { 8, render::LINE_STYLE::LL_SOLID, render::FILL_TYPE::FT_NULL, user_interface::selectedColor, "", 0, 0, user_interface::selectedAlpha },
+      { render::FIND_TYPE::FT_FIND_FAST, 0, render::FIND_OBJECT_TYPE::FOT_SELECTED, SP_START_POINT }
+   });
+
+   renderer->AddObject({
+      { m_pointTo.pos },
+      { 8, render::LINE_STYLE::LL_SOLID, render::FILL_TYPE::FT_NULL, user_interface::selectedColor, "", 0, 0, user_interface::selectedAlpha},
+      { render::FIND_TYPE::FT_FIND_FAST, 0, render::FIND_OBJECT_TYPE::FOT_SELECTED, SP_END_POINT }
+   });
 }
 
 
@@ -208,7 +239,10 @@ void SelectedRouteSegment::Edit(render::iRender* renderer, CPoint point)
    case SelectedRouteSegment::SP_START_POINT:
       if (m_index > 0)
       {
-         renderer->AddObject({ { m_route[m_index - 1].pos, m_geoEdit }, { 5, render::LINE_STYLE::LL_DASH, render::FILL_TYPE::FT_NONE , user_interface::selectedColor, "", 0, 0, user_interface::selectedAlpha } });
+         renderer->AddObject({
+            { m_route[m_index - 1].pos, m_geoEdit },
+            { 5, render::LINE_STYLE::LL_DASH, render::FILL_TYPE::FT_NONE , user_interface::selectedColor, "", 0, 0, user_interface::selectedAlpha }
+         });
          renderer->AddObject({ { m_geoEdit,  m_route[m_index + 1].pos }, { 5, render::LINE_STYLE::LL_DASH, render::FILL_TYPE::FT_NONE ,user_interface::selectedColor, "", 0, 0, user_interface::selectedAlpha } });
 
          text << "Dir: " << get_formated_value(math::direction(m_route[m_index - 1].pos, m_geoEdit), VALUE_FORMAT_TYPE::VFT_COURSE);

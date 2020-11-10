@@ -114,6 +114,7 @@ chart_object_unit_vct LabirinthTraverse::generateIsolineLevel(const pathfinder::
    settings::environment_settings& env_stt = GetService()->GetSettingsSerializerHolder()->GetSettings().env_stt;
    chart_object_unit_vct res;
    auto& gcBack = res.emplace_back();
+   gcBack.type = OBJECT_TYPE::OT_ISOLINE;
    for (auto& line : isoLineVct)
    {
       auto& cBack = gcBack.geom_contour_vct.emplace_back();

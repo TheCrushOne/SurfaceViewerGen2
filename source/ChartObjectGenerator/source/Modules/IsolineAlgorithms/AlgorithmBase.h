@@ -26,5 +26,6 @@ namespace SV::chart_object
          return generateIsolineLevel(rawdata, height, H);
       }
    protected:
+
    };
 }

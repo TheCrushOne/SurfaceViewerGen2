@@ -392,6 +392,7 @@ chart_object_unit_vct SegmentCollector::generateIsolineLevel(const pathfinder::G
    settings::application_settings& app_stt = GetService()->GetSettingsSerializerHolder()->GetSettings();
    chart_object_unit_vct res;
    auto& gcBack = res.emplace_back();
+   gcBack.type = OBJECT_TYPE::OT_ISOLINE;
    for (auto& line : isoLineVct)
    {
       auto& cBack = gcBack.geom_contour_vct.emplace_back();

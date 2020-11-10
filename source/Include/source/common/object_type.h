@@ -33,10 +33,10 @@ namespace SV::chart_object
       switch (type)
       {
          // SurfaceViewer Types
-      case OBJECT_TYPE::OT_BORDER_AREA:   return "B_AREA";
-      case OBJECT_TYPE::OT_ISOLINE:       return "ISOLINE";
-      case OBJECT_TYPE::OT_NO_GO_AREA:    return "NOGO";
-      case OBJECT_TYPE::OT_NO_FLY_AREA:   return "NOFLY";
+         case OBJECT_TYPE::OT_BORDER_AREA:   return "B_AREA";
+         case OBJECT_TYPE::OT_ISOLINE:       return "ISOLINE";
+         case OBJECT_TYPE::OT_NO_GO_AREA:    return "NOGO";
+         case OBJECT_TYPE::OT_NO_FLY_AREA:   return "NOFLY";
       }
       return "UNKNOWN";
    }

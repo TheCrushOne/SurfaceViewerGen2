@@ -3,19 +3,22 @@
 
 namespace SV::surface_simulation
 {
-   class LayerChartObjectImpl : public iLayerChartObject
+   class LayerChartObjectImpl
+      : public iLayerChartObject
    {
    public:
       LayerChartObjectImpl()
       {}
 
       //layer_provider::ship_info GetInfo() const override final { return m_info; }
-      const layer_provider::layer_chart_object* GetContourData() const override final { return &m_chartObject; }
-      const properties::simple_prop_vct* GetProps() const override final { return &m_props; }
+      const CG::geo_contour_vct& GetContourData() const override final { return m_chartObject.geom_contour_vct; }
+      const chart_object_id GetId() const override final { return m_chartObject.id; }
+      const chart_object::OBJECT_TYPE GetType() const override final { return m_chartObject.type; }
+
+      const properties::simple_prop_vct* GetProps() const override final { return &m_chartObject.prop_vct; }
 
       void SetSrcRoute(const SV::layer_provider::layer_chart_object& src) { m_chartObject = src; }
    private:
-      properties::simple_prop_vct m_props;
       SV::layer_provider::layer_chart_object m_chartObject;
    };
 }

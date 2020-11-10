@@ -5,9 +5,75 @@
 //#include "gui/layers/renderhelper.h"
 //#include "gui/user_interface.h"
 
-#define CR_CHART_OBJECT_PROP(iPropPtr, field, name, description, prStruct, obj) PROPHELPER_CREATEHOLDER_L(iPropPtr, name, description, prStruct, obj, field, &SelectedChartObject::OnSimSettingChanged)
+#define CR_CHART_OBJECT_PROP(iPropPtr, name, description, prStruct, obj, field) PROPHELPER_CREATEHOLDER_L(iPropPtr, name, description, prStruct, obj, field, &SelectedChartObject::OnSimSettingChanged)
 
 using namespace SV;
+
+namespace
+{
+   const render::object_info selected_chart_object_area_solid_oi()
+   {
+      return { 
+         2,
+         render::LINE_STYLE::LL_NONE,
+         render::FILL_TYPE::FT_SOLID,
+         user_interface::selectedColor,
+         "",
+         0,
+         0,
+         user_interface::selectedAlpha 
+      };
+   }
+
+   const render::object_info selected_chart_object_area_none_oi()
+   {
+      return { 
+         4,
+         render::LINE_STYLE::LL_DASH,
+         render::FILL_TYPE::FT_NONE,
+         user_interface::selectedColor,
+         "",
+         0,
+         0,
+         200
+      };
+   }
+
+   const render::object_info selected_chart_object_line_oi()
+   {
+      return {
+         4,
+         render::LINE_STYLE::LL_DASH,
+         render::FILL_TYPE::FT_NONE,
+         user_interface::selectedColor,
+         "",
+         0,
+         0,
+         200
+      };
+   }
+
+   const render::object_info selected_chart_object_common_oi()
+   {
+      return {
+         5,
+         render::LINE_STYLE::LL_SOLID,
+         render::FILL_TYPE::FT_NONE,
+         RGB(200, 0, 0),
+         ""
+      };
+   }
+
+   const render::find_info selected_chart_object_common_fi(size_t i)
+   {
+      return {
+         render::FIND_TYPE::FT_FIND_FAST,
+         static_cast<id_type>(i),
+         render::FIND_OBJECT_TYPE::FOT_SELECTED,
+         SelectedChartObject::SELECT_TYPE::ST_POINT
+      };
+   }
+}
 
 SelectedChartObject::SelectedChartObject(id_type id, chart_object::OBJECT_TYPE chart_object_type)
    : m_id{ id }
@@ -16,21 +82,11 @@ SelectedChartObject::SelectedChartObject(id_type id, chart_object::OBJECT_TYPE c
 {
    // NOTE: загрузка инфы по выбранному объекту
    auto* pObj = simulator::getSimulator()->GetState().GetChartObjectById(m_obj_id);
-
-   //if (pObj && pObj->Get() && pObj->Get()->size)
-   //{
-   //   _chart_object_type = pObj->Get()->arr[0].type;
-   //}
+   m_points = pObj->GetContourData();
    m_strType = chart_object::chart_obj_type_to_str(m_chart_object_type);
 
-   m_prop_id = std::make_unique<ValuePropertyHolder<SelectedChartObject, decltype(m_id)>>(
-      FieldMeta{ "ID", "Chart object id", VALUE_FORMAT_TYPE::VFT_NONE, false },
-      this, &SelectedChartObject::m_id, &SelectedChartObject::OnSimSettingChanged, this
-   );
-   m_prop_type = std::make_unique<ValuePropertyHolder<SelectedChartObject, decltype(m_strType)>>(
-      FieldMeta{ "Type", "Chart object type", VALUE_FORMAT_TYPE::VFT_NONE, false },
-      this, &SelectedChartObject::m_strType, & SelectedChartObject::OnSimSettingChanged, this
-   );
+   CR_CHART_OBJECT_PROP(m_prop_id, "ID", "Chart object id", SelectedChartObject, this, m_id);
+   CR_CHART_OBJECT_PROP(m_prop_type, "Type", "Chart object type", SelectedChartObject, this, m_strType);
 
    m_info_folder = std::make_unique<FolderProperty>("chart object info");
    m_info_folder->AddChild(m_prop_id.get());
@@ -38,9 +94,6 @@ SelectedChartObject::SelectedChartObject(id_type id, chart_object::OBJECT_TYPE c
 
    if (pObj)
    {
-      //const auto obj = pObj.arr[0];
-      //m_points = std::vector<math::geo_points>{ pObj->geom_contour_vct.begin(), pObj->geom_contour_vct.end() };
-
       size_t i = 0;
       for (const auto& p : *pObj->GetProps())
       {
@@ -88,31 +141,43 @@ void SelectedChartObject::OnSimSettingChanged()
    //ScenarioManager::GetInstance().AddObject(object);
 }
 
-
 void SelectedChartObject::Render(render::iRender* renderer)
 {
    if (chart_object::check_chart_obj_type(chart_object::OBJECT_TYPE::OT_AREAS, m_chart_object_type))
    {
       for (auto& contour : m_points)
       {
-         renderer->AddObject({ contour, { 2, render::LINE_STYLE::LL_NONE, render::FILL_TYPE::FT_SOLID, user_interface::selectedColor, "", 0, 0, user_interface::selectedAlpha } });
-         renderer->AddObject({ contour, { 4, render::LINE_STYLE::LL_DASH, render::FILL_TYPE::FT_NONE, user_interface::selectedColor, "", 0, 0, 200} });
+         renderer->AddObject({
+            contour,
+            selected_chart_object_area_solid_oi()
+         });
+         renderer->AddObject({
+            contour,
+            selected_chart_object_area_none_oi()
+         });
       }
    }
-   else if (chart_object::check_chart_obj_type(chart_object::OT_LINES, m_chart_object_type))
+   else if (chart_object::check_chart_obj_type(chart_object::OBJECT_TYPE::OT_LINES, m_chart_object_type))
    {
       for (auto& contour : m_points)
       {
-         renderer->AddObject({ contour,{ 4, render::LINE_STYLE::LL_DASH, render::FILL_TYPE::FT_NONE, user_interface::selectedColor, "", 0, 0, 200 } });
+         renderer->AddObject({
+            contour,
+            selected_chart_object_line_oi()
+         });
       }
    }
    for (auto& contour : m_points)
    {
       for (size_t i = 0; i < contour.size(); ++i)
-         renderer->AddObject({ { contour[i] }, { 5, render::LINE_STYLE::LL_SOLID, render::FILL_TYPE::FT_NONE, RGB(200, 0, 0), "" }
-                             , { render::FIND_TYPE::FT_FIND_FAST, static_cast<id_type>(i), render::FIND_OBJECT_TYPE::FOT_SELECTED, SELECT_TYPE::ST_POINT } });
+      {
+         renderer->AddObject({
+            { contour[i] },
+            selected_chart_object_common_oi(),
+            selected_chart_object_common_fi(i)
+         });
+      }
    }
-
 }
 void SelectedChartObject::StartEdit(render::iRender* renderer, CPoint point, render::find_info info)
 {
@@ -251,3 +316,5 @@ void SelectedChartObject::Delete()
    //colreg::check_chart_obj_type(colreg::OT_DYNAMIC_AREAS | colreg::OT_STATISTIC_AREA, _chart_object_type) ? cid.dynamic_id = _id : cid.static_id = _id;
    //ScenarioManager::GetInstance().RemoveObject(cid, _chart_object_type);
 }
+
+#undef CR_CHART_OBJECT_PROP

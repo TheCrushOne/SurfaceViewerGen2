@@ -225,7 +225,7 @@ const iLayerChartObject* SimulatorBase::GetChartObjectById(chart_object_id id) c
    for (size_t idx = 0; idx < GetChartObjectCount(); idx++)
    {
       const auto* obj = GetChartObjectByIdx(idx);
-      if (obj->GetContourData()->id == id)
+      if (obj->GetId() == id)
          return obj;
    }
    return nullptr;

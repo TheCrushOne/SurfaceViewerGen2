@@ -5,7 +5,8 @@
 
 namespace SV::layer_provider
 {
-   struct layer_chart_object : SV::chart_object::chart_object_unit
+   struct layer_chart_object
+      : SV::chart_object::chart_object_unit
    {
       layer_chart_object()
          : SV::chart_object::chart_object_unit()

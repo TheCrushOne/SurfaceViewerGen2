@@ -180,3 +180,5 @@ void SelectedShip::renderTrack(render::iRender* renderer) const
    const auto* selected = getSelectedUnit();
    TrackLayerHelper::renderRoute(renderer, selected->GetInfo().id, selected->GetRoute(surface_simulation::ROUTE_TYPE::RT_SOURSE), selected_ship_track_info, surface_simulation::ROUTE_TYPE::RT_SOURSE);
 }
+
+#undef CRSHIPINFO

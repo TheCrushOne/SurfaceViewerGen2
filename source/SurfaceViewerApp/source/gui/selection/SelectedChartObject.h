@@ -40,13 +40,13 @@ namespace SV
          iPropertyPtr prop_prop;
       };
       prop_info m_props[MAX_PROPS];
-
+   public:
       enum SELECT_TYPE
       {
          ST_POINT = 0,
          SP_SEGMENT,
       };
-
+   protected:
       SELECT_TYPE m_selectedType;
       CG::geo_point m_geoEdit;
       size_t m_index = 0;

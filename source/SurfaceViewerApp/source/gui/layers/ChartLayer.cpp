@@ -2,6 +2,8 @@
 #include "ChartLayer.h"
 #include "simulator\simulator.h"
 
+#define CR_CHART_LAYER_PROP(iPropPtr, name, description, prStruct, obj, field) PROPHELPER_CREATEHOLDER_L(iPropPtr, name, description, prStruct, obj, field, &ChartLayer::OnShowDepthChartObjectsChanged)
+
 using namespace SV;
 // HACK: шайтан каст...но без него не линкуется автоконтейнер
 // HACK: этот объект должен стоять в первом классе слоёв по списку из .vcxproj, иначе игнорятся модули
@@ -66,8 +68,7 @@ bool ChartLayer::synchronize_map(render::iRender* renderer, const SV::surface_si
 void ChartLayer::addChartObject(render::iRender* renderer, const SV::surface_simulation::iLayerChartObject* obj)
 {
    using namespace render;
-   const auto* contour_data = obj->GetContourData();
-   const auto itf = m_objInfo.find(contour_data->type);
+   const auto itf = m_objInfo.find(obj->GetType());
    render::object_info info;
    if (itf != m_objInfo.end())
       info = (*itf).second;
@@ -86,8 +87,7 @@ void ChartLayer::addChartObject(render::iRender* renderer, const SV::surface_sim
    //}
 
    int r = 0, g = 0, b = 0;
-   //const auto* props = obj->GetProps();
-   const auto* props = &contour_data->prop_vct;
+   const auto* props = obj->GetProps();
    bool colorOverride = false;
    if (props)
    {
@@ -109,16 +109,46 @@ void ChartLayer::addChartObject(render::iRender* renderer, const SV::surface_sim
    //    if (id == 147838)
    //       info.width = 10;
 
-   for (auto& contour : contour_data->geom_contour_vct)
-      renderer->AddObject({ contour, info, {render::FIND_TYPE::FT_FIND_DETAILED, contour_data->id, render::FIND_OBJECT_TYPE::FOT_CHART_OBJECT, 0, contour_data->type}, minScale }, false);
+   const auto& contour_data = obj->GetContourData();
+   chart_object_id id = obj->GetId();
+   chart_object::OBJECT_TYPE type = obj->GetType();
+   for (auto& contour : contour_data)
+   {
+      renderer->AddObject(
+         {
+            contour,
+            info,
+            {
+               render::FIND_TYPE::FT_FIND_DETAILED,
+               id,
+               render::FIND_OBJECT_TYPE::FOT_CHART_OBJECT,
+               0,
+               type
+            },
+            minScale
+         },
+         false
+      );
+   }
    render::object_info ptInfo{ 1, render::LINE_STYLE::LL_DASH, render::FILL_TYPE::FT_NONE, RGB(110, 110, 110) };
    ptInfo.alpha = 255;
    if (colorOverride)
       ptInfo.color = RGB(r, g, b);
    ptInfo.width += 2;
-   for (auto& contour : contour_data->geom_contour_vct)
+   for (auto& contour : contour_data)
+   {
       for (size_t i = 0; i < contour.size(); i++)
-         renderer->AddObject({ {contour[i]}, ptInfo });
+      {
+         renderer->AddObject(
+            {
+               {
+                  contour[i]
+               },
+               ptInfo
+            }
+         );
+      }
+   }
 }
 
 iProperty* ChartLayer::GetProperties()
@@ -128,17 +158,10 @@ iProperty* ChartLayer::GetProperties()
       auto folderProps = std::make_unique<FolderProperty>("Chart Layer");
 
       folderProps->AddChild(GetLayerEnabledProperty());
-      _prop_showDepthChartObjects = std::make_unique<ValuePropertyHolder<ChartLayer, decltype(_showDepthChartObjects)>>(
-         FieldMeta{ "Show Depth Objects", "Show Depth Chart Objects", VALUE_FORMAT_TYPE::VFT_NONE, false },
-         this, &ChartLayer::_showDepthChartObjects, &ChartLayer::OnShowDepthChartObjectsChanged, this
-      );
+      CR_CHART_LAYER_PROP(_prop_showDepthChartObjects, "Show Depth Objects", "Show Depth Chart Objects", ChartLayer, this, _showDepthChartObjects);
 
       folderProps->AddChild(_prop_showDepthChartObjects.get());
-
-      _prop_minScale2ShowDepthObjects = std::make_unique<ValuePropertyHolder<ChartLayer, decltype(_minScale2ShowDepthObjects)>>(
-         FieldMeta{ "Min. Scale 2 Show Depth Objects", "Minimum zoom scale to show depth objects", VALUE_FORMAT_TYPE::VFT_NONE, false },
-         this, &ChartLayer::_minScale2ShowDepthObjects, &ChartLayer::OnShowDepthChartObjectsChanged, this
-      );
+      CR_CHART_LAYER_PROP(_prop_minScale2ShowDepthObjects, "Min. Scale 2 Show Depth Objects", "Minimum zoom scale to show depth objects", ChartLayer, this, _minScale2ShowDepthObjects);
 
       folderProps->AddChild(_prop_minScale2ShowDepthObjects.get());
       _props = std::move(folderProps);

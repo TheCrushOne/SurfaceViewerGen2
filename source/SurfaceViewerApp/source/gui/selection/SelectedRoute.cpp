@@ -2,7 +2,112 @@
 #include "selectedroute.h"
 #include "simulator/simulator.h"
 
+#define CRROUTEINFO(iPropPtr, name, description, prStruct, obj, field) PROPHELPER_CREATEHOLDER_L(iPropPtr, name, description, prStruct, obj, field, &SelectRouteBase::OnEmpty)
+
 using namespace SV;
+
+namespace
+{
+   const render::object_info selected_route_point_oi()
+   {
+      return {
+         8,
+         render::LINE_STYLE::LL_SOLID,
+         render::FILL_TYPE::FT_NONE,
+         user_interface::selectedColor,
+         "",
+         0,
+         0,
+         user_interface::selectedAlpha
+      };
+   }
+
+   const render::find_info selected_route_point_fi(chart_object_id id)
+   {
+      return {
+         render::FIND_TYPE::FT_FIND_FAST,
+         id,
+         render::FIND_OBJECT_TYPE::FOT_SELECTED,
+         0,
+         chart_object::OBJECT_TYPE::OT_NONE
+      };
+   }
+
+   const render::object_info selected_route_segment_segment_oi()
+   {
+      return {
+         5,
+         render::LINE_STYLE::LL_SOLID,
+         render::FILL_TYPE::FT_NONE,
+         user_interface::selectedColor,
+         "",
+         0,
+         0,
+         user_interface::selectedAlpha
+      };
+   }
+
+   const render::find_info selected_route_segment_segment_fi(chart_object_id id)
+   {
+      return {
+         render::FIND_TYPE::FT_FIND_FAST,
+         id,
+         render::FIND_OBJECT_TYPE::FOT_SELECTED,
+         SelectedRouteSegment::SEGMENT_PART::SP_SEGMENT,
+         chart_object::OBJECT_TYPE::OT_NONE
+      };
+   }
+
+   const render::object_info selected_route_segment_start_point_oi()
+   {
+      return {
+         8,
+         render::LINE_STYLE::LL_SOLID,
+         render::FILL_TYPE::FT_NULL,
+         user_interface::selectedColor,
+         "",
+         0,
+         0,
+         user_interface::selectedAlpha
+      };
+   }
+
+   const render::find_info selected_route_segment_start_point_fi(chart_object_id id)
+   {
+      return {
+         render::FIND_TYPE::FT_FIND_FAST,
+         id,
+         render::FIND_OBJECT_TYPE::FOT_SELECTED,
+         SelectedRouteSegment::SEGMENT_PART::SP_START_POINT,
+         chart_object::OBJECT_TYPE::OT_NONE
+      };
+   }
+
+   const render::object_info selected_route_segment_end_point_oi()
+   {
+      return {
+         8,
+         render::LINE_STYLE::LL_SOLID,
+         render::FILL_TYPE::FT_NULL,
+         user_interface::selectedColor,
+         "",
+         0,
+         0,
+         user_interface::selectedAlpha
+      };
+   }
+
+   const render::find_info selected_route_segment_end_point_fi(chart_object_id id)
+   {
+      return {
+         render::FIND_TYPE::FT_FIND_FAST,
+         id,
+         render::FIND_OBJECT_TYPE::FOT_SELECTED,
+         SelectedRouteSegment::SEGMENT_PART::SP_END_POINT,
+         chart_object::OBJECT_TYPE::OT_NONE
+      };
+   }
+}
 
 inline const char* route_type_to_string(surface_simulation::ROUTE_TYPE _type)
 {
@@ -39,10 +144,11 @@ SelectRouteBase::SelectRouteBase(id_type id, size_t data)
 
    m_ship_info_folder = std::make_unique<FolderProperty>("Ship info");
 
-   m_prop_id = std::make_unique< ValuePropertyHolder< SelectRouteBase, decltype(m_id)>>(
+   /*m_prop_id = std::make_unique< ValuePropertyHolder< SelectRouteBase, decltype(m_id)>>(
       FieldMeta{ "ID", "Ship ID", VALUE_FORMAT_TYPE::VFT_NONE, true },
       this, &SelectRouteBase::m_id, &SelectRouteBase::OnEmpty, this
-   );
+   );*/
+   CRROUTEINFO(m_prop_id, "ID", "Ship ID", SelectRouteBase, this, m_id);
 
    m_ship_info_folder->AddChild(m_prop_id.get());
 
@@ -51,10 +157,11 @@ SelectRouteBase::SelectRouteBase(id_type id, size_t data)
 
    m_typeName = route_type_to_string(m_format_type);
 
-   m_route_type = std::make_unique< ValuePropertyHolder< SelectRouteBase, decltype(m_typeName)>>(
+   /*m_route_type = std::make_unique< ValuePropertyHolder< SelectRouteBase, decltype(m_typeName)>>(
       FieldMeta{ "Type", "Route type", VALUE_FORMAT_TYPE::VFT_NONE, true },
       this, &SelectRouteBase::m_typeName, &SelectRouteBase::OnEmpty, this
-   );
+   );*/
+   CRROUTEINFO(m_route_type, "Type", "Route type", SelectRouteBase, this, m_typeName);
 
    m_route_info_folder->AddChild(m_route_type.get());
 
@@ -92,13 +199,12 @@ void SelectedRoutePoint::OnSimSettingChanged()
    //ScenarioManager::GetInstance().SetShipRoute(_format_type, _id, _route);
 }
 
-
 void SelectedRoutePoint::Render(render::iRender* renderer)
 {
    renderer->AddObject({
       { m_point },
-      { 8, render::LINE_STYLE::LL_SOLID, render::FILL_TYPE::FT_NONE , user_interface::selectedColor, "", 0, 0, user_interface::selectedAlpha },
-      {render::FIND_TYPE::FT_FIND_FAST, 0, render::FIND_OBJECT_TYPE::FOT_SELECTED, 0 }
+      selected_route_point_oi(),
+      selected_route_point_fi(m_id),
    });
 }
 
@@ -109,20 +215,26 @@ void SelectedRoutePoint::StartEdit(render::iRender* renderer, CPoint point, rend
 
 void SelectedRoutePoint::Edit(render::iRender* renderer, CPoint point)
 {
-   m_geoEdit = renderer->PixelToGeo(math::point{ (double)point.y, (double)point.x });
+   /*m_geoEdit = renderer->PixelToGeo(math::point{ (double)point.y, (double)point.x });
 
    if (m_index > 0)
    {
-      renderer->AddObject({ { m_route[m_index - 1].pos, m_geoEdit }, { 5, render::LINE_STYLE::LL_DASH, render::FILL_TYPE::FT_NONE , user_interface::selectedColor, "", 0, 0, user_interface::selectedAlpha } });
+      renderer->AddObject({
+         { m_route[m_index - 1].pos, m_geoEdit },
+         { 5, render::LINE_STYLE::LL_DASH, render::FILL_TYPE::FT_NONE , user_interface::selectedColor, "", 0, 0, user_interface::selectedAlpha }
+      });
       std::stringstream text;
       text << "dir: " << get_formated_value(math::direction(m_route[m_index - 1].pos, m_geoEdit), VALUE_FORMAT_TYPE::VFT_COURSE);
       text << ", d: " << get_formated_value(math::distance(m_route[m_index - 1].pos, m_geoEdit), VALUE_FORMAT_TYPE::VFT_DISTANCE);
 
-      renderer->AddObject({ { m_geoEdit }, { 5, render::LINE_STYLE::LL_SOLID, render::FILL_TYPE::FT_NONE , user_interface::selectedColor, text.str(), 25, 0, user_interface::selectedAlpha } });
+      renderer->AddObject({
+         { m_geoEdit },
+         { 5, render::LINE_STYLE::LL_SOLID, render::FILL_TYPE::FT_NONE , user_interface::selectedColor, text.str(), 25, 0, user_interface::selectedAlpha }
+      });
    }
 
    if (m_index < m_route.size() - 1)
-      renderer->AddObject({ { m_geoEdit, m_route[m_index + 1].pos }, { 5, render::LINE_STYLE::LL_DASH, render::FILL_TYPE::FT_NONE , user_interface::selectedColor, "", 0, 0, user_interface::selectedAlpha } });
+      renderer->AddObject({ { m_geoEdit, m_route[m_index + 1].pos }, { 5, render::LINE_STYLE::LL_DASH, render::FILL_TYPE::FT_NONE , user_interface::selectedColor, "", 0, 0, user_interface::selectedAlpha } });*/
 }
 
 void SelectedRoutePoint::EndEdit()
@@ -131,7 +243,6 @@ void SelectedRoutePoint::EndEdit()
    //ScenarioManager::GetInstance().SetShipRoute(_format_type, _id, _route);
    SelectedObjectManager::GetInstance().Unselect();
 }
-
 
 void SelectedRoutePoint::Delete()
 {
@@ -201,28 +312,29 @@ void SelectedRouteSegment::OnSimSettingChanged()
    //ScenarioManager::GetInstance().SetShipRoute(_format_type, _id, _route);
 }
 
-
 void SelectedRouteSegment::Render(render::iRender* renderer)
 {
+   // segment
    renderer->AddObject({ 
       { m_pointFrom.pos, m_pointTo.pos },
-      { 5, render::LINE_STYLE::LL_SOLID, render::FILL_TYPE::FT_NONE , user_interface::selectedColor, "", 0, 0, user_interface::selectedAlpha },
-      { render::FIND_TYPE::FT_FIND_FAST, 0, render::FIND_OBJECT_TYPE::FOT_SELECTED, SP_SEGMENT }
+      selected_route_segment_segment_oi(),
+      selected_route_segment_segment_fi(m_id),
    });
 
+   // start
    renderer->AddObject({
       { m_pointFrom.pos },
-      { 8, render::LINE_STYLE::LL_SOLID, render::FILL_TYPE::FT_NULL, user_interface::selectedColor, "", 0, 0, user_interface::selectedAlpha },
-      { render::FIND_TYPE::FT_FIND_FAST, 0, render::FIND_OBJECT_TYPE::FOT_SELECTED, SP_START_POINT }
+      selected_route_segment_start_point_oi(),
+      selected_route_segment_start_point_fi(m_id),
    });
 
+   // finish
    renderer->AddObject({
       { m_pointTo.pos },
-      { 8, render::LINE_STYLE::LL_SOLID, render::FILL_TYPE::FT_NULL, user_interface::selectedColor, "", 0, 0, user_interface::selectedAlpha},
-      { render::FIND_TYPE::FT_FIND_FAST, 0, render::FIND_OBJECT_TYPE::FOT_SELECTED, SP_END_POINT }
+      selected_route_segment_end_point_oi(),
+      selected_route_segment_end_point_fi(m_id),
    });
 }
-
 
 void SelectedRouteSegment::StartEdit(render::iRender* renderer, CPoint point, render::find_info info)
 {
@@ -232,7 +344,7 @@ void SelectedRouteSegment::StartEdit(render::iRender* renderer, CPoint point, re
 
 void SelectedRouteSegment::Edit(render::iRender* renderer, CPoint point)
 {
-   m_geoEdit = renderer->PixelToGeo(math::point{ (double)point.y, (double)point.x });
+   /*m_geoEdit = renderer->PixelToGeo(math::point{ (double)point.y, (double)point.x });
    std::stringstream text;
    switch (m_editPart)
    {
@@ -268,7 +380,7 @@ void SelectedRouteSegment::Edit(render::iRender* renderer, CPoint point)
    }
 
 
-   renderer->AddObject({ { m_geoEdit }, { 8, render::LINE_STYLE::LL_DASH, render::FILL_TYPE::FT_NONE , user_interface::selectedColor, text.str(), 25, 0, user_interface::selectedAlpha } });
+   renderer->AddObject({ { m_geoEdit }, { 8, render::LINE_STYLE::LL_DASH, render::FILL_TYPE::FT_NONE , user_interface::selectedColor, text.str(), 25, 0, user_interface::selectedAlpha } });*/
 }
 
 void SelectedRouteSegment::EndEdit()
@@ -290,7 +402,6 @@ void SelectedRouteSegment::EndEdit()
    //ScenarioManager::GetInstance().SetShipRoute(_format_type, _id, _route);
    SelectedObjectManager::GetInstance().Unselect();
 }
-
 
 void SelectedRouteSegment::Delete()
 {

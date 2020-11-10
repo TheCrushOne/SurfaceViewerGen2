@@ -81,13 +81,14 @@ namespace SV
       iPropertyPtr m_prop_distance;
       iPropertyPtr m_prop_xte_left;
       iPropertyPtr m_prop_xte_right;
-
+   public:
       enum SEGMENT_PART
       {
          SP_START_POINT = 0,
          SP_END_POINT,
          SP_SEGMENT
       };
+   protected:
       SEGMENT_PART m_editPart;
    };
 }

@@ -32,6 +32,8 @@ namespace SV
       void initObjInfo();
       bool synchronize_map(render::iRender* renderer, const SV::surface_simulation::iSimulationState& state);
       void addChartObject(render::iRender* renderer, const SV::surface_simulation::iLayerChartObject* obj);
+      void addCoverage(render::iRender* renderer, const pathfinder::UnsignedMatrix& coverage);
+      void addExplication(render::iRender* renderer, const pathfinder::UnsignedMatrix& explication, std::function<unsigned long(size_t)> colorizer);
       void onLayerEnabledChanged() override;
       bool isLayerEnabled() const override { return true; }
    private:

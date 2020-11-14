@@ -42,6 +42,8 @@ void PathFinderPipeline::FindPath(std::function<void(void)> callback, std::share
    m_rowCount = rawdata->GetRowCount();
    m_colCount = rawdata->GetColCount();
    m_settings = settings;
+   // NOTE: вот на всякий очистить надо..
+   m_coverageHistory.clear();
 
    if (m_indata->settings.multithread)
       findPathMultiThread();
@@ -147,10 +149,8 @@ void PathFinderPipeline::buildLandCoverage()
 {
    if (m_indata->settings.land_path)
    {
-      auto newCoverage = m_coverageBuilder->BuildLandCoverage(m_rowCount, m_colCount, m_indata->strategy_settings, m_paths.air_routes);
-      if (!m_currentCoverage.get() || checkLandCoverage(newCoverage))
+      if (updateCurrentCoverage())
       {
-         m_currentCoverage = std::move(newCoverage);
          correctControlPoints();
          findLandRoute();
       }
@@ -168,6 +168,7 @@ void PathFinderPipeline::buildLandCoverage()
    }
 }
 
+// NOTE: сравнение старой матрицы покрытия с новой
 bool PathFinderPipeline::checkLandCoverage(const SharedUnsignedMatrix& coverageMatrix)
 {
    ATLASSERT(coverageMatrix->GetRowCount() == m_currentCoverage->GetRowCount());
@@ -199,6 +200,20 @@ void PathFinderPipeline::pipelineFinalize()
    m_callback();
 }
 
+bool PathFinderPipeline::updateCurrentCoverage()
+{
+   auto newCoverage = m_coverageBuilder->BuildLandCoverage(m_rowCount, m_colCount, m_indata->strategy_settings, m_paths.air_routes);
+   if (!m_currentCoverage.get() || checkLandCoverage(newCoverage))
+   {
+      m_currentCoverage = std::move(newCoverage);
+      m_coverageHistory.emplace_back(m_currentCoverage);
+      return true;
+   }
+   else
+      m_coverageHistory.emplace_back(std::move(newCoverage));
+   return false;
+}
+
 void PathFinderPipeline::findPathSingleThread()
 {
    do
@@ -212,11 +227,8 @@ void PathFinderPipeline::findPathSingleThread()
 
       if (m_indata->settings.land_path)
       {
-         auto newCoverage = m_coverageBuilder->BuildLandCoverage(m_rowCount, m_colCount, m_indata->strategy_settings, m_paths.air_routes);
-         if (!m_currentCoverage.get() || checkLandCoverage(newCoverage))
+         if (updateCurrentCoverage())
          {
-            m_currentCoverage = std::move(newCoverage);
-
             ATLASSERT(m_indata->unit_data.land_units.size() == 1);
             m_paths.land_routes.clear();
             m_paths.land_routes.resize(1);
@@ -247,7 +259,8 @@ void PathFinderPipeline::correctControlPoints()
 {
    affilationCheckerMtd affilationChecker = [this](const std::shared_ptr<pathfinder::RoutePointMatrix>& rawdata, size_t row, size_t col)->bool
    {
-      return this->GetCurrentCoverage()->Get(row, col) == 1 && rawdata->Get(row, col).go != pathfinder::GoZoneAffilation::GZA_FORBIDDEN;
+      return this->GetCurrentCoverage()->Get(row, col) == 1
+         && rawdata->Get(row, col).go != pathfinder::GoZoneAffilation::GZA_FORBIDDEN;
    };
    auto corrector = [this, affilationChecker](CG::route_point& src)
    {

@@ -30,6 +30,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Include\source\colreg\ThirdParty\md5\md5.h" />
+    <ClInclude Include="source\Common\BinaryDataLoadHelper.h" />
+    <ClInclude Include="source\Common\BinaryDataSaveHelper.h" />
     <ClInclude Include="source\Common\GeoJsonLoadHelper.h" />
     <ClInclude Include="source\Common\GeoJsonSaveHelper.h" />
     <ClInclude Include="source\Common\TagList.h" />

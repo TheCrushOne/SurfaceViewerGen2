@@ -13,6 +13,9 @@ namespace SV::engine
    {
       virtual void ProcessPathFind(const pathfinder::path_finder_indata&, const pathfinder::GeoMatrix&, std::shared_ptr<settings::application_settings>, std::function<void(void)>) = 0;
       virtual const pathfinder::route_data& GetLastProcessedPaths() const = 0;
+      virtual const pathfinder::UnsignedMatrix& GetLandUnitExplication() const = 0;
+      virtual const pathfinder::UnsignedMatrix& GetAirUnitExplication() const = 0;
+      virtual const std::vector<pathfinder::SharedUnsignedMatrix>& GetCoverageHistory() const = 0;
       virtual void LaunchResearch(std::function<void(void)>) = 0;
       virtual const research::TimeResearchComplexStorage& GetTimeResearchResult() const = 0;
       virtual const research::LengthResearchComplexStorage& GetLengthResearchResult() const = 0;

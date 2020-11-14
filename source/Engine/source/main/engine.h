@@ -35,6 +35,9 @@ namespace SV::engine
 
       void ProcessPathFind(const pathfinder::path_finder_indata&, const pathfinder::GeoMatrix&, std::shared_ptr<settings::application_settings>, std::function<void(void)>) override final;
       const pathfinder::route_data& GetLastProcessedPaths() const override final { return m_pathfinder->GetPaths(); }
+      const pathfinder::UnsignedMatrix& GetLandUnitExplication() const override final;
+      const pathfinder::UnsignedMatrix& GetAirUnitExplication() const override final;
+      const std::vector<pathfinder::SharedUnsignedMatrix>& GetCoverageHistory() const override final { return m_pathfinder->GetCoverageHistory(); }
       void Release() override final { delete this; }
    private:
       void timeResearch();
@@ -64,6 +67,7 @@ namespace SV::engine
       std::unique_ptr<pathfinder::PathFinderPipeline> m_pathfinder;
       std::shared_ptr<settings::application_settings> m_settings;
 
+      // NOTE: экспликации для разных типов роботов внутри содержатся
       std::shared_ptr<pathfinder::RoutePointMatrix> m_rawdata;
       std::shared_ptr<pathfinder::route_data> m_routedata;
       //std::shared_ptr<pathfinder::route_data> m_routedata;

@@ -7,8 +7,12 @@ namespace SV::data_standart
 {
    struct iPathStorageDataStandart : public iDataStandart
    {
-      virtual void SetData(const pathfinder::route_data& paths) = 0;
-      virtual const pathfinder::route_data& GetData() = 0;
+      virtual const pathfinder::route_data& GetData() const = 0;
+      virtual const pathfinder::UnsignedMatrix& GetLandUnitExplication() const = 0;
+      virtual const pathfinder::UnsignedMatrix& GetAirUnitExplication() const = 0;
+      virtual const std::vector<pathfinder::UnsignedMatrix>& GetCoverageHistory() const = 0;
+
+      virtual void SetData(const pathfinder::route_data& paths, const pathfinder::UnsignedMatrix& land, const pathfinder::UnsignedMatrix& air, const std::vector<pathfinder::SharedUnsignedMatrix>& coverages) = 0;
    };
 }
 

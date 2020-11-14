@@ -181,27 +181,43 @@ bool StrategyManager::PrepareControlPoint(size_t iterations, std::vector<setting
 
          // NOTE: заюзана формула поворота относительно произвольной точки
          GeoMatrix rtResStart =
-              GeoMatrix({ { startNonRotated.lat, startNonRotated.lon, 1. } })
-            * GeoMatrix({ { 1., 0., 0. }
-                        , { 0., 1., 0. }
-                        , { -dSRow, -dSCol, 1. } })
-            * GeoMatrix({ { cos(theta_mod), sin(theta_mod), 0. }
-                        , { -sin(theta_mod), cos(theta_mod), 0. }
-                        , { 0., 0., 1. } })
-            * GeoMatrix({ { 1., 0., 0. }
-                        , { 0., 1., 0. }
-                        , { dSRow, dSCol, 1. } });
+            GeoMatrix(std::vector<std::vector<double>>{
+               { startNonRotated.lat, startNonRotated.lon, 1. }
+            })
+            * GeoMatrix(std::vector<std::vector<double>>{
+               { 1., 0., 0. },
+               { 0., 1., 0. },
+               { -dSRow, -dSCol, 1. }
+            })
+            * GeoMatrix(std::vector<std::vector<double>>{
+               { cos(theta_mod), sin(theta_mod), 0. },
+               { -sin(theta_mod), cos(theta_mod), 0. },
+               { 0., 0., 1. }
+            })
+            * GeoMatrix(std::vector<std::vector<double>>{
+               { 1., 0., 0. },
+               { 0., 1., 0. },
+               { dSRow, dSCol, 1. }
+            });
          GeoMatrix rtResFinish =
-              GeoMatrix({ { finishNonRotated.lat, finishNonRotated.lon, 1. } })
-            * GeoMatrix({ { 1., 0., 0. }
-                        , { 0., 1., 0. }
-                        , { -dFRow, -dFCol, 1. } })
-            * GeoMatrix({ { cos(-theta_mod), sin(-theta_mod), 0. }
-                        , { -sin(-theta_mod), cos(-theta_mod), 0. }
-                        , { 0., 0., 1. } })
-            * GeoMatrix({ { 1., 0., 0. }
-                        , { 0., 1., 0. }
-                        , { dFRow, dFCol, 1. } });
+            GeoMatrix(std::vector<std::vector<double>>{
+               { finishNonRotated.lat, finishNonRotated.lon, 1. }
+            })
+            * GeoMatrix(std::vector<std::vector<double>>{
+               { 1., 0., 0. },
+               { 0., 1., 0. },
+               { -dFRow, -dFCol, 1. }
+            })
+            * GeoMatrix(std::vector<std::vector<double>>{
+               { cos(-theta_mod), sin(-theta_mod), 0. },
+               { -sin(-theta_mod), cos(-theta_mod), 0. },
+               { 0., 0., 1. }
+            })
+            * GeoMatrix(std::vector<std::vector<double>>{
+               { 1., 0., 0. },
+               { 0., 1., 0. },
+               { dFRow, dFCol, 1. }
+            });
          cpPairVector.emplace_back(std::pair<CG::route_point, CG::route_point>{
               { static_cast<int>(rtResStart.Get(0, 0)), static_cast<int>(rtResStart.Get(0, 1)) }
             , { static_cast<int>(rtResFinish.Get(0, 0)), static_cast<int>(rtResFinish.Get(0, 1)) }

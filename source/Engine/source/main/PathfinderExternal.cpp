@@ -51,7 +51,7 @@ bool PathfinderExternal::readFromSource(data_standart::iSurfaceVieverGenMapDataS
 
 bool PathfinderExternal::writeToDestination(data_standart::iPathStorageDataStandart* dst)
 {
-   dst->SetData(m_engine->GetLastProcessedPaths());
+   dst->SetData(m_engine->GetLastProcessedPaths(), m_engine->GetLandUnitExplication(), m_engine->GetAirUnitExplication(), m_engine->GetCoverageHistory());
    return true;
 }
 

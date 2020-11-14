@@ -70,20 +70,7 @@ void SurfaceViewerGenMapDataStandart::readMetaData()
 void SurfaceViewerGenMapDataStandart::readHeightData()
 {
    std::string dataFilePath = getDataFilePath();
-   std::ifstream file(dataFilePath, std::ios::in | std::ios::binary);
-   m_rawdata.SetRowCount(m_rowCount);
-   m_rawdata.SetColCount(m_colCount);
-   char* buffer = new char[sizeof(double)];
-   for (size_t ridx = 0; ridx < m_rowCount; ridx++)
-   {
-      for (size_t cidx = 0; cidx < m_colCount; cidx++)
-      {
-         file.read(buffer, sizeof(double));
-         m_rawdata.Set(ridx, cidx, *reinterpret_cast<double*>(buffer));
-      }
-   }
-   delete [] buffer;
-   file.close();
+   m_rawdata = binary_load_helper::from_file<double>(dataFilePath.c_str(), m_rowCount, m_colCount);
 }
 
 void SurfaceViewerGenMapDataStandart::readUnitData()
@@ -104,16 +91,7 @@ void SurfaceViewerGenMapDataStandart::saveMetaData()
 void SurfaceViewerGenMapDataStandart::saveHeightData()
 {
    std::string dataFilePath = getDataFilePath();
-   std::ofstream file(dataFilePath, std::ios::out | std::ios::binary);
-   for (size_t ridx = 0; ridx < m_rowCount; ridx++)
-   {
-      for (size_t cidx = 0; cidx < m_colCount; cidx++)
-      {
-         double buffer = m_rawdata.Get(ridx, cidx);
-         file.write(reinterpret_cast<const char*>(&buffer), sizeof(double));
-      }
-   }
-   file.close();
+   binary_save_helper::to_file(dataFilePath.c_str(), m_rawdata);
 }
 
 void SurfaceViewerGenMapDataStandart::mountPathFileStorage()

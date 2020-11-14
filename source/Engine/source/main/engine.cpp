@@ -32,6 +32,40 @@ void Engine::ProcessPathFind(const pathfinder::path_finder_indata& scenarioData,
    std::thread(&Engine::processPathFind, this, scenarioData, rawData, completeCallback).detach();
 }
 
+const pathfinder::UnsignedMatrix& Engine::GetLandUnitExplication() const
+{
+   static pathfinder::UnsignedMatrix explication;
+   size_t rowCount = m_rawdata.get()->GetRowCount();
+   size_t colCount = m_rawdata.get()->GetColCount();
+   explication.SetRowCount(rowCount);
+   explication.SetColCount(colCount);
+   for (size_t ridx = 0; ridx < rowCount; ridx++)
+   {
+      for (size_t cidx = 0; cidx < colCount; cidx++)
+      {
+         explication.Set(ridx, cidx, static_cast<size_t>(m_rawdata.get()->Get(ridx, cidx).go));
+      }
+   }
+   return explication;
+}
+
+const pathfinder::UnsignedMatrix& Engine::GetAirUnitExplication() const
+{
+   static pathfinder::UnsignedMatrix explication;
+   size_t rowCount = m_rawdata.get()->GetRowCount();
+   size_t colCount = m_rawdata.get()->GetColCount();
+   explication.SetRowCount(rowCount);
+   explication.SetColCount(colCount);
+   for (size_t ridx = 0; ridx < rowCount; ridx++)
+   {
+      for (size_t cidx = 0; cidx < colCount; cidx++)
+      {
+         explication.Set(ridx, cidx, static_cast<size_t>(m_rawdata.get()->Get(ridx, cidx).fly));
+      }
+   }
+   return explication;
+}
+
 void Engine::processPathFind(const pathfinder::path_finder_indata& scenarioData, const pathfinder::GeoMatrix& rawData, std::function<void(void)> completeCallback)
 {
    // TODO: разобраться с настройками

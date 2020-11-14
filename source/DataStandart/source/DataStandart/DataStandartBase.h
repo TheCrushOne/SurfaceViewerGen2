@@ -4,6 +4,9 @@
 #include "navdisp/ComService.h"
 #include <filesystem>
 
+#include "Common\BinaryDataLoadHelper.h"
+#include "Common\BinaryDataSaveHelper.h"
+
 #include "json/json_wrapper.h"
 
 namespace SV::data_standart

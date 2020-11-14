@@ -8,33 +8,40 @@ using namespace SV;
 namespace
 {
    TrackLayer layer;
-   render::object_info roverRouteObjInfo
+   const render::object_info rover_route_obj_info()
    {
-      1,
-      render::LINE_STYLE::LL_DASH,
-      render::FILL_TYPE::FT_NONE,
-      RGB(110, 110, 110)
+      return { 1,
+         render::LINE_STYLE::LL_DASH,
+         render::FILL_TYPE::FT_NONE,
+         RGB(110, 110, 110)
+      };
    };
-   render::object_info roverControlPointsObjInfo
+
+   const render::object_info rover_control_points_obj_info()
    {
-      1,
-      render::LINE_STYLE::LL_NONE,
-      render::FILL_TYPE::FT_NONE,
-      RGB(150, 150, 150)
+      return { 1,
+         render::LINE_STYLE::LL_NONE,
+         render::FILL_TYPE::FT_NONE,
+         RGB(150, 150, 150)
+      };
    };
-   render::object_info droneRouteObjInfo
+
+   const render::object_info drone_route_obj_info()
    {
-      1,
-      render::LINE_STYLE::LL_DASH,
-      render::FILL_TYPE::FT_NONE,
-      RGB(255, 200, 30)
+      return { 1,
+         render::LINE_STYLE::LL_DASH,
+         render::FILL_TYPE::FT_NONE,
+         RGB(255, 200, 30)
+      };
    };
-   render::object_info droneControlPointsObjInfo
+
+   const render::object_info drone_control_points_obj_info()
    {
-      1,
-      render::LINE_STYLE::LL_NONE,
-      render::FILL_TYPE::FT_NONE,
-      RGB(255, 255, 30)
+      return { 1,
+         render::LINE_STYLE::LL_NONE,
+         render::FILL_TYPE::FT_NONE,
+         RGB(255, 255, 30)
+      };
    };
 }
 void TrackLayer::renderTracks(render::iRender* renderer)
@@ -50,9 +57,9 @@ void TrackLayer::renderTracks(render::iRender* renderer)
       ATLASSERT(rover);
 
       if (m_renderSourceRoute)
-         TrackLayerHelper::renderRoute(renderer, rover->GetInfo().id, rover->GetSrcPath(), roverRouteObjInfo, surface_simulation::ROUTE_TYPE::RT_SOURSE);
+         TrackLayerHelper::renderRoute(renderer, rover->GetInfo().id, rover->GetSrcPath(), rover_route_obj_info(), surface_simulation::ROUTE_TYPE::RT_SOURSE);
       if (m_renderControlPoints)
-         TrackLayerHelper::renderRoute(renderer, rover->GetInfo().id, rover->GetSrcControlPoints(), roverControlPointsObjInfo, surface_simulation::ROUTE_TYPE::RT_CONTROL);
+         TrackLayerHelper::renderRoute(renderer, rover->GetInfo().id, rover->GetSrcControlPoints(), rover_control_points_obj_info(), surface_simulation::ROUTE_TYPE::RT_CONTROL);
    }
 
    for (size_t idx = 0; idx < simulationState.GetUnitCount(surface_simulation::UNIT_TYPE::UT_DRONE); ++idx)
@@ -60,8 +67,8 @@ void TrackLayer::renderTracks(render::iRender* renderer)
       const auto* drone = simulationState.GetUnitByIdx(surface_simulation::UNIT_TYPE::UT_DRONE, idx);
 
       if (m_renderSourceRoute)
-         TrackLayerHelper::renderRoute(renderer, drone->GetInfo().id, drone->GetSrcPath(), droneRouteObjInfo, surface_simulation::ROUTE_TYPE::RT_SOURSE);
+         TrackLayerHelper::renderRoute(renderer, drone->GetInfo().id, drone->GetSrcPath(), drone_route_obj_info(), surface_simulation::ROUTE_TYPE::RT_SOURSE);
       if (m_renderControlPoints)
-         TrackLayerHelper::renderRoute(renderer, drone->GetInfo().id, drone->GetSrcControlPoints(), droneControlPointsObjInfo, surface_simulation::ROUTE_TYPE::RT_CONTROL);
+         TrackLayerHelper::renderRoute(renderer, drone->GetInfo().id, drone->GetSrcControlPoints(), drone_control_points_obj_info(), surface_simulation::ROUTE_TYPE::RT_CONTROL);
    }
 }

@@ -33,6 +33,12 @@ namespace SV::pathfinder
                Set(rIdx, cIdx, mtx.Get(rIdx, cIdx));
          }
       }
+      Matrix(const std::vector<std::vector<type>>& data)
+      {
+         m_rowCount = data.size();
+         m_colCount = data.size() ? data.at(0).size() : 0;
+         m_data = std::move(data);
+      }
 
       type Get(size_t rIdx, size_t cIdx) const
       {
@@ -77,7 +83,7 @@ namespace SV::pathfinder
       GeoMatrix(double inVal = double())
          : Matrix(inVal)
       {}
-      GeoMatrix(std::vector<std::vector<double>> source)
+      /*GeoMatrix(std::vector<std::vector<double>> source)
       {
          m_rowCount = source.size();
          m_colCount = m_rowCount > 0 ? source.at(0).size() : 0;
@@ -86,12 +92,18 @@ namespace SV::pathfinder
             _ASSERT(source.at(idx).size() == m_colCount);
 #endif
          m_data = source;
-      }
+      }*/
       GeoMatrix(size_t rowCount, size_t colCount, double inVal = double())
          : Matrix(rowCount, colCount, inVal)
       {}
       GeoMatrix(const GeoMatrix& mtx)
          : Matrix(mtx)
+      {}
+      GeoMatrix(const Matrix<double>& mtx)
+         : Matrix(mtx)
+      {}
+      GeoMatrix(const std::vector<std::vector<double>>& data)
+         : Matrix(data)
       {}
 
       GeoMatrix operator*(const GeoMatrix& right)

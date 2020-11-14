@@ -10,6 +10,11 @@ namespace SV::data_standart
       : public iPathStorageDataStandart
       , public DataStandart<DataStandartType::DST_OPTPATHS, optimized_path_storage_data_standart>
    {
+      struct meta
+      {
+         size_t row_count;
+         size_t col_count;
+      };
    public:
       OptimizedPathStorageDataStandart(central_pack* pack, LPCSTR base_folder, navigation_dispatcher::iComService* pService)
          : DataStandart(pack, base_folder, pService)
@@ -35,9 +40,12 @@ namespace SV::data_standart
       // iSurfaceViewerGenMapDataStandart
       // Common
       // Read
+      const pathfinder::route_data& GetData() const override final;
+      const pathfinder::UnsignedMatrix& GetLandUnitExplication() const override final;
+      const pathfinder::UnsignedMatrix& GetAirUnitExplication() const override final;
+      const std::vector<pathfinder::UnsignedMatrix>& GetCoverageHistory() const override final;
       // Write
-      void SetData(const pathfinder::route_data& paths) override final;
-      const pathfinder::route_data& GetData() override final;
+      void SetData(const pathfinder::route_data& paths, const pathfinder::UnsignedMatrix& land, const pathfinder::UnsignedMatrix& air, const std::vector<pathfinder::SharedUnsignedMatrix>& coverages) override final;
    private:
       // Common
       std::string getDataFilePath() override final { return std::string(getPath()) + "\\optpathdata.pl"; }
@@ -48,5 +56,9 @@ namespace SV::data_standart
       LPCSTR getPath() override final { return m_dataStandartData.folder.c_str(); }
    private:
       pathfinder::route_data m_paths;
+      pathfinder::UnsignedMatrix m_landExplication;
+      pathfinder::UnsignedMatrix m_airExplication;
+      std::vector<pathfinder::UnsignedMatrix> m_coverageHistory;
+      meta m_meta;
    };
 }

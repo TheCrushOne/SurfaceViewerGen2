@@ -16,8 +16,7 @@ void DebugFiltersManager::prepareFilters()
    if (!sim)
       return;
    //const auto* debugInfo = sim->GetDebugInfo();
-   if (!nullptr/*debugInfo*/)
-      return;
+
    /*const auto roots = debugInfo->GetNodes();
    if (!roots)
       return;
@@ -31,32 +30,36 @@ void DebugFiltersManager::prepareFilters()
       }
    }
    */
+   m_filters.name = debug_filter_tag::general;
+   auto& explications = addDebugNode(m_filters, debug_filter_tag::explications);
+   addDebugNode(explications, debug_filter_tag::land);
+   addDebugNode(explications, debug_filter_tag::air);
+
+   auto& coverages = addDebugNode(m_filters, debug_filter_tag::coverages);
+   auto covCount = sim->GetState().GetCoverageHistory().size();
+   for (size_t step = 0; step < covCount; step++)
+      addDebugNode(coverages, std::string(debug_filter_tag::step_templ) + std::to_string(step));
 }
 
-void DebugFiltersManager::addDebugFolder(const dbg::debug_info_node& node, filter_info& filter)
+filter_info& DebugFiltersManager::addDebugNode(filter_info& filter, const std::string& folderName)
 {
-   //if (wcslen(node.name) > 0)
-   //{
-   //   filter.childs[node.name].name = node.name;
-
-   //   for (size_t nodeIdx = 0; nodeIdx < node.subnodes.size; ++nodeIdx)
-   //      addDebugFolder(node.subnodes.arr[nodeIdx], filter.childs[node.name]);
-   //}
+   filter.childs[folderName].name = folderName;
+   return filter.childs[folderName];
 }
 
 void DebugFiltersManager::ShowFilter(const std::vector<std::string>& path, bool show)
 {
-   //filter_info* filter = &m_filters;
-   //for (const auto& name : path)
-   //{
-   //   const auto itf = filter->childs.find(name);
-   //   ATLASSERT(itf != filter->childs.end());
-   //   if (show)
-   //      filter->visible = show;
-   //   filter = &(*itf).second;
-   //}
+   filter_info* filter = &m_filters;
+   for (const auto& name : path)
+   {
+      const auto itf = filter->childs.find(name);
+      ATLASSERT(itf != filter->childs.end());
+      if (show)
+         filter->visible = show;
+      filter = &(*itf).second;
+   }
 
-   //filter->visible = show;
+   filter->visible = show;
 }
 
 bool DebugFiltersManager::IsFilterVisible(const std::vector<std::string>& path)const

@@ -51,7 +51,7 @@ bool OptPathfinderExternal::readFromSource(data_standart::iSurfaceVieverGenMapDa
 
 bool OptPathfinderExternal::writeToDestination(data_standart::iOptimizedPathStorageDataStandart* dst)
 {
-   dst->SetData(m_engine->GetLastProcessedPaths());
+   dst->SetData(m_engine->GetLastProcessedPaths(), m_engine->GetLandUnitExplication(), m_engine->GetAirUnitExplication(), m_engine->GetCoverageHistory());
    return true;
 }
 

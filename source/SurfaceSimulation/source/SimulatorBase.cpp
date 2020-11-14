@@ -132,6 +132,9 @@ bool SimulatorBase::LoadProcessedPaths()
    routeMover<LayerDroneImpl>(m_settings, rt.air_routes, m_data.air_unit_objects);
    routeMover<LayerRoverImpl>(m_settings, rt.land_routes, m_data.land_unit_objects);
    calcStepCount();
+   m_data.land_explication = pathDS->GetLandUnitExplication();
+   m_data.air_explication = pathDS->GetAirUnitExplication();
+   m_data.coverage_history = pathDS->GetCoverageHistory();
    SetSimulatorScenarioState(SCENARIO_STATUS::SS_PATHS_COUNTED);
    SetSimulatorSimulationState(SIMULATION_STATUS::SS_STOP);
    return true;

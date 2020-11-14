@@ -46,6 +46,10 @@ namespace SV::surface_simulation
          //layer_provider::layer_unit_object_vct air_unit_objects;
          size_t step_count;
          size_t current_step;
+
+         pathfinder::UnsignedMatrix land_explication;
+         pathfinder::UnsignedMatrix air_explication;
+         std::vector<pathfinder::UnsignedMatrix> coverage_history;
       };
    public:
       SimulatorBase(central_pack*, iPropertyInterface*, navigation_dispatcher::iComService*);
@@ -81,6 +85,10 @@ namespace SV::surface_simulation
 
       const iLayerChartObject* GetChartObjectByIdx(size_t idx) const override final;
       const iLayerChartObject* GetChartObjectById(chart_object_id id) const override final;
+
+      const pathfinder::UnsignedMatrix& GetLandUnitExplication() const override final { return m_data.land_explication; }
+      const pathfinder::UnsignedMatrix& GetAirUnitExplication() const override final { return m_data.air_explication; }
+      const std::vector<pathfinder::UnsignedMatrix>& GetCoverageHistory() const override final { return m_data.coverage_history; }
    protected:
       void processRecountRouteVisualizeMeta(layer_provider::layer_unit_object_vct&);
       void calcStepCount();

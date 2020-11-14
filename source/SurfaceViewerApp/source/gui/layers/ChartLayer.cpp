@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "ChartLayer.h"
 #include "simulator\simulator.h"
+#include "gui\helpers\DebugFiltersManager.h"
+#include "common/pathfinder_types.h"
 
 #define CR_CHART_LAYER_PROP(iPropPtr, name, description, prStruct, obj, field) PROPHELPER_CREATEHOLDER_L(iPropPtr, name, description, prStruct, obj, field, &ChartLayer::OnShowDepthChartObjectsChanged)
 
@@ -11,6 +13,46 @@ AutoContainer< LayersContainer>::ListObjects AutoContainer< LayersContainer>::_o
 namespace
 {
    ChartLayer layer;
+   const render::object_info coverage_obj_info()
+   {
+      return {
+         1,
+         render::LINE_STYLE::LL_DASH,
+         render::FILL_TYPE::FT_NONE,
+         RGB(110, 110, 110)
+      };
+   }
+
+   const render::object_info explication_obj_info()
+   {
+      return {
+         1,
+         render::LINE_STYLE::LL_DASH,
+         render::FILL_TYPE::FT_NONE,
+         RGB(110, 110, 110)
+      };
+   }
+
+   const render::object_info contour_point_obj_info()
+   {
+      return { 
+         3,
+         render::LINE_STYLE::LL_DASH,
+         render::FILL_TYPE::FT_NONE,
+         RGB(110, 110, 110)
+      };
+   }
+
+   const render::find_info contour_find_info(chart_object_id id, chart_object::OBJECT_TYPE type)
+   {
+      return {
+         render::FIND_TYPE::FT_FIND_DETAILED,
+         id,
+         render::FIND_OBJECT_TYPE::FOT_CHART_OBJECT,
+         0,
+         type
+      };
+   }
 }
 
 void ChartLayer::Render(render::iRender* renderer)
@@ -42,6 +84,7 @@ void ChartLayer::Render(render::iRender* renderer)
    //   addChartObject(renderer, obj);
    //}
 }
+
 void ChartLayer::OnShowDepthChartObjectsChanged()
 {
    user_interface::InvalidateView();
@@ -51,10 +94,67 @@ void ChartLayer::onLayerEnabledChanged()
 {
 }
 
+unsigned long air_affilation_color(size_t uaff)
+{
+   pathfinder::FlyZoneAffilation aff = static_cast<pathfinder::FlyZoneAffilation>(uaff);
+   switch (aff)
+   {
+   case pathfinder::FlyZoneAffilation::FZA_NORMAL:
+      return RGB(50, 255, 50);
+   case pathfinder::FlyZoneAffilation::FZA_FORBIDDEN:
+      return RGB(255, 50, 50);
+   case pathfinder::FlyZoneAffilation::FZA_DANGEROUS:
+      return RGB(255, 255, 50);
+   default:
+      ATLASSERT(false);
+      return RGB(0, 0, 0);
+   }
+}
+
+unsigned long land_affilation_color(size_t uaff)
+{
+   pathfinder::GoZoneAffilation aff = static_cast<pathfinder::GoZoneAffilation>(uaff);
+   switch (aff)
+   {
+   case pathfinder::GoZoneAffilation::GZA_NORMAL:
+      return RGB(50, 255, 50);
+   case pathfinder::GoZoneAffilation::GZA_FORBIDDEN:
+      return RGB(255, 50, 50);
+   case pathfinder::GoZoneAffilation::GZA_DANGEROUS:
+      return RGB(255, 255, 50);
+   default:
+      ATLASSERT(false);
+      return RGB(0, 0, 0);
+   }
+}
+
 bool ChartLayer::synchronize_map(render::iRender* renderer, const SV::surface_simulation::iSimulationState& state)
 {
    //m_chartUSN = checker->GetObjectsUSN();
    renderer->Clear();
+
+   if (DebugFiltersManager::GetInstance().IsFilterVisible({
+      debug_filter_tag::general,
+      debug_filter_tag::explications,
+      debug_filter_tag::air
+   }))
+      addExplication(renderer, state.GetAirUnitExplication(), &air_affilation_color);
+   if (DebugFiltersManager::GetInstance().IsFilterVisible({
+      debug_filter_tag::general,
+      debug_filter_tag::explications,
+      debug_filter_tag::land
+   }))
+      addExplication(renderer, state.GetLandUnitExplication(), &land_affilation_color);
+
+   for (size_t idx = 0; idx < state.GetCoverageHistory().size(); idx++)
+   {
+      if (DebugFiltersManager::GetInstance().IsFilterVisible({
+         debug_filter_tag::general,
+         debug_filter_tag::coverages,
+         debug_filter_tag::step_templ + std::to_string(idx)
+      }))
+         addCoverage(renderer, state.GetCoverageHistory().at(idx));
+   }
 
    for (size_t iObj = 0; iObj < state.GetChartObjectCount(); iObj++)
    {
@@ -114,39 +214,55 @@ void ChartLayer::addChartObject(render::iRender* renderer, const SV::surface_sim
    chart_object::OBJECT_TYPE type = obj->GetType();
    for (auto& contour : contour_data)
    {
-      renderer->AddObject(
-         {
-            contour,
-            info,
-            {
-               render::FIND_TYPE::FT_FIND_DETAILED,
-               id,
-               render::FIND_OBJECT_TYPE::FOT_CHART_OBJECT,
-               0,
-               type
-            },
-            minScale
-         },
-         false
-      );
+      renderer->AddObject({
+         contour,
+         info,
+         contour_find_info(id, type),
+         minScale
+      }, false);
    }
-   render::object_info ptInfo{ 1, render::LINE_STYLE::LL_DASH, render::FILL_TYPE::FT_NONE, RGB(110, 110, 110) };
+   render::object_info ptInfo = contour_point_obj_info();
    ptInfo.alpha = 255;
    if (colorOverride)
       ptInfo.color = RGB(r, g, b);
-   ptInfo.width += 2;
    for (auto& contour : contour_data)
    {
       for (size_t i = 0; i < contour.size(); i++)
       {
-         renderer->AddObject(
-            {
-               {
-                  contour[i]
-               },
-               ptInfo
-            }
-         );
+         renderer->AddObject({
+            { contour[i] },
+            ptInfo
+         });
+      }
+   }
+}
+
+void ChartLayer::addCoverage(render::iRender* renderer, const pathfinder::UnsignedMatrix& coverage)
+{
+   for (size_t ridx = 0; ridx < coverage.GetRowCount(); ridx++)
+   {
+      for (size_t cidx = 0; cidx < coverage.GetColCount(); cidx++)
+      {
+         renderer->AddObject({
+            { CG::geo_point(ridx, cidx) },
+            coverage_obj_info()
+         });
+      }
+   }
+}
+
+void ChartLayer::addExplication(render::iRender* renderer, const pathfinder::UnsignedMatrix& explication, std::function<unsigned long(size_t)> colorizer)
+{
+   for (size_t ridx = 0; ridx < explication.GetRowCount(); ridx++)
+   {
+      for (size_t cidx = 0; cidx < explication.GetColCount(); cidx++)
+      {
+         auto ptInfo = explication_obj_info();
+         ptInfo.color = colorizer(explication.Get(ridx, cidx));
+         renderer->AddObject({
+            { CG::geo_point(ridx, cidx) },
+            ptInfo
+         });
       }
    }
 }

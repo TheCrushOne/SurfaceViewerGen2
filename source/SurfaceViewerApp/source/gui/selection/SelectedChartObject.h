@@ -3,7 +3,8 @@
 
 namespace SV
 {
-   class SelectedChartObject : public iSelected
+   class SelectedChartObject
+      : public iSelected
    {
 
    public:

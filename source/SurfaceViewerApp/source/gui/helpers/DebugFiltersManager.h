@@ -3,15 +3,24 @@
 
 namespace SV
 {
-   namespace dbg
-   {
-      struct debug_info_node;
-   }
    struct filter_info
    {
       std::string name;
       bool visible = false;
       std::unordered_map<std::string, filter_info> childs;
+   };
+
+   struct debug_filter_tag
+   {
+      static constexpr char general[] = "General";
+
+      static constexpr char explications[] = "Explications";
+      static constexpr char land[] = "Land";
+      static constexpr char air[] = "Air";
+
+      static constexpr char coverages[] = "Coverages";
+
+      static constexpr char step_templ[] = "Step_";
    };
 
    class DebugFiltersManager
@@ -30,7 +39,7 @@ namespace SV
    private:
       DebugFiltersManager();
       void prepareFilters();
-      void addDebugFolder(const dbg::debug_info_node& node, filter_info& filter);
+      filter_info& addDebugNode(filter_info& filter, const std::string& folderName);
 
    private:
       friend class Singleton<DebugFiltersManager>;

@@ -27,6 +27,19 @@ PathFinder::~PathFinder()
 /*void fly(Route& route)
 {}*/
 
+namespace
+{
+   bool airCheckAffilation(const SharedRoutePointMatrix& data, const SharedUnsignedMatrix& coverageMatrix, size_t row, size_t col)
+   {
+      return data->Get(row, col).fly == FlyZoneAffilation::FZA_FORBIDDEN;
+   }
+
+   float airCorrector(float y)
+   {
+      return y + 50.f;
+   }
+}
+
 void PathFinder::FindAirPath(settings::route& route, const SharedRoutePointMatrix& rawdata, size_t iterations, bool multithread)
 {
    CG::route_line exp_route;
@@ -39,19 +52,10 @@ void PathFinder::FindAirPath(settings::route& route, const SharedRoutePointMatri
    // NOTE: Миграция чего-то непонятно чего...
    for (auto& item : waypointList)
       item = rawdata->Get(item.row, item.col);
-   
-   aff_checker checker = [](const SharedRoutePointMatrix& data, const SharedUnsignedMatrix& coverageMatrix, size_t row, size_t col) -> bool
-   {
-      //Q_UNUSED(coverageMatrix);
-      return data->Get(row, col).fly == FlyZoneAffilation::FZA_FORBIDDEN;
-   };
-   height_corrector corrector = [](float y) -> float
-   {
-      return y + 50.f;
-   };
-   path_finder_logic logic = { checker, corrector };
+
+   path_finder_logic logic = { airCheckAffilation, airCorrector };
    std::string wplist;
-   for (auto wp : waypointList)
+   for (const auto& wp : waypointList)
       wplist.append(std::string("[" + std::to_string(wp.row) + ";" + std::to_string(wp.col) + "]").c_str());
    /*THREADDEBUG("st-fn: "
             << std::string("[" + std::to_string(route.start.mp.row) + ";" + std::to_string(route.start.mp.col) + "]").c_str()
@@ -80,6 +84,20 @@ void PathFinder::FindAirPath(settings::route& route, const SharedRoutePointMatri
    route.route_list = exp_route;
 }
 
+namespace
+{
+   bool landAffilationChecker(const SharedRoutePointMatrix& data, const SharedUnsignedMatrix& covMatrix, size_t row, size_t col)
+   {
+      return data->Get(row, col).go == GoZoneAffilation::GZA_FORBIDDEN || covMatrix->Get(row, col) == 0;
+   }
+
+   float landCorrector(float y)
+   {
+      // NOTE: корректировок нет
+      return y;
+   }
+}
+
 void PathFinder::FindLandPath(settings::route& route, const SharedRoutePointMatrix& rawdata, const SharedUnsignedMatrix& coverageMatrix, bool multithread, bool *pathfound)
 {
    CG::route_line exp_route;
@@ -88,16 +106,8 @@ void PathFinder::FindLandPath(settings::route& route, const SharedRoutePointMatr
    waypointList.insert(waypointList.end(), route.control_point_list.begin(), route.control_point_list.end());
    waypointList.emplace_back(route.finish);
    ATLASSERT(waypointList.size() >= 2);
-   aff_checker checker = [](const SharedRoutePointMatrix& data, const SharedUnsignedMatrix& covMatrix, size_t row, size_t col) -> bool
-   {
-      return data->Get(row, col).go == GoZoneAffilation::GZA_FORBIDDEN || covMatrix->Get(row, col) == 0;
-   };
-   height_corrector counter = [](float y) -> float
-   {
-      // NOTE: корректировок нет
-      return y;
-   };
-   path_finder_logic logic = { checker, counter };
+
+   path_finder_logic logic = { landAffilationChecker, landCorrector };
    exp_route.emplace_back(waypointList.at(0));
    for (size_t idx = 0; idx < waypointList.size() - 1; idx++)
    {
@@ -126,11 +136,13 @@ CG::route_line PathFinder::findUniversalPath(const CG::route_point& start, const
    if (start.row == finish.row
        && start.col == finish.col)
    {
-      auto point = CG::route_point(start.row,
-                                       start.col,
-                                       logic.corrector(start.height),
-                                       rawdata->Get(start.row, start.col).fly,
-                                       rawdata->Get(start.row, start.col).go);
+      auto point = CG::route_point(
+         start.row,
+         start.col,
+         logic.corrector(start.height),
+         rawdata->Get(start.row, start.col).fly,
+         rawdata->Get(start.row, start.col).go
+      );
       exp_route.emplace_back(point);
       *pathFound = true;
       return exp_route;
@@ -284,7 +296,7 @@ CG::route_line PathFinder::findUniversalPath(const CG::route_point& start, const
 
       std::sort(pts.begin(), pts.end(), [](std::pair<double, std::pair<size_t, size_t>> r1, std::pair<double, std::pair<size_t, size_t>> r2)->bool { return r1.first < r2.first; });
 
-      for (auto iter : pts)
+      for (const auto& iter : pts)
       {
          if (pointScore->Get(iter.second.first, iter.second.second) != 0
              && pointScore->Get(iter.second.first, iter.second.second) < curScore)

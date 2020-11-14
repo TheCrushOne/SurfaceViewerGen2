@@ -56,6 +56,12 @@
     <ClInclude Include="source\Common\TagList.h">
       <Filter>Common</Filter>
     </ClInclude>
+    <ClInclude Include="source\Common\BinaryDataLoadHelper.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Common\BinaryDataSaveHelper.h">
+      <Filter>Common</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="DataStandart">

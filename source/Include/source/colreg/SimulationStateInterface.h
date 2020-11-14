@@ -44,6 +44,13 @@ namespace SV::surface_simulation
 
       virtual const settings::map_settings& GetChartGridMeta() const = 0;
 
+      //! Explication dee
+      virtual const pathfinder::UnsignedMatrix& GetLandUnitExplication() const = 0;
+
+      virtual const pathfinder::UnsignedMatrix& GetAirUnitExplication() const = 0;
+
+      virtual const std::vector<pathfinder::UnsignedMatrix>& GetCoverageHistory() const = 0;
+
       //! Текущая навигационная оценка с решениями
       //virtual const iSimulationEstimation* GetEstimation() const = 0;
 

@@ -10,6 +10,7 @@ namespace SV::binary_load_helper
    pathfinder::Matrix<T> from_file(LPCSTR filename, size_t row_count, size_t col_count)
    {
       pathfinder::Matrix<T> data;
+      data.SetAverallSize(row_count, col_count);
       std::ifstream file(filename, std::ios::in | std::ios::binary);
       char* buffer = new char[sizeof(T)];
       for (size_t ridx = 0; ridx < row_count; ridx++)

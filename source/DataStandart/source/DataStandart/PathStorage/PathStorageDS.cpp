@@ -45,6 +45,10 @@ void PathStorageDataStandart::SetData(const pathfinder::route_data& paths, const
       m_coverageHistory.emplace_back(pathfinder::UnsignedMatrix(*coverage.get()));
    std::filesystem::path path(getPath());
    std::filesystem::create_directories(path);
+   m_meta.row_count = land.GetRowCount();
+   m_meta.col_count = land.GetColCount();
+   ATLASSERT(land.GetRowCount() == air.GetRowCount());
+   ATLASSERT(land.GetColCount() == air.GetColCount());
    saveMetaToFile();
    savePathDataToFile();
    saveCoverageDataToFile();
@@ -97,8 +101,8 @@ void PathStorageDataStandart::readLandExplicationDataFromFile(size_t idx)
 void PathStorageDataStandart::readAirExplicationDataFromFile(size_t idx)
 {
    readMetaFromFile();
-   std::string dataFilePath = getLandExplicationFilePath();
-   m_landExplication = binary_load_helper::from_file<size_t>(dataFilePath.c_str(), m_meta.row_count, m_meta.col_count);
+   std::string dataFilePath = getAirExplicationFilePath();
+   m_airExplication = binary_load_helper::from_file<size_t>(dataFilePath.c_str(), m_meta.row_count, m_meta.col_count);
 }
 
 CG::route_point PathStorageDataStandart::routePointRead(const Json::Value& j)

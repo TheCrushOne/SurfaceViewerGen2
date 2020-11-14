@@ -207,6 +207,7 @@ bool DebugFiltersView::OnScenarioScenarioStatusChanged(surface_simulation::SCENA
    default:
       break;
    }
+   DebugFiltersManager::GetInstance().Reload();
    return res;
 }
 

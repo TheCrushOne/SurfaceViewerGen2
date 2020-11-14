@@ -53,6 +53,11 @@ namespace SV::pathfinder
       {
          if (m_rowCount > rIdx && m_colCount > cIdx)
             m_data[rIdx][cIdx] = val;
+         else
+         {
+            // HACK: без скобок не соберется в релизе
+            ATLASSERT(false);
+         }
       }
 
       void SetRowCount(size_t rowCount)
@@ -66,6 +71,11 @@ namespace SV::pathfinder
          m_colCount = colCount;
          for (auto& vct : m_data)
             vct.resize(m_colCount);
+      }
+      void SetAverallSize(size_t rowCount, size_t colCount)
+      {
+         SetRowCount(rowCount);
+         SetColCount(colCount);
       }
 
       size_t GetRowCount() const { return m_rowCount; }

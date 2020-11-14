@@ -6,7 +6,7 @@ using namespace SV;
 
 DebugFiltersManager::DebugFiltersManager()
 {
-   prepareFilters();
+   Reload();
 }
 
 void DebugFiltersManager::prepareFilters()

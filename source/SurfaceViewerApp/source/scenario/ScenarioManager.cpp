@@ -45,7 +45,7 @@ void ScenarioManager::CheckOpen(const char* fileName, std::function<void(void)> 
    if (true)
    {
       simulator::simulatorInit(m_comService.operator->());
-      auto& settings = m_comService->GetSettingsSerializerHolder()->GetSettings();
+      auto& settings = m_comService->GetSettingsSerializerHolder()->GetSettings(m_pathStorage);
       simulator::getSimulator()->SetAppSettings(settings);
       simulator::getSimulator()->CheckOpenScenario();
       ScenarioDispather::GetInstance().OnScenarioScenarioStatusChanged(surface_simulation::SCENARIO_STATUS::SS_MAP_CHECKOPENED);
@@ -57,8 +57,8 @@ void ScenarioManager::ProcessMap(std::function<void(void)> buttonEnableCallback)
 {
    std::thread(&ScenarioManager::processMapCommand, this, [this, buttonEnableCallback]()
       {
-         auto& settings = m_comService->GetSettingsSerializerHolder()->GetSettings();
-         simulator::getSimulator()->SetAppSettings(settings);
+         //auto& settings = m_comService->GetSettingsSerializerHolder()->GetSettings();
+         //simulator::getSimulator()->SetAppSettings(settings);
          simulator::getSimulator()->LoadProcessedMap();
          ScenarioDispather::GetInstance().OnScenarioScenarioStatusChanged(surface_simulation::SCENARIO_STATUS::SS_MAP_PROCESSED);
          buttonEnableCallback();
@@ -70,8 +70,8 @@ void ScenarioManager::ProcessMapObjects(std::function<void(void)> buttonEnableCa
 {
    std::thread(&ScenarioManager::processMapObjCommand, this, [this, buttonEnableCallback]()
       {
-         auto& settings = m_comService->GetSettingsSerializerHolder()->GetSettings();
-         simulator::getSimulator()->SetAppSettings(settings);
+         //auto& settings = m_comService->GetSettingsSerializerHolder()->GetSettings();
+         //simulator::getSimulator()->SetAppSettings(settings);
          simulator::getSimulator()->LoadProcessedMapObjects();
          ScenarioDispather::GetInstance().OnScenarioScenarioStatusChanged(surface_simulation::SCENARIO_STATUS::SS_MAPOBJ_PROCESSED);
          buttonEnableCallback();
@@ -83,8 +83,8 @@ void ScenarioManager::ProcessPaths(std::function<void(void)> buttonEnableCallbac
 {
    std::thread(&ScenarioManager::processPathCommand, this, [this, buttonEnableCallback]()
       {
-         auto& settings = m_comService->GetSettingsSerializerHolder()->GetSettings();
-         simulator::getSimulator()->SetAppSettings(settings);
+         //auto& settings = m_comService->GetSettingsSerializerHolder()->GetSettings();
+         //simulator::getSimulator()->SetAppSettings(settings);
          simulator::getSimulator()->LoadProcessedPaths();
          ScenarioDispather::GetInstance().OnScenarioScenarioStatusChanged(surface_simulation::SCENARIO_STATUS::SS_PATHS_COUNTED);
          simulator::simulatorStart();
@@ -97,8 +97,8 @@ void ScenarioManager::ProcessOptPaths(std::function<void(void)> buttonEnableCall
 {
    std::thread(&ScenarioManager::processOptPathCommand, this, [this, buttonEnableCallback]()
       {
-         auto& settings = m_comService->GetSettingsSerializerHolder()->GetSettings();
-         simulator::getSimulator()->SetAppSettings(settings);
+         //auto& settings = m_comService->GetSettingsSerializerHolder()->GetSettings();
+         //simulator::getSimulator()->SetAppSettings(settings);
          simulator::getSimulator()->LoadProcessedOptPaths();
          ScenarioDispather::GetInstance().OnScenarioScenarioStatusChanged(surface_simulation::SCENARIO_STATUS::SS_OPT_PATHS_COUNTED);
          simulator::simulatorStart();

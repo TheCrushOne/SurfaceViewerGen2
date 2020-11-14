@@ -30,10 +30,10 @@ namespace SV
       bool onScenarioOptPathFound();
 
       void initObjInfo();
-      bool synchronize_map(render::iRender* renderer, const SV::surface_simulation::iSimulationState& state);
+      bool synchronize_map(render::iRender* renderer, const SV::surface_simulation::iSimulationState& state, const settings::environment_settings& env_stt);
       void addChartObject(render::iRender* renderer, const SV::surface_simulation::iLayerChartObject* obj);
-      void addCoverage(render::iRender* renderer, const pathfinder::UnsignedMatrix& coverage);
-      void addExplication(render::iRender* renderer, const pathfinder::UnsignedMatrix& explication, std::function<unsigned long(size_t)> colorizer);
+      void addCoverage(render::iRender* renderer, const pathfinder::UnsignedMatrix& coverage, const settings::environment_settings& env_stt);
+      void addExplication(render::iRender* renderer, const pathfinder::UnsignedMatrix& explication, std::function<unsigned long(size_t)> colorizer, const settings::environment_settings& env_stt);
       void onLayerEnabledChanged() override;
       bool isLayerEnabled() const override { return true; }
    private:

@@ -36,7 +36,8 @@ namespace SV::navigation_dispatcher
          VALID_CHECK_DLL_LOAD("SettingsHandler", "CreateUnitDataSerializer", m_unitDataSerializer);
          VALID_CHECK_DLL_LOAD("ChecksumService", "CreateChecksumService", m_checksumService, pack);
          VALID_CHECK_DLL_LOAD("SQLiteController", "CreateSQLiteDatabaseController", m_databaseController, pack);
-         VALID_CHECK_DLL_LOAD("PythonMiscellaneousWrapper", "CreatePythonWrapper", m_pythonWrapper, pack);
+         // WARNING: отключено, пока сломан питон
+         //VALID_CHECK_DLL_LOAD("PythonMiscellaneousWrapper", "CreatePythonWrapper", m_pythonWrapper, pack);
          auto pathToDb = std::string(baseFolder) + "\\svgm.db";
          m_databaseController->Connect(pathToDb.c_str());
       }

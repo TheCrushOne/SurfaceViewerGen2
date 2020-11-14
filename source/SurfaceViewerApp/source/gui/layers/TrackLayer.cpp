@@ -10,7 +10,8 @@ namespace
    TrackLayer layer;
    const render::object_info rover_route_obj_info()
    {
-      return { 1,
+      return {
+         1,
          render::LINE_STYLE::LL_DASH,
          render::FILL_TYPE::FT_NONE,
          RGB(110, 110, 110)
@@ -19,7 +20,8 @@ namespace
 
    const render::object_info rover_control_points_obj_info()
    {
-      return { 1,
+      return {
+         1,
          render::LINE_STYLE::LL_NONE,
          render::FILL_TYPE::FT_NONE,
          RGB(150, 150, 150)
@@ -28,7 +30,8 @@ namespace
 
    const render::object_info drone_route_obj_info()
    {
-      return { 1,
+      return {
+         1,
          render::LINE_STYLE::LL_DASH,
          render::FILL_TYPE::FT_NONE,
          RGB(255, 200, 30)
@@ -37,7 +40,8 @@ namespace
 
    const render::object_info drone_control_points_obj_info()
    {
-      return { 1,
+      return {
+         1,
          render::LINE_STYLE::LL_NONE,
          render::FILL_TYPE::FT_NONE,
          RGB(255, 255, 30)

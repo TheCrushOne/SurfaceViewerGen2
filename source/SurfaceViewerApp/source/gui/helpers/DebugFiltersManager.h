@@ -33,6 +33,7 @@ namespace SV
          return m_filters;
       }
 
+      void Reload() { prepareFilters(); }
       void ShowFilter(const std::vector<std::string>& path, bool show);
       bool IsFilterVisible(const std::vector<std::string>& path)const;
 

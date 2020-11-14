@@ -3,6 +3,7 @@
 #include "simulator\simulator.h"
 #include "gui\helpers\DebugFiltersManager.h"
 #include "common/pathfinder_types.h"
+#include "SVCG/positioning.h"
 
 #define CR_CHART_LAYER_PROP(iPropPtr, name, description, prStruct, obj, field) PROPHELPER_CREATEHOLDER_L(iPropPtr, name, description, prStruct, obj, field, &ChartLayer::OnShowDepthChartObjectsChanged)
 
@@ -16,7 +17,7 @@ namespace
    const render::object_info coverage_obj_info()
    {
       return {
-         1,
+         5,
          render::LINE_STYLE::LL_DASH,
          render::FILL_TYPE::FT_NONE,
          RGB(110, 110, 110)
@@ -26,7 +27,7 @@ namespace
    const render::object_info explication_obj_info()
    {
       return {
-         1,
+         5,
          render::LINE_STYLE::LL_DASH,
          render::FILL_TYPE::FT_NONE,
          RGB(110, 110, 110)
@@ -66,11 +67,11 @@ void ChartLayer::Render(render::iRender* renderer)
    if (!sim || sim->GetSimulatorScenarioState() < surface_simulation::SCENARIO_STATUS::SS_MAPOBJ_PROCESSED)
       return;
    const auto& simulationState = sim->GetState();
-
+   const auto& env_stt = sim->GetAppSettings().env_stt;
    
    //colreg::ReleaseGuard<colreg::iChartObjects> chartObjs(safetyChecker->GetChartObjects());
 
-   synchronize_map(renderer, simulationState);
+   synchronize_map(renderer, simulationState, env_stt);
 
    //size_t statAreaCount = sim->GetStatisticsAreaObjectsCount();
 
@@ -94,66 +95,72 @@ void ChartLayer::onLayerEnabledChanged()
 {
 }
 
-unsigned long air_affilation_color(size_t uaff)
+namespace
 {
-   pathfinder::FlyZoneAffilation aff = static_cast<pathfinder::FlyZoneAffilation>(uaff);
-   switch (aff)
+   unsigned long air_affilation_color(size_t uaff)
    {
-   case pathfinder::FlyZoneAffilation::FZA_NORMAL:
-      return RGB(50, 255, 50);
-   case pathfinder::FlyZoneAffilation::FZA_FORBIDDEN:
-      return RGB(255, 50, 50);
-   case pathfinder::FlyZoneAffilation::FZA_DANGEROUS:
-      return RGB(255, 255, 50);
-   default:
-      ATLASSERT(false);
-      return RGB(0, 0, 0);
+      pathfinder::FlyZoneAffilation aff = static_cast<pathfinder::FlyZoneAffilation>(uaff);
+      switch (aff)
+      {
+      case pathfinder::FlyZoneAffilation::FZA_NORMAL:
+         return RGB(50, 255, 50);
+      case pathfinder::FlyZoneAffilation::FZA_FORBIDDEN:
+         return RGB(255, 50, 50);
+      case pathfinder::FlyZoneAffilation::FZA_DANGEROUS:
+         return RGB(255, 255, 50);
+      default:
+         ATLASSERT(false);
+         return RGB(0, 0, 0);
+      }
+   }
+
+   unsigned long land_affilation_color(size_t uaff)
+   {
+      pathfinder::GoZoneAffilation aff = static_cast<pathfinder::GoZoneAffilation>(uaff);
+      switch (aff)
+      {
+      case pathfinder::GoZoneAffilation::GZA_NORMAL:
+         return RGB(50, 255, 50);
+      case pathfinder::GoZoneAffilation::GZA_FORBIDDEN:
+         return RGB(255, 50, 50);
+      case pathfinder::GoZoneAffilation::GZA_DANGEROUS:
+         return RGB(255, 255, 50);
+      default:
+         ATLASSERT(false);
+         return RGB(0, 0, 0);
+      }
+   }
+
+   unsigned int getCoveragePointColor(size_t isCoveredU)
+   {
+      bool isCovered = isCoveredU >= 1;
+      return isCovered ? RGB(100, 100, 255) : RGB(50, 50, 50);
    }
 }
 
-unsigned long land_affilation_color(size_t uaff)
-{
-   pathfinder::GoZoneAffilation aff = static_cast<pathfinder::GoZoneAffilation>(uaff);
-   switch (aff)
-   {
-   case pathfinder::GoZoneAffilation::GZA_NORMAL:
-      return RGB(50, 255, 50);
-   case pathfinder::GoZoneAffilation::GZA_FORBIDDEN:
-      return RGB(255, 50, 50);
-   case pathfinder::GoZoneAffilation::GZA_DANGEROUS:
-      return RGB(255, 255, 50);
-   default:
-      ATLASSERT(false);
-      return RGB(0, 0, 0);
-   }
-}
-
-bool ChartLayer::synchronize_map(render::iRender* renderer, const SV::surface_simulation::iSimulationState& state)
+bool ChartLayer::synchronize_map(render::iRender* renderer, const SV::surface_simulation::iSimulationState& state, const settings::environment_settings& env_stt)
 {
    //m_chartUSN = checker->GetObjectsUSN();
    renderer->Clear();
 
    if (DebugFiltersManager::GetInstance().IsFilterVisible({
-      debug_filter_tag::general,
       debug_filter_tag::explications,
       debug_filter_tag::air
    }))
-      addExplication(renderer, state.GetAirUnitExplication(), &air_affilation_color);
+      addExplication(renderer, state.GetAirUnitExplication(), &air_affilation_color, env_stt);
    if (DebugFiltersManager::GetInstance().IsFilterVisible({
-      debug_filter_tag::general,
       debug_filter_tag::explications,
       debug_filter_tag::land
    }))
-      addExplication(renderer, state.GetLandUnitExplication(), &land_affilation_color);
+      addExplication(renderer, state.GetLandUnitExplication(), &land_affilation_color, env_stt);
 
    for (size_t idx = 0; idx < state.GetCoverageHistory().size(); idx++)
    {
       if (DebugFiltersManager::GetInstance().IsFilterVisible({
-         debug_filter_tag::general,
          debug_filter_tag::coverages,
          debug_filter_tag::step_templ + std::to_string(idx)
       }))
-         addCoverage(renderer, state.GetCoverageHistory().at(idx));
+         addCoverage(renderer, state.GetCoverageHistory().at(idx), env_stt);
    }
 
    for (size_t iObj = 0; iObj < state.GetChartObjectCount(); iObj++)
@@ -237,21 +244,23 @@ void ChartLayer::addChartObject(render::iRender* renderer, const SV::surface_sim
    }
 }
 
-void ChartLayer::addCoverage(render::iRender* renderer, const pathfinder::UnsignedMatrix& coverage)
+void ChartLayer::addCoverage(render::iRender* renderer, const pathfinder::UnsignedMatrix& coverage, const settings::environment_settings& env_stt)
 {
    for (size_t ridx = 0; ridx < coverage.GetRowCount(); ridx++)
    {
       for (size_t cidx = 0; cidx < coverage.GetColCount(); cidx++)
       {
+         auto ptInfo = coverage_obj_info();
+         ptInfo.color = getCoveragePointColor(coverage.Get(ridx, cidx));
          renderer->AddObject({
-            { CG::geo_point(ridx, cidx) },
-            coverage_obj_info()
+            { CG::geo_point(static_cast<CG::geo_point>(transfercase::RoutePointToPositionPoint(CG::route_point(ridx, cidx), env_stt))) },
+            ptInfo
          });
       }
    }
 }
 
-void ChartLayer::addExplication(render::iRender* renderer, const pathfinder::UnsignedMatrix& explication, std::function<unsigned long(size_t)> colorizer)
+void ChartLayer::addExplication(render::iRender* renderer, const pathfinder::UnsignedMatrix& explication, std::function<unsigned long(size_t)> colorizer, const settings::environment_settings& env_stt)
 {
    for (size_t ridx = 0; ridx < explication.GetRowCount(); ridx++)
    {
@@ -260,7 +269,7 @@ void ChartLayer::addExplication(render::iRender* renderer, const pathfinder::Uns
          auto ptInfo = explication_obj_info();
          ptInfo.color = colorizer(explication.Get(ridx, cidx));
          renderer->AddObject({
-            { CG::geo_point(ridx, cidx) },
+            { CG::geo_point(static_cast<CG::geo_point>(transfercase::RoutePointToPositionPoint(CG::route_point(ridx, cidx), env_stt))) },
             ptInfo
          });
       }

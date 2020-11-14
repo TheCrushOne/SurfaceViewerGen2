@@ -103,19 +103,19 @@ void TrackLayerHelper::renderRoute(render::iRender* renderer, id_type id, const 
          std::string imagePath = SVGUtils::CurrentCurrentPath() + "\\res\\glyphicon\\flag.png";
          COLORREF clrDanger = 255;
          renderer->AddObject({
-              { cur.pos }
-            , { 32, render::LINE_STYLE::LL_SOLID, render::FILL_TYPE::FT_NONE, clrDanger, s.str().c_str(), 0, 0, 255, imagePath.c_str(), render::ANCHOR_TYPE::AT_BOTTOMLEFT }
-            , {}
-            , .0
-            , .0 
+            { cur.pos },
+            { 32, render::LINE_STYLE::LL_SOLID, render::FILL_TYPE::FT_NONE, clrDanger, s.str().c_str(), 0, 0, 255, imagePath.c_str(), render::ANCHOR_TYPE::AT_BOTTOMLEFT },
+            {},
+            .0,
+            .0
          });
       }
       else
       {
          renderer->AddObject({
-              { cur.pos }
-            , { 5, render::LINE_STYLE::LL_SOLID, render::FILL_TYPE::FT_NONE, info.color, /*s.str().c_str()*/""}
-            , { ft, id, render::FIND_OBJECT_TYPE::FOT_ROUTE_POINT, ui.value }
+            { cur.pos },
+            { 5, render::LINE_STYLE::LL_SOLID, render::FILL_TYPE::FT_NONE, info.color, /*s.str().c_str()*/""},
+            { ft, id, render::FIND_OBJECT_TYPE::FOT_ROUTE_POINT, ui.value }
          });
       }
 
@@ -123,9 +123,11 @@ void TrackLayerHelper::renderRoute(render::iRender* renderer, id_type id, const 
    ui.type = (char)type;
    ui.index = (short)(route.size() - 1);
    std::stringstream s;  s << route.size() - 1;
-   renderer->AddObject({ { route.at(route.size() - 1).pos }
-                        , { 5, render::LINE_STYLE::LL_SOLID, render::FILL_TYPE::FT_NONE, info.color, /*s.str().c_str()*/""}
-                        , { ft, id, render::FIND_OBJECT_TYPE::FOT_ROUTE_POINT, ui.value } });
+   renderer->AddObject({
+      { route.at(route.size() - 1).pos },
+      { 5, render::LINE_STYLE::LL_SOLID, render::FILL_TYPE::FT_NONE, info.color, /*s.str().c_str()*/""},
+      { ft, id, render::FIND_OBJECT_TYPE::FOT_ROUTE_POINT, ui.value }
+   });
 }
 
 void TrackLayerHelper::renderRouteSegment(render::iRender* renderer, id_type id, size_t index, const CG::layer_provider::trajectory_point& rp1, const CG::layer_provider::trajectory_point& rp2, const render::object_info& info, surface_simulation::ROUTE_TYPE type)

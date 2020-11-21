@@ -31,6 +31,7 @@ void LayerUnitImpl::createDomain(double radius)
 void LayerUnitImpl::SetSrcRoute(const settings::route& src)
 {
    const auto& env_stt = m_settings.env_stt;
+   // NOTE: перетирается установка контрол поинтов, ну да и черт с ним
    for (const auto& cpt : src.control_point_list)
       m_controlPoints.emplace_back(transfercase::RoutePointToPositionPoint(cpt, env_stt));
    for (const auto& rpt : src.route_list)
@@ -42,4 +43,11 @@ void LayerUnitImpl::SetSrcRoute(const settings::route& src)
       cur.course = math::direction(cur.pos, next.pos);
       cur.speed = DefaultUnitSpeed;   // NOTE: пока что дефолт
    }
+}
+
+void LayerUnitImpl::SetSrcControlPoints(const CG::route_line& cplist)
+{
+   const auto& env_stt = m_settings.env_stt;
+   for (const auto& cpt : cplist)
+      m_controlPoints.emplace_back(transfercase::RoutePointToPositionPoint(cpt, env_stt));
 }

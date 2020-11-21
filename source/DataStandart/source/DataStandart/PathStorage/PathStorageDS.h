@@ -19,6 +19,10 @@ namespace SV::data_standart
          static constexpr char start[] = "start";
          static constexpr char finish[] = "finish";
 
+         static constexpr char meta[] = "meta";
+         static constexpr char id[] = "id";
+         static constexpr char name[] = "name";
+
          static constexpr char control_point_list[] = "control_point_list";
          static constexpr char route_list[] = "route_list";
 

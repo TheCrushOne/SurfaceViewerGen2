@@ -75,6 +75,8 @@ void SurfaceViewerGenMapDataStandart::readHeightData()
 
 void SurfaceViewerGenMapDataStandart::readUnitData()
 {
+   m_unitData.air_units.clear();
+   m_unitData.land_units.clear();
    m_service->GetUnitDataSerializer()->Deserialize(m_dataStandartData.unit_data.c_str(), m_unitData);
 }
 

@@ -123,9 +123,9 @@ namespace SV::surface_simulation
       SCENARIO_STATUS m_scenarioStatus = SCENARIO_STATUS::SS_NOT_LOADED;
       SIMULATION_STATUS m_simulationStatus = SIMULATION_STATUS::SS_STOP;
       //dbg::iDebugInfo* m_debugInfo = nullptr;
-      navigation_dispatcher::iComService* m_service = nullptr;
 
       std::vector<std::vector<double>> m_coordGrid;
       chart_grid_meta m_gridMeta = {};
+      id_type m_unitId = 0;
    };
 }

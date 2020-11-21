@@ -39,10 +39,10 @@ SimulatorBase::SimulatorBase(central_pack* pack, iPropertyInterface* prop, navig
    VALID_CHECK_DLL_LOAD("Engine", "CreateEngine", m_engine, pack);
    VALID_CHECK_DLL_LOAD("UniversalLogger", "CreateUniversalLogger", m_logger, pack);
 
-   VALID_CHECK_DLL_LOAD("DataStandart", "CreateSurfaceViewerGenMapDataStandart", m_mapDS, pack, "", m_service);
-   VALID_CHECK_DLL_LOAD("DataStandart", "CreateChartObjectDataStandart", m_mapObjDS, pack, "", m_service);
-   VALID_CHECK_DLL_LOAD("DataStandart", "CreatePathStorageDataStandart", m_pathDS, pack, "", m_service);
-   VALID_CHECK_DLL_LOAD("DataStandart", "CreateOptimizedPathStorageDataStandart", m_optPathDS, pack, "", m_service);
+   VALID_CHECK_DLL_LOAD("DataStandart", "CreateSurfaceViewerGenMapDataStandart", m_mapDS, pack, "", m_pService);
+   VALID_CHECK_DLL_LOAD("DataStandart", "CreateChartObjectDataStandart", m_mapObjDS, pack, "", m_pService);
+   VALID_CHECK_DLL_LOAD("DataStandart", "CreatePathStorageDataStandart", m_pathDS, pack, "", m_pService);
+   VALID_CHECK_DLL_LOAD("DataStandart", "CreateOptimizedPathStorageDataStandart", m_optPathDS, pack, "", m_pService);
 }
 
 bool SimulatorBase::LoadProcessedStep(PROCESS_STEP_TYPE type)
@@ -94,6 +94,22 @@ void deserializeStandartAttrs(Standart* standart, const char* configPath, data_s
      checkDataStandart(iter->second, standart, expected);
 }
 
+template<typename UnitType>
+void routePreparer(const settings::application_settings& settings, const std::vector<settings::unit_data_element>& src, id_type& id, std::vector<UnitType>& dst)
+{
+   dst.clear();
+   for (const auto& pt : src)
+   {
+      UnitType unit(settings);
+      unit.SetSrcControlPoints(pt.control_point_list);
+      layer_provider::ship_info info;
+      strcpy(info.name, pt.name.c_str());
+      info.id = id++;
+      unit.SetInfo(info);
+      dst.emplace_back(unit);
+   }
+}
+
 bool SimulatorBase::loadProcessedMap()
 {
    auto* mapDS = reinterpret_cast<data_standart::iSurfaceVieverGenMapDataStandart*>(m_mapDS.operator->());
@@ -101,6 +117,10 @@ bool SimulatorBase::loadProcessedMap()
    deserializeStandartAttrs(mapDS, SVGUtils::wstringToString(m_currentConfig).c_str(), data_standart::DataStandartType::DST_SVGM);
    SetSimulatorScenarioState(SCENARIO_STATUS::SS_MAP_PROCESSED);
    SetSimulatorSimulationState(SIMULATION_STATUS::SS_STOP);
+   const auto& ds = mapDS->GetUnitData();
+   m_unitId = 0;
+   routePreparer<LayerDroneImpl>(m_settings, ds.air_units, m_unitId, m_data.air_unit_objects);
+   routePreparer<LayerRoverImpl>(m_settings, ds.land_units, m_unitId, m_data.land_unit_objects);
    return true;
 }
 
@@ -132,11 +152,11 @@ bool SimulatorBase::loadProcessedMapObjects()
 template<typename UnitType>
 void routeMover(const settings::application_settings& settings, const std::vector<settings::route>& src, std::vector<UnitType>& dst)
 {
-   for (const auto& pt : src)
+   ATLASSERT(src.size() == dst.size());
+   for (size_t idx = 0; idx < src.size(); idx++)
    {
-      UnitType unit(settings);
-      unit.SetSrcRoute(pt);
-      dst.emplace_back(unit);
+      const auto& pt = src.at(idx);
+      dst.at(idx).SetSrcRoute(pt);
    }
 }
 

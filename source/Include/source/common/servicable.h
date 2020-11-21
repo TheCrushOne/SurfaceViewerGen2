@@ -13,7 +13,7 @@ namespace SV
       navigation_dispatcher::iComService* GetService() const { return m_pService; }
    protected:
       void checkService() const { _ASSERT(m_pService); }
-   private:
+   protected:
       navigation_dispatcher::iComService* m_pService;
    };
 }

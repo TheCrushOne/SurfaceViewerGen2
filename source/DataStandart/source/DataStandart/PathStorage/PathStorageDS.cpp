@@ -186,6 +186,10 @@ Json::Value PathStorageDataStandart::routePointWrite(const CG::route_point& poin
 Json::Value PathStorageDataStandart::routeWrite(const settings::route& route)
 {
    Json::Value rt;
+   Json::Value meta;
+   //meta[tag::id] = route.
+   //meta[tag::name] = route.
+   rt[tag::meta] = meta;
    rt[tag::start] = routePointWrite(route.start);
    rt[tag::finish] = routePointWrite(route.finish);
    Json::Value cpl(Json::arrayValue);

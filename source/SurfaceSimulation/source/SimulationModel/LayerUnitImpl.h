@@ -41,7 +41,7 @@ namespace SV::surface_simulation
       const properties::simple_prop_vct* GetProps() const override final { return &m_props; }
       layer_provider::ship_info GetInfo() const override final { return m_info; }
       //const colreg::domain_scales& GetDomainScales() const override final { return m_domainScales; }
-      const CG::layer_provider::trajectory_point& GetPos() const override final { return m_srcRoute.at(m_currentPositionIdx); }
+      const CG::layer_provider::trajectory_point& GetPos() const override final { return m_srcRoute.size() > 0 ? m_srcRoute.at(m_currentPositionIdx) : m_controlPoints.size() > 0 ? m_controlPoints.at(0) : CG::layer_provider::trajectory_point(CG::geo_point(0, 0)); }
       const CG::layer_provider::trajectory_point_vct& GetRoute(ROUTE_TYPE type) const override final;
       const CG::layer_provider::trajectory_point_vct& GetSrcPath() const override final { return m_srcRoute; }
       const CG::layer_provider::trajectory_point_vct& GetSrcControlPoints() const override final { return m_controlPoints; }
@@ -49,7 +49,7 @@ namespace SV::surface_simulation
 
       //const char* GetETA() const override final { return m_eta.c_str(); /*ETA formatted as: MMDDHHMM, (Month, day, hour, minute). Example: 02.06.1982 19:40 encoded as 06021940*/ }
       void SetSrcRoute(const settings::route& src);
-      void SetSrcContolPoints(CG::layer_provider::trajectory_point_vct& route) { m_controlPoints = route; }
+      void SetSrcControlPoints(const CG::route_line& route);
       void SetInfo(const layer_provider::ship_info& info) { m_info = info; }
       void SetCurrentPositionIdx(size_t idx) { ATLASSERT(idx < m_srcRoute.size()); m_currentPositionIdx = idx; }
       //void SetPosInfo(const CG::layer_provider::trajectory_point& info) { m_posInfo = info; }

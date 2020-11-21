@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "ChartLayer.h"
 #include "simulator\simulator.h"
-#include "gui\helpers\DebugFiltersManager.h"
+#include "gui\helpers\LayerFiltersManager.h"
 #include "common/pathfinder_types.h"
 #include "SVCG/positioning.h"
 
@@ -143,22 +143,22 @@ bool ChartLayer::synchronize_map(render::iRender* renderer, const SV::surface_si
    //m_chartUSN = checker->GetObjectsUSN();
    renderer->Clear();
 
-   if (DebugFiltersManager::GetInstance().IsFilterVisible({
-      debug_filter_tag::explications,
-      debug_filter_tag::air
+   if (LayerFiltersManager::GetInstance().IsFilterVisible({
+      layer_filter_tag::explications,
+      layer_filter_tag::air
    }))
       addExplication(renderer, state.GetAirUnitExplication(), &air_affilation_color, env_stt);
-   if (DebugFiltersManager::GetInstance().IsFilterVisible({
-      debug_filter_tag::explications,
-      debug_filter_tag::land
+   if (LayerFiltersManager::GetInstance().IsFilterVisible({
+      layer_filter_tag::explications,
+      layer_filter_tag::land
    }))
       addExplication(renderer, state.GetLandUnitExplication(), &land_affilation_color, env_stt);
 
    for (size_t idx = 0; idx < state.GetCoverageHistory().size(); idx++)
    {
-      if (DebugFiltersManager::GetInstance().IsFilterVisible({
-         debug_filter_tag::coverages,
-         debug_filter_tag::step_templ + std::to_string(idx)
+      if (LayerFiltersManager::GetInstance().IsFilterVisible({
+         layer_filter_tag::coverages,
+         layer_filter_tag::step_templ + std::to_string(idx)
       }))
          addCoverage(renderer, state.GetCoverageHistory().at(idx), env_stt);
    }

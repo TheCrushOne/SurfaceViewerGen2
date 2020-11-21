@@ -45,7 +45,24 @@ SimulatorBase::SimulatorBase(central_pack* pack, iPropertyInterface* prop, navig
    VALID_CHECK_DLL_LOAD("DataStandart", "CreateOptimizedPathStorageDataStandart", m_optPathDS, pack, "", m_service);
 }
 
-bool SimulatorBase::CheckOpenScenario()
+bool SimulatorBase::LoadProcessedStep(PROCESS_STEP_TYPE type)
+{
+   switch (type)
+   {
+   case PROCESS_STEP_TYPE::PST_CHECK:
+      return checkOpenScenario();
+   case PROCESS_STEP_TYPE::PST_MAP:
+      return loadProcessedMap();
+   case PROCESS_STEP_TYPE::PST_MAP_OBJ:
+      return loadProcessedMapObjects();
+   case PROCESS_STEP_TYPE::PST_PATHS:
+      return loadProcessedPaths();
+   case PROCESS_STEP_TYPE::PST_OPT_PATHS:
+      return loadProcessedOptPaths();
+   }
+}
+
+bool SimulatorBase::checkOpenScenario()
 {
    // TODO: check!!! а то я чет не уверен, что тут всё верно
    SetSimulatorScenarioState(SCENARIO_STATUS::SS_MAP_CHECKOPENED);
@@ -77,7 +94,7 @@ void deserializeStandartAttrs(Standart* standart, const char* configPath, data_s
      checkDataStandart(iter->second, standart, expected);
 }
 
-bool SimulatorBase::LoadProcessedMap()
+bool SimulatorBase::loadProcessedMap()
 {
    auto* mapDS = reinterpret_cast<data_standart::iSurfaceVieverGenMapDataStandart*>(m_mapDS.operator->());
    m_currentConfig = m_orderCacheFolder + L"process_map.xml";
@@ -87,7 +104,7 @@ bool SimulatorBase::LoadProcessedMap()
    return true;
 }
 
-bool SimulatorBase::LoadProcessedMapObjects()
+bool SimulatorBase::loadProcessedMapObjects()
 {
    auto* mapObjDS = reinterpret_cast<data_standart::iChartObjectDataStandart*>(m_mapObjDS.operator->());
    m_currentConfig = m_orderCacheFolder + L"process_map_object.xml";
@@ -123,7 +140,7 @@ void routeMover(const settings::application_settings& settings, const std::vecto
    }
 }
 
-bool SimulatorBase::LoadProcessedPaths()
+bool SimulatorBase::loadProcessedPaths()
 {
    auto* pathDS = reinterpret_cast<data_standart::iPathStorageDataStandart*>(m_pathDS.operator->());
    m_currentConfig = m_orderCacheFolder + L"process_path_find.xml";
@@ -140,7 +157,7 @@ bool SimulatorBase::LoadProcessedPaths()
    return true;
 }
 
-bool SimulatorBase::LoadProcessedOptPaths()
+bool SimulatorBase::loadProcessedOptPaths()
 {
    auto* optPathDS = reinterpret_cast<data_standart::iOptimizedPathStorageDataStandart*>(m_optPathDS.operator->());
    SetSimulatorScenarioState(surface_simulation::SCENARIO_STATUS::SS_OPT_PATHS_COUNTED);

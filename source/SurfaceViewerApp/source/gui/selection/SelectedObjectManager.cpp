@@ -75,10 +75,11 @@ void SelectedObjectManager::Update()
 
 void SelectedObjectManager::Unselect()
 {
-   m_selected.reset();
-   m_info = {};
-   SelectObjectObserver::SelectObject(nullptr);
-   user_interface::InvalidateView();
+   //m_selected.reset();
+   //m_info = {};
+   m_selected = std::make_unique<ScenarioProperties>();
+   SelectObjectObserver::SelectObject(m_selected.get());
+   //user_interface::InvalidateView();
 }
 
 void SelectedObjectManager::Delete()

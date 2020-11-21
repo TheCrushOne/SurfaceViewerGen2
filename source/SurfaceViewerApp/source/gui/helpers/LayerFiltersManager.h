@@ -10,7 +10,7 @@ namespace SV
       std::unordered_map<std::string, filter_info> childs;
    };
 
-   struct debug_filter_tag
+   struct layer_filter_tag
    {
       static constexpr char general[] = "General";
 
@@ -23,8 +23,8 @@ namespace SV
       static constexpr char step_templ[] = "Step_";
    };
 
-   class DebugFiltersManager
-      : public Singleton< DebugFiltersManager>
+   class LayerFiltersManager
+      : public Singleton< LayerFiltersManager>
    {
    public:
       const filter_info& GetFilters()
@@ -38,12 +38,12 @@ namespace SV
       bool IsFilterVisible(const std::vector<std::string>& path)const;
 
    private:
-      DebugFiltersManager();
+      LayerFiltersManager();
       void prepareFilters();
       filter_info& addDebugNode(filter_info& filter, const std::string& folderName);
 
    private:
-      friend class Singleton<DebugFiltersManager>;
+      friend class Singleton<LayerFiltersManager>;
       filter_info m_filters;
    };
 }

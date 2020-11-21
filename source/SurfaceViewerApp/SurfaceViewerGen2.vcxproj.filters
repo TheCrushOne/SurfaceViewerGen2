@@ -311,12 +311,6 @@
     <ClInclude Include="source\thirdparty\CMemDC.h">
       <Filter>gui\thirdparty</Filter>
     </ClInclude>
-    <ClInclude Include="source\gui\DebugFiltersView.h">
-      <Filter>gui</Filter>
-    </ClInclude>
-    <ClInclude Include="source\gui\helpers\DebugFiltersManager.h">
-      <Filter>gui\helpers</Filter>
-    </ClInclude>
     <ClInclude Include="source\gui\ProgressView.h">
       <Filter>gui</Filter>
     </ClInclude>
@@ -343,6 +337,12 @@
     </ClInclude>
     <ClInclude Include="source\properties\ValuePropertyHolder.h">
       <Filter>properties</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gui\LayerFiltersView.h">
+      <Filter>gui</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gui\helpers\LayerFiltersManager.h">
+      <Filter>gui\helpers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -494,17 +494,17 @@
     <ClCompile Include="source\thirdparty\TextProgressCtrl.cpp">
       <Filter>gui\thirdparty</Filter>
     </ClCompile>
-    <ClCompile Include="source\gui\DebugFiltersView.cpp">
-      <Filter>gui</Filter>
-    </ClCompile>
-    <ClCompile Include="source\gui\helpers\DebugFiltersManager.cpp">
-      <Filter>gui\helpers</Filter>
-    </ClCompile>
     <ClCompile Include="source\gui\ProgressView.cpp">
       <Filter>gui</Filter>
     </ClCompile>
     <ClCompile Include="source\gui\PipelineStatusWnd.cpp">
       <Filter>gui</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gui\LayerFiltersView.cpp">
+      <Filter>gui</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gui\helpers\LayerFiltersManager.cpp">
+      <Filter>gui\helpers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

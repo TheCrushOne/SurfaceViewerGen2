@@ -47,7 +47,8 @@ void ScenarioManager::CheckOpen(const char* fileName, std::function<void(void)> 
       simulator::simulatorInit(m_comService.operator->());
       auto& settings = m_comService->GetSettingsSerializerHolder()->GetSettings(m_pathStorage);
       simulator::getSimulator()->SetAppSettings(settings);
-      simulator::getSimulator()->CheckOpenScenario();
+      simulator::getSimulator()->SetStepSettings(surface_simulation::PROCESS_STEP_TYPE::PST_CHECK, settings);
+      simulator::getSimulator()->LoadProcessedStep(surface_simulation::PROCESS_STEP_TYPE::PST_CHECK);
       ScenarioDispather::GetInstance().OnScenarioScenarioStatusChanged(surface_simulation::SCENARIO_STATUS::SS_MAP_CHECKOPENED);
       buttonEnableCallback();
    }
@@ -57,9 +58,9 @@ void ScenarioManager::ProcessMap(std::function<void(void)> buttonEnableCallback)
 {
    std::thread(&ScenarioManager::processMapCommand, this, [this, buttonEnableCallback]()
       {
-         //auto& settings = m_comService->GetSettingsSerializerHolder()->GetSettings();
-         //simulator::getSimulator()->SetAppSettings(settings);
-         simulator::getSimulator()->LoadProcessedMap();
+         auto& settings = m_comService->GetSettingsSerializerHolder()->GetSettings();
+         simulator::getSimulator()->SetStepSettings(surface_simulation::PROCESS_STEP_TYPE::PST_MAP, settings);
+         simulator::getSimulator()->LoadProcessedStep(surface_simulation::PROCESS_STEP_TYPE::PST_MAP);
          ScenarioDispather::GetInstance().OnScenarioScenarioStatusChanged(surface_simulation::SCENARIO_STATUS::SS_MAP_PROCESSED);
          buttonEnableCallback();
       }
@@ -70,9 +71,9 @@ void ScenarioManager::ProcessMapObjects(std::function<void(void)> buttonEnableCa
 {
    std::thread(&ScenarioManager::processMapObjCommand, this, [this, buttonEnableCallback]()
       {
-         //auto& settings = m_comService->GetSettingsSerializerHolder()->GetSettings();
-         //simulator::getSimulator()->SetAppSettings(settings);
-         simulator::getSimulator()->LoadProcessedMapObjects();
+         auto& settings = m_comService->GetSettingsSerializerHolder()->GetSettings();
+         simulator::getSimulator()->SetStepSettings(surface_simulation::PROCESS_STEP_TYPE::PST_MAP_OBJ, settings);
+         simulator::getSimulator()->LoadProcessedStep(surface_simulation::PROCESS_STEP_TYPE::PST_MAP_OBJ);
          ScenarioDispather::GetInstance().OnScenarioScenarioStatusChanged(surface_simulation::SCENARIO_STATUS::SS_MAPOBJ_PROCESSED);
          buttonEnableCallback();
       }
@@ -83,9 +84,9 @@ void ScenarioManager::ProcessPaths(std::function<void(void)> buttonEnableCallbac
 {
    std::thread(&ScenarioManager::processPathCommand, this, [this, buttonEnableCallback]()
       {
-         //auto& settings = m_comService->GetSettingsSerializerHolder()->GetSettings();
-         //simulator::getSimulator()->SetAppSettings(settings);
-         simulator::getSimulator()->LoadProcessedPaths();
+         auto& settings = m_comService->GetSettingsSerializerHolder()->GetSettings();
+         simulator::getSimulator()->SetStepSettings(surface_simulation::PROCESS_STEP_TYPE::PST_PATHS, settings);
+         simulator::getSimulator()->LoadProcessedStep(surface_simulation::PROCESS_STEP_TYPE::PST_PATHS);
          ScenarioDispather::GetInstance().OnScenarioScenarioStatusChanged(surface_simulation::SCENARIO_STATUS::SS_PATHS_COUNTED);
          simulator::simulatorStart();
          buttonEnableCallback();
@@ -97,9 +98,9 @@ void ScenarioManager::ProcessOptPaths(std::function<void(void)> buttonEnableCall
 {
    std::thread(&ScenarioManager::processOptPathCommand, this, [this, buttonEnableCallback]()
       {
-         //auto& settings = m_comService->GetSettingsSerializerHolder()->GetSettings();
-         //simulator::getSimulator()->SetAppSettings(settings);
-         simulator::getSimulator()->LoadProcessedOptPaths();
+         auto& settings = m_comService->GetSettingsSerializerHolder()->GetSettings();
+         simulator::getSimulator()->SetStepSettings(surface_simulation::PROCESS_STEP_TYPE::PST_OPT_PATHS, settings);
+         simulator::getSimulator()->LoadProcessedStep(surface_simulation::PROCESS_STEP_TYPE::PST_OPT_PATHS);
          ScenarioDispather::GetInstance().OnScenarioScenarioStatusChanged(surface_simulation::SCENARIO_STATUS::SS_OPT_PATHS_COUNTED);
          simulator::simulatorStart();
          buttonEnableCallback();

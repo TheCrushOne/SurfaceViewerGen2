@@ -28,6 +28,14 @@ void user_interface::SetOutputText(OUTPUT_TYPE type, const char* text, COLORREF 
 
 // CMainFrame
 
+namespace
+{
+   std::string windowFailureMsg(LPCSTR name)
+   {
+      return std::string("Не удалось создать окно ") + name + "\n";
+   }
+}
+
 IMPLEMENT_DYNCREATE(CMainFrame, CFrameWndEx)
 
 const int  iMaxUserToolbars = 10;
@@ -154,12 +162,12 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
    }
 
    m_wndFileView.EnableDocking(CBRS_ALIGN_ANY);
-   m_wndClassView.EnableDocking(CBRS_ALIGN_ANY);
-   m_wndAppStatusView.EnableDocking(CBRS_ALIGN_ANY);
+   m_wndLayerFitlersView.EnableDocking(CBRS_ALIGN_ANY);
+   //m_wndAppStatusView.EnableDocking(CBRS_ALIGN_ANY);
    DockPane(&m_wndFileView);
-   DockPane(&m_wndAppStatusView);
+   //DockPane(&m_wndAppStatusView);
    CDockablePane* pTabbedBar = nullptr;
-   m_wndClassView.AttachToTabWnd(&m_wndFileView, DM_SHOW, FALSE, &pTabbedBar);
+   m_wndLayerFitlersView.AttachToTabWnd(&m_wndFileView, DM_SHOW, FALSE, &pTabbedBar);
    m_wndOutput.EnableDocking(CBRS_ALIGN_ANY);
    DockPane(&m_wndOutput);
    m_wndProperties.EnableDocking(CBRS_ALIGN_ANY);
@@ -210,17 +218,11 @@ BOOL CMainFrame::CreateDockingWindows()
 
    // Создать представление классов
    CString strClassView;
-   bNameValid = strClassView.LoadString(IDS_CLASS_VIEW);
+   bNameValid = strClassView.LoadString(IDS_LAYER_FILTERS_VIEW);
    ASSERT(bNameValid);
-   if (!m_wndClassView.Create(strClassView, this, CRect(0, 0, 200, 200), TRUE, ID_VIEW_CLASSVIEW, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_LEFT | CBRS_FLOAT_MULTI))
+   if (!m_wndLayerFitlersView.Create(strClassView, this, CRect(0, 0, 200, 200), TRUE, ID_VIEW_LAYERFILTERSVIEW, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_LEFT | CBRS_FLOAT_MULTI))
    {
-      TRACE0("Не удалось создать окно \"Представление классов\"\n");
-      return FALSE; // не удалось создать
-   }
-
-   if (!m_wndAppStatusView.Create(strClassView, this, CRect(0, 0, 200, 200), TRUE, ID_APPSTATUSVIEW, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_LEFT | CBRS_FLOAT_MULTI))
-   {
-      TRACE0("Не удалось создать окно \"Статус приложения\"\n");
+      TRACE0(windowFailureMsg(strClassView.GetString()));
       return FALSE; // не удалось создать
    }
 
@@ -230,39 +232,47 @@ BOOL CMainFrame::CreateDockingWindows()
    ASSERT(bNameValid);
    if (!m_wndFileView.Create(strFileView, this, CRect(0, 0, 200, 200), TRUE, ID_VIEW_FILEVIEW, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_LEFT| CBRS_FLOAT_MULTI))
    {
-      TRACE0("Не удалось создать окно \"Представление файлов\"\n");
+      TRACE0(windowFailureMsg(strFileView.GetString()));
       return FALSE; // не удалось создать
    }
 
-   // Создать окно вывода
+   // Окно вывода
    CString strOutputWnd;
    bNameValid = strOutputWnd.LoadString(IDS_OUTPUT_WND);
    ASSERT(bNameValid);
    if (!m_wndOutput.Create(strOutputWnd, this, CRect(0, 0, 100, 100), TRUE, ID_VIEW_OUTPUTWND, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_BOTTOM | CBRS_FLOAT_MULTI))
    {
-      TRACE0("Не удалось создать окно \"Вывод\"\n");
+      TRACE0(windowFailureMsg(strOutputWnd.GetString()));
       return FALSE; // не удалось создать
    }
 
-   // Создать окно свойств
+   // Окно свойств
    CString strPropertiesWnd;
    bNameValid = strPropertiesWnd.LoadString(IDS_PROPERTIES_WND);
    ASSERT(bNameValid);
    if (!m_wndProperties.Create(strPropertiesWnd, this, CRect(0, 0, 200, 200), TRUE, ID_VIEW_PROPERTIESWND, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_RIGHT | CBRS_FLOAT_MULTI))
    {
-      TRACE0("Не удалось создать окно \"Свойства\"\n");
+      TRACE0(windowFailureMsg(strPropertiesWnd.GetString()));
       return FALSE; // не удалось создать
    }
 
-   if (!m_wndProgressView.Create("Progress", this, CRect(0, 0, 200, 60), FALSE, ID_VIEW_PROGRESS, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_RIGHT | CBRS_FLOAT_MULTI))
+   // Окно свойств
+   CString strProgressWnd;
+   bNameValid = strProgressWnd.LoadString(IDS_PROGRESS_WND);
+   ASSERT(bNameValid);
+   if (!m_wndProgressView.Create(strProgressWnd, this, CRect(0, 0, 200, 60), FALSE, ID_VIEW_PROGRESS, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_RIGHT | CBRS_FLOAT_MULTI))
    {
-      TRACE0("Failed to create Progress window\n");
+      TRACE0(windowFailureMsg(strProgressWnd.GetString()));
       return FALSE; // failed to create
    }
 
-   if (!m_wndStatuses.Create("Statuses", this, CRect(0, 0, 200, 60), FALSE, ID_WND_STATUSES, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_RIGHT | CBRS_FLOAT_MULTI))
+   // Окно свойств
+   CString strStatusesWnd;
+   bNameValid = strStatusesWnd.LoadString(IDS_STATUSES_WND);
+   ASSERT(bNameValid);
+   if (!m_wndStatuses.Create(strStatusesWnd, this, CRect(0, 0, 200, 60), FALSE, ID_WND_STATUSES, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_RIGHT | CBRS_FLOAT_MULTI))
    {
-      TRACE0("Failed to create Statuses window\n");
+      TRACE0(windowFailureMsg(strStatusesWnd.GetString()));
       return FALSE; // failed to create
    }
 
@@ -275,19 +285,18 @@ void CMainFrame::SetDockingWindowIcons(BOOL bHiColorIcons)
    HICON hFileViewIcon = (HICON) ::LoadImage(::AfxGetResourceHandle(), MAKEINTRESOURCE(bHiColorIcons ? IDI_FILE_VIEW_HC : IDI_FILE_VIEW), IMAGE_ICON, ::GetSystemMetrics(SM_CXSMICON), ::GetSystemMetrics(SM_CYSMICON), 0);
    m_wndFileView.SetIcon(hFileViewIcon, FALSE);
 
-   HICON hClassViewIcon = (HICON) ::LoadImage(::AfxGetResourceHandle(), MAKEINTRESOURCE(bHiColorIcons ? IDI_CLASS_VIEW_HC : IDI_CLASS_VIEW), IMAGE_ICON, ::GetSystemMetrics(SM_CXSMICON), ::GetSystemMetrics(SM_CYSMICON), 0);
-   m_wndClassView.SetIcon(hClassViewIcon, FALSE);
+   HICON hClassViewIcon = (HICON) ::LoadImage(::AfxGetResourceHandle(), MAKEINTRESOURCE(bHiColorIcons ? IDI_LAYER_FILTER_VIEW_HC : IDI_LAYER_FILTER_VIEW), IMAGE_ICON, ::GetSystemMetrics(SM_CXSMICON), ::GetSystemMetrics(SM_CYSMICON), 0);
+   m_wndLayerFitlersView.SetIcon(hClassViewIcon, FALSE);
 
    // NOTE: частично слинковано с предыдущим
-   HICON hAppStatusViewIcon = (HICON) ::LoadImage(::AfxGetResourceHandle(), MAKEINTRESOURCE(bHiColorIcons ? IDI_CLASS_VIEW_HC : IDI_CLASS_VIEW), IMAGE_ICON, ::GetSystemMetrics(SM_CXSMICON), ::GetSystemMetrics(SM_CYSMICON), 0);
-   m_wndAppStatusView.SetIcon(hAppStatusViewIcon, FALSE);
+   //HICON hAppStatusViewIcon = (HICON) ::LoadImage(::AfxGetResourceHandle(), MAKEINTRESOURCE(bHiColorIcons ? IDI_CLASS_VIEW_HC : IDI_CLASS_VIEW), IMAGE_ICON, ::GetSystemMetrics(SM_CXSMICON), ::GetSystemMetrics(SM_CYSMICON), 0);
+   //m_wndAppStatusView.SetIcon(hAppStatusViewIcon, FALSE);
 
    HICON hOutputBarIcon = (HICON) ::LoadImage(::AfxGetResourceHandle(), MAKEINTRESOURCE(bHiColorIcons ? IDI_OUTPUT_WND_HC : IDI_OUTPUT_WND), IMAGE_ICON, ::GetSystemMetrics(SM_CXSMICON), ::GetSystemMetrics(SM_CYSMICON), 0);
    m_wndOutput.SetIcon(hOutputBarIcon, FALSE);
 
    HICON hPropertiesBarIcon = (HICON) ::LoadImage(::AfxGetResourceHandle(), MAKEINTRESOURCE(bHiColorIcons ? IDI_PROPERTIES_WND_HC : IDI_PROPERTIES_WND), IMAGE_ICON, ::GetSystemMetrics(SM_CXSMICON), ::GetSystemMetrics(SM_CYSMICON), 0);
    m_wndProperties.SetIcon(hPropertiesBarIcon, FALSE);
-
 }
 
 // Диагностика CMainFrame

@@ -15,27 +15,16 @@ namespace
    };
 
    const std::unordered_map<VALUE_FORMAT_TYPE, maskData> valueMask = {
-      { VALUE_FORMAT_TYPE::VFT_NONE, { "" , "" } },
-      { VALUE_FORMAT_TYPE::VFT_SPEED, { "dd d kts"
-                                      , "__._ kts" } },
-      { VALUE_FORMAT_TYPE::VFT_SPEED_MS, { "dd d kts"
-                                        , "__._ m/s" } },
-      { VALUE_FORMAT_TYPE::VFT_COURSE, { "ddd d°"
-                                       , "___._°" } },
-      { VALUE_FORMAT_TYPE::VFT_DISTANCE, { "dd dd NM"
-                                       ,   "__.__ NM" } },
-      { VALUE_FORMAT_TYPE::VFT_DISTANCE_METERS, { "ddd m"
-                                              ,   "___ m" } },
-
-      { VALUE_FORMAT_TYPE::VFT_TIME_SEC, { "00000 s"
-                                       ,   "_____ s" } },
-
-      { VALUE_FORMAT_TYPE::VFT_PERCENT, { "ddd %"
-                                      ,   "___ %" } },
-      { VALUE_FORMAT_TYPE::VFT_COORD_LAT, { "+dd dddd°"
-                                          , "___.____°" } },
-      { VALUE_FORMAT_TYPE::VFT_COORD_LON, { "+ddd dddd°"
-                                          , "____.____°" } },
+      { VALUE_FORMAT_TYPE::VFT_NONE,            { "" ,            "" } },
+      { VALUE_FORMAT_TYPE::VFT_SPEED,           { "dd d kts",     "__._ kts" } },
+      { VALUE_FORMAT_TYPE::VFT_SPEED_MS,        { "dd d kts",     "__._ m/s" } },
+      { VALUE_FORMAT_TYPE::VFT_COURSE,          { "ddd d°",       "___._°" } },
+      { VALUE_FORMAT_TYPE::VFT_DISTANCE,        { "dd dd NM",     "__.__ NM" } },
+      { VALUE_FORMAT_TYPE::VFT_DISTANCE_METERS, { "ddd m",        "___ m" } },
+      { VALUE_FORMAT_TYPE::VFT_TIME_SEC,        { "00000 s",      "_____ s" } },
+      { VALUE_FORMAT_TYPE::VFT_PERCENT,         { "ddd %",        "___ %" } },
+      { VALUE_FORMAT_TYPE::VFT_COORD_LAT,       { "+dd dddd°",    "___.____°" } },
+      { VALUE_FORMAT_TYPE::VFT_COORD_LON,       { "+ddd dddd°",   "____.____°" } },
    };
 }
 
@@ -46,11 +35,11 @@ void CPropertiesCtrl::ShowProperties(iProperty* prop, bool fullReload)
 {
    _selected = prop;
    // WARNING: не проходит AssertValid
-   /*if (fullReload)
+   if (fullReload)
    {
       _prop_struct.clear();
       RemoveAll();
-   }*/
+   }
 
    if (!prop)
       return;

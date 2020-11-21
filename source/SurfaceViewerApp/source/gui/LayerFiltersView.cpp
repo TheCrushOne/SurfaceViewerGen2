@@ -1,7 +1,7 @@
 ﻿
 #include "stdafx.h"
 #include "MainFrm.h"
-#include "DebugFiltersView.h"
+#include "LayerFiltersView.h"
 #include "Resource.h"
 #include "SurfaceViewerGen2.h"
 
@@ -39,16 +39,16 @@ IMPLEMENT_SERIAL(CClassViewMenuButton, CMFCToolBarMenuButton, 1)
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-DebugFiltersView::DebugFiltersView() noexcept
+LayerFiltersView::LayerFiltersView() noexcept
 {
    m_nCurrSort = ID_SORTING_GROUPBYTYPE;
 }
 
-DebugFiltersView::~DebugFiltersView()
+LayerFiltersView::~LayerFiltersView()
 {
 }
 
-BEGIN_MESSAGE_MAP(DebugFiltersView, CDockablePane)
+BEGIN_MESSAGE_MAP(LayerFiltersView, CDockablePane)
    ON_WM_CREATE()
    ON_WM_SIZE()
    ON_WM_CONTEXTMENU()
@@ -61,15 +61,15 @@ BEGIN_MESSAGE_MAP(DebugFiltersView, CDockablePane)
    ON_WM_PAINT()
    ON_WM_SETFOCUS()
    ON_UPDATE_COMMAND_UI_RANGE(ID_AUTO_UPDATE, ID_AUTO_UPDATE, OnUpdateSort)
-   ON_NOTIFY(TVM_SETITEM, 2, &DebugFiltersView::OnTvnItemChangedTree)
-   ON_NOTIFY(NM_CLICK, 2, &DebugFiltersView::OnNMClkTree1)
-   ON_NOTIFY(NM_DBLCLK, 2, &DebugFiltersView::OnNMDblclkTree1)
+   ON_NOTIFY(TVM_SETITEM, 2, &LayerFiltersView::OnTvnItemChangedTree)
+   ON_NOTIFY(NM_CLICK, 2, &LayerFiltersView::OnNMClkTree1)
+   ON_NOTIFY(NM_DBLCLK, 2, &LayerFiltersView::OnNMDblclkTree1)
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
 // CClassView message handlers
 
-void DebugFiltersView::OnTvnItemChangedTree(NMHDR* pNMHDR, LRESULT* pResult)
+void LayerFiltersView::OnTvnItemChangedTree(NMHDR* pNMHDR, LRESULT* pResult)
 {
    NMTVITEMCHANGE* pNMTVItemChange = reinterpret_cast<NMTVITEMCHANGE*>(pNMHDR);
    auto check = m_treeFilters.GetCheck(pNMTVItemChange->hItem);
@@ -78,7 +78,7 @@ void DebugFiltersView::OnTvnItemChangedTree(NMHDR* pNMHDR, LRESULT* pResult)
 }
 
 
-int DebugFiltersView::OnCreate(LPCREATESTRUCT lpCreateStruct)
+int LayerFiltersView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 {
    if (CDockablePane::OnCreate(lpCreateStruct) == -1)
       return -1;
@@ -116,13 +116,13 @@ int DebugFiltersView::OnCreate(LPCREATESTRUCT lpCreateStruct)
    return 0;
 }
 
-void DebugFiltersView::OnSize(UINT nType, int cx, int cy)
+void LayerFiltersView::OnSize(UINT nType, int cx, int cy)
 {
    CDockablePane::OnSize(nType, cx, cy);
    AdjustLayout();
 }
 
-void DebugFiltersView::fillSubFilters(HTREEITEM hParent, const filter_info& filter)
+void LayerFiltersView::fillSubFilters(HTREEITEM hParent, const filter_info& filter)
 {
    std::unordered_map<std::string, HTREEITEM> currentChilds;
 
@@ -171,9 +171,9 @@ void DebugFiltersView::fillSubFilters(HTREEITEM hParent, const filter_info& filt
 
 }
 
-void DebugFiltersView::fillClassView()
+void LayerFiltersView::fillClassView()
 {
-   const auto& filters = DebugFiltersManager::GetInstance().GetFilters();
+   const auto& filters = LayerFiltersManager::GetInstance().GetFilters();
 
    HTREEITEM hRoot = m_treeFilters.GetRootItem() ? m_treeFilters.GetRootItem() : m_treeFilters.InsertItem("DEBUG FILTERS", 0, 0);
 
@@ -183,7 +183,7 @@ void DebugFiltersView::fillClassView()
    m_treeFilters.UnlockWindowUpdate();
 }
 
-bool DebugFiltersView::OnScenarioScenarioStatusChanged(surface_simulation::SCENARIO_STATUS status)
+bool LayerFiltersView::OnScenarioScenarioStatusChanged(surface_simulation::SCENARIO_STATUS status)
 {
    bool res = true;
    switch (status)
@@ -207,11 +207,11 @@ bool DebugFiltersView::OnScenarioScenarioStatusChanged(surface_simulation::SCENA
    default:
       break;
    }
-   DebugFiltersManager::GetInstance().Reload();
+   LayerFiltersManager::GetInstance().Reload();
    return res;
 }
 
-bool DebugFiltersView::OnScenarioTimeChanged(double time)
+bool LayerFiltersView::OnScenarioTimeChanged(double time)
 {
    CMFCToolBarButton* button = DYNAMIC_DOWNCAST(CMFCToolBarButton, m_wndToolBar.GetButton(2));
    if (_autoUpdate)
@@ -219,34 +219,34 @@ bool DebugFiltersView::OnScenarioTimeChanged(double time)
    return true;
 }
 
-bool DebugFiltersView::onScenarioCheckOpened()
+bool LayerFiltersView::onScenarioCheckOpened()
 {
    m_treeFilters.DeleteAllItems();
    fillClassView();
    return true;
 }
 
-bool DebugFiltersView::onScenarioMapProcessed()
+bool LayerFiltersView::onScenarioMapProcessed()
 {
    return true;
 }
 
-bool DebugFiltersView::onScenarioMapObjProcessed()
+bool LayerFiltersView::onScenarioMapObjProcessed()
 {
    return true;
 }
 
-bool DebugFiltersView::onScenarioPathFound()
+bool LayerFiltersView::onScenarioPathFound()
 {
    return true;
 }
 
-bool DebugFiltersView::onScenarioOptPathFound()
+bool LayerFiltersView::onScenarioOptPathFound()
 {
    return true;
 }
 
-void DebugFiltersView::OnContextMenu(CWnd* pWnd, CPoint point)
+void LayerFiltersView::OnContextMenu(CWnd* pWnd, CPoint point)
 {
    CTreeCtrl* pWndTree = (CTreeCtrl*)&m_treeFilters;
    ASSERT_VALID(pWndTree);
@@ -289,7 +289,7 @@ void DebugFiltersView::OnContextMenu(CWnd* pWnd, CPoint point)
    }
 }
 
-void DebugFiltersView::AdjustLayout()
+void LayerFiltersView::AdjustLayout()
 {
    if (GetSafeHwnd() == nullptr)
    {
@@ -305,47 +305,47 @@ void DebugFiltersView::AdjustLayout()
    m_treeFilters.SetWindowPos(nullptr, rectClient.left + 1, rectClient.top + cyTlb + 1, rectClient.Width() - 2, rectClient.Height() - cyTlb - 2, SWP_NOACTIVATE | SWP_NOZORDER);
 }
 
-BOOL DebugFiltersView::PreTranslateMessage(MSG* pMsg)
+BOOL LayerFiltersView::PreTranslateMessage(MSG* pMsg)
 {
    return CDockablePane::PreTranslateMessage(pMsg);
 }
 
-void DebugFiltersView::OnUpdateSort(CCmdUI* pCmdUI)
+void LayerFiltersView::OnUpdateSort(CCmdUI* pCmdUI)
 {
    pCmdUI->SetCheck(_autoUpdate);
 }
 
-void DebugFiltersView::OnClassAddMemberFunction()
+void LayerFiltersView::OnClassAddMemberFunction()
 {
    AfxMessageBox(_T("Add member function..."));
 }
 
-void DebugFiltersView::OnClassAddMemberVariable()
+void LayerFiltersView::OnClassAddMemberVariable()
 {
    // TODO: Add your command handler code here
 }
 
-void DebugFiltersView::OnClassDefinition()
+void LayerFiltersView::OnClassDefinition()
 {
    // TODO: Add your command handler code here
 }
 
-void DebugFiltersView::OnClassProperties()
+void LayerFiltersView::OnClassProperties()
 {
    // TODO: Add your command handler code here
 }
 
-void DebugFiltersView::OnUpdateDebug()
+void LayerFiltersView::OnUpdateDebug()
 {
    fillClassView();
 }
 
-void DebugFiltersView::OnAutoUpdateDebug()
+void LayerFiltersView::OnAutoUpdateDebug()
 {
    _autoUpdate = !_autoUpdate;
 }
 
-void DebugFiltersView::OnPaint()
+void LayerFiltersView::OnPaint()
 {
    CPaintDC dc(this); // device context for painting
 
@@ -357,14 +357,14 @@ void DebugFiltersView::OnPaint()
    dc.Draw3dRect(rectTree, ::GetSysColor(COLOR_3DSHADOW), ::GetSysColor(COLOR_3DSHADOW));
 }
 
-void DebugFiltersView::OnSetFocus(CWnd* pOldWnd)
+void LayerFiltersView::OnSetFocus(CWnd* pOldWnd)
 {
    CDockablePane::OnSetFocus(pOldWnd);
 
    m_treeFilters.SetFocus();
 }
 
-void DebugFiltersView::OnChangeVisualStyle()
+void LayerFiltersView::OnChangeVisualStyle()
 {
    m_ClassViewImages.DeleteImageList();
 
@@ -394,13 +394,13 @@ void DebugFiltersView::OnChangeVisualStyle()
    m_wndToolBar.LoadBitmap(theApp.m_bHiColorIcons ? IDB_SORT_24 : IDR_SORT, 0, 0, TRUE /* Locked */);
 }
 
-bool DebugFiltersView::showFilter(HTREEITEM hItem, bool show, bool showParent)
+bool LayerFiltersView::showFilter(HTREEITEM hItem, bool show, bool showParent)
 {
-   DebugFiltersManager::GetInstance().ShowFilter(getFilterPath(hItem, show, showParent), show);
+   LayerFiltersManager::GetInstance().ShowFilter(getFilterPath(hItem, show, showParent), show);
    return true;
 }
 
-void DebugFiltersView::recursive_set_check(HTREEITEM hRoot, bool check)
+void LayerFiltersView::recursive_set_check(HTREEITEM hRoot, bool check)
 {
    HTREEITEM hItemChild = m_treeFilters.GetChildItem(hRoot);
    while (hItemChild)
@@ -414,7 +414,7 @@ void DebugFiltersView::recursive_set_check(HTREEITEM hRoot, bool check)
       hItemChild = m_treeFilters.GetNextItem(hItemChild, TVGN_NEXT);
    }
 }
-void DebugFiltersView::OnNMClkTree1(NMHDR* pNMHDR, LRESULT* pResult)
+void LayerFiltersView::OnNMClkTree1(NMHDR* pNMHDR, LRESULT* pResult)
 {
    UINT nFlags;
    CPoint curPoint;
@@ -437,7 +437,7 @@ void DebugFiltersView::OnNMClkTree1(NMHDR* pNMHDR, LRESULT* pResult)
    *pResult = 0;
 }
 
-void DebugFiltersView::OnNMDblclkTree1(NMHDR* pNMHDR, LRESULT* pResult)
+void LayerFiltersView::OnNMDblclkTree1(NMHDR* pNMHDR, LRESULT* pResult)
 {
    UINT nFlags;
    CPoint curPoint;

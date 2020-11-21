@@ -1,15 +1,15 @@
 #include "stdafx.h"
-#include "DebugFiltersManager.h"
+#include "LayerFiltersManager.h"
 #include "simulator/simulator.h"
 
 using namespace SV;
 
-DebugFiltersManager::DebugFiltersManager()
+LayerFiltersManager::LayerFiltersManager()
 {
    Reload();
 }
 
-void DebugFiltersManager::prepareFilters()
+void LayerFiltersManager::prepareFilters()
 {
    m_filters.childs.clear();
    auto* sim = simulator::getSimulator();
@@ -30,24 +30,24 @@ void DebugFiltersManager::prepareFilters()
       }
    }
    */
-   m_filters.name = debug_filter_tag::general;
-   auto& explications = addDebugNode(m_filters, debug_filter_tag::explications);
-   addDebugNode(explications, debug_filter_tag::land);
-   addDebugNode(explications, debug_filter_tag::air);
+   m_filters.name = layer_filter_tag::general;
+   auto& explications = addDebugNode(m_filters, layer_filter_tag::explications);
+   addDebugNode(explications, layer_filter_tag::land);
+   addDebugNode(explications, layer_filter_tag::air);
 
-   auto& coverages = addDebugNode(m_filters, debug_filter_tag::coverages);
+   auto& coverages = addDebugNode(m_filters, layer_filter_tag::coverages);
    auto covCount = sim->GetState().GetCoverageHistory().size();
    for (size_t step = 0; step < covCount; step++)
-      addDebugNode(coverages, std::string(debug_filter_tag::step_templ) + std::to_string(step));
+      addDebugNode(coverages, std::string(layer_filter_tag::step_templ) + std::to_string(step));
 }
 
-filter_info& DebugFiltersManager::addDebugNode(filter_info& filter, const std::string& folderName)
+filter_info& LayerFiltersManager::addDebugNode(filter_info& filter, const std::string& folderName)
 {
    filter.childs[folderName].name = folderName;
    return filter.childs[folderName];
 }
 
-void DebugFiltersManager::ShowFilter(const std::vector<std::string>& path, bool show)
+void LayerFiltersManager::ShowFilter(const std::vector<std::string>& path, bool show)
 {
    filter_info* filter = &m_filters;
    for (const auto& name : path)
@@ -62,7 +62,7 @@ void DebugFiltersManager::ShowFilter(const std::vector<std::string>& path, bool 
    filter->visible = show;
 }
 
-bool DebugFiltersManager::IsFilterVisible(const std::vector<std::string>& path)const
+bool LayerFiltersManager::IsFilterVisible(const std::vector<std::string>& path)const
 {
    const filter_info* filter = &m_filters;
    for (const auto& name : path)

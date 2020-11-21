@@ -44,5 +44,14 @@ namespace SV::surface_simulation
       SPT_LOG,
       SPT_SIZE
    };
+
+   enum class PROCESS_STEP_TYPE : char
+   {
+      PST_CHECK = 0,
+      PST_MAP,
+      PST_MAP_OBJ,
+      PST_PATHS,
+      PST_OPT_PATHS,
+   };
 #pragma pack(pop)
 }

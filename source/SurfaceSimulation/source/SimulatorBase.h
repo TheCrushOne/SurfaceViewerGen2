@@ -59,16 +59,15 @@ namespace SV::surface_simulation
       void Release() override final { delete this; }
 
       // iSimulator impl
-      bool CheckOpenScenario() override;
-      bool LoadProcessedMap() override;
-      bool LoadProcessedMapObjects() override;
-      bool LoadProcessedPaths() override;
-      bool LoadProcessedOptPaths() override;
+      bool LoadProcessedStep(PROCESS_STEP_TYPE) override final;
+      
       //virtual const std::shared_ptr<settings::application_settings>& GetAppSettings() const override final { return GetSettings(); }
 
-      inline void SetSimulationType(const surface_simulation::SIMULATION_PLAYER_TYPE type) { m_simulationType = type; }
+      inline void SetSimulationType(const SIMULATION_PLAYER_TYPE type) { m_simulationType = type; }
       void SetAppSettings(const settings::application_settings& settings) override final { m_settings = settings; }
+      void SetStepSettings(PROCESS_STEP_TYPE type, const settings::application_settings& settings) { m_stepSettings[type] = settings; }
       const settings::application_settings& GetAppSettings() const override final { return m_settings; }
+      const settings::application_settings& GetStepSettings(PROCESS_STEP_TYPE type) const override final { return m_stepSettings.at(type); }
 
       virtual SCENARIO_STATUS GetSimulatorScenarioState() const override final { return m_scenarioStatus; }
       virtual SIMULATION_STATUS GetSimulatorSimulationState() const override final { return m_simulationStatus; }
@@ -90,6 +89,12 @@ namespace SV::surface_simulation
       const pathfinder::UnsignedMatrix& GetAirUnitExplication() const override final { return m_data.air_explication; }
       const std::vector<pathfinder::UnsignedMatrix>& GetCoverageHistory() const override final { return m_data.coverage_history; }
    protected:
+      bool checkOpenScenario();
+      bool loadProcessedMap();
+      bool loadProcessedMapObjects();
+      bool loadProcessedPaths();
+      bool loadProcessedOptPaths();
+
       void processRecountRouteVisualizeMeta(layer_provider::layer_unit_object_vct&);
       void calcStepCount();
       surface_simulation::iLayerUnit* getUnitByIdx(UNIT_TYPE type, size_t idx);
@@ -100,6 +105,7 @@ namespace SV::surface_simulation
       std::shared_ptr<file_utils::global_path_storage> m_paths;
 
       settings::application_settings m_settings;
+      std::unordered_map<PROCESS_STEP_TYPE, settings::application_settings> m_stepSettings;
 
       iPropertyInterface* m_prop;
       std::wstring m_orderCacheFolder, m_currentConfig;

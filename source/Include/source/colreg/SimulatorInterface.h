@@ -10,20 +10,8 @@ namespace SV::surface_simulation
       //! Получить корневой элемент, который будет заполняться дебажной информацией
       //virtual dbg::iDebugInfo* GetDebugInfo() const = 0;
 
-      //! Реакция на загрузку метаданных сценария
-      virtual bool CheckOpenScenario() = 0;
-
-      //! Загрузить обработанную карту высот
-      virtual bool LoadProcessedMap() = 0;
-
-      //! Загрузить сгенерированные объекты карты
-      virtual bool LoadProcessedMapObjects() = 0;
-
-      //! Загрузить рассчитанный стандартный путь
-      virtual bool LoadProcessedPaths() = 0;
-
-      //! Загрузить рассчитанные оптимизированные пути
-      virtual bool LoadProcessedOptPaths() = 0;
+      //! Загрузить в соответствии с названием этапа
+      virtual bool LoadProcessedStep(PROCESS_STEP_TYPE) = 0;
 
       //! Запуск симулятора
       virtual void Start() = 0;
@@ -61,14 +49,20 @@ namespace SV::surface_simulation
       //! Получить тип симуляции
       virtual const surface_simulation::SIMULATION_PLAYER_TYPE GetSimulationType() = 0;
 
-      //! Установить настройки
+      //! Установить настройки gui
       virtual void SetAppSettings(const settings::application_settings& s) = 0;
+
+      //! Установить настройки этапов
+      virtual void SetStepSettings(PROCESS_STEP_TYPE, const settings::application_settings&) = 0;
 
       //! Перезагрузить настройки с xml
       virtual void ReloadSettings() = 0;
 
       //! Взять настройки
       virtual const settings::application_settings& GetAppSettings() const = 0;
+
+      //! Установить настройки этапов
+      virtual const settings::application_settings& GetStepSettings(PROCESS_STEP_TYPE) const = 0;
 
       //! Перерасчет путей
       virtual void RecountRoutes() = 0;

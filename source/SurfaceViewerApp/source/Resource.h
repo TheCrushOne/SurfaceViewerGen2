@@ -2,205 +2,234 @@
 // Включаемый файл, созданный в Microsoft Visual C++.
 // Используется в SurfaceViewerGen2.rc
 //
-#define IDD_ABOUTBOX             100
-#define IDP_OLE_INIT_FAILED		100
-#define IDR_POPUP_EDIT				119
-#define ID_STATUSBAR_PANE1			120
-#define ID_STATUSBAR_PANE2			121
-#define IDS_STATUS_PANE1			122
-#define IDS_STATUS_PANE2			123
-#define IDS_TOOLBAR_STANDARD		124
-#define IDS_TOOLBAR_CUSTOMIZE		125
-#define ID_VIEW_CUSTOMIZE			126
-#define IDR_MAINFRAME				128
-#define IDR_MAINFRAME_256			129
-#define IDR_SurfaceViewerGen2TYPE				130
-#define ID_WINDOW_MANAGER			131
-#define ID_VIEW_FILEVIEW			133
-#define ID_VIEW_CLASSVIEW			134
-#define ID_PROPERTIES				135
-//#define ID_OPEN						136
-#define ID_OPEN_WITH				137
-#define ID_DUMMY_COMPILE			138
-#define ID_CLASS_ADD_MEMBER_FUNCTION	139
-#define ID_CLASS_ADD_MEMBER_VARIABLE	140
-#define ID_CLASS_DEFINITION			141
-#define ID_CLASS_PROPERTIES			142
-#define ID_NEW_FOLDER				143
-#define ID_SORT_MENU				144
-#define ID_SORTING_GROUPBYTYPE		145
-#define ID_SORTING_SORTALPHABETIC	146
-#define ID_SORTING_SORTBYTYPE		147
-#define ID_SORTING_SORTBYACCESS		148
-#define ID_VIEW_OUTPUTWND			149
-#define ID_VIEW_PROPERTIESWND		150
-#define ID_SORTPROPERTIES			151
-#define ID_PROPERTIES1				152
-#define ID_PROPERTIES2				153
-#define ID_EXPAND_ALL				154
-#define IDS_FILE_VIEW				155
-#define IDS_CLASS_VIEW				156
-#define IDS_OUTPUT_WND				157
-#define IDS_PROPERTIES_WND			158
-#define IDI_FILE_VIEW				161
-#define IDI_FILE_VIEW_HC			162
-#define IDI_CLASS_VIEW				163
-#define IDI_CLASS_VIEW_HC			164
-#define IDI_OUTPUT_WND				165
-#define IDI_OUTPUT_WND_HC			166
-#define IDI_PROPERTIES_WND			167
-#define IDI_PROPERTIES_WND_HC		168
-#define IDR_EXPLORER				169
-#define IDB_EXPLORER_24				170
-#define IDR_SORT					171
-#define IDB_SORT_24					172
-#define IDR_POPUP_SORT				173
-#define IDR_POPUP_EXPLORER			174
-#define IDB_FILE_VIEW				175
-#define IDB_FILE_VIEW_24			176
-#define IDB_CLASS_VIEW				177
-#define IDB_CLASS_VIEW_24			178
-#define IDR_MENU_IMAGES				179
-#define IDB_MENU_IMAGES_24			180
-#define ID_TOOLS_MACRO				181
-#define IDR_OUTPUT_POPUP			182
-#define IDR_PROPERTIES				183
-#define IDB_PROPERTIES_HC			184
-#define IDR_THEME_MENU				200
-#define ID_SET_STYLE				201
-#define ID_VIEW_APPLOOK_WIN_2000	205
-#define ID_VIEW_APPLOOK_OFF_XP		206
-#define ID_VIEW_APPLOOK_WIN_XP		207
-#define ID_VIEW_APPLOOK_OFF_2003	208
-#define ID_VIEW_APPLOOK_VS_2005		209
-#define ID_VIEW_APPLOOK_VS_2008		210
-#define ID_VIEW_APPLOOK_OFF_2007_BLUE	215
-#define ID_VIEW_APPLOOK_OFF_2007_BLACK	216
-#define ID_VIEW_APPLOOK_OFF_2007_SILVER	217
-#define ID_VIEW_APPLOOK_OFF_2007_AQUA	218
-#define ID_VIEW_APPLOOK_WINDOWS_7	219
-#define IDS_BUILD_TAB				300
-//#define IDS_DEBUG_TAB				301
-#define IDS_FIND_TAB				302
-#define IDS_EXPLORER				305
-#define IDS_EDIT_MENU				306
 
-#define IDC_RENDER                      1001
-#define IDD_SVG2V_FORM                  1002
-#define ID_VIEW_RENDER                  1003
+// IDD - Окна
+#define IDD_ABOUTBOX                   100
+#define IDD_SVG2V_FORM                 101
+#define IDD_DXMODAL                    102
+#define IDD_GRAPH_GRAPH_PROP_PAGE      103
+#define IDD_GRAPH_AXIS_PROP_PAGE       104
+#define IDD_GRAPH_GRAPHICS_PROPS       105
+#define IDD_GRAPH_CHANGE_TITLE         106
+//#define IDD_GRAPH_DIALOG               1010
+//#define IDD_DO_GRAPH_DIALOG            1034
+//#define IDD_MODALFRAME1_DIALOG         1037
 
-#define IDD_GRAPH_GRAPH_PROP_PAGE       1005
-#define IDD_GRAPH_AXIS_PROP_PAGE        1006
-#define IDD_GRAPH_GRAPHICS_PROPS        1007
-#define IDR_TEST_GTYPE                  1009
-#define IDD_GRAPH_DIALOG                1010
-#define IDD_GRAPH_CHANGE_TITLE          1011
-#define IDC_NEW_GRAPH_DLG               1012
-#define IDC_GRAPH_TITLE                 1013
-#define IDC_GRAPH_CH_TITLE              1014
-#define IDC_GRAPH_CH_COLOR              1015
-#define IDC_TITLE_STRING                1016
-#define IDC_X1                          1017
-#define IDC_X2                          1018
-#define IDC_Y1                          1019
-#define IDC_Y2                          1020
-#define IDC_GEN_GRAPH_PROPS_AXIS        1021
-#define IDC_XTITLE                      1022
-#define IDC_XUOM                        1023
-#define IDC_YTITLE                      1024
-#define IDC_GRAPH_CHOICE                1025
-#define IDC_YUOM                        1026
-#define IDC_GRAPH_HIDESHOW              1027
-#define IDC_GRAPH_POINTMARKS            1028
-#define IDC_GRAPH_MOUSECOORDS           1029
-#define IDC_XAXIS_PRECISION             1030
-#define IDC_YAXIS_PRECISION             1031
-#define IDC_GRAPHS_SHOWALL              1032
-#define IDM_NEW_GRAPH                   1033
-#define IDD_DO_GRAPH_DIALOG             1034
+// IDP - Ошибки
+#define IDP_OLE_INIT_FAILED            200
 
-#define IDR_MANIFEST                    1035
-#define IDM_ABOUTBOX                    0x0010
-#define IDS_ABOUTBOX                    1036
-#define IDD_MODALFRAME1_DIALOG          1037
-#define IDR_RT_MANIFEST1                1039
-#define IDC_BUTTON1                     1040
-#define IDC_CHECK1                      1041
-#define ID_VIEW_YELLOW                  1042
-#define ID_VIEW_GREEN                   1043
-#define ID_MODAL_FRAME                  1044
-#define IDR_MODALFRAME                  1045
-#define IDD_DXMODAL                     1046
+//#define ID_STATUSBAR_PANE1             120
+//#define ID_STATUSBAR_PANE2             121
 
-#define IDS_INFO_TAB                    1047
-#define IDS_ERROR_TAB                   1048
-#define IDS_WARNING_TAB                 1049
-#define IDS_DEBUG_TAB                   1050
-#define IDS_OUTPUT_TAB                  1051
-#define IDS_PERFORMANCE_TAB             1052
+// IDS - Стринговые константы для имен объектов
+// Тулбар мейнфрейма
+#define IDS_STATUS_PANE1               400
+#define IDS_STATUS_PANE2               401
+#define IDS_TOOLBAR_STANDARD           402
+#define IDS_TOOLBAR_CUSTOMIZE          403
 
-#define ID_TEST_PACKET                  2001
-#define ID_NO1                          2002
-#define ID_NO2                          2003
-#define ID_NO3                          2004
-#define ID_NO4                          2005
+// Заголовки док-окон
+#define IDS_LAYER_FILTERS_VIEW         410
+#define IDS_FILE_VIEW                  411
+#define IDS_OUTPUT_WND                 412
+#define IDS_PROPERTIES_WND             413
+#define IDS_PROGRESS_WND               414
+#define IDS_STATUSES_WND               415
 
-#define IDR_DOWNARROW                   5001
-#define IDR_UPARROW                     5002
+// Меню выпадающее
+#define IDS_EXPLORER                   420
+#define IDS_BUILD_TAB                  421
+#define IDS_FIND_TAB                   422
+#define IDS_EDIT_MENU                  423
 
-#define IDR_SCENARIO_CONTROL_TOOLBAR    6001
-#define IDR_SIMULATION_TOOLBAR          6002
+// ModalDX dee
+#define IDS_ABOUTBOX                   430
 
-#define ID_SC_CHOOSESCENARIO            7001
-#define ID_SC_PROCESSMAP                7002
-#define ID_SC_PROCESSMAPOBJ             7003
-#define ID_SC_PROCESSSIMPLEPATHS        7004
-#define ID_SC_PROCESSOPTIMIZEDPATHS     7005
+// Вкладки нижнего док-окна
+#define IDS_INFO_TAB                   440
+#define IDS_ERROR_TAB                  441
+#define IDS_WARNING_TAB                442
+#define IDS_DEBUG_TAB                  443
+#define IDS_OUTPUT_TAB                 444
+#define IDS_PERFORMANCE_TAB            445
 
-#define IDR_EDIT_TOOLBAR               10001
 
-#define ID_EDIT_RUN                    10002
-#define ID_SIM_STEP                    10003
-#define ID_EDIT_PAUSE                  10004
-#define ID_EDIT_STOP                   10005
-#define ID_SIM_TIME_SCALE_1X           10006
-#define ID_SIM_TIME_SCALE_10X          10007
-#define ID_SIM_TIME_SCALE_100X         10008
-#define ID_DEPTH_AREA                  10108
-#define ID_AUTOPAUSE                   10009
+// IDR - Хороший вопрос что это, бля... похоже, что объекты из rc
+#define IDR_POPUP_EDIT                 500
+#define IDR_POPUP_SORT                 501
+#define IDR_POPUP_EXPLORER             502
 
-#define ID_DEBUG                       10018
+// merged with bmp
+#define IDR_MAINFRAME                  510
+#define IDR_MAINFRAME_256              511
+#define IDR_SERVICE                    512
+#define IDR_SERVICE_256                513
+#define IDR_SVG2TYPE                   514
+#define IDR_EXPLORER                   515
+#define IDR_SORT                       516
+#define IDR_MENU_IMAGES                517
+#define IDR_OUTPUT_POPUP               518
+#define IDR_PROPERTIES                 519
+#define IDR_THEME_MENU                 520
+#define IDR_TEST_GTYPE                 521
+#define IDR_MANIFEST                   522
+#define IDR_RT_MANIFEST1               523
+#define IDR_MODALFRAME                 524
+#define IDR_DOWNARROW                  525
+#define IDR_UPARROW                    526
+#define IDR_SCENARIO_CONTROL_TOOLBAR   527
+#define IDR_SIMULATION_TOOLBAR         528
+#define IDR_EDIT_TOOLBAR               529
+#define IDR_TIME_SCALE_TOOLBAR         530
 
-#define ID_NEW                         10020
-#define ID_OPEN                        10021
-#define ID_SAVE                        10022
-#define ID_SAVE_AS                     10023
-#define ID_SAVE_FOCUSED_AS             10024
-#define ID_SCENARIO_DELETE             10025
-#define ID_SCENARIO_CREATE_FOLDER      10026
-#define ID_SCENARIO_EDIT               10027
-#define ID_SCENARIO_OPEN               10028
+// IDB - bitmap
+#define IDB_EXPLORER_24                600
+#define IDB_SORT_24                    601
+#define IDB_FILE_VIEW                  602
+#define IDB_FILE_VIEW_24               603
+#define IDB_CLASS_VIEW                 604
+#define IDB_CLASS_VIEW_24              605
+#define IDB_MENU_IMAGES_24             606
+#define IDB_PROPERTIES_HC              607
 
-#define ID_APPSTATUSVIEW               10029
-#define IDR_SERVICE                    10030
-#define IDR_SERVICE_256                10031
-#define ID_CHECK_ENGINE                10032
+// IDI - icons
+#define IDI_FILE_VIEW                  700
+#define IDI_FILE_VIEW_HC               701
+#define IDI_LAYER_FILTER_VIEW          702
+#define IDI_LAYER_FILTER_VIEW_HC       703
+#define IDI_OUTPUT_WND                 704
+#define IDI_OUTPUT_WND_HC              705
+#define IDI_PROPERTIES_WND             706
+#define IDI_PROPERTIES_WND_HC          707
 
-#define IDC_APPST_PROGRESS             10033
+// IDC - ddx
+//
+#define IDC_GRAPH_TITLE                800
+#define IDC_GRAPH_CH_TITLE             801
+#define IDC_GRAPH_CH_COLOR             802
+#define IDC_TITLE_STRING               803
+#define IDC_X1                         804
+#define IDC_X2                         805
+#define IDC_Y1                         806
+#define IDC_Y2                         807
+#define IDC_GEN_GRAPH_PROPS_AXIS       808
+#define IDC_XTITLE                     809
+#define IDC_XUOM                       810
+#define IDC_YTITLE                     811
+#define IDC_GRAPH_CHOICE               812
+#define IDC_YUOM                       813
+#define IDC_GRAPH_HIDESHOW             814
+#define IDC_GRAPH_POINTMARKS           815
+#define IDC_GRAPH_MOUSECOORDS          816
+#define IDC_XAXIS_PRECISION            817
+#define IDC_YAXIS_PRECISION            818
+#define IDC_GRAPHS_SHOWALL             819
+// controls
+#define IDC_RENDER                     820
 
-#define ID_DEBUG_UPDATE                10034
-#define ID_AUTO_UPDATE                 10035
+#define IDC_SIMULATION_SLIDER          830
+#define IDC_SIMULATION_TIME_SET_BUTTON 831
+#define IDC_SIMULATION_TIME            832
+#define IDC_LIST_STATUSES              833
 
-#define IDR_TIME_SCALE_TOOLBAR         10036
 
-#define IDC_SIMULATION_SLIDER          10037
-#define IDC_SIMULATION_TIME_SET_BUTTON 10038
-#define IDC_SIMULATION_TIME            10039
+// IDM - modal dee
+#define IDM_ABOUTBOX                   0x0010
 
-#define ID_VIEW_PROGRESS               10040
+// ID - just id
 
-#define ID_WND_STATUSES                10041
-#define IDC_LIST_STATUSES              10042
+#define ID_PROPERTIES                  900
+#define ID_OPEN_WITH                   902
+#define ID_DUMMY_COMPILE               903
+#define ID_CLASS_ADD_MEMBER_FUNCTION   904
+#define ID_CLASS_ADD_MEMBER_VARIABLE   905
+#define ID_CLASS_DEFINITION            906
+#define ID_CLASS_PROPERTIES            907
+#define ID_NEW_FOLDER                  908
+#define ID_SORT_MENU                   909
+#define ID_SORTING_GROUPBYTYPE         910
+#define ID_SORTING_SORTALPHABETIC      911
+#define ID_SORTING_SORTBYTYPE          912
+#define ID_SORTING_SORTBYACCESS        913
+
+#define ID_SORTPROPERTIES              920
+#define ID_PROPERTIES1                 921
+#define ID_PROPERTIES2                 922
+#define ID_EXPAND_ALL                  923
+
+#define ID_TOOLS_MACRO                 930
+
+// winstyles
+#define ID_VIEW_APPLOOK_WIN_2000       940
+#define ID_VIEW_APPLOOK_OFF_XP         941
+#define ID_VIEW_APPLOOK_WIN_XP         942
+#define ID_VIEW_APPLOOK_OFF_2003       943
+#define ID_VIEW_APPLOOK_VS_2005        944
+#define ID_VIEW_APPLOOK_VS_2008        945
+#define ID_VIEW_APPLOOK_OFF_2007_BLUE  946
+#define ID_VIEW_APPLOOK_OFF_2007_BLACK 947
+#define ID_VIEW_APPLOOK_OFF_2007_SILVER   948
+#define ID_VIEW_APPLOOK_OFF_2007_AQUA  949
+#define ID_VIEW_APPLOOK_WINDOWS_7      950
+
+// commands
+#define ID_VIEW_RENDER                 960
+#define ID_VIEW_YELLOW                 961
+#define ID_VIEW_GREEN                  962
+#define ID_MODAL_FRAME                 963
+#define ID_VIEW_CUSTOMIZE              964
+#define ID_TEST_PACKET                 965
+#define ID_NO1                         966
+#define ID_NO2                         967
+#define ID_NO3                         968
+#define ID_NO4                         969
+#define ID_WINDOW_MANAGER              970
+
+// mainfrm
+#define ID_VIEW_LAYERFILTERSVIEW       980
+#define ID_VIEW_FILEVIEW               981
+#define ID_VIEW_OUTPUTWND              982
+#define ID_VIEW_PROPERTIESWND          983
+#define ID_VIEW_PROGRESS               984
+#define ID_WND_STATUSES                985
+
+// svg2 button 1
+#define ID_NEW                         990
+#define ID_OPEN                        991
+#define ID_SAVE                        992
+#define ID_SAVE_AS                     993
+#define ID_SAVE_FOCUSED_AS             994
+#define ID_SCENARIO_DELETE             995
+#define ID_SCENARIO_CREATE_FOLDER      996
+#define ID_SCENARIO_OPEN               997
+#define ID_SCENARIO_EDIT               998
+
+// svg2 status change
+#define ID_SC_CHOOSESCENARIO           1000
+#define ID_SC_PROCESSMAP               1001
+#define ID_SC_PROCESSMAPOBJ            1002
+#define ID_SC_PROCESSSIMPLEPATHS       1003
+#define ID_SC_PROCESSOPTIMIZEDPATHS    1004
+
+// svg2 fictive
+#define ID_DEPTH_AREA                  1010
+
+// svg2 button 2
+#define ID_EDIT_RUN                    1020
+#define ID_SIM_STEP                    1021
+#define ID_EDIT_PAUSE                  1022
+#define ID_EDIT_STOP                   1023
+#define ID_SIM_TIME_SCALE_1X           1024
+#define ID_SIM_TIME_SCALE_10X          1025
+#define ID_SIM_TIME_SCALE_100X         1026
+
+// svg2 check engine
+#define ID_CHECK_ENGINE                1030
+
+// layer filters
+#define ID_DEBUG_UPDATE                1040
+#define ID_AUTO_UPDATE                 1041
+
 
 // Next default values for new objects
 // 

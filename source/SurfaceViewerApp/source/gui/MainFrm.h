@@ -4,7 +4,7 @@
 
 #pragma once
 #include "FileView.h"
-#include "DebugFiltersView.h"
+#include "LayerFiltersView.h"
 #include "OutputWnd.h"
 #include "AppStatusView.h"
 #include "properties/PropertiesWnd.h"
@@ -52,10 +52,10 @@ namespace SV
       CMFCStatusBar     m_wndStatusBar;
       CMFCToolBarImages m_UserImages;
       CFileView         m_wndFileView;
-      DebugFiltersView  m_wndClassView;
+      LayerFiltersView  m_wndLayerFitlersView;
       COutputWnd        m_wndOutput;
       CPropertiesWnd    m_wndProperties;
-      CAppStatusView    m_wndAppStatusView;
+      //CAppStatusView    m_wndAppStatusView;
       CProgressViewWnd  m_wndProgressView;
       CPipeplineStatusWnd m_wndStatuses;
 

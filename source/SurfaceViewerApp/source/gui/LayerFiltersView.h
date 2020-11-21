@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 #include "ViewTree.h"
-#include "helpers/DebugFiltersManager.h"
+#include "helpers/LayerFiltersManager.h"
 #include "scenario/ScenarioManager.h"
 
 namespace SV
@@ -16,13 +16,13 @@ namespace SV
       virtual BOOL AllowShowOnList() const { return FALSE; }
    };
 
-   class DebugFiltersView
+   class LayerFiltersView
       : public CDockablePane
       , ScenarioObserverBase
    {
    public:
-      DebugFiltersView() noexcept;
-      virtual ~DebugFiltersView();
+      LayerFiltersView() noexcept;
+      virtual ~LayerFiltersView();
 
       void AdjustLayout();
       void OnChangeVisualStyle();

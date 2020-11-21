@@ -254,7 +254,7 @@
   <ItemGroup>
     <ClInclude Include="source\framework.h" />
     <ClInclude Include="source\gui\AppStatusView.h" />
-    <ClInclude Include="source\gui\DebugFiltersView.h" />
+    <ClInclude Include="source\gui\LayerFiltersView.h" />
     <ClInclude Include="source\gui\CModalDirectX.h" />
     <ClInclude Include="source\gui\FileView.h" />
     <ClInclude Include="source\gui\graph2d\coords.h">
@@ -341,7 +341,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClInclude>
-    <ClInclude Include="source\gui\helpers\DebugFiltersManager.h" />
+    <ClInclude Include="source\gui\helpers\LayerFiltersManager.h" />
     <ClInclude Include="source\gui\layers\ChartLayer.h" />
     <ClInclude Include="source\gui\layers\NetLayer.h" />
     <ClInclude Include="source\gui\layers\RenderHelper.h" />
@@ -406,7 +406,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\gui\AppStatusView.cpp" />
-    <ClCompile Include="source\gui\DebugFiltersView.cpp" />
+    <ClCompile Include="source\gui\LayerFiltersView.cpp" />
     <ClCompile Include="source\gui\CModalDirectX.cpp" />
     <ClCompile Include="source\gui\FileView.cpp" />
     <ClCompile Include="source\gui\graph2d\coords.cpp">
@@ -493,7 +493,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="source\gui\helpers\DebugFiltersManager.cpp" />
+    <ClCompile Include="source\gui\helpers\LayerFiltersManager.cpp" />
     <ClCompile Include="source\gui\layers\ChartLayer.cpp" />
     <ClCompile Include="source\gui\layers\NetLayer.cpp" />
     <ClCompile Include="source\gui\layers\RenderHelper.cpp" />

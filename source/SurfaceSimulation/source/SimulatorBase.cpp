@@ -45,6 +45,16 @@ SimulatorBase::SimulatorBase(central_pack* pack, iPropertyInterface* prop, navig
    VALID_CHECK_DLL_LOAD("DataStandart", "CreateOptimizedPathStorageDataStandart", m_optPathDS, pack, "", m_pService);
 }
 
+bool SimulatorBase::AddLayerVisibilityInfoUnit(std::vector<std::string> path, bool val)
+{
+   addLayerVisibilityInfoUnit(m_visibility, path, val);
+}
+
+bool SimulatorBase::ClearLayerVisibilityInfoUnitBranch(std::vector<std::string> path)
+{
+   clearLayerVisibilityInfoUnitBranch(m_visibility, path);
+}
+
 bool SimulatorBase::LoadProcessedStep(PROCESS_STEP_TYPE type)
 {
    switch (type)
@@ -252,6 +262,42 @@ iLayerUnit* SimulatorBase::getUnitByIdx(UNIT_TYPE type, size_t idx)
    }
    ATLASSERT(false);
    return nullptr;
+}
+
+//bool marshal(std::function<bool(LayerVisibilityControl)>, LayerVisibilityControl& visibility, std::vector<std::string> path, bool val)
+
+bool SimulatorBase::addLayerVisibilityInfoUnit(LayerVisibilityControl& visibility, std::vector<std::string> path, bool val)
+{
+   if (path.empty())
+   {
+      visibility.defvalue = val;
+      return true;
+   }
+   std::string cur_name = path.front();
+   path.erase(path.begin());
+   auto& children = visibility.children;
+   //auto iter = std::find_if(children.begin(), children.begin(), [&cur_name](const LayerVisibilityControl& elem)->bool { return elem.name.compare(cur_name) == 0; });
+   auto iter = children.find(cur_name);
+   if (iter == children.end())
+      children[cur_name] = (LayerVisibilityControl{ cur_name });
+   return addLayerVisibilityInfoUnit(children[cur_name], path, val);
+}
+
+bool SimulatorBase::clearLayerVisibilityInfoUnitBranch(LayerVisibilityControl& visibility, std::vector<std::string> path)
+{
+   if (path.empty())
+   {
+      visibility.children.clear();
+      return true;
+   }
+   std::string cur_name = path.front();
+   path.erase(path.begin());
+   auto& children = visibility.children;
+   //auto iter = std::find_if(children.begin(), children.begin(), [&cur_name](const LayerVisibilityControl& elem)->bool { return elem.name.compare(cur_name) == 0; });
+   auto iter = children.find(cur_name);
+   if (iter == children.end())
+      return false;
+   return clearLayerVisibilityInfoUnitBranch(children[cur_name], path);
 }
 
 const iLayerChartObject* SimulatorBase::GetChartObjectByIdx(size_t idx) const

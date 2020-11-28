@@ -1,14 +1,21 @@
 #pragma once
 #include "BaseRef.h"
 #include "SimulationStateInterface.h"
+#include "LayerVisibilityControl.h"
 
 namespace SV::surface_simulation
 {
    //! Интерфейс симулятора
    struct iSimulator : iReleasable
    {
-      //! Получить корневой элемент, который будет заполняться дебажной информацией
-      //virtual dbg::iDebugInfo* GetDebugInfo() const = 0;
+      //! Добавление элемента контроля видимости по пути
+      virtual bool AddLayerVisibilityInfoUnit(std::vector<std::string>, bool) = 0;
+
+      //! Сбро ветки элеметов исключая элемент, указанный в пути
+      virtual bool ClearLayerVisibilityInfoUnitBranch(std::vector<std::string>) = 0;
+
+      //! Взятие дерева элементов контроля видимости
+      virtual const LayerVisibilityControl* GetLayerVisibilityInfo() const = 0;
 
       //! Загрузить в соответствии с названием этапа
       virtual bool LoadProcessedStep(PROCESS_STEP_TYPE) = 0;

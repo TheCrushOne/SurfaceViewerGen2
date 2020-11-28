@@ -59,6 +59,9 @@ namespace SV::surface_simulation
       void Release() override final { delete this; }
 
       // iSimulator impl
+      bool AddLayerVisibilityInfoUnit(std::vector<std::string>, bool) override final;
+      bool ClearLayerVisibilityInfoUnitBranch(std::vector<std::string>) override final;
+      const LayerVisibilityControl* GetLayerVisibilityInfo() const override final { return &m_visibility; }
       bool LoadProcessedStep(PROCESS_STEP_TYPE) override final;
       
       //virtual const std::shared_ptr<settings::application_settings>& GetAppSettings() const override final { return GetSettings(); }
@@ -98,9 +101,12 @@ namespace SV::surface_simulation
       void processRecountRouteVisualizeMeta(layer_provider::layer_unit_object_vct&);
       void calcStepCount();
       surface_simulation::iLayerUnit* getUnitByIdx(UNIT_TYPE type, size_t idx);
+      static bool addLayerVisibilityInfoUnit(LayerVisibilityControl&, std::vector<std::string>, bool);
+      static bool clearLayerVisibilityInfoUnitBranch(LayerVisibilityControl&, std::vector<std::string>);
       //void deserializeStandartAttrs()
    protected:
       scenario_data m_data;
+      LayerVisibilityControl m_visibility;
 
       std::shared_ptr<file_utils::global_path_storage> m_paths;
 

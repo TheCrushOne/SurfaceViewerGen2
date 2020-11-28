@@ -11,26 +11,16 @@ LayerFiltersManager::LayerFiltersManager()
 
 void LayerFiltersManager::prepareFilters()
 {
-   m_filters.childs.clear();
+   //m_filters.childs.clear();
    auto* sim = simulator::getSimulator();
    if (!sim)
       return;
-   //const auto* debugInfo = sim->GetDebugInfo();
+   auto* info = sim->GetLayerVisibilityInfo();
+   m_filters = info;
 
-   /*const auto roots = debugInfo->GetNodes();
-   if (!roots)
-      return;
-   m_filters.name = L"";
-
-   for (auto& node : *roots)
-   {
-      for (size_t nodeIdx = 0; nodeIdx < node->subnodes.size; ++nodeIdx)
-      {
-         addDebugFolder(node->subnodes.arr[nodeIdx], m_filters);
-      }
-   }
-   */
-   m_filters.name = layer_filter_tag::general;
+   //addLayerFilterNode(m_filters, info);
+   
+   /*m_filters.name = layer_filter_tag::general;
    auto& explications = addDebugNode(m_filters, layer_filter_tag::explications);
    addDebugNode(explications, layer_filter_tag::land);
    addDebugNode(explications, layer_filter_tag::air);
@@ -38,22 +28,22 @@ void LayerFiltersManager::prepareFilters()
    auto& coverages = addDebugNode(m_filters, layer_filter_tag::coverages);
    auto covCount = sim->GetState().GetCoverageHistory().size();
    for (size_t step = 0; step < covCount; step++)
-      addDebugNode(coverages, std::string(layer_filter_tag::step_templ) + std::to_string(step));
+      addDebugNode(coverages, std::string(layer_filter_tag::step_templ) + std::to_string(step));*/
 }
 
-filter_info& LayerFiltersManager::addDebugNode(filter_info& filter, const std::string& folderName)
+/*filter_info& LayerFiltersManager::addLayerFilterNode(filter_info& filter, const std::string& folderName)
 {
    filter.childs[folderName].name = folderName;
    return filter.childs[folderName];
-}
+}*/
 
 void LayerFiltersManager::ShowFilter(const std::vector<std::string>& path, bool show)
 {
-   filter_info* filter = &m_filters;
+   auto* filter = &m_filters;
    for (const auto& name : path)
    {
-      const auto itf = filter->childs.find(name);
-      ATLASSERT(itf != filter->childs.end());
+      const auto itf = filter->children.find(name);
+      ATLASSERT(itf != filter->children.end());
       if (show)
          filter->visible = show;
       filter = &(*itf).second;
@@ -64,11 +54,11 @@ void LayerFiltersManager::ShowFilter(const std::vector<std::string>& path, bool 
 
 bool LayerFiltersManager::IsFilterVisible(const std::vector<std::string>& path)const
 {
-   const filter_info* filter = &m_filters;
+   const auto* filter = &m_filters;
    for (const auto& name : path)
    {
-      const auto itf = filter->childs.find(name);
-      if (itf != filter->childs.end())
+      const auto itf = filter->children.find(name);
+      if (itf != filter->children.end())
          filter = &(*itf).second;
       else
          return false;

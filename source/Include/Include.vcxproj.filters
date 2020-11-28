@@ -396,6 +396,9 @@
     <ClInclude Include="source\crossdllinterface\MCMInterface.h">
       <Filter>crossdllinterface</Filter>
     </ClInclude>
+    <ClInclude Include="source\colreg\LayerVisibilityControl.h">
+      <Filter>colreg</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\colreg\ThirdParty\tinyxml2\tinyxml2.cpp">

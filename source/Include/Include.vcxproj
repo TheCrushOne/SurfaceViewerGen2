@@ -30,6 +30,7 @@
     <ClInclude Include="source\colreg\DebugStructs.h" />
     <ClInclude Include="source\colreg\DomainStructs.h" />
     <ClInclude Include="source\colreg\domain_utils.h" />
+    <ClInclude Include="source\colreg\LayerVisibilityControl.h" />
     <ClInclude Include="source\colreg\MathModelInterface.h" />
     <ClInclude Include="source\colreg\MemoryBlock.h" />
     <ClInclude Include="source\colreg\MemoryOverload.h" />

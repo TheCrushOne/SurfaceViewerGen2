@@ -68,7 +68,7 @@ namespace SV
       bool onScenarioOptPathFound();
 
       void recursive_set_check(HTREEITEM hRoot, bool check);
-      void fillSubFilters(HTREEITEM hParent, const filter_info& filter);
+      void fillSubFilters(HTREEITEM hParent, const surface_simulation::LayerVisibilityControl* filter);
 
       inline HTREEITEM addChild(HTREEITEM hParent, const char* text)
       {

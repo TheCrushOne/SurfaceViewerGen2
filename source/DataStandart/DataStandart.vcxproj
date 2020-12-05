@@ -25,6 +25,7 @@
     <ClCompile Include="source\DataStandart\OptimizedPathStorage\OptimizedPathStorageDS.cpp" />
     <ClCompile Include="source\DataStandart\PathStorage\PathStorageDS.cpp" />
     <ClCompile Include="source\DataStandart\PngHeightMap\PngHeightMapDS.cpp" />
+    <ClCompile Include="source\DataStandart\ResearchResult\ResearchResultDS.cpp" />
     <ClCompile Include="source\DataStandart\SurfaceVieverGeneralMap\SVGenMapDS.cpp" />
     <ClCompile Include="source\stdafx.cpp" />
   </ItemGroup>
@@ -40,6 +41,7 @@
     <ClInclude Include="source\DataStandart\OptimizedPathStorage\OptimizedPathStorageDS.h" />
     <ClInclude Include="source\DataStandart\PathStorage\PathStorageDS.h" />
     <ClInclude Include="source\DataStandart\PngHeightMap\PngHeightMapDS.h" />
+    <ClInclude Include="source\DataStandart\ResearchResult\ResearchResultDS.h" />
     <ClInclude Include="source\DataStandart\SurfaceVieverGeneralMap\SVGenMapDS.h" />
     <ClInclude Include="source\stdafx.h" />
   </ItemGroup>

@@ -8,7 +8,7 @@ namespace SV::surface_simulation
    struct LayerVisibilityControl
    {
       std::string name;
-      bool defvalue;
+      bool value;
       std::unordered_map<std::string, LayerVisibilityControl> children;
    };
 }

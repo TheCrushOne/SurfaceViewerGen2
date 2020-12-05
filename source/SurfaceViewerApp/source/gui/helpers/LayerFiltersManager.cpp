@@ -37,24 +37,27 @@ void LayerFiltersManager::prepareFilters()
    return filter.childs[folderName];
 }*/
 
-void LayerFiltersManager::ShowFilter(const std::vector<std::string>& path, bool show)
+void LayerFiltersManager::ShowFilter(const layer_filter_path& path, bool show)
 {
-   auto* filter = &m_filters;
+   auto* sim = simulator::getSimulator();
+   if (!sim)
+      return;
+   auto* filter = sim->GetLayerVisibilityInfoModify();
    for (const auto& name : path)
    {
       const auto itf = filter->children.find(name);
       ATLASSERT(itf != filter->children.end());
       if (show)
-         filter->visible = show;
+         filter->value = show;
       filter = &(*itf).second;
    }
 
-   filter->visible = show;
+   filter->value = show;
 }
 
-bool LayerFiltersManager::IsFilterVisible(const std::vector<std::string>& path)const
+bool LayerFiltersManager::IsFilterVisible(const layer_filter_path& path)const
 {
-   const auto* filter = &m_filters;
+   const auto* filter = m_filters;
    for (const auto& name : path)
    {
       const auto itf = filter->children.find(name);
@@ -64,5 +67,5 @@ bool LayerFiltersManager::IsFilterVisible(const std::vector<std::string>& path)c
          return false;
    }
 
-   return filter->visible;
+   return filter->value;
 }

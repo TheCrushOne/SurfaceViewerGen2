@@ -399,6 +399,9 @@
     <ClInclude Include="source\colreg\LayerVisibilityControl.h">
       <Filter>colreg</Filter>
     </ClInclude>
+    <ClInclude Include="source\datastandart\ResearchResultDataStandartInterface.h">
+      <Filter>datastandart</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\colreg\ThirdParty\tinyxml2\tinyxml2.cpp">

@@ -176,6 +176,7 @@ iDataStandart* DataStandartFactoryImpl::DataStandartFactoryImplInternal::createD
       VALID_CHECK_DLL_LOAD(DST_PATHS, "DataStandart", "CreatePathStorageDataStandart", GetPack(), "", m_services);
       VALID_CHECK_DLL_LOAD(DST_OPTPATHS, "DataStandart", "CreateOptimizedPathStorageDataStandart", GetPack(), "", m_services);
       VALID_CHECK_DLL_LOAD(DST_PCKHND, "DataStandart", "CreatePackHoundDataStandart", GetPack(), "", m_services);
+      VALID_CHECK_DLL_LOAD(DST_RESRES, "DataStandart", "CreateResearchResultDataStandart", GetPack(), "", m_services);
    default:
       GetPack()->comm->Message(ICommunicator::MessageType::MT_ERROR, "Error! Unknown type of data source '%s'.\n", (LPCSTR)_bstr_t(convert_datastandart_type(type)));
       return nullptr;

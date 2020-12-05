@@ -32,6 +32,7 @@ SimulatorBase::SimulatorBase(central_pack* pack, iPropertyInterface* prop, navig
    , Servicable(service)
    , m_prop(prop)
    , m_gridMeta({})
+   , m_visibility({ "Visibility", true, {} })
 {
    m_orderCacheFolder = std::filesystem::absolute(std::filesystem::current_path().generic_wstring() + L"\\..\\..\\..\\cache\\order_heap\\");
 
@@ -45,14 +46,16 @@ SimulatorBase::SimulatorBase(central_pack* pack, iPropertyInterface* prop, navig
    VALID_CHECK_DLL_LOAD("DataStandart", "CreateOptimizedPathStorageDataStandart", m_optPathDS, pack, "", m_pService);
 }
 
-bool SimulatorBase::AddLayerVisibilityInfoUnit(std::vector<std::string> path, bool val)
+bool SimulatorBase::AddLayerVisibilityInfoUnit(const std::vector<std::string>& path, bool val)
 {
-   addLayerVisibilityInfoUnit(m_visibility, path, val);
+   std::vector<std::string> r_path = path;
+   return addLayerVisibilityInfoUnit(m_visibility, r_path, val);
 }
 
-bool SimulatorBase::ClearLayerVisibilityInfoUnitBranch(std::vector<std::string> path)
+bool SimulatorBase::ClearLayerVisibilityInfoUnitBranch(const std::vector<std::string>& path)
 {
-   clearLayerVisibilityInfoUnitBranch(m_visibility, path);
+   std::vector<std::string> r_path = path;
+   return clearLayerVisibilityInfoUnitBranch(m_visibility, r_path);
 }
 
 bool SimulatorBase::LoadProcessedStep(PROCESS_STEP_TYPE type)
@@ -266,24 +269,25 @@ iLayerUnit* SimulatorBase::getUnitByIdx(UNIT_TYPE type, size_t idx)
 
 //bool marshal(std::function<bool(LayerVisibilityControl)>, LayerVisibilityControl& visibility, std::vector<std::string> path, bool val)
 
-bool SimulatorBase::addLayerVisibilityInfoUnit(LayerVisibilityControl& visibility, std::vector<std::string> path, bool val)
+bool SimulatorBase::addLayerVisibilityInfoUnit(LayerVisibilityControl& visibility, std::vector<std::string>& path, bool val)
 {
    if (path.empty())
    {
-      visibility.defvalue = val;
+      visibility.value = val;
       return true;
    }
-   std::string cur_name = path.front();
+   std::string cur_name(path.front());
    path.erase(path.begin());
    auto& children = visibility.children;
-   //auto iter = std::find_if(children.begin(), children.begin(), [&cur_name](const LayerVisibilityControl& elem)->bool { return elem.name.compare(cur_name) == 0; });
-   auto iter = children.find(cur_name);
+   const auto iter = children.find(cur_name);
    if (iter == children.end())
-      children[cur_name] = (LayerVisibilityControl{ cur_name });
-   return addLayerVisibilityInfoUnit(children[cur_name], path, val);
+      children.insert({ cur_name, LayerVisibilityControl{ cur_name } });
+   if (val)
+      children.at(cur_name).value = true;
+   return addLayerVisibilityInfoUnit(children.at(cur_name), path, val);
 }
 
-bool SimulatorBase::clearLayerVisibilityInfoUnitBranch(LayerVisibilityControl& visibility, std::vector<std::string> path)
+bool SimulatorBase::clearLayerVisibilityInfoUnitBranch(LayerVisibilityControl& visibility, std::vector<std::string>& path)
 {
    if (path.empty())
    {
@@ -293,8 +297,7 @@ bool SimulatorBase::clearLayerVisibilityInfoUnitBranch(LayerVisibilityControl& v
    std::string cur_name = path.front();
    path.erase(path.begin());
    auto& children = visibility.children;
-   //auto iter = std::find_if(children.begin(), children.begin(), [&cur_name](const LayerVisibilityControl& elem)->bool { return elem.name.compare(cur_name) == 0; });
-   auto iter = children.find(cur_name);
+   auto& iter = children.find(cur_name);
    if (iter == children.end())
       return false;
    return clearLayerVisibilityInfoUnitBranch(children[cur_name], path);

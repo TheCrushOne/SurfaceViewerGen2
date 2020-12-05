@@ -143,30 +143,41 @@ bool ChartLayer::synchronize_map(render::iRender* renderer, const SV::surface_si
    //m_chartUSN = checker->GetObjectsUSN();
    renderer->Clear();
 
-   if (LayerFiltersManager::GetInstance().IsFilterVisible({
-      layer_filter_tag::explications,
-      layer_filter_tag::air
-   }))
+   if (LayerFiltersManager::GetInstance().IsFilterVisible(formatAirExplicationPath()))
       addExplication(renderer, state.GetAirUnitExplication(), &air_affilation_color, env_stt);
-   if (LayerFiltersManager::GetInstance().IsFilterVisible({
-      layer_filter_tag::explications,
-      layer_filter_tag::land
-   }))
+   if (LayerFiltersManager::GetInstance().IsFilterVisible(formatLandExplicationPath()))
       addExplication(renderer, state.GetLandUnitExplication(), &land_affilation_color, env_stt);
 
    for (size_t idx = 0; idx < state.GetCoverageHistory().size(); idx++)
    {
-      if (LayerFiltersManager::GetInstance().IsFilterVisible({
-         layer_filter_tag::coverages,
-         layer_filter_tag::step_templ + std::to_string(idx)
-      }))
+      if (LayerFiltersManager::GetInstance().IsFilterVisible(formatCoveragesStepIdxPath(idx)))
          addCoverage(renderer, state.GetCoverageHistory().at(idx), env_stt);
    }
-
    for (size_t iObj = 0; iObj < state.GetChartObjectCount(); iObj++)
    {
       const auto* obj = state.GetChartObjectByIdx(iObj);
-      addChartObject(renderer, obj);
+      auto id = obj->GetId();
+      auto type = obj->GetType();
+      bool visible = false;
+      switch (type)
+      {
+      case chart_object::OBJECT_TYPE::OT_ISOLINE:
+         visible = LayerFiltersManager::GetInstance().IsFilterVisible(formatChartObjectsIsolinesPathId(id, getIsolineHeight(obj->GetProps())));
+         break;
+      case chart_object::OBJECT_TYPE::OT_BORDER_AREA:
+         visible = LayerFiltersManager::GetInstance().IsFilterVisible(formatChartObjectsBorderAreasPathId(id));
+         break;
+      case chart_object::OBJECT_TYPE::OT_NO_GO_AREA:
+         visible = LayerFiltersManager::GetInstance().IsFilterVisible(formatChartObjectsNogoZonesPathId(id));
+         break;
+      case chart_object::OBJECT_TYPE::OT_NO_FLY_AREA:
+         visible = LayerFiltersManager::GetInstance().IsFilterVisible(formatChartObjectsNoFlyZonesPathId(id));
+         break;
+      default:
+         break;
+      }
+      if (visible)
+         addChartObject(renderer, obj);
    }
 
    return true;
@@ -295,57 +306,81 @@ iProperty* ChartLayer::GetProperties()
    return _props.get();
 }
 
-bool ChartLayer::OnScenarioScenarioStatusChanged(surface_simulation::SCENARIO_STATUS status)
-{
-   bool res = true;
-   switch (status)
-   {
-   case surface_simulation::SCENARIO_STATUS::SS_MAP_CHECKOPENED:
-      res &= onScenarioCheckOpened();
-      break;
-   case surface_simulation::SCENARIO_STATUS::SS_MAP_PROCESSED:
-      res &= onScenarioMapProcessed();
-      break;
-   case surface_simulation::SCENARIO_STATUS::SS_MAPOBJ_PROCESSED:
-      res &= onScenarioMapObjProcessed();
-      break;
-   case surface_simulation::SCENARIO_STATUS::SS_PATHS_COUNTED:
-      res &= onScenarioPathFound();
-      break;
-   case surface_simulation::SCENARIO_STATUS::SS_OPT_PATHS_COUNTED:
-      res &= onScenarioOptPathFound();
-      break;
-   case surface_simulation::SCENARIO_STATUS::SS_NOT_LOADED:
-   default:
-      break;
-   }
-   return res;
-}
-
 bool ChartLayer::onScenarioCheckOpened()
 {
    m_chartUSN = INVALID_ID;
-   return true;
-}
-
-bool ChartLayer::onScenarioMapProcessed()
-{
+   auto* sim = simulator::getSimulator();
+   if (!sim)
+      return true;
+   sim->ClearLayerVisibilityInfoUnitBranch(formatExplicationPath());
+   sim->AddLayerVisibilityInfoUnit(formatAirExplicationPath(), false);
+   sim->AddLayerVisibilityInfoUnit(formatLandExplicationPath(), false);
    return true;
 }
 
 bool ChartLayer::onScenarioMapObjProcessed()
 {
+   auto* sim = simulator::getSimulator();
+   if (!sim)
+      return true;
+   sim->ClearLayerVisibilityInfoUnitBranch(formatChartObjectsPath());
+   sim->AddLayerVisibilityInfoUnit(formatChartObjectsIsolinesPath(), true);
+   sim->AddLayerVisibilityInfoUnit(formatChartObjectsBorderAreasPath(), true);
+   sim->AddLayerVisibilityInfoUnit(formatChartObjectsNogoZonesPath(), true);
+   sim->AddLayerVisibilityInfoUnit(formatChartObjectsNoFlyZonesPath(), true);
+   const auto& state = sim->GetState();
+   for (size_t idx = 0; idx < state.GetChartObjectCount(); idx++)
+   {
+      const auto* obj = state.GetChartObjectByIdx(idx);
+      auto id = obj->GetId();
+      auto type = obj->GetType();
+      switch (type)
+      {
+      case chart_object::OBJECT_TYPE::OT_ISOLINE:
+         sim->AddLayerVisibilityInfoUnit(formatChartObjectsIsolinesPathId(id, getIsolineHeight(obj->GetProps())), true);
+         break;
+      case chart_object::OBJECT_TYPE::OT_BORDER_AREA:
+         sim->AddLayerVisibilityInfoUnit(formatChartObjectsBorderAreasPathId(id), true);
+         break;
+      case chart_object::OBJECT_TYPE::OT_NO_GO_AREA:
+         sim->AddLayerVisibilityInfoUnit(formatChartObjectsNogoZonesPathId(id), true);
+         break;
+      case chart_object::OBJECT_TYPE::OT_NO_FLY_AREA:
+         sim->AddLayerVisibilityInfoUnit(formatChartObjectsNoFlyZonesPathId(id), true);
+         break;
+      default:
+         break;
+      }
+   }
    return true;
 }
 
 bool ChartLayer::onScenarioPathFound()
 {
-   return true;
+   return onAnyPathFound();
 }
 
 bool ChartLayer::onScenarioOptPathFound()
 {
+   return onAnyPathFound();
+}
+
+bool ChartLayer::onAnyPathFound()
+{
+   auto* sim = simulator::getSimulator();
+   if (!sim || sim->GetSimulatorScenarioState() < surface_simulation::SCENARIO_STATUS::SS_OPT_PATHS_COUNTED)
+      return false;
+   const auto& state = sim->GetState();
+   sim->ClearLayerVisibilityInfoUnitBranch(formatCoveragesPath());
+   for (size_t idx = 0; idx < state.GetCoverageHistory().size(); idx++)
+   {
+      sim->AddLayerVisibilityInfoUnit(formatCoveragesStepIdxPath(idx), false);
+   }
    return true;
+}
+
+void ChartLayer::updateCoverageFilterList()
+{
 }
 
 void ChartLayer::initObjInfo()
@@ -366,4 +401,110 @@ void ChartLayer::initObjInfo()
    m_objInfo[chart_object::OBJECT_TYPE::OT_NO_FLY_AREA].width = 1;
    m_objInfo[chart_object::OBJECT_TYPE::OT_NO_FLY_AREA].style = render::LINE_STYLE::LL_DASH_DOT;
    m_objInfo[chart_object::OBJECT_TYPE::OT_NO_FLY_AREA].fill = render::FILL_TYPE::FT_FDIAGONAL;
+}
+
+layer_filter_path ChartLayer::formatExplicationPath()
+{
+   return { layer_filter_tag::explications };
+}
+
+layer_filter_path ChartLayer::formatAirExplicationPath()
+{
+   auto res = formatExplicationPath();
+   res.emplace_back(layer_filter_tag::air);
+   return res;
+}
+
+layer_filter_path ChartLayer::formatLandExplicationPath()
+{
+   auto res = formatExplicationPath();
+   res.emplace_back(layer_filter_tag::land);
+   return res;
+}
+
+layer_filter_path ChartLayer::formatCoveragesPath()
+{
+   return { layer_filter_tag::coverages };
+}
+
+layer_filter_path ChartLayer::formatCoveragesStepIdxPath(size_t idx)
+{
+   auto res = formatCoveragesPath();
+   res.emplace_back(layer_filter_tag::step_templ + std::to_string(idx));
+   return res;
+}
+
+layer_filter_path ChartLayer::formatChartObjectsPath()
+{
+   return { layer_filter_tag::chart_objects };
+}
+
+layer_filter_path ChartLayer::formatChartObjectsIsolinesPath()
+{
+   auto res = formatChartObjectsPath();
+   res.emplace_back(layer_filter_tag::isolines);
+   return res;
+}
+
+layer_filter_path ChartLayer::formatChartObjectsIsolinesPathId(chart_object_id id, double height)
+{
+   std::ostringstream out;
+   out.precision(2);
+   out << std::fixed << height;
+   auto res = formatChartObjectsIsolinesPath();
+   res.emplace_back(layer_filter_tag::isoline_templ + std::to_string(id) + " [" + out.str() + "m]");
+   return res;
+}
+
+layer_filter_path ChartLayer::formatChartObjectsBorderAreasPath()
+{
+   auto res = formatChartObjectsPath();
+   res.emplace_back(layer_filter_tag::border_areas);
+   return res;
+}
+
+layer_filter_path ChartLayer::formatChartObjectsBorderAreasPathId(chart_object_id id)
+{
+   auto res = formatChartObjectsBorderAreasPath();
+   res.emplace_back(layer_filter_tag::border_area_templ + std::to_string(id));
+   return res;
+}
+
+layer_filter_path ChartLayer::formatChartObjectsNogoZonesPath()
+{
+   auto res = formatChartObjectsPath();
+   res.emplace_back(layer_filter_tag::nogo_zones);
+   return res;
+}
+
+layer_filter_path ChartLayer::formatChartObjectsNogoZonesPathId(chart_object_id id)
+{
+   auto res = formatChartObjectsNogoZonesPath();
+   res.emplace_back(layer_filter_tag::nogo_zone_templ + std::to_string(id));
+   return res;
+}
+
+layer_filter_path ChartLayer::formatChartObjectsNoFlyZonesPath()
+{
+   auto res = formatChartObjectsPath();
+   res.emplace_back(layer_filter_tag::nofly_zones);
+   return res;
+}
+
+layer_filter_path ChartLayer::formatChartObjectsNoFlyZonesPathId(chart_object_id id)
+{
+   auto res = formatChartObjectsNoFlyZonesPath();
+   res.emplace_back(layer_filter_tag::nofly_zone_templ + std::to_string(id));
+   return res;
+}
+
+double ChartLayer::getIsolineHeight(const properties::simple_prop_vct* prop_vct)
+{
+   double height = 0;
+   for (auto& prop : *prop_vct)
+   {
+      if (strcmp(prop.key.c_str(), "Depth") == 0)
+         height = atof(prop.val.c_str());
+   }
+   return height;
 }

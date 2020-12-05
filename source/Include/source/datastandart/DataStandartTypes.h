@@ -24,6 +24,7 @@ namespace SV::data_standart
       DST_PATHS,        // [.pl]
       DST_OPTPATHS,     // [.opl]
       DST_PCKHND,       // [.phc]
+      DST_RESRES,       // [.phc]
 
       DST_MAX_VALUE,
    };
@@ -40,6 +41,7 @@ namespace SV::data_standart
          DECLARE_TYPE(DataStandartType::DST_PATHS, "PathData")
          DECLARE_TYPE(DataStandartType::DST_OPTPATHS, "OptPathData")
          DECLARE_TYPE(DataStandartType::DST_PCKHND, "PackHound")
+         DECLARE_TYPE(DataStandartType::DST_RESRES, "ResearchResult")
       }
 
       _ASSERT(!"Unknown data source type");

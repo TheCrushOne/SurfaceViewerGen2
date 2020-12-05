@@ -10,8 +10,6 @@
 //#include "main/dispatcher.h"
 //#include "settings/common/settings.h"
 
-
-
 #define THREADDEBUG(line) qDebug() << line << "thread:" << QThread::currentThreadId();
 
 using namespace SV;

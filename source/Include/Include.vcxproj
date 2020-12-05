@@ -97,6 +97,7 @@
     <ClInclude Include="source\datastandart\PackHoundDataStandartInterface.h" />
     <ClInclude Include="source\datastandart\PathStorageDataStandartInterface.h" />
     <ClInclude Include="source\datastandart\PngHeightMapDataStandartInterface.h" />
+    <ClInclude Include="source\datastandart\ResearchResultDataStandartInterface.h" />
     <ClInclude Include="source\datastandart\SVGenMapDataStandartInterface.h" />
     <ClInclude Include="source\json\json_wrapper.h" />
     <ClInclude Include="source\json\json_wrapper_impl.h" />

@@ -37,8 +37,21 @@ namespace SV::transfercase
       return math::point(-info.ordinate_bias + ord_spos, -info.abscissa_bias + abs_spos);
    }
 
+   inline SV::CG::route_point MathPointToRoutePoint(const math::point& pPoint, const settings::environment_settings settings = settings::environment_settings())
+   {
+      auto& info = settings.mtx_info;
+      auto ord_spos = info.scale * (static_cast<double>(pPoint.y) * sin(info.angle) - static_cast<double>(pPoint.x) * cos(info.angle));
+      auto abs_spos = info.scale * (static_cast<double>(pPoint.x) * cos(info.angle) - static_cast<double>(pPoint.y) * sin(info.angle));
+      return SV::CG::route_point(info.ordinate_bias + ord_spos, info.abscissa_bias + abs_spos);
+   }
+
    inline SV::CG::position_point RoutePointToPositionPoint(const SV::CG::route_point& pPoint, const settings::environment_settings settings = settings::environment_settings())
    {
       return MathPointToPositionPoint(RoutePointToMathPoint(pPoint, settings), settings);
+   }
+
+   inline SV::CG::route_point PositionPointToRoutePoint(const SV::CG::position_point& pPoint, const settings::environment_settings settings = settings::environment_settings())
+   {
+      return MathPointToRoutePoint(PositionPointToMathPoint(pPoint, settings), settings);
    }
 }

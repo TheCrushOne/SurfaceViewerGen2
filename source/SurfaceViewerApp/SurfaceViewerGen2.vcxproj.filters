@@ -344,6 +344,9 @@
     <ClInclude Include="source\gui\helpers\LayerFiltersManager.h">
       <Filter>gui\helpers</Filter>
     </ClInclude>
+    <ClInclude Include="source\gui\layers\ScenarioLayerBase.h">
+      <Filter>gui\layers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\stdafx.cpp" />
@@ -505,6 +508,9 @@
     </ClCompile>
     <ClCompile Include="source\gui\helpers\LayerFiltersManager.cpp">
       <Filter>gui\helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gui\layers\ScenarioLayerBase.cpp">
+      <Filter>gui\layers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -346,6 +346,7 @@
     <ClInclude Include="source\gui\layers\NetLayer.h" />
     <ClInclude Include="source\gui\layers\RenderHelper.h" />
     <ClInclude Include="source\gui\layers\RenderLayers.h" />
+    <ClInclude Include="source\gui\layers\ScenarioLayerBase.h" />
     <ClInclude Include="source\gui\layers\TrackLayer.h" />
     <ClInclude Include="source\gui\layers\TrackLayerHelper.h" />
     <ClInclude Include="source\gui\layers\UnitLayer.h" />
@@ -497,6 +498,7 @@
     <ClCompile Include="source\gui\layers\ChartLayer.cpp" />
     <ClCompile Include="source\gui\layers\NetLayer.cpp" />
     <ClCompile Include="source\gui\layers\RenderHelper.cpp" />
+    <ClCompile Include="source\gui\layers\ScenarioLayerBase.cpp" />
     <ClCompile Include="source\gui\layers\TrackLayer.cpp" />
     <ClCompile Include="source\gui\layers\TrackLayerHelper.cpp" />
     <ClCompile Include="source\gui\layers\UnitLayer.cpp" />

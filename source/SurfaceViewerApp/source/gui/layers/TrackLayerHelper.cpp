@@ -23,7 +23,10 @@ void TrackLayerHelper::RenderShiptrack(render::iRender* renderer, const CG::laye
    for (size_t i = 0; i < track->size(); ++i)
    {
       auto& cur = track->at(i);
-      renderer->AddObject({ {cur.pos}, info });
+      renderer->AddObject({
+         {cur.pos},
+         info
+      });
 
       if (/*track->chart_context && */(i < (track->size() - 1)))
       {
@@ -35,7 +38,10 @@ void TrackLayerHelper::RenderShiptrack(render::iRender* renderer, const CG::laye
             newInfo.color = color;
             newInfo.alpha = 100;
             newInfo.width += 2;
-            renderer->AddObject({ {cur.pos}, newInfo });
+            renderer->AddObject({
+               {cur.pos},
+               newInfo
+            });
          }
       }
 
@@ -75,8 +81,7 @@ void TrackLayerHelper::RenderShiptrack(render::iRender* renderer, const CG::laye
    }
 }
 
-
-void TrackLayerHelper::renderRoute(render::iRender* renderer, id_type id, const CG::layer_provider::trajectory_point_vct& route, const render::object_info& info, surface_simulation::ROUTE_TYPE type)
+void TrackLayerHelper::renderRoute(render::iRender* renderer, id_type id, const CG::layer_provider::trajectory_point_vct& route, const render::object_info& info, surface_simulation::ROUTE_TYPE type, SegmentVisibilityChecker segVisChecker, PointVisibilityChecker pntVisChecker)
 {
    if (route.size() < 2)
       return;
@@ -87,7 +92,8 @@ void TrackLayerHelper::renderRoute(render::iRender* renderer, id_type id, const 
    for (size_t i = 0; i < route.size(); i++)
    {
       const CG::layer_provider::trajectory_point& cur = route.at(i);
-      if (i < route.size() - 1)
+      if ((i < route.size() - 1)
+         && (segVisChecker(i)))
       {
          const CG::layer_provider::trajectory_point& next = route.at(i + 1);
 
@@ -98,36 +104,42 @@ void TrackLayerHelper::renderRoute(render::iRender* renderer, id_type id, const 
       }
 
       std::stringstream s;  s << id << " - " << i;
-      if (type == surface_simulation::ROUTE_TYPE::RT_CONTROL)
+      if (pntVisChecker(i, route.at(i).pos))
       {
-         std::string imagePath = SVGUtils::CurrentCurrentPath() + "\\res\\glyphicon\\flag.png";
-         COLORREF clrDanger = 255;
-         renderer->AddObject({
-            { cur.pos },
-            { 32, render::LINE_STYLE::LL_SOLID, render::FILL_TYPE::FT_NONE, clrDanger, s.str().c_str(), 0, 0, 255, imagePath.c_str(), render::ANCHOR_TYPE::AT_BOTTOMLEFT },
-            {},
-            .0,
-            .0
-         });
+         if (type == surface_simulation::ROUTE_TYPE::RT_CONTROL)
+         {
+            std::string imagePath = SVGUtils::CurrentCurrentPath() + "\\res\\glyphicon\\flag.png";
+            COLORREF clrDanger = 255;
+            renderer->AddObject({
+               { cur.pos },
+               { 32, render::LINE_STYLE::LL_SOLID, render::FILL_TYPE::FT_NONE, clrDanger, s.str().c_str(), 0, 0, 255, imagePath.c_str(), render::ANCHOR_TYPE::AT_BOTTOMLEFT },
+               {},
+               .0,
+               .0
+            });
+         }
+         else
+         {
+            renderer->AddObject({
+               { cur.pos },
+               { 5, render::LINE_STYLE::LL_SOLID, render::FILL_TYPE::FT_NONE, info.color, /*s.str().c_str()*/""},
+               { ft, id, render::FIND_OBJECT_TYPE::FOT_ROUTE_POINT, ui.value }
+            });
+         }
       }
-      else
-      {
-         renderer->AddObject({
-            { cur.pos },
-            { 5, render::LINE_STYLE::LL_SOLID, render::FILL_TYPE::FT_NONE, info.color, /*s.str().c_str()*/""},
-            { ft, id, render::FIND_OBJECT_TYPE::FOT_ROUTE_POINT, ui.value }
-         });
-      }
-
    }
    ui.type = (char)type;
    ui.index = (short)(route.size() - 1);
    std::stringstream s;  s << route.size() - 1;
-   renderer->AddObject({
-      { route.at(route.size() - 1).pos },
-      { 5, render::LINE_STYLE::LL_SOLID, render::FILL_TYPE::FT_NONE, info.color, /*s.str().c_str()*/""},
-      { ft, id, render::FIND_OBJECT_TYPE::FOT_ROUTE_POINT, ui.value }
-   });
+   // HACK: финишер
+   /*if (pntVisChecker(route.size()))
+   {
+      renderer->AddObject({
+         { route.at(route.size() - 1).pos },
+         { 5, render::LINE_STYLE::LL_SOLID, render::FILL_TYPE::FT_NONE, info.color, ""},
+         { ft, id, render::FIND_OBJECT_TYPE::FOT_ROUTE_POINT, ui.value }
+      });
+   }*/
 }
 
 void TrackLayerHelper::renderRouteSegment(render::iRender* renderer, id_type id, size_t index, const CG::layer_provider::trajectory_point& rp1, const CG::layer_provider::trajectory_point& rp2, const render::object_info& info, surface_simulation::ROUTE_TYPE type)
@@ -139,17 +151,25 @@ void TrackLayerHelper::renderRouteSegment(render::iRender* renderer, id_type id,
    {
       const CG::layer_provider::trajectory_point rpLeft1 = math::calc_point(rp1.pos, rp2.left_XTE, dir - 90);
       const CG::layer_provider::trajectory_point rpLeft2 = math::calc_point(rp2.pos, rp2.left_XTE, dir - 90);
-      renderer->AddObject({ { rpLeft1.pos, rpLeft2.pos }, {1, render::LINE_STYLE::LL_DOT, render::FILL_TYPE::FT_NONE, info.color, ""} });
+      renderer->AddObject({
+         { rpLeft1.pos, rpLeft2.pos },
+         {1, render::LINE_STYLE::LL_DOT, render::FILL_TYPE::FT_NONE, info.color, ""}
+      });
    }
    if (rp2.right_XTE < 100000)
    {
       const CG::layer_provider::trajectory_point rpRight1 = math::calc_point(rp1.pos, rp2.right_XTE, dir + 90);
       const CG::layer_provider::trajectory_point rpRight2 = math::calc_point(rp2.pos, rp2.right_XTE, dir + 90);
-      renderer->AddObject({ { rpRight1.pos, rpRight2.pos }, {1, render::LINE_STYLE::LL_DOT, render::FILL_TYPE::FT_NONE, info.color, "" } });
+      renderer->AddObject({
+         { rpRight1.pos, rpRight2.pos },
+         {1, render::LINE_STYLE::LL_DOT, render::FILL_TYPE::FT_NONE, info.color, "" }
+      });
    }
-   renderer->AddObject({ { rp1.pos, rp2.pos }
-                           , info
-                           , { ft, id, render::FIND_OBJECT_TYPE::FOT_ROUTE_SEGMENT, index } });
+   renderer->AddObject({
+      { rp1.pos, rp2.pos },
+      info,
+      { ft, id, render::FIND_OBJECT_TYPE::FOT_ROUTE_SEGMENT, index }
+   });
 }
 
 void TrackLayerHelper::renderRouteZone(render::iRender* renderer, const std::function<RouteZoneWidthGetFunc>& func, const CG::layer_provider::trajectory_point_vct* route, COLORREF color)

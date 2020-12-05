@@ -23,6 +23,9 @@
     <ClCompile Include="..\Include\source\colreg\ThirdParty\md5\md5.cpp">
       <Filter>ThirdParty</Filter>
     </ClCompile>
+    <ClCompile Include="source\DataStandart\ResearchResult\ResearchResultDS.cpp">
+      <Filter>DataStandart\ResearchResult</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\stdafx.h" />
@@ -62,6 +65,9 @@
     <ClInclude Include="source\Common\BinaryDataSaveHelper.h">
       <Filter>Common</Filter>
     </ClInclude>
+    <ClInclude Include="source\DataStandart\ResearchResult\ResearchResultDS.h">
+      <Filter>DataStandart\ResearchResult</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="DataStandart">
@@ -87,6 +93,9 @@
     </Filter>
     <Filter Include="Common">
       <UniqueIdentifier>{7e41e2e3-7e3c-4810-8dd1-24b134e7ddd0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DataStandart\ResearchResult">
+      <UniqueIdentifier>{1a6e2cb5-8023-4fc8-be9a-0316697d64ef}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

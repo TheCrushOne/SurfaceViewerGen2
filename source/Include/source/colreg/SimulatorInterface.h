@@ -9,13 +9,16 @@ namespace SV::surface_simulation
    struct iSimulator : iReleasable
    {
       //! Добавление элемента контроля видимости по пути
-      virtual bool AddLayerVisibilityInfoUnit(std::vector<std::string>, bool) = 0;
+      virtual bool AddLayerVisibilityInfoUnit(const std::vector<std::string>&, bool) = 0;
 
       //! Сбро ветки элеметов исключая элемент, указанный в пути
-      virtual bool ClearLayerVisibilityInfoUnitBranch(std::vector<std::string>) = 0;
+      virtual bool ClearLayerVisibilityInfoUnitBranch(const std::vector<std::string>&) = 0;
 
       //! Взятие дерева элементов контроля видимости
       virtual const LayerVisibilityControl* GetLayerVisibilityInfo() const = 0;
+
+      //! Взятие дерева элементов контроля видимости для изменений
+      virtual LayerVisibilityControl* GetLayerVisibilityInfoModify() = 0;
 
       //! Загрузить в соответствии с названием этапа
       virtual bool LoadProcessedStep(PROCESS_STEP_TYPE) = 0;

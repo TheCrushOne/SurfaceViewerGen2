@@ -25,7 +25,7 @@ void SV::RenderUnitContour(render::iRender* renderer, surface_simulation::UNIT_T
 
       renderer->AddObject({ { p1, p2, p3, p4, p5, p1 }
                            , info
-                           , {render::FIND_TYPE::FT_FIND_FAST, ship_info.id, render::FIND_OBJECT_TYPE::FOT_ROVER } });
+                           , { render::FIND_TYPE::FT_FIND_FAST, ship_info.id, render::FIND_OBJECT_TYPE::FOT_ROVER } });
       break;
    }
    case surface_simulation::UNIT_TYPE::UT_ROVER:

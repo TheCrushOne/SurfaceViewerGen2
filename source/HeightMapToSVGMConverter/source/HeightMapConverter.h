@@ -26,10 +26,9 @@ namespace SV::converter
       bool writeToDestination(data_standart::iSurfaceVieverGenMapDataStandart*);
       bool processData();
    private:
-      
       system::ModuleGuard<serializer::iSettingsSerializer> m_settingsSerializer;
       system::ModuleGuard<serializer::iUnitDataSerializer> m_unitDataSerializer;
-      
+
       bool m_lock = false;
 
       std::vector<std::vector<double>> m_rawData;

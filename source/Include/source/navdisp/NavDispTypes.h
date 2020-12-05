@@ -14,19 +14,22 @@ namespace SV::navigation_dispatcher
 
       OT_PNGHMCONVERT,
       // Convert pictured height map to binary
-      // Format: [.png]->[.hdat]
+      // Format: [.png]->[.hdat][.meta]
       OT_GENOBJLIST,
       // Generates object list from binary heightmap
-      // Format: [.hdat]->[.obj]
+      // Format: [.hdat]->[.co]
       OT_PATHFIND,
       // Found simplest paths from binary heightmap
-      // Format: [.hdat]->[.pl]
+      // Format: [.hdat]->[.pl][.inf][.exp][.cov]
       OT_OPTPATH,
       // Found optimized paths from binary heightmap
-      // Format: [.hdat]->[.opl]
+      // Format: [.hdat]->[.opl][.inf][.exp][.cov]
       OT_PACKHOUND,
       // Creates thread optimization preconfig
       // Format: [null]->[.phc]
+      OT_RESEARCH,
+      // Creates result of research
+      // Format: [.hdat]->[.rres]
 
       OT_MAX_VALUE
    };
@@ -42,6 +45,7 @@ namespace SV::navigation_dispatcher
          DECLARE_TYPE(OT_PATHFIND, "PathFind")
          DECLARE_TYPE(OT_OPTPATH, "OptPathFind")
          DECLARE_TYPE(OT_PACKHOUND, "PackHound")
+         DECLARE_TYPE(OT_RESEARCH, "Research")
       }
 
       _ASSERT(!"Unknown command type");

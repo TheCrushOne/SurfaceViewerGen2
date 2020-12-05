@@ -47,6 +47,7 @@ navigation_dispatcher::iOrder* OrderFactoryImpl::CreateOrder(navigation_dispatch
       VALID_CHECK_DLL_LOAD(navigation_dispatcher::OrderType::OT_PATHFIND, "Engine", "CreatePathfinder");
       VALID_CHECK_DLL_LOAD(navigation_dispatcher::OrderType::OT_OPTPATH, "Engine", "CreateOptimizedPathfinder");
       VALID_CHECK_DLL_LOAD(navigation_dispatcher::OrderType::OT_PACKHOUND, "PackHound", "CreatePackHound");
+      VALID_CHECK_DLL_LOAD(navigation_dispatcher::OrderType::OT_RESEARCH, "Engine", "CreateResearcher");
    }
 
    _ASSERT(!"Unknown command type!");

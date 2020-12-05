@@ -199,7 +199,7 @@ Json::Value PathStorageDataStandart::routeWrite(const settings::route& route)
    Json::Value rl(Json::arrayValue);
    for (const auto& rt : route.route_list)
       rl.append(routePointWrite(rt));
-   rt[tag::route_list] = cpl;
+   rt[tag::route_list] = rl;
    return rt;
 }
 

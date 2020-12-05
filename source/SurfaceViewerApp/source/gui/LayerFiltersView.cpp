@@ -122,8 +122,10 @@ void LayerFiltersView::OnSize(UINT nType, int cx, int cy)
    AdjustLayout();
 }
 
-void LayerFiltersView::fillSubFilters(HTREEITEM hParent, const filter_info& filter)
+void LayerFiltersView::fillSubFilters(HTREEITEM hParent, const surface_simulation::LayerVisibilityControl* filter)
 {
+   if (!filter)
+      return;
    std::unordered_map<std::string, HTREEITEM> currentChilds;
 
    auto child = m_treeFilters.GetNextItem(hParent, TVGN_CHILD);
@@ -134,7 +136,7 @@ void LayerFiltersView::fillSubFilters(HTREEITEM hParent, const filter_info& filt
 
       child = m_treeFilters.GetNextItem(child, TVGN_NEXT);
 
-      if (filter.childs.find(wname) != filter.childs.end())
+      if (filter->children.find(wname) != filter->children.end())
       {
          //зарегистрируем элемент, чтобы его дальше снова не добавить
          currentChilds.insert_or_assign(wname, curChild);
@@ -146,34 +148,29 @@ void LayerFiltersView::fillSubFilters(HTREEITEM hParent, const filter_info& filt
       }
    }
 
-   for (const auto& child : filter.childs)
+   for (const auto& child : filter->children)
    {
       HTREEITEM hFilter = nullptr;
 
       auto itemIt = currentChilds.find(child.second.name);
       if (itemIt == currentChilds.end())
-      {
          hFilter = m_treeFilters.InsertItem(child.second.name.c_str(), hParent, 0);
-      }
       else
-      {
          hFilter = itemIt->second;
-      }
 
+      m_treeFilters.SetItemState(hParent, child.second.children.size() ? TVIS_BOLD : 0, TVIS_BOLD);
+      m_treeFilters.SetCheck(hFilter, child.second.value);
 
-      m_treeFilters.SetItemState(hParent, child.second.childs.size() ? TVIS_BOLD : 0, TVIS_BOLD);
-
-      for (const auto& subChild : child.second.childs)
-         fillSubFilters(hFilter, child.second);
+      for (const auto& subChild : child.second.children)
+         fillSubFilters(hFilter, &child.second);
 
       //m_treeFilters.Expand(hFilter, TVE_EXPAND);
    }
-
 }
 
 void LayerFiltersView::fillClassView()
 {
-   const auto& filters = LayerFiltersManager::GetInstance().GetFilters();
+   const auto filters = LayerFiltersManager::GetInstance().GetFilters();
 
    HTREEITEM hRoot = m_treeFilters.GetRootItem() ? m_treeFilters.GetRootItem() : m_treeFilters.InsertItem("DEBUG FILTERS", 0, 0);
 

@@ -1,0 +1,54 @@
+<SerializableClass Type="OrderConfig" Version="1.0">
+	<root>
+		<common>
+		</common>
+		<orders>
+			<order id="1">
+				<type>PngHMConvert</type>
+				<name>TestConvert</name>
+				<params>
+					<source>PngSrc</source>
+					<destination>SVGMDst</destination>
+				</params>
+			</order>
+			<order id="2">
+				<type>Research</type>
+				<name>GanttResearch</name>
+				<params>
+					<source>SVGMDst</source>
+					<destination>RResDst</destination>
+					<rewrite_dst>true</rewrite_dst>
+				</params>
+			</order>
+		</orders>
+		<data_standarts>
+			<data_standart>
+				<type>PngHeightMap</type>
+				<name>PngSrc</name>
+				<params>
+					<file>$(PNG_SRC)</file>
+				</params>
+			</data_standart>
+			<data_standart>
+				<type>SurfaceViewerGenMap</type>
+				<name>SVGMDst</name>
+				<params>
+					<folder>$(SVGM_FLDR)</folder>
+					<unit_data>$(UNIT_DATA)</unit_data>
+					<env_stt>$(ENV_STT)</env_stt>
+					<map_stt>$(MAP_STT)</map_stt>
+					<pth_stt>$(PTH_STT)</pth_stt>
+					<res_stt>$(RES_STT)</res_stt>
+					<sim_stt>$(SIM_STT)</sim_stt>
+				</params>
+			</data_standart>
+			<data_standart>
+				<type>PathData</type>
+				<name>PathDst</name>
+				<params>
+					<folder>$(PATHS_DST)</folder>
+				</params>
+			</data_standart>
+		</data_standarts>
+	</root>
+</SerializableClass>

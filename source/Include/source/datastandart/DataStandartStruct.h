@@ -112,4 +112,20 @@ namespace SV::data_standart
          return true;
       }
    };
+
+   struct research_result_data_standart : data_standart_base
+   {
+      std::string folder;
+
+      struct tag
+      {
+         static constexpr char folder[] = "folder";
+      };
+
+      bool Deserialize(const xml_properties::PropertyItem& standart) override
+      {
+         standart[tag::folder].Get(folder);
+         return true;
+      }
+   };
 }

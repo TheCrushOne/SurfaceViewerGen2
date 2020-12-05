@@ -8,6 +8,9 @@ namespace SV::CG
 {
    struct position_point : geo_point
    {
+      position_point(const geo_point& pt)
+         : geo_point(pt)
+      {}
       position_point(double lt, double ln)
          : geo_point(lt, ln)
       {}

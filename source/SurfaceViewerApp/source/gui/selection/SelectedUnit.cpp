@@ -6,6 +6,7 @@
 #include "gui/layers/TrackLayerHelper.h"
 #include "simulation/LayerUnitInterface.h"
 #include "simulation/LayerChartObjectInterface.h"
+#include "gui\helpers\LayerFiltersManager.h"
 
 #define CRSHIPINFO(iPropPtr, prStruct, obj, field, sifi) PROPHELPER_CREATEHOLDER_S(iPropPtr, prStruct, obj, field, SelectedShip::shipInfoMeta, sifi, &SelectedShip::OnShipInfoChanged)
 
@@ -154,7 +155,15 @@ void SelectedDrone::renderDomain(render::iRender* renderer) const
 void SelectedDrone::renderTrack(render::iRender* renderer) const
 {
    const auto* selected = getSelectedUnit();
-   TrackLayerHelper::renderRoute(renderer, selected->GetInfo().id, selected->GetRoute(surface_simulation::ROUTE_TYPE::RT_SOURSE), selected_drone_track_info, surface_simulation::ROUTE_TYPE::RT_SOURSE);
+   layer_filter_path track_path{
+   };
+   TrackLayerHelper::SegmentVisibilityChecker segCheck = [track_path](size_t idx)->bool {
+      return true;// LayerFiltersManager::GetInstance().IsFilterVisible(track_path);
+   };
+   TrackLayerHelper::PointVisibilityChecker pntCheck = [track_path](size_t idx, const CG::geo_point& pnt)->bool {
+      return true;// LayerFiltersManager::GetInstance().IsFilterVisible(track_path);
+   };
+   TrackLayerHelper::renderRoute(renderer, selected->GetInfo().id, selected->GetRoute(surface_simulation::ROUTE_TYPE::RT_SOURSE), selected_drone_track_info, surface_simulation::ROUTE_TYPE::RT_SOURSE, segCheck, pntCheck);
 }
 
 void SelectedRover::renderDomain(render::iRender* renderer) const
@@ -166,7 +175,15 @@ void SelectedRover::renderDomain(render::iRender* renderer) const
 void SelectedRover::renderTrack(render::iRender* renderer) const
 {
    const auto* selected = getSelectedUnit();
-   TrackLayerHelper::renderRoute(renderer, selected->GetInfo().id, selected->GetRoute(surface_simulation::ROUTE_TYPE::RT_SOURSE), selected_rover_track_info, surface_simulation::ROUTE_TYPE::RT_SOURSE);
+   layer_filter_path track_path{
+   };
+   TrackLayerHelper::SegmentVisibilityChecker segCheck = [track_path](size_t idx)->bool {
+      return true;// LayerFiltersManager::GetInstance().IsFilterVisible(track_path);
+   };
+   TrackLayerHelper::PointVisibilityChecker pntCheck = [track_path](size_t idx, const CG::geo_point& pnt)->bool {
+      return true;// LayerFiltersManager::GetInstance().IsFilterVisible(track_path);
+   };
+   TrackLayerHelper::renderRoute(renderer, selected->GetInfo().id, selected->GetRoute(surface_simulation::ROUTE_TYPE::RT_SOURSE), selected_rover_track_info, surface_simulation::ROUTE_TYPE::RT_SOURSE, segCheck, pntCheck);
 }
 
 void SelectedShip::renderDomain(render::iRender* renderer) const
@@ -178,7 +195,15 @@ void SelectedShip::renderDomain(render::iRender* renderer) const
 void SelectedShip::renderTrack(render::iRender* renderer) const
 {
    const auto* selected = getSelectedUnit();
-   TrackLayerHelper::renderRoute(renderer, selected->GetInfo().id, selected->GetRoute(surface_simulation::ROUTE_TYPE::RT_SOURSE), selected_ship_track_info, surface_simulation::ROUTE_TYPE::RT_SOURSE);
+   layer_filter_path track_path{
+   };
+   TrackLayerHelper::SegmentVisibilityChecker segCheck = [track_path](size_t idx)->bool {
+      return true;// LayerFiltersManager::GetInstance().IsFilterVisible(track_path);
+   };
+   TrackLayerHelper::PointVisibilityChecker pntCheck = [track_path](size_t idx, const CG::geo_point& pnt)->bool {
+      return true;// LayerFiltersManager::GetInstance().IsFilterVisible(track_path);
+   };
+   TrackLayerHelper::renderRoute(renderer, selected->GetInfo().id, selected->GetRoute(surface_simulation::ROUTE_TYPE::RT_SOURSE), selected_ship_track_info, surface_simulation::ROUTE_TYPE::RT_SOURSE, segCheck, pntCheck);
 }
 
 #undef CRSHIPINFO

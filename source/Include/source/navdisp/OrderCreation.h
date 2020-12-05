@@ -17,3 +17,4 @@ PREPARE_ORDER(CreateObjectListGenerator);
 PREPARE_ORDER(CreatePathfinder);
 PREPARE_ORDER(CreateOptimizedPathfinder);
 PREPARE_ORDER(CreatePackHound);
+PREPARE_ORDER(CreateResearcher);

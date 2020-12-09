@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "StrategyManager.h"
-#include "main/engine.h"
 #include "Helpers\CoordinateCorrectionHelper.h"
 
 // HACK: если геометрия не сходится, можно принять пи равным 7 и проверить, изменилось ли что

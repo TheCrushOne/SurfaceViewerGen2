@@ -198,9 +198,6 @@
     <ClInclude Include="source\colreg\ChartSafetyStructs.h">
       <Filter>colreg</Filter>
     </ClInclude>
-    <ClInclude Include="source\crossdllinterface\EngineInterface.h">
-      <Filter>crossdllinterface</Filter>
-    </ClInclude>
     <ClInclude Include="source\crossdllinterface\UniversalLoggerInterface.h">
       <Filter>crossdllinterface</Filter>
     </ClInclude>
@@ -401,6 +398,12 @@
     </ClInclude>
     <ClInclude Include="source\datastandart\ResearchResultDataStandartInterface.h">
       <Filter>datastandart</Filter>
+    </ClInclude>
+    <ClInclude Include="source\crossdllinterface\PathfindingEngineInterface.h">
+      <Filter>crossdllinterface</Filter>
+    </ClInclude>
+    <ClInclude Include="source\crossdllinterface\ResearchEngineInterface.h">
+      <Filter>crossdllinterface</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

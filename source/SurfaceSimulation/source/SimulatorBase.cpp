@@ -37,7 +37,8 @@ SimulatorBase::SimulatorBase(central_pack* pack, iPropertyInterface* prop, navig
    m_orderCacheFolder = std::filesystem::absolute(std::filesystem::current_path().generic_wstring() + L"\\..\\..\\..\\cache\\order_heap\\");
 
    VALID_CHECK_DLL_LOAD("SQLiteController", "CreateSQLiteDatabaseController", m_databaseController, pack);
-   VALID_CHECK_DLL_LOAD("Engine", "CreateEngine", m_engine, pack);
+   VALID_CHECK_DLL_LOAD("ResearchEngine", "CreateResearchEngine", m_researchEngine, pack);
+   VALID_CHECK_DLL_LOAD("PathfindingEngine", "CreatepathfindingEngine", m_pathfindingEngine, pack);
    VALID_CHECK_DLL_LOAD("UniversalLogger", "CreateUniversalLogger", m_logger, pack);
 
    VALID_CHECK_DLL_LOAD("DataStandart", "CreateSurfaceViewerGenMapDataStandart", m_mapDS, pack, "", m_pService);

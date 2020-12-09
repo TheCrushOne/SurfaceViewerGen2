@@ -112,7 +112,7 @@ void RobotScenarioPlayer::RecountRoutes()
 void RobotScenarioPlayer::RecountResearch()
 {
    // NOTE: пока так
-   m_engine->LaunchResearch([this]() { LogResearchResult(); });
+   m_researchEngine->LaunchResearch([this]() { LogResearchResult(); });
 }
 
 void RobotScenarioPlayer::LogResearchResult()
@@ -130,13 +130,11 @@ void RobotScenarioPlayer::LogResearchResult()
    }
    case settings::ResearchType::RT_THREAD:
    {
-      m_logger->LogThreadResearchResult(m_engine->GetThreadResearchResult());
+      m_logger->LogThreadResearchResult(m_researchEngine->GetThreadResearchResult());
       break;
    }
    }
 }
-
-
 
 double RobotScenarioPlayer::GetTime() const
 {
@@ -144,7 +142,7 @@ double RobotScenarioPlayer::GetTime() const
 }
 
 const settings::map_settings& RobotScenarioPlayer::GetChartGridMeta() const
-{   
+{
    return GetAppSettings().map_stt;
 }
 
@@ -152,4 +150,3 @@ bool RobotScenarioPlayer::PrepareDataForSave(const bool focused, const CG::geo_c
 {
    return false;
 }
-

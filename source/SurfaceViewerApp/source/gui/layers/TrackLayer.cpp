@@ -79,7 +79,8 @@ bool TrackLayer::onAnyPathFound()
       {
          if (idx < route.size() - 1)
             sim->AddLayerVisibilityInfoUnit(formatIdRoverSrcRouteSegmentsIdxPath(rover_id, idx), m_renderSourceRoute);
-         sim->AddLayerVisibilityInfoUnit(formatIdRoverSrcRoutePointsIdxPath(rover_id, idx, transfercase::PositionPointToRoutePoint(route.at(idx).pos, sim->GetAppSettings().env_stt)), m_renderSourceRoute);
+         auto meta_point = transfercase::PositionPointToRoutePoint(route.at(idx).pos, sim->GetAppSettings().env_stt);
+         sim->AddLayerVisibilityInfoUnit(formatIdRoverSrcRoutePointsIdxPath(rover_id, idx, meta_point), m_renderSourceRoute);
       }
 
       auto& cps = rover->GetSrcControlPoints();
@@ -87,7 +88,8 @@ bool TrackLayer::onAnyPathFound()
       {
          if (idx < cps.size() - 1)
             sim->AddLayerVisibilityInfoUnit(formatIdRoverSrcControlPointsSegmentsIdxPath(rover_id, idx), m_renderControlPoints);
-         sim->AddLayerVisibilityInfoUnit(formatIdRoverSrcControlPointsPointsIdxPath(rover_id, idx), m_renderControlPoints);
+         auto meta_point = transfercase::PositionPointToRoutePoint(route.at(idx).pos, sim->GetAppSettings().env_stt);
+         sim->AddLayerVisibilityInfoUnit(formatIdRoverSrcControlPointsPointsIdxPath(rover_id, idx, meta_point), m_renderControlPoints);
       }
    }
 
@@ -101,18 +103,20 @@ bool TrackLayer::onAnyPathFound()
       auto& route = drone->GetSrcPath();
       for (size_t idx = 0; idx < route.size(); idx++)
       {
-         sim->AddLayerVisibilityInfoUnit(formatIdDroneSrcRouteSegmentsIdxPath(drone_id, idx), m_renderSourceRoute);
-         sim->AddLayerVisibilityInfoUnit(formatIdDroneSrcRoutePointsIdxPath(drone_id, idx), m_renderSourceRoute);
+         if (idx < route.size() - 1)
+            sim->AddLayerVisibilityInfoUnit(formatIdDroneSrcRouteSegmentsIdxPath(drone_id, idx), m_renderSourceRoute);
+         auto meta_point = transfercase::PositionPointToRoutePoint(route.at(idx).pos, sim->GetAppSettings().env_stt);
+         sim->AddLayerVisibilityInfoUnit(formatIdDroneSrcRoutePointsIdxPath(drone_id, idx, meta_point), m_renderSourceRoute);
       }
-      sim->AddLayerVisibilityInfoUnit(formatIdDroneSrcRoutePointsIdxPath(drone_id, route.size()), m_renderSourceRoute);
 
       auto& cps = drone->GetSrcControlPoints();
       for (size_t idx = 0; idx < cps.size(); idx++)
       {
-         sim->AddLayerVisibilityInfoUnit(formatIdDroneSrcControlPointsSegmentsIdxPath(drone_id, idx), m_renderControlPoints);
-         sim->AddLayerVisibilityInfoUnit(formatIdDroneSrcControlPointsPointsIdxPath(drone_id, idx), m_renderControlPoints);
+         if (idx < route.size() - 1)
+            sim->AddLayerVisibilityInfoUnit(formatIdDroneSrcControlPointsSegmentsIdxPath(drone_id, idx), m_renderControlPoints);
+         auto meta_point = transfercase::PositionPointToRoutePoint(route.at(idx).pos, sim->GetAppSettings().env_stt);
+         sim->AddLayerVisibilityInfoUnit(formatIdDroneSrcControlPointsPointsIdxPath(drone_id, idx, meta_point), m_renderControlPoints);
       }
-      sim->AddLayerVisibilityInfoUnit(formatIdDroneSrcControlPointsPointsIdxPath(drone_id, cps.size()), m_renderControlPoints);
    }
 }
 
@@ -149,12 +153,15 @@ void TrackLayer::renderTracks(render::iRender* renderer)
       if (m_renderControlPoints
          && LayerFiltersManager::GetInstance().IsFilterVisible(formatIdRoverSrcControlPointsPath(rover_id)))
       {
-         TrackLayerHelper::SegmentVisibilityChecker segmentVisibilityCheck = [rover_id, this](size_t idx)->bool {
+         TrackLayerHelper::SegmentVisibilityChecker segmentVisibilityCheck = [rover_id, this](size_t idx)->bool
+         {
             return LayerFiltersManager::GetInstance().IsFilterVisible(formatIdRoverSrcControlPointsSegmentsIdxPath(rover_id, idx));
          };
          auto& env_stt = sim->GetAppSettings().env_stt;
-         TrackLayerHelper::PointVisibilityChecker pointVisibilityCheck = [rover_id, env_stt, this](size_t idx, const CG::geo_point& pnt)->bool {
-            return LayerFiltersManager::GetInstance().IsFilterVisible(formatIdRoverSrcControlPointsPointsIdxPath(rover_id, idx));
+         TrackLayerHelper::PointVisibilityChecker pointVisibilityCheck = [rover_id, env_stt, this](size_t idx, const CG::geo_point& pnt)->bool
+         {
+            auto meta_point = transfercase::PositionPointToRoutePoint(pnt, env_stt);
+            return LayerFiltersManager::GetInstance().IsFilterVisible(formatIdRoverSrcControlPointsPointsIdxPath(rover_id, idx, meta_point));
          };
          TrackLayerHelper::renderRoute(renderer, rover_id, rover->GetSrcControlPoints(), rover_control_points_obj_info(), surface_simulation::ROUTE_TYPE::RT_CONTROL, segmentVisibilityCheck, pointVisibilityCheck);
       }
@@ -173,12 +180,15 @@ void TrackLayer::renderTracks(render::iRender* renderer)
       if (m_renderSourceRoute
          && LayerFiltersManager::GetInstance().IsFilterVisible(formatIdDroneSrcRoutePath(drone_id)))
       {
-         TrackLayerHelper::SegmentVisibilityChecker segmentVisibilityCheck = [drone_id, this](size_t idx)->bool {
+         TrackLayerHelper::SegmentVisibilityChecker segmentVisibilityCheck = [drone_id, this](size_t idx)->bool
+         {
             return LayerFiltersManager::GetInstance().IsFilterVisible(formatIdDroneSrcRouteSegmentsIdxPath(drone_id, idx));
          };
          auto& env_stt = sim->GetAppSettings().env_stt;
-         TrackLayerHelper::PointVisibilityChecker pointVisibilityCheck = [drone_id, env_stt, this](size_t idx, const CG::geo_point& pnt)->bool {
-            return LayerFiltersManager::GetInstance().IsFilterVisible(formatIdDroneSrcRoutePointsIdxPath(drone_id, idx));
+         TrackLayerHelper::PointVisibilityChecker pointVisibilityCheck = [drone_id, env_stt, this](size_t idx, const CG::geo_point& pnt)->bool
+         {
+            auto meta_point = transfercase::PositionPointToRoutePoint(pnt, env_stt);
+            return LayerFiltersManager::GetInstance().IsFilterVisible(formatIdDroneSrcRoutePointsIdxPath(drone_id, idx, meta_point));
          };
          TrackLayerHelper::renderRoute(renderer, drone->GetInfo().id, drone->GetSrcPath(), drone_route_obj_info(), surface_simulation::ROUTE_TYPE::RT_SOURSE, segmentVisibilityCheck, pointVisibilityCheck);
       }
@@ -186,12 +196,15 @@ void TrackLayer::renderTracks(render::iRender* renderer)
       if (m_renderControlPoints
          && LayerFiltersManager::GetInstance().IsFilterVisible(formatIdDroneSrcControlPointsPath(drone_id)))
       {
-         TrackLayerHelper::SegmentVisibilityChecker segmentVisibilityCheck = [drone_id, this](size_t idx)->bool {
+         TrackLayerHelper::SegmentVisibilityChecker segmentVisibilityCheck = [drone_id, this](size_t idx)->bool
+         {
             return LayerFiltersManager::GetInstance().IsFilterVisible(formatIdDroneSrcControlPointsSegmentsIdxPath(drone_id, idx));
          };
          auto& env_stt = sim->GetAppSettings().env_stt;
-         TrackLayerHelper::PointVisibilityChecker pointVisibilityCheck = [drone_id, env_stt, this](size_t idx, const CG::geo_point& pnt)->bool {
-            return LayerFiltersManager::GetInstance().IsFilterVisible(formatIdDroneSrcControlPointsPointsIdxPath(drone_id, idx));
+         TrackLayerHelper::PointVisibilityChecker pointVisibilityCheck = [drone_id, env_stt, this](size_t idx, const CG::geo_point& pnt)->bool
+         {
+            auto meta_point = transfercase::PositionPointToRoutePoint(pnt, env_stt);
+            return LayerFiltersManager::GetInstance().IsFilterVisible(formatIdDroneSrcControlPointsPointsIdxPath(drone_id, idx, meta_point));
          };
          TrackLayerHelper::renderRoute(renderer, drone->GetInfo().id, drone->GetSrcControlPoints(), drone_control_points_obj_info(), surface_simulation::ROUTE_TYPE::RT_CONTROL, segmentVisibilityCheck, pointVisibilityCheck);
       }

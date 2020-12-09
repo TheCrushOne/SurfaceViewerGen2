@@ -73,12 +73,13 @@
     <ClInclude Include="source\common\utils.h" />
     <ClInclude Include="source\crossdllinterface\ChecksumServiceInterface.h" />
     <ClInclude Include="source\crossdllinterface\DataShareInterface.h" />
-    <ClInclude Include="source\crossdllinterface\EngineInterface.h" />
     <ClInclude Include="source\crossdllinterface\FileStorageInterface.h" />
     <ClInclude Include="source\crossdllinterface\MCMInterface.h" />
     <ClInclude Include="source\crossdllinterface\NavigationDispatcherInterface.h" />
+    <ClInclude Include="source\crossdllinterface\PathfindingEngineInterface.h" />
     <ClInclude Include="source\crossdllinterface\PythonWrapperInterface.h" />
     <ClInclude Include="source\crossdllinterface\RawDataInterface.h" />
+    <ClInclude Include="source\crossdllinterface\ResearchEngineInterface.h" />
     <ClInclude Include="source\crossdllinterface\SettingsSerializerInterface.h" />
     <ClInclude Include="source\crossdllinterface\SimulationInterface.h" />
     <ClInclude Include="source\crossdllinterface\SurfaceViewerOrderingWrapperInterface.h" />

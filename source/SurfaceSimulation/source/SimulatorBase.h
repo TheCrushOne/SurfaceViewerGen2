@@ -11,7 +11,8 @@
 #include "crossdllinterface/SVGMDatabaseInterface.h"
 #include "common/chart_object_unit.h"
 #include "crossdllinterface\UniversalLoggerInterface.h"
-#include "crossdllinterface\EngineInterface.h"
+#include "crossdllinterface\PathfindingEngineInterface.h"
+#include "crossdllinterface\ResearchEngineInterface.h"
 
 #include "datastandart/SVGenMapDataStandartInterface.h"
 #include "datastandart/PathStorageDataStandartInterface.h"
@@ -120,7 +121,8 @@ namespace SV::surface_simulation
       surface_simulation::SIMULATION_PLAYER_TYPE m_simulationType = surface_simulation::SIMULATION_PLAYER_TYPE::SPT_SIZE;
       
       system::ModuleGuard<database::iSVGMDatabaseController, central_pack*> m_databaseController;
-      system::ModuleGuard<engine::iEngine, central_pack*> m_engine;
+      system::ModuleGuard<engine::iPathfindingEngine, central_pack*> m_pathfindingEngine;
+      system::ModuleGuard<engine::iResearchEngine, central_pack*> m_researchEngine;
       system::ModuleGuard<logger::iUniversalLogger, central_pack*> m_logger;
 
       system::ModuleGuard<data_standart::iDataStandart, central_pack*, LPCSTR, navigation_dispatcher::iComService*> m_mapDS;

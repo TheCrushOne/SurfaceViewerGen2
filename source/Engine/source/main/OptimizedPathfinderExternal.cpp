@@ -5,12 +5,13 @@
 using namespace SV;
 using namespace SV::engine;
 
-std::condition_variable opt_cv;
-std::mutex opt_cv_m;
+std::condition_variable opt_pf_cond_var;
+std::mutex opt_pf_cond_var_mutex;
 
 OptPathfinderExternal::OptPathfinderExternal(central_pack* pack, navigation_dispatcher::iComService* pService)
    : OrderBase(pack, pService)
-   , m_engine(std::make_shared<engine::Engine>(pack))
+   , m_pathfindingEngine(std::make_shared<engine::PathfindingEngine>(pack))
+   , m_researchEngine(std::make_shared<engine::ResearchEngine>(pack))
 {}
 
 bool OptPathfinderExternal::processCommand()
@@ -29,8 +30,8 @@ bool OptPathfinderExternal::processCommand()
 
    // NOTE: локер, который стопает главный поток, пока все пути не будут рассчитаны
    // NOTE: анлок прокинут из processData 
-   std::unique_lock<std::mutex> lk(opt_cv_m);
-   opt_cv.wait(lk);
+   std::unique_lock<std::mutex> lk(opt_pf_cond_var_mutex);
+   opt_pf_cond_var.wait(lk);
 
    if (!writeToDestination(reinterpret_cast<data_standart::iOptimizedPathStorageDataStandart*>(dst)))
       return false;
@@ -51,13 +52,13 @@ bool OptPathfinderExternal::readFromSource(data_standart::iSurfaceVieverGenMapDa
 
 bool OptPathfinderExternal::writeToDestination(data_standart::iOptimizedPathStorageDataStandart* dst)
 {
-   dst->SetData(m_engine->GetLastProcessedPaths(), m_engine->GetLandUnitExplication(), m_engine->GetAirUnitExplication(), m_engine->GetCoverageHistory());
+   dst->SetData(m_pathfindingEngine->GetLastProcessedPaths(), m_pathfindingEngine->GetLandUnitExplication(), m_pathfindingEngine->GetAirUnitExplication(), m_pathfindingEngine->GetCoverageHistory());
    return true;
 }
 
 bool OptPathfinderExternal::processData()
 {
-   m_engine->ProcessPathFind(m_indata, m_data, m_settings, [this]() { opt_cv.notify_all(); });
+   m_pathfindingEngine->ProcessPathFind(m_indata, m_data, m_settings, [this]() { opt_pf_cond_var.notify_all(); });
    return true;
 }
 

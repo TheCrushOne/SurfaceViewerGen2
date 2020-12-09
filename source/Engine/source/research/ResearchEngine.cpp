@@ -1,23 +1,14 @@
 #include "stdafx.h"
-#include "engine.h"
-//#include "common/matrix.h"
-//#include "main/dispatcher.h"
-#define _USE_MATH_DEFINES
-#include <math.h>
-#include <cmath>
-//#include "settings/common/settings.h"
-#include <windows.h>
-#include "algorithm/statistic.h"
+#include "ResearchEngine.h"
 
 using namespace SV;
 using namespace SV::engine;
-std::recursive_mutex g_engineMutex;
+std::recursive_mutex g_researchEngineMutex;
 
-Engine::Engine(central_pack* pack)
-   : Central(pack)
-   , m_rawdata(std::make_shared<pathfinder::RoutePointMatrix>(CG::route_point{}))
-   , m_routedata(std::make_shared<pathfinder::route_data>())
-   , m_pathfinder(std::make_unique<pathfinder::PathFinderPipeline>(pack))
+ResearchEngine::ResearchEngine(central_pack* pack)
+   : EngineBase(pack)
+   //, m_routedata(std::make_shared<pathfinder::route_data>())
+   //, m_pathfinder(std::make_unique<pathfinder::PathFinderPipeline>(pack))
 {
    /*m_noGoLowLevel = 73.f;
    m_noGoHighLevel = 120.f;
@@ -26,143 +17,7 @@ Engine::Engine(central_pack* pack)
    m_maxDangerAngle = 70.f;*/
 }
 
-void Engine::ProcessPathFind(const pathfinder::path_finder_indata& scenarioData, const pathfinder::GeoMatrix& rawData, std::shared_ptr<settings::application_settings> settings, std::function<void(void)> completeCallback)
-{
-   m_settings = settings;
-   std::thread(&Engine::processPathFind, this, scenarioData, rawData, completeCallback).detach();
-}
-
-const pathfinder::UnsignedMatrix& Engine::GetLandUnitExplication() const
-{
-   static pathfinder::UnsignedMatrix explication;
-   size_t rowCount = m_rawdata.get()->GetRowCount();
-   size_t colCount = m_rawdata.get()->GetColCount();
-   explication.SetRowCount(rowCount);
-   explication.SetColCount(colCount);
-   for (size_t ridx = 0; ridx < rowCount; ridx++)
-   {
-      for (size_t cidx = 0; cidx < colCount; cidx++)
-      {
-         explication.Set(ridx, cidx, static_cast<size_t>(m_rawdata.get()->Get(ridx, cidx).go));
-      }
-   }
-   return explication;
-}
-
-const pathfinder::UnsignedMatrix& Engine::GetAirUnitExplication() const
-{
-   static pathfinder::UnsignedMatrix explication;
-   size_t rowCount = m_rawdata.get()->GetRowCount();
-   size_t colCount = m_rawdata.get()->GetColCount();
-   explication.SetRowCount(rowCount);
-   explication.SetColCount(colCount);
-   for (size_t ridx = 0; ridx < rowCount; ridx++)
-   {
-      for (size_t cidx = 0; cidx < colCount; cidx++)
-      {
-         explication.Set(ridx, cidx, static_cast<size_t>(m_rawdata.get()->Get(ridx, cidx).fly));
-      }
-   }
-   return explication;
-}
-
-void Engine::processPathFind(const pathfinder::path_finder_indata& scenarioData, const pathfinder::GeoMatrix& rawData, std::function<void(void)> completeCallback)
-{
-   // TODO: СЂР°Р·РѕР±СЂР°С‚СЊСЃСЏ СЃ РЅР°СЃС‚СЂРѕР№РєР°РјРё
-   convertMap(rawData, m_rawdata);
-   processPathFindInternal(scenarioData, completeCallback);
-}
-
-void Engine::processPathFindInternal(const pathfinder::path_finder_indata& scenarioData, std::function<void(void)> completeCallback)
-{
-   m_indata = std::make_shared<pathfinder::path_finder_indata>(scenarioData);
-   // NOTE: СЂР°РґРёСѓСЃ РїРѕРєР° С‡С‚Рѕ С‚СѓС‚ РЅР°СЃС‚СЂР°РёРІР°РµС‚СЃСЏ
-   m_indata->strategy_settings = pathfinder::strategy_settings{ pathfinder::StrategyType::ST_RHOMBOID, 5. }; 
-   m_indata->settings = pathfinder::path_finder_settings{};
-   m_indata->settings.multithread = true;
-   m_pathfinder->FindPath([completeCallback]() { completeCallback(); }, m_settings, m_rawdata, m_indata);
-   //using namespace std::chrono_literals;
-   //std::this_thread::sleep_for(3ms);
-   //completeCallback();
-}
-
-void Engine::convertMap(const pathfinder::GeoMatrix& rawdataSrc, std::shared_ptr<pathfinder::RoutePointMatrix> rawdataDst)
-{
-   size_t rowCount = rawdataSrc.GetRowCount();
-   size_t colCount = rawdataSrc.GetColCount();
-   rawdataDst->SetRowCount(rowCount);
-   if (rowCount > 0)
-      rawdataDst->SetColCount(colCount);
-   for (size_t rIdx = 0; rIdx < rowCount; rIdx++)
-   {
-      for (size_t cIdx = 0; cIdx < colCount; cIdx++)
-         rawdataDst->Set(rIdx, cIdx, CG::route_point(rIdx, cIdx, rawdataSrc.Get(rIdx, cIdx), checkFlyZone(rawdataSrc, rIdx, cIdx).fza, checkGoZone(rawdataSrc, rIdx, cIdx).gza));
-   }
-}
-
-pathfinder::check_fly_zone_result Engine::checkFlyZone(const pathfinder::GeoMatrix& rawdataSrc, int rowIdx, int colIdx)
-{
-   auto& pth_stt = m_settings->pth_stt;
-   return { (rawdataSrc.Get(rowIdx, colIdx) > pth_stt.lvl_stt.max_air_height) ? pathfinder::FlyZoneAffilation::FZA_FORBIDDEN : pathfinder::FlyZoneAffilation::FZA_NORMAL };
-}
-
-pathfinder::check_go_zone_result Engine::checkGoZone(const pathfinder::GeoMatrix& rawdataSrc, int rowIdx, int colIdx)
-{
-   // NOTE: СЃС‚РѕР±Р»С†С‹ РёРґСѓС‚ СЃРЅРёР·Сѓ РІРІРµСЂС…(РїРѕ РєСЂР°Р№РЅРµР№ РјРµСЂРµ С‚СѓС‚ СЃС‡РёС‚Р°РµРј РёРјРµРЅРЅРѕ С‚Р°Рє)
-   size_t rowCount = rawdataSrc.GetRowCount();
-   size_t colCount = rawdataSrc.GetColCount();
-   return checkAngles(
-        rawdataSrc.Get(rowIdx, colIdx) // center
-      , rawdataSrc.Get(rowIdx, colIdx > 0 ? colIdx - 1 : 0) // left
-      , rawdataSrc.Get(rowIdx, colIdx < colCount - 1 ? colIdx + 1 : colCount - 1) // right
-      , rawdataSrc.Get(rowIdx < rowCount - 1 ? rowIdx + 1 : rowCount - 1, colIdx) // top
-      , rawdataSrc.Get(rowIdx > 0 ? rowIdx - 1 : 0, colIdx) // bottom
-      , rawdataSrc.Get(rowIdx < rowCount - 1 ? rowIdx + 1 : rowCount - 1, colIdx > 0 ? colIdx - 1 : 0) // topleft
-      , rawdataSrc.Get(rowIdx > 0 ? rowIdx - 1 : 0, colIdx > 0 ? colIdx - 1 : 0) // bottomleft
-      , rawdataSrc.Get(rowIdx < rowCount - 1 ? rowIdx + 1 : rowCount - 1, colIdx < colCount - 1 ? colIdx + 1 : colCount - 1) // topright
-      , rawdataSrc.Get(rowIdx > 0 ? rowIdx - 1 : 0, colIdx > 0 ? colIdx - 1 : 0) // bottomright
-   );
-}
-
-pathfinder::check_go_zone_result Engine::checkAngles(double center, double left, double right, double top, double bottom, double topleft, double bottomleft, double topright, double bottomright)
-{
-   auto& pth_stt = m_settings->pth_stt;
-   // NOTE: РїСЂРѕРІРµСЂСЏРµРј 4 РЅР°РїСЂР°РІР»РµРЅРёСЏ РїРѕ 8 СЃС‚РѕСЂРѕРЅР°Рј СЃРІРµС‚Р°
-   pathfinder::check_go_zone_result result;
-   double cellMult = 6.;
-   float mult = 180.f/static_cast<float>(M_PI);
-   // top-bottom
-   float angleTB = (atan(fabs(top - center) / cellMult)*mult + atan(fabs(center - bottom) / cellMult)*mult)/2.;
-   // left-right
-   float angleLR = (atan(fabs(left - center) / cellMult)*mult + atan(fabs(center - right) / cellMult)*mult)/2.;
-   // topleft-bottomright
-   float angleTLBR = (atan(fabs(topleft - center) / cellMult) * mult + atan(fabs(center - bottomright) / cellMult) * mult) / 2.;
-   // topright-bottomleft
-   float angleTRBL = (atan(fabs(bottomleft - center) / cellMult) * mult + atan(fabs(center - topright) / cellMult) * mult) / 2.;
-   result.asn = angleTB;
-   result.awe = angleLR;
-   result.aswne = angleTRBL;
-   result.asenw = angleTLBR;
-
-   auto minDA = pth_stt.lvl_stt.dangerous_land_angle;
-   auto maxDA = pth_stt.lvl_stt.max_land_angle;
-   auto minLH = pth_stt.lvl_stt.min_land_height;
-   auto maxLH = pth_stt.lvl_stt.max_land_height;
-   //qDebug() << "angles:" << fabs(angleUD) << fabs(angleLR);
-   bool maxAngleExcess = (maxDA < fabs(angleTB)) || (maxDA < fabs(angleLR)) || (maxDA < fabs(angleTRBL)) || (maxDA < fabs(angleTLBR));
-   bool minAngleExcess = (minDA < fabs(angleTB)) || (minDA < fabs(angleLR)) || (minDA < fabs(angleTRBL)) || (minDA < fabs(angleTLBR));
-   if (maxAngleExcess
-       || (center < minLH)
-       || (center > maxLH))
-      result.gza = pathfinder::GoZoneAffilation::GZA_FORBIDDEN;
-   else if (minAngleExcess)
-      result.gza = pathfinder::GoZoneAffilation::GZA_DANGEROUS;
-   else
-      result.gza = pathfinder::GoZoneAffilation::GZA_NORMAL;
-   return result;
-}
-
-void Engine::LaunchResearch(std::function<void(void)> callback)
+void ResearchEngine::LaunchResearch(std::function<void(void)> callback)
 {
    m_endRoundCallback = callback;
    auto& res_stt = m_settings->res_stt;
@@ -187,11 +42,11 @@ void Engine::LaunchResearch(std::function<void(void)> callback)
    }
 }
 
-void Engine::timeResearch(/*const std::shared_ptr<SVM::iMatrix<SurfaceElement>>&, std::shared_ptr<ResearchResultGen1>& result*/)
+void ResearchEngine::timeResearch(/*const std::shared_ptr<SVM::iMatrix<SurfaceElement>>&, std::shared_ptr<ResearchResultGen1>& result*/)
 {
    //const auto& pathfinder = WFM::GetSharedInstance<PathFinder>(DBG_DATA);
    //auto rawmap = WFM::CreateSharedObject<SVM::iMatrix<SurfaceElement>>();
-   //// TODO: СЂР°Р·РѕР±СЂР°С‚СЊСЃСЏ, РЅСѓР¶РЅР° Р»Рё РІРѕРѕР±С‰Рµ РєР°СЂС‚Р°?...РјРѕР¶РµС‚ РїСЂРѕСЃС‚Рѕ РіРµРЅРµСЂР°С‚РѕСЂ СЃРґРµР»Р°С‚СЊ?..
+   //// TODO: разобраться, нужна ли вообще карта?...может просто генератор сделать?..
    //const auto& resStt = m_appSettings->res_settings.g1s;
    //const auto& cntRange = resStt.countRange;
    //const auto& lnRange = resStt.lengthRange;
@@ -207,7 +62,7 @@ void Engine::timeResearch(/*const std::shared_ptr<SVM::iMatrix<SurfaceElement>>&
    ////__int64 ctr1 = 0, ctr2 = 0, freq = 0;
    //const RoutePoint startRP{ rawmap->Get(2, 2).x, rawmap->Get(2, 2).y, rawmap->Get(2, 2).z };
    //const MatrixPoint startMP{ 2, 2 };
-   //// NOTE: СЂР°СЃСЃС‚РѕСЏРЅРёРµ РЅР° РєР»РµС‚РєСѓ
+   //// NOTE: расстояние на клетку
    //const double step = static_cast<double>(fabs(rawmap->Get(0, 0).x - rawmap->Get(1, 0).x));
    //CombinedPoint startPoint{ startRP, startMP };
    //double fcntstep = 100./cntCnt;
@@ -286,28 +141,14 @@ void Engine::timeResearch(/*const std::shared_ptr<SVM::iMatrix<SurfaceElement>>&
    ////Q_ASSERT(resmap->GetRowCount() == cntIdx && resmap->GetColCount() == lnIdx);
 }
 
-void Engine::generateResMap(size_t mapSize)
-{
-   // NOTE: С‚СѓС‚ РІСЃРµРіРґР° С‡С‚Рѕ-С‚Рѕ РєРІР°РґСЂР°С‚РЅРѕРµ
-   m_rawdata->SetRowCount(mapSize);
-   m_rawdata->SetColCount(mapSize);
-   for (size_t rowIdx = 0; rowIdx < mapSize; rowIdx++)
-   {
-      for (size_t colIdx = 0; colIdx < mapSize; colIdx++)
-      {
-         m_rawdata->Set(rowIdx, colIdx, { static_cast<int>(rowIdx), static_cast<int>(colIdx), 0. });
-      }
-   }
-}
-
-void Engine::lengthResearch(/*const std::shared_ptr<SVM::iMatrix<SurfaceElement>>& rawmap, std::shared_ptr<ResearchResultGen2>& result*/)
+void ResearchEngine::lengthResearch(/*const std::shared_ptr<SVM::iMatrix<SurfaceElement>>& rawmap, std::shared_ptr<ResearchResultGen2>& result*/)
 {
    //Route landRoute;
    //auto routeConvert = [](Route& route, STT::PointSettingElement& setting)
    //{
    //    route = Route(setting.start, setting.finish, setting.controlPointList);
    //};
-   //// TODO: РєР°Рє-С‚Рѕ СЃРєРѕРјРїРѕРЅРѕРІР°С‚СЊ
+   //// TODO: как-то скомпоновать
    //auto pointSettings = m_appSettings->sim_settings.pointSettings;
    //routeConvert(landRoute, pointSettings.landSettings.at(0));
    ////routeConvert(m_route->airRoutes, pointSettings.airSettings);
@@ -387,14 +228,14 @@ void Engine::lengthResearch(/*const std::shared_ptr<SVM::iMatrix<SurfaceElement>
    //}
 }
 
-// NOTE: РСЃСЃР»РµРґРѕРІР°РЅРёРµ РЅР°РїСЂР°РІР»РµРЅРѕ РЅР° РѕРїСЂРµРґРµР»РµРЅРёРµ РѕРїС‚РёРјР°Р»СЊРЅРѕРіРѕ СЃРѕРѕС‚РЅРѕС€РµРЅРёСЏ СЂР°Р·РјРµСЂР° РїСѓР»Р° Р·Р°РґР°С‡ Рє СЂР°СЃС‡РµС‚Сѓ Рё РєРѕР»РёС‡РµСЃС‚РІР° РїРѕС‚РѕРєРѕРІ
-void Engine::threadResearch(/*const std::shared_ptr<SVM::iMatrix<SurfaceElement>>& resmap, std::shared_ptr<ResearchResultGen3>& result*/)
+// NOTE: Исследование направлено на определение оптимального соотношения размера пула задач к расчету и количества потоков
+void ResearchEngine::threadResearch(/*const std::shared_ptr<SVM::iMatrix<SurfaceElement>>& resmap, std::shared_ptr<ResearchResultGen3>& result*/)
 {
    auto& res_stt = m_settings->res_stt;
-   // Р”Р»РёРЅ РїСѓС‚РµР№ 62, 125, 250, 500
-   // РџРѕС‚РѕРєРѕРІ 1, 2, 4, 8
-   // РџСѓР» Р·Р°РґР°С‡ 2, 4, 8
-   // РџСѓС‚РµР№ 2, 4, 8, 16, 32, 64, 128
+   // Длин путей 62, 125, 250, 500
+   // Потоков 1, 2, 4, 8
+   // Пул задач 2, 4, 8
+   // Путей 2, 4, 8, 16, 32, 64, 128
 
    for (size_t lengthIdx = 0; lengthIdx < res_stt.length_range.values.size(); lengthIdx++)
    {
@@ -422,12 +263,12 @@ void Engine::threadResearch(/*const std::shared_ptr<SVM::iMatrix<SurfaceElement>
                   research::ThreadResearchComplexStorage::SuperCell::Result{
                      0
                   }
-               });
+                  });
             }
          }
       }
    }
-   m_threadResStorage.info = { 
+   m_threadResStorage.info = {
       res_stt.thread_pool_range,
       res_stt.task_pool_range,
       res_stt.fly_count_range,
@@ -437,10 +278,24 @@ void Engine::threadResearch(/*const std::shared_ptr<SVM::iMatrix<SurfaceElement>
    threadResNextStep();
 }
 
-void Engine::threadResNextStep()
+void ResearchEngine::generateResMap(size_t mapSize)
+{
+   // NOTE: тут всегда что-то квадратное
+   m_rawdata->SetRowCount(mapSize);
+   m_rawdata->SetColCount(mapSize);
+   for (size_t rowIdx = 0; rowIdx < mapSize; rowIdx++)
+   {
+      for (size_t colIdx = 0; colIdx < mapSize; colIdx++)
+      {
+         m_rawdata->Set(rowIdx, colIdx, { static_cast<int>(rowIdx), static_cast<int>(colIdx), 0. });
+      }
+   }
+}
+
+void ResearchEngine::threadResNextStep()
 {
    ATLASSERT(false);
-   std::lock_guard<std::recursive_mutex> guard(g_engineMutex);
+   std::lock_guard<std::recursive_mutex> guard(g_researchEngineMutex);
    __int64 startTime;
    CURTIME_MS(startTime);
    if (m_threadTaskCurrentIdx > 0)
@@ -464,19 +319,19 @@ void Engine::threadResNextStep()
    stt.packet_size = threadResIndex.task_pool_value;
    stt.thread_count = threadResIndex.thread_pool_value;
    GetPack()->comm->Message(ICommunicator::MessageType::MT_INFO, "task started: [fly: %i, length: %f, task: %i, thread: %i]", threadResIndex.fly_count_value, threadResIndex.length_value, threadResIndex.task_pool_value, threadResIndex.thread_pool_value);
-   std::thread(&Engine::processPathFindInternal, this, data/*, stt*/, [this]() { threadResNextStep(); }).detach();
+   std::thread(&ResearchEngine::processPathFindInternal, this, data/*, stt*/, [this]() { threadResNextStep(); }).detach();
    //m_communicator->Message(ICommunicator::MS_Debug, "Thread task idx %i", m_threadTaskCurrentIdx);
    m_threadTaskCurrentIdx++;
-   GetPack()->comm->SetProgress(static_cast<unsigned int>(static_cast<double>(m_threadTaskCurrentIdx)/static_cast<double>(m_threadResStorage.data.size())*100.));
+   GetPack()->comm->SetProgress(static_cast<unsigned int>(static_cast<double>(m_threadTaskCurrentIdx) / static_cast<double>(m_threadResStorage.data.size()) * 100.));
 }
 
-void Engine::generateResScenarioData(pathfinder::path_finder_indata& data, const settings::research_settings& stt, const research::ThreadResearchComplexStorage::SuperCell::Index& idx)
+void ResearchEngine::generateResScenarioData(pathfinder::path_finder_indata& data, const settings::research_settings& stt, const research::ThreadResearchComplexStorage::SuperCell::Index& idx)
 {
    data.unit_data.air_units.resize(idx.fly_count_value);
    data.unit_data.land_units.resize(1);
    int mapSize = static_cast<int>(stt.map_size);
    int curSize = static_cast<int>(idx.length_value);
-   // NOTE: РёРЅРґРµРєСЃ РїСЂРµРґРµР»СЊРЅРѕР№ С‚РѕС‡РєРё РѕС‚Р»РёС‡Р°РµС‚СЃСЏ РѕС‚ СЂР°Р·РјРµСЂР° РєР°СЂС‚С‹ РЅР° 1
+   // NOTE: индекс предельной точки отличается от размера карты на 1
    int fnCoord = curSize < mapSize - 1 ? curSize : mapSize - 1;
    for (auto& elem : data.unit_data.air_units)
    {
@@ -490,10 +345,5 @@ void Engine::generateResScenarioData(pathfinder::path_finder_indata& data, const
    }
 }
 
-void Engine::logThreadResearchResult()
+void ResearchEngine::logThreadResearchResult()
 {}
-
-engine::iEngine* CreateEngine(central_pack* pack)
-{
-   return new engine::Engine(pack);
-}

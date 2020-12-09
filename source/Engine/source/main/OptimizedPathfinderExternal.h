@@ -2,7 +2,8 @@
 
 #include "datastandart\SVGenMapDataStandartInterface.h"
 #include "datastandart\OptimizedPathStorageDataStandartInterface.h"
-#include "engine.h"
+#include "pathfinding/PathfindingEngine.h"
+#include "research\ResearchEngine.h"
 #include "navdisp\OrderBase.h"
 #include "navdisp\OrderStruct.h"
 
@@ -23,7 +24,8 @@ namespace SV::engine
    private:
       pathfinder::GeoMatrix m_data;
       pathfinder::path_finder_indata m_indata;
-      std::shared_ptr<engine::Engine> m_engine;
+      std::shared_ptr<engine::PathfindingEngine> m_pathfindingEngine;
+      std::shared_ptr<engine::ResearchEngine> m_researchEngine;
       std::shared_ptr<settings::application_settings> m_settings;
    };
 }

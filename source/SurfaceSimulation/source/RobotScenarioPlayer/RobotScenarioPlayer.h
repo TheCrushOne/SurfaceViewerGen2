@@ -1,7 +1,8 @@
 #pragma once
 
 #include "SimulatorBase.h"
-#include "crossdllinterface\EngineInterface.h"
+#include "crossdllinterface\PathfindingEngineInterface.h"
+#include "crossdllinterface\ResearchEngineInterface.h"
 #include "common\pathfinder_structs.h"
 
 namespace SV::surface_simulation

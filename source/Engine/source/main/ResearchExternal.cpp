@@ -5,12 +5,13 @@
 using namespace SV;
 using namespace SV::engine;
 
-std::condition_variable cv;
-std::mutex cv_m;
+std::condition_variable res_cond_var;
+std::mutex cond_var_mutex;
 
 ResearchExternal::ResearchExternal(central_pack* pack, navigation_dispatcher::iComService* pService)
    : OrderBase(pack, pService)
-   , m_engine(std::make_shared<engine::Engine>(pack))
+   , m_researchEngine(std::make_shared<engine::ResearchEngine>(pack))
+   , m_pathfindingEngine(std::make_shared<engine::PathfindingEngine>(pack))
 {}
 
 bool ResearchExternal::processCommand()
@@ -26,11 +27,6 @@ bool ResearchExternal::processCommand()
 
    if (!processData())
       return false;
-
-   // NOTE: локер, который стопает главный поток, пока все пути не будут рассчитаны
-   // NOTE: анлок прокинут из processData 
-   std::unique_lock<std::mutex> lk(cv_m);
-   cv.wait(lk);
 
    if (!writeToDestination(reinterpret_cast<data_standart::iResearchResultDataStandart*>(dst)))
       return false;
@@ -57,7 +53,7 @@ bool ResearchExternal::writeToDestination(data_standart::iResearchResultDataStan
 
 bool ResearchExternal::processData()
 {
-   m_engine->ProcessPathFind(m_indata, m_data, m_settings, [this]() { cv.notify_all(); });
+   //m_engine->ProcessPathFind(m_indata, m_data, m_settings, [this]() { cv.notify_all(); });
    return true;
 }
 

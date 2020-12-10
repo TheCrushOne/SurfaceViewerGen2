@@ -7,7 +7,7 @@
 #include "colreg/ModuleGuard.h"
 #include "algorithm\pathfinder\pathfinder.h"
 #include "common\file_storage.h"
-#include "engine.h"
+//#include "engine.h"
 
 namespace SV
 {
@@ -63,7 +63,7 @@ namespace SV
       //std::unique_ptr<DomSettings> m_dom;
       std::shared_ptr<file_utils::global_path_storage> m_fileStorage;
 
-      std::unique_ptr<engine::Engine> m_engine;
+      //std::unique_ptr<engine::Engine> m_engine;
 
       //QFutureWatcher<void> m_resWatcher;
 

@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "dispatcher.h"
 
-#include "engine.h"
+//#include "engine.h"
 #include "algorithm/pathfinder/pathfinder.h"
 //#include "common/settings.h"
 #include "crossdllinterface\SettingsSerializerInterface.h"

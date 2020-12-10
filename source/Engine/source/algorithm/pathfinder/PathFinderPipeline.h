@@ -13,10 +13,12 @@
 #include "Multithread/MCManager.h"
 #include "PathFinder.h"
 #include "common/central_class.h"
+#include "Multithread/TaskHolder.h"
 
 namespace SV::pathfinder
 {
-   class PathFinderPipeline : public Central
+   class PathFinderPipeline
+      : public Central
    {
    public:
       PathFinderPipeline(central_pack* pack);
@@ -40,7 +42,7 @@ namespace SV::pathfinder
       void formatTaskPool();
       void formatTaskPacket();
       //void onAirRouteTaskHolderFinished();
-      void onAirRoutePacketFinished();
+      void onAirRoutePacketFinished(const task_holder_statistic* stat);
       void buildLandCoverage();
       bool checkLandCoverage(const SharedUnsignedMatrix& coverageMatrix);
       void findLandRoute();
@@ -55,6 +57,7 @@ namespace SV::pathfinder
 
       SharedUnsignedMatrix m_currentCoverage;
       std::vector<SharedUnsignedMatrix> m_coverageHistory;
+      std::vector<std::vector<task_holder_statistic::statistic_unit>> m_holderStatisticHistory;
 
       TaskStorage m_taskPool;
       std::shared_ptr<TaskStorage> m_taskPacket;

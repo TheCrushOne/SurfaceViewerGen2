@@ -16,12 +16,12 @@ namespace SV::pathfinder
       ~MultithreadComputingManager();
 
       void SetHolderCount(size_t count);
-      void SetTaskPacketFinishCallback(std::function<void(void)> callback);
+      void SetTaskPacketFinishCallback(TaskHolderGroupFinishCallback callback);
 
       void LaunchTaskPacket(std::shared_ptr<TaskStorage> taskPacket);
       void Finale();
    private:
       TaskHolders m_holders;
-      std::function<void(void)> m_callback;
+      TaskHolderGroupFinishCallback m_callback;
    };
 }

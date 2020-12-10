@@ -26,9 +26,26 @@ namespace SV::pathfinder
    {
       std::function<void(void)> runnable;
       size_t index;
+      unsigned long start_ts, finish_ts;
+      size_t holder_idx;
       //std::function<settings::route(settings::route&, const std::shared_ptr<Matrix<SVCG::route_point>>, size_t, bool)> runnable;
       TaskStatus status;
    };
+
+   struct task_holder_statistic
+   {
+      struct statistic_unit
+      {
+         size_t holder_idx;
+         size_t task_idx;
+         unsigned long start_ts;
+         unsigned long finish_ts;
+      };
+
+      std::vector<statistic_unit> stat_data;
+   };
+
+   typedef std::function<void(const task_holder_statistic*)> TaskHolderGroupFinishCallback;
 
    class TaskHolder : public Central
    {
@@ -39,10 +56,12 @@ namespace SV::pathfinder
       static void SetTaskPacket(std::shared_ptr<std::vector<task_unit>> taskPacket) { m_packet = taskPacket; }
 
       void Launch();
+      void SetIdx(size_t idx) { holder_idx = idx; }
 
       static void InitSynchronizer();
       static void DeInitSynchronizer();
-      static void SetTaskPacketFinishCallback(std::function<void(void)> callback) { m_callback = callback; }
+      static void ClearStatistic();
+      static void SetTaskPacketFinishCallback(TaskHolderGroupFinishCallback callback) { m_callback = callback; }
 
       // NOTE: они не совсем жесткие, т.е. это скорее try
       static void ForceInnerLock();
@@ -56,10 +75,12 @@ namespace SV::pathfinder
    private:
       HolderStatus status;
       std::function<void(void)> callback;
+      size_t holder_idx;
 
+      static std::shared_ptr<task_holder_statistic> m_stat;
       static std::shared_ptr<std::vector<task_unit>> m_packet;
       static std::unique_ptr<SemaphoreType> m_sema;
-      static std::function<void(void)> m_callback;
+      static TaskHolderGroupFinishCallback m_callback;
       static bool m_crsRaised;
    };
 }

@@ -1,13 +1,16 @@
 #include "stdafx.h"
 #include "TaskHolder.h"
 
+#define CURTIME_MS_EPOCH() std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
+
 using namespace SV;
 using namespace SV::pathfinder;
 std::recursive_mutex g_mutex;
 
-std::unique_ptr<SemaphoreType> TaskHolder::m_sema = nullptr;
+std::shared_ptr<task_holder_statistic> TaskHolder::m_stat = {};
 std::shared_ptr<std::vector<task_unit>> TaskHolder::m_packet = nullptr;
-std::function<void(void)> TaskHolder::m_callback = nullptr;
+std::unique_ptr<SemaphoreType> TaskHolder::m_sema = nullptr;
+TaskHolderGroupFinishCallback TaskHolder::m_callback = nullptr;
 bool TaskHolder::m_crsRaised = false;
 
 CRITICAL_SECTION critical_inner, critical_outer, critical_chck;
@@ -39,6 +42,11 @@ void TaskHolder::DeInitSynchronizer()
    }
 }
 
+void TaskHolder::ClearStatistic()
+{
+   TaskHolder::m_stat.get()->stat_data.clear();
+}
+
 void TaskHolder::ForceInnerLock()
 {
    EnterCriticalSection(&critical_inner);
@@ -57,7 +65,7 @@ void TaskHolder::Launch()
 
 void TaskHolder::finish()
 {
-   m_callback();
+   m_callback(TaskHolder::m_stat.get());
 }
 
 void TaskHolder::onTaskHolderFinished()
@@ -105,8 +113,12 @@ void TaskHolder::onFinished(bool fromLaunch)
 
 void TaskHolder::launchSingleTask(task_unit& task)
 {
+   task.start_ts = CURTIME_MS_EPOCH();
    task.runnable();
+   task.finish_ts = CURTIME_MS_EPOCH();
+   task.holder_idx = holder_idx;
    EnterCriticalSection(&critical_inner);
+
    //GetPack()->comm->Message(ICommunicator::MessageType::MT_INFO, "task finished: thread [%d], packet size [%d], idx [%d]", std::this_thread::get_id(), m_packet->size(), task.index);
    task.status = TaskStatus::TS_FINISHED;
    status = HolderStatus::HS_FINISHED;

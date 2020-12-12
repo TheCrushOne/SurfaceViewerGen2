@@ -112,7 +112,7 @@ void RobotScenarioPlayer::RecountRoutes()
 void RobotScenarioPlayer::RecountResearch()
 {
    // NOTE: пока так
-   m_researchEngine->LaunchResearch([this]() { LogResearchResult(); });
+   //m_researchEngine->LaunchResearch([this]() { LogResearchResult(); }, );
 }
 
 void RobotScenarioPlayer::LogResearchResult()

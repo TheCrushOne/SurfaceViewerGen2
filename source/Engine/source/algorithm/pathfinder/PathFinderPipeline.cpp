@@ -22,7 +22,7 @@ PathFinderPipeline::PathFinderPipeline(central_pack* pack)
    , Central(pack)
 {
    // TODO: check!!!
-   m_taskManager->SetTaskPacketFinishCallback([this](const task_holder_statistic* stat) { onAirRoutePacketFinished(stat); });
+   m_taskManager->SetTaskPacketFinishCallback([this](const research::task_holder_statistic* stat) { onAirRoutePacketFinished(stat); });
 }
 
 PathFinderPipeline::~PathFinderPipeline()
@@ -126,7 +126,7 @@ void PathFinderPipeline::formatTaskPacket()
 //   onAirRoutePacketFinished();
 //}
 
-void PathFinderPipeline::onAirRoutePacketFinished(const task_holder_statistic* stat)
+void PathFinderPipeline::onAirRoutePacketFinished(const research::task_holder_statistic* stat)
 {
    static const unsigned long long int threadCountSpec = std::thread::hardware_concurrency();
 

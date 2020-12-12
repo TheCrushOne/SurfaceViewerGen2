@@ -4,6 +4,7 @@
 #include "Semaphore.h"
 #include "common/pathfinder_structs.h"
 #include "common/central_class.h"
+#include "common/statistic_types.h"
 
 namespace SV::pathfinder
 {
@@ -32,20 +33,7 @@ namespace SV::pathfinder
       TaskStatus status;
    };
 
-   struct task_holder_statistic
-   {
-      struct statistic_unit
-      {
-         size_t holder_idx;
-         size_t task_idx;
-         unsigned long start_ts;
-         unsigned long finish_ts;
-      };
-
-      std::vector<statistic_unit> stat_data;
-   };
-
-   typedef std::function<void(const task_holder_statistic*)> TaskHolderGroupFinishCallback;
+   typedef std::function<void(const research::task_holder_statistic*)> TaskHolderGroupFinishCallback;
 
    class TaskHolder : public Central
    {
@@ -77,7 +65,7 @@ namespace SV::pathfinder
       std::function<void(void)> callback;
       size_t holder_idx;
 
-      static std::shared_ptr<task_holder_statistic> m_stat;
+      static std::shared_ptr<research::task_holder_statistic> m_stat;
       static std::shared_ptr<std::vector<task_unit>> m_packet;
       static std::unique_ptr<SemaphoreType> m_sema;
       static TaskHolderGroupFinishCallback m_callback;

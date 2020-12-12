@@ -25,7 +25,7 @@ namespace SV::engine
       pathfinder::GeoMatrix m_data;
       pathfinder::path_finder_indata m_indata;
       std::shared_ptr<engine::ResearchEngine> m_researchEngine;
-      std::shared_ptr<engine::PathfindingEngine> m_pathfindingEngine;
+      //std::shared_ptr<engine::PathfindingEngine> m_pathfindingEngine;
       std::shared_ptr<settings::application_settings> m_settings;
    };
 }

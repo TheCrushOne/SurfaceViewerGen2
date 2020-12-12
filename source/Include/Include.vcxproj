@@ -69,6 +69,7 @@
     <ClInclude Include="source\common\properties.h" />
     <ClInclude Include="source\common\research_structs.h" />
     <ClInclude Include="source\common\servicable.h" />
+    <ClInclude Include="source\common\statistic_types.h" />
     <ClInclude Include="source\common\transceiver_types.h" />
     <ClInclude Include="source\common\utils.h" />
     <ClInclude Include="source\crossdllinterface\ChecksumServiceInterface.h" />

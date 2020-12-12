@@ -179,6 +179,9 @@ public:
    template<>
    static unsigned int valGetter(const Json::Value& j) { return j.asUInt(); }
 
+   template<>
+   static size_t valGetter(const Json::Value& j) { return j.asUInt(); }
+
    template<typename T>
    static std::vector<T> valVectorExtractor(const Json::Value& j, std::function<T(const Json::Value&)> getter)
    {
@@ -199,10 +202,13 @@ public:
    static std::vector<double> valVectorGetter(const Json::Value& j) { return valVectorExtractor<double>(j, [](const Json::Value& j)->double { return j.asDouble(); }); }
 
    template<>
-   static std::vector<int> valVectorGetter(const Json::Value& j) { return valVectorExtractor<int>(j, [](const Json::Value& j)->int { return j.asDouble(); }); }
+   static std::vector<int> valVectorGetter(const Json::Value& j) { return valVectorExtractor<int>(j, [](const Json::Value& j)->int { return j.asInt(); }); }
 
    template<>
-   static std::vector<unsigned int> valVectorGetter(const Json::Value& j) { return valVectorExtractor<unsigned int>(j, [](const Json::Value& j)->unsigned int { return j.asDouble(); }); }
+   static std::vector<unsigned int> valVectorGetter(const Json::Value& j) { return valVectorExtractor<unsigned int>(j, [](const Json::Value& j)->unsigned int { return j.asUInt(); }); }
+
+   template<>
+   static std::vector<size_t> valVectorGetter(const Json::Value& j) { return valVectorExtractor<size_t>(j, [](const Json::Value& j)->size_t { return j.asUInt(); }); }
 
    template<typename T>
    static settings::range_data<T> rangeReader(const Json::Value& j)

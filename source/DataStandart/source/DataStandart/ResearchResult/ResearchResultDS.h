@@ -10,6 +10,15 @@ namespace SV::data_standart
       : public iResearchResultDataStandart
       , public DataStandart<DataStandartType::DST_RESRES, research_result_data_standart>
    {
+      struct tag
+      {
+         static constexpr char history[] = "history";
+
+         static constexpr char start_ts[] = "start_ts";
+         static constexpr char finish_ts[] = "finish_ts";
+         static constexpr char task_idx[] = "task_idx";
+         static constexpr char holder_idx[] = "holder_idx";
+      };
    public:
       ResearchResultDataStandart(central_pack* pack, LPCSTR base_folder, navigation_dispatcher::iComService* pService)
          : DataStandart(pack, base_folder, pService)
@@ -32,17 +41,24 @@ namespace SV::data_standart
       // Read
       // Write
 
-      // iSurfaceViewerGenMapDataStandart
+      // iResearchResultDataStandart
       // Common
       // Read
       // Write
+      void SetData(const research::statistic_data_history&) override final;
    private:
       // Common
       std::string getDataFilePath() { return std::string(getPath()) + "\\universal.rres"; }
       // Read
       // Write
+      static Json::Value writeStatisticHistory(const research::statistic_data_history& history);
+      static Json::Value writeStatisticLine(const research::statistic_data& statistic);
+      static Json::Value writeStatisticStamp(const research::task_holder_statistic::statistic_unit& statistic);
+      void saveStatisticDataToFile();
    private:
       void resolvePathDee();
       LPCSTR getPath() override final { return m_dataStandartData.folder.c_str(); }
+   private:
+      research::statistic_data_history m_statistic;
    };
 }

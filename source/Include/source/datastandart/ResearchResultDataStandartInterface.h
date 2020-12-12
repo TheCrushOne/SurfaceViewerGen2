@@ -1,13 +1,15 @@
 #pragma once
 #include "DataStandart.h"
 #include "common/pathfinder_structs.h"
+#include "common/statistic_types.h"
 #include "navdisp/ComService.h"
 
 namespace SV::data_standart
 {
-   struct iResearchResultDataStandart : public iDataStandart
+   struct iResearchResultDataStandart
+      : public iDataStandart
    {
-      //virtual void SetData(const pathfinder::GeoMatrix&) = 0;
+      virtual void SetData(const research::statistic_data_history&) = 0;
       //virtual pathfinder::GeoMatrix& GetData() = 0;
       //virtual settings::unit_source_data& GetUnitData() = 0;
    };

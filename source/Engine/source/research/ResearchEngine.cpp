@@ -7,8 +7,8 @@ std::recursive_mutex g_researchEngineMutex;
 
 ResearchEngine::ResearchEngine(central_pack* pack)
    : EngineBase(pack)
+   , m_indata(std::make_shared<pathfinder::path_finder_indata>())
    //, m_routedata(std::make_shared<pathfinder::route_data>())
-   //, m_pathfinder(std::make_unique<pathfinder::PathFinderPipeline>(pack))
 {
    /*m_noGoLowLevel = 73.f;
    m_noGoHighLevel = 120.f;
@@ -17,9 +17,15 @@ ResearchEngine::ResearchEngine(central_pack* pack)
    m_maxDangerAngle = 70.f;*/
 }
 
-void ResearchEngine::LaunchResearch(std::function<void(void)> callback)
+void ResearchEngine::LaunchResearch(std::function<void(void)> callback, std::shared_ptr<settings::application_settings> settings)
 {
+   m_settings = settings;
    m_endRoundCallback = callback;
+   std::thread(&ResearchEngine::launchResearch, this).detach();
+}
+
+void ResearchEngine::launchResearch()
+{
    auto& res_stt = m_settings->res_stt;
    generateResMap(res_stt.map_size);
    switch (res_stt.res_type)
@@ -263,7 +269,7 @@ void ResearchEngine::threadResearch(/*const std::shared_ptr<SVM::iMatrix<Surface
                   research::ThreadResearchComplexStorage::SuperCell::Result{
                      0
                   }
-                  });
+               });
             }
          }
       }
@@ -294,7 +300,6 @@ void ResearchEngine::generateResMap(size_t mapSize)
 
 void ResearchEngine::threadResNextStep()
 {
-   ATLASSERT(false);
    std::lock_guard<std::recursive_mutex> guard(g_researchEngineMutex);
    __int64 startTime;
    CURTIME_MS(startTime);
@@ -313,32 +318,34 @@ void ResearchEngine::threadResNextStep()
    auto& threadRes = m_threadResStorage.data.at(m_threadTaskCurrentIdx);
    auto& threadResIndex = threadRes.index;
    threadRes.result.time.start = startTime;
-   pathfinder::path_finder_indata data;
-   generateResScenarioData(data, res_stt, threadResIndex);
+   generateResScenarioData(res_stt, threadResIndex);
    pathfinder::path_finder_settings stt(true, {}, true, true, 0, 0, false);
    stt.packet_size = threadResIndex.task_pool_value;
    stt.thread_count = threadResIndex.thread_pool_value;
+   m_indata->settings = stt;
    GetPack()->comm->Message(ICommunicator::MessageType::MT_INFO, "task started: [fly: %i, length: %f, task: %i, thread: %i]", threadResIndex.fly_count_value, threadResIndex.length_value, threadResIndex.task_pool_value, threadResIndex.thread_pool_value);
-   std::thread(&ResearchEngine::processPathFindInternal, this, data/*, stt*/, [this]() { threadResNextStep(); }).detach();
+   std::thread(&ResearchEngine::processPathFindInternal, this, *m_indata.get()/*, stt*/, [this]() { threadResNextStep(); }).detach();
    //m_communicator->Message(ICommunicator::MS_Debug, "Thread task idx %i", m_threadTaskCurrentIdx);
    m_threadTaskCurrentIdx++;
    GetPack()->comm->SetProgress(static_cast<unsigned int>(static_cast<double>(m_threadTaskCurrentIdx) / static_cast<double>(m_threadResStorage.data.size()) * 100.));
 }
 
-void ResearchEngine::generateResScenarioData(pathfinder::path_finder_indata& data, const settings::research_settings& stt, const research::ThreadResearchComplexStorage::SuperCell::Index& idx)
+void ResearchEngine::generateResScenarioData(const settings::research_settings& stt, const research::ThreadResearchComplexStorage::SuperCell::Index& idx)
 {
-   data.unit_data.air_units.resize(idx.fly_count_value);
-   data.unit_data.land_units.resize(1);
+   m_indata->unit_data.air_units.clear();
+   m_indata->unit_data.land_units.clear();
+   m_indata->unit_data.air_units.resize(idx.fly_count_value);
+   m_indata->unit_data.land_units.resize(1);
    int mapSize = static_cast<int>(stt.map_size);
    int curSize = static_cast<int>(idx.length_value);
    // NOTE: индекс предельной точки отличается от размера карты на 1
    int fnCoord = curSize < mapSize - 1 ? curSize : mapSize - 1;
-   for (auto& elem : data.unit_data.air_units)
+   for (auto& elem : m_indata->unit_data.air_units)
    {
       elem.start = CG::route_point{ 0, 0 };
       elem.finish = CG::route_point{ fnCoord, fnCoord };
    }
-   for (auto& elem : data.unit_data.land_units)
+   for (auto& elem : m_indata->unit_data.land_units)
    {
       elem.start = CG::route_point{ 0, 0 };
       elem.finish = CG::route_point{ fnCoord, fnCoord };

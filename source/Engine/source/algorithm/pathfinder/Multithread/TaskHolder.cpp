@@ -7,7 +7,7 @@ using namespace SV;
 using namespace SV::pathfinder;
 std::recursive_mutex g_mutex;
 
-std::shared_ptr<task_holder_statistic> TaskHolder::m_stat = {};
+std::shared_ptr<research::task_holder_statistic> TaskHolder::m_stat = std::make_shared<research::task_holder_statistic>();
 std::shared_ptr<std::vector<task_unit>> TaskHolder::m_packet = nullptr;
 std::unique_ptr<SemaphoreType> TaskHolder::m_sema = nullptr;
 TaskHolderGroupFinishCallback TaskHolder::m_callback = nullptr;
@@ -118,7 +118,7 @@ void TaskHolder::launchSingleTask(task_unit& task)
    task.finish_ts = CURTIME_MS_EPOCH();
    task.holder_idx = holder_idx;
    EnterCriticalSection(&critical_inner);
-
+   m_stat.get()->stat_data.emplace_back(research::task_holder_statistic::statistic_unit{ task.holder_idx, task.index, task.start_ts, task.finish_ts });
    //GetPack()->comm->Message(ICommunicator::MessageType::MT_INFO, "task finished: thread [%d], packet size [%d], idx [%d]", std::this_thread::get_id(), m_packet->size(), task.index);
    task.status = TaskStatus::TS_FINISHED;
    status = HolderStatus::HS_FINISHED;

@@ -26,27 +26,27 @@
 				<type>PngHeightMap</type>
 				<name>PngSrc</name>
 				<params>
-					<file>$(PNG_SRC)</file>
+					<file>..\..\..\scenarios\gantt_demo\gantt_demo.png</file>
 				</params>
 			</data_standart>
 			<data_standart>
 				<type>SurfaceViewerGenMap</type>
 				<name>SVGMDst</name>
 				<params>
-					<folder>$(SVGM_FLDR)</folder>
-					<unit_data>$(UNIT_DATA)</unit_data>
-					<env_stt>$(ENV_STT)</env_stt>
-					<map_stt>$(MAP_STT)</map_stt>
-					<pth_stt>$(PTH_STT)</pth_stt>
-					<res_stt>$(RES_STT)</res_stt>
-					<sim_stt>$(SIM_STT)</sim_stt>
+					<folder>..\..\..\cache\gantt_demo\svgm</folder>
+					<unit_data>..\..\..\scenarios\gantt_demo\gantt_demo.udp</unit_data>
+					<env_stt>..\..\..\scenarios\gantt_demo\gantt_demo.es</env_stt>
+					<!--map_stt>$(MAP_STT)</map_stt-->
+					<pth_stt>..\..\..\scenarios\gantt_demo\gantt_demo.ps</pth_stt>
+					<res_stt>..\..\..\scenarios\gantt_demo\gantt_demo.rs</res_stt>
+					<!--sim_stt>$(SIM_STT)</sim_stt-->
 				</params>
 			</data_standart>
 			<data_standart>
-				<type>PathData</type>
-				<name>PathDst</name>
+				<type>ResearchResult</type>
+				<name>RResDst</name>
 				<params>
-					<folder>$(PATHS_DST)</folder>
+					<folder>..\..\..\cache\gantt_demo\research</folder>
 				</params>
 			</data_standart>
 		</data_standarts>

@@ -54,7 +54,9 @@ namespace SV::file_utils
          , path(ps.path)
          , translator(ps.translator)
       {}
-      path_storage_unit() {}
+      path_storage_unit()
+         : translator([](const std::string&)->std::string { return ""; })
+      {}
       path_storage_unit(const std::string& base_path, const rapida_filename_translator& base_translator)
          : base(base_path)
          , translator(base_translator)

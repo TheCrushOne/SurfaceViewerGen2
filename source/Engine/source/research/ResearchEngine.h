@@ -17,12 +17,14 @@ namespace SV::engine
    public:
       ResearchEngine(central_pack* pack);
    public:
-      void LaunchResearch(std::function<void(void)>) override final;
+      void LaunchResearch(std::function<void(void)>, std::shared_ptr<settings::application_settings>) override final;
       const research::TimeResearchComplexStorage& GetTimeResearchResult() const override final { return m_timeResStorage; }
       const research::LengthResearchComplexStorage& GetLengthResearchResult() const override final { return m_lengthResStorage; }
       const research::ThreadResearchComplexStorage& GetThreadResearchResult() const override final { return m_threadResStorage; }
+      const research::statistic_data_history& GetStatisticHistory() const override final { return m_pathfinder->GetStatisticHistory(); }
       void Release() override final { delete this; }
    private:
+      void launchResearch();
       void timeResearch();
       void lengthResearch();
       void threadResearch();
@@ -32,9 +34,8 @@ namespace SV::engine
       void logThreadResearchResult();
 
       void threadResNextStep();
-      void generateResScenarioData(pathfinder::path_finder_indata&, const settings::research_settings&, const research::ThreadResearchComplexStorage::SuperCell::Index&);
+      void generateResScenarioData(const settings::research_settings&, const research::ThreadResearchComplexStorage::SuperCell::Index&);
    private:
-      std::shared_ptr<settings::application_settings> m_settings;
       // TODO: восстановить
       research::TimeResearchComplexStorage m_timeResStorage;
       research::LengthResearchComplexStorage m_lengthResStorage;
@@ -43,5 +44,7 @@ namespace SV::engine
       std::function<void(void)> m_endRoundCallback;
 
       size_t m_threadTaskCurrentIdx;
+
+      std::shared_ptr<pathfinder::path_finder_indata> m_indata;
    };
 }

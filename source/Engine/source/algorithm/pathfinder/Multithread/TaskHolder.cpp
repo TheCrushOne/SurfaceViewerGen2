@@ -1,7 +1,8 @@
 #include "stdafx.h"
 #include "TaskHolder.h"
+#include <time.h>
 
-#define CURTIME_MS_EPOCH() std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
+#define CURTIME_MS_EPOCH() clock();//std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
 
 using namespace SV;
 using namespace SV::pathfinder;
@@ -11,6 +12,7 @@ std::shared_ptr<research::task_holder_statistic> TaskHolder::m_stat = std::make_
 std::shared_ptr<std::vector<task_unit>> TaskHolder::m_packet = nullptr;
 std::unique_ptr<SemaphoreType> TaskHolder::m_sema = nullptr;
 TaskHolderGroupFinishCallback TaskHolder::m_callback = nullptr;
+__int64 TaskHolder::m_startTime = 0;
 bool TaskHolder::m_crsRaised = false;
 
 CRITICAL_SECTION critical_inner, critical_outer, critical_chck;
@@ -40,6 +42,11 @@ void TaskHolder::DeInitSynchronizer()
       DeleteCriticalSection(&critical_outer);
       DeleteCriticalSection(&critical_chck);
    }
+}
+
+void TaskHolder::FixCurrentTime()
+{
+   TaskHolder::m_startTime = CURTIME_MS_EPOCH();
 }
 
 void TaskHolder::ClearStatistic()
@@ -113,9 +120,9 @@ void TaskHolder::onFinished(bool fromLaunch)
 
 void TaskHolder::launchSingleTask(task_unit& task)
 {
-   task.start_ts = CURTIME_MS_EPOCH();
+   task.start_ts = CURTIME_MS_EPOCH() - m_startTime;
    task.runnable();
-   task.finish_ts = CURTIME_MS_EPOCH();
+   task.finish_ts = CURTIME_MS_EPOCH() - m_startTime;
    task.holder_idx = holder_idx;
    EnterCriticalSection(&critical_inner);
    m_stat.get()->stat_data.emplace_back(research::task_holder_statistic::statistic_unit{ task.holder_idx, task.index, task.start_ts, task.finish_ts });

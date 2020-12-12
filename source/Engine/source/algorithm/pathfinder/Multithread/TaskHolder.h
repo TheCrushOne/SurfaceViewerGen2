@@ -51,6 +51,7 @@ namespace SV::pathfinder
       static void ClearStatistic();
       static void SetTaskPacketFinishCallback(TaskHolderGroupFinishCallback callback) { m_callback = callback; }
 
+      static void FixCurrentTime();
       // NOTE: они не совсем жесткие, т.е. это скорее try
       static void ForceInnerLock();
       static void ForceInnerUnlock();
@@ -70,5 +71,6 @@ namespace SV::pathfinder
       static std::unique_ptr<SemaphoreType> m_sema;
       static TaskHolderGroupFinishCallback m_callback;
       static bool m_crsRaised;
+      static __int64 m_startTime;
    };
 }

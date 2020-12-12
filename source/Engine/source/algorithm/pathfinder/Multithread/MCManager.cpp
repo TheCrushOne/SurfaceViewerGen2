@@ -28,6 +28,7 @@ void MultithreadComputingManager::SetHolderCount(size_t count)
 void MultithreadComputingManager::LaunchTaskPacket(std::shared_ptr<TaskStorage> taskPacket)
 {
    TaskHolder::SetTaskPacket(taskPacket);
+   TaskHolder::FixCurrentTime();
    Finale();
    //GetPack()->comm->Message(ICommunicator::MessageType::MT_INFO, "Init sync");
    TaskHolder::InitSynchronizer();

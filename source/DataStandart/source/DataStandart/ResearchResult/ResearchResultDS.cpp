@@ -24,34 +24,52 @@ void ResearchResultDataStandart::saveStatisticDataToFile()
 {
    std::string dataFilePath = getDataFilePath();
    std::ofstream file(dataFilePath);
+   reorganizeStatistic();
    Json::Value data;
-   data[tag::history] = writeStatisticHistory(m_statistic);
+   data[tag::history] = writeStatisticHistory(m_organizedStatistic);
    file << data;
 }
 
-Json::Value ResearchResultDataStandart::writeStatisticHistory(const research::statistic_data_history& history)
+void ResearchResultDataStandart::reorganizeStatistic()
+{
+   for (const auto& stat : m_statistic)
+   {
+      for (const auto& stamp : stat)
+      {
+         if (m_organizedStatistic.stat.find(stamp.holder_idx) == m_organizedStatistic.stat.end())
+            m_organizedStatistic.stat.emplace(stamp.holder_idx, organized_statistic::holder_data());
+         auto& data = m_organizedStatistic.stat.at(stamp.holder_idx).data;
+         if (data.find(stamp.task_idx) == data.end())
+            data.emplace(stamp.task_idx, organized_statistic::holder_data::task_data());
+         data.at(stamp.task_idx).start_ts = stamp.start_ts;
+         data.at(stamp.task_idx).finish_ts = stamp.finish_ts;
+      }
+   }   
+}
+
+Json::Value ResearchResultDataStandart::writeStatisticHistory(const organized_statistic& history)
 {
    Json::Value jhistory(Json::arrayValue);
-   for (const auto& stat : history)
-      jhistory.append(writeStatisticLine(stat));
+   for (const auto& stat : history.stat)
+      jhistory.append(writeStatisticLine(stat.second));
    return jhistory;
 }
 
-Json::Value ResearchResultDataStandart::writeStatisticLine(const research::statistic_data& statistic)
+Json::Value ResearchResultDataStandart::writeStatisticLine(const organized_statistic::holder_data& statistic)
 {
    Json::Value jstat(Json::arrayValue);
-   for (const auto& stamp : statistic)
-      jstat.append(writeStatisticStamp(stamp));
+   for (const auto& stamp : statistic.data)
+      jstat.append(writeStatisticStamp(stamp.second));
    return jstat;
 }
 
-Json::Value ResearchResultDataStandart::writeStatisticStamp(const research::task_holder_statistic::statistic_unit& stamp)
+Json::Value ResearchResultDataStandart::writeStatisticStamp(const organized_statistic::holder_data::task_data& stamp)
 {
    Json::Value jstamp;
    jstamp[tag::start_ts] = stamp.start_ts;
    jstamp[tag::finish_ts] = stamp.finish_ts;
-   jstamp[tag::holder_idx] = stamp.holder_idx;
-   jstamp[tag::task_idx] = stamp.task_idx;
+   //jstamp[tag::holder_idx] = stamp.holder_idx;
+   //jstamp[tag::task_idx] = stamp.task_idx;
    return jstamp;
 }
 

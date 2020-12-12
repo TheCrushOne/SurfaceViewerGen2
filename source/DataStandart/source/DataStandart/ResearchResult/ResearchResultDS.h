@@ -19,6 +19,22 @@ namespace SV::data_standart
          static constexpr char task_idx[] = "task_idx";
          static constexpr char holder_idx[] = "holder_idx";
       };
+
+      struct organized_statistic
+      {
+         struct holder_data
+         {
+            struct task_data
+            {
+               __int64 start_ts;
+               __int64 finish_ts;
+            };
+
+            std::unordered_map<size_t, task_data> data;
+         };
+
+         std::unordered_map<size_t, holder_data> stat;
+      };
    public:
       ResearchResultDataStandart(central_pack* pack, LPCSTR base_folder, navigation_dispatcher::iComService* pService)
          : DataStandart(pack, base_folder, pService)
@@ -49,16 +65,18 @@ namespace SV::data_standart
    private:
       // Common
       std::string getDataFilePath() { return std::string(getPath()) + "\\universal.rres"; }
+      void reorganizeStatistic();
       // Read
       // Write
-      static Json::Value writeStatisticHistory(const research::statistic_data_history& history);
-      static Json::Value writeStatisticLine(const research::statistic_data& statistic);
-      static Json::Value writeStatisticStamp(const research::task_holder_statistic::statistic_unit& statistic);
+      static Json::Value writeStatisticHistory(const organized_statistic& history);
+      static Json::Value writeStatisticLine(const organized_statistic::holder_data& statistic);
+      static Json::Value writeStatisticStamp(const organized_statistic::holder_data::task_data& statistic);
       void saveStatisticDataToFile();
    private:
       void resolvePathDee();
       LPCSTR getPath() override final { return m_dataStandartData.folder.c_str(); }
    private:
       research::statistic_data_history m_statistic;
+      organized_statistic m_organizedStatistic;
    };
 }

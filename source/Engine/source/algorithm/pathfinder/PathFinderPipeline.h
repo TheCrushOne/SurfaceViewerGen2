@@ -29,7 +29,7 @@ namespace SV::pathfinder
       const pathfinder::route_data& GetPaths() const { return m_paths; }
       const SharedUnsignedMatrix& GetCurrentCoverage() const { return m_currentCoverage; }
       const std::vector<SharedUnsignedMatrix>& GetCoverageHistory() const { return m_coverageHistory; }
-      const research::statistic_data_history& GetStatisticHistory() const { return m_holderStatisticHistory; }
+      const research::task_holder_statistic::holder_cluster_run_history& GetStatisticHistory() const { return m_holderStatisticHistory; }
    private:
       void prepareSourcePoints();
       void correctControlPoints();
@@ -44,7 +44,7 @@ namespace SV::pathfinder
       void formatTaskPacket();
       //void onAirRouteTaskHolderFinished();
    public:
-      void onAirRoutePacketFinished(const research::task_holder_statistic* stat);
+      void onAirRoutePacketFinished();
    private:
       void buildLandCoverage();
       bool checkLandCoverage(const SharedUnsignedMatrix& coverageMatrix);
@@ -60,7 +60,7 @@ namespace SV::pathfinder
 
       SharedUnsignedMatrix m_currentCoverage;
       std::vector<SharedUnsignedMatrix> m_coverageHistory;
-      research::statistic_data_history m_holderStatisticHistory;
+      research::task_holder_statistic::holder_cluster_run_history m_holderStatisticHistory;
 
       TaskStorage m_taskPool;
       std::shared_ptr<TaskStorage> m_taskPacket;

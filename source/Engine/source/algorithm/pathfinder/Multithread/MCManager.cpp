@@ -33,7 +33,7 @@ void MultithreadComputingManager::LaunchTaskPacket(std::shared_ptr<TaskStorage> 
    //GetPack()->comm->Message(ICommunicator::MessageType::MT_INFO, "Init sync");
    TaskHolder::InitSynchronizer();
    TaskHolder::ForceInnerLock();
-   TaskHolder::ClearStatistic();
+   //TaskHolder::ClearStatistic();
    for (auto& holder : m_holders)
       std::thread([&holder] { holder.first.Launch(); }).detach();
    TaskHolder::ForceInnerUnlock();

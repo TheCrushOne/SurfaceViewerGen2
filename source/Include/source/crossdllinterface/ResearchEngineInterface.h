@@ -16,7 +16,7 @@ namespace SV::engine
       virtual const research::TimeResearchComplexStorage& GetTimeResearchResult() const = 0;
       virtual const research::LengthResearchComplexStorage& GetLengthResearchResult() const = 0;
       virtual const research::ThreadResearchComplexStorage& GetThreadResearchResult() const = 0;
-      virtual const research::statistic_data_history& GetStatisticHistory() const = 0;
+      virtual const research::task_holder_statistic::experiment_history& GetStatisticHistory() const = 0;
    };
 }
 

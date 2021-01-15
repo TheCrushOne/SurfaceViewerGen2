@@ -12,7 +12,15 @@ namespace SV::data_standart
    {
       struct tag
       {
-         static constexpr char history[] = "history";
+         static constexpr char experiment_history[] = "experiment_history";
+
+         static constexpr char cluster_history[] = "cluster_history";
+
+         static constexpr char cluster_run_data[] = "cluster_run_data";
+
+         static constexpr char holder_run_data[] = "holder_run_data";
+
+         static constexpr char count[] = "count";
 
          static constexpr char start_ts[] = "start_ts";
          static constexpr char finish_ts[] = "finish_ts";
@@ -61,22 +69,25 @@ namespace SV::data_standart
       // Common
       // Read
       // Write
-      void SetData(const research::statistic_data_history&) override final;
+      void SetData(const research::task_holder_statistic::experiment_history&) override final;
    private:
       // Common
       std::string getDataFilePath() { return std::string(getPath()) + "\\universal.rres"; }
       void reorganizeStatistic();
       // Read
       // Write
-      static Json::Value writeStatisticHistory(const organized_statistic& history);
-      static Json::Value writeStatisticLine(const organized_statistic::holder_data& statistic);
-      static Json::Value writeStatisticStamp(const organized_statistic::holder_data::task_data& statistic);
+      static Json::Value writeExperimentHistory(const research::task_holder_statistic::experiment_history& history);
+      static Json::Value writeClusterRunHistory(const research::task_holder_statistic::holder_cluster_run_history& history);
+      static Json::Value writeClusterRunData(const research::task_holder_statistic::holder_cluster_run_data& data);
+      static Json::Value writeHolderRunData(const research::task_holder_statistic::holder_run_data& data);
+      static Json::Value writeUnitData(const research::task_holder_statistic::statistic_unit& data);
       void saveStatisticDataToFile();
    private:
       void resolvePathDee();
       LPCSTR getPath() override final { return m_dataStandartData.folder.c_str(); }
    private:
-      research::statistic_data_history m_statistic;
+      research::task_holder_statistic::experiment_history m_statistic;
       organized_statistic m_organizedStatistic;
+      static size_t m_maxSize;
    };
 }

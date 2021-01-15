@@ -22,7 +22,7 @@ PathFinderPipeline::PathFinderPipeline(central_pack* pack)
    , Central(pack)
 {
    // TODO: check!!!
-   m_taskManager->SetTaskPacketFinishCallback([this](const research::task_holder_statistic* stat) { onAirRoutePacketFinished(stat); });
+   m_taskManager->SetTaskPacketFinishCallback([this]() { onAirRoutePacketFinished(); });
 }
 
 PathFinderPipeline::~PathFinderPipeline()
@@ -44,6 +44,10 @@ void PathFinderPipeline::FindPath(std::function<void(void)> callback, std::share
    m_settings = settings;
    // NOTE: вот на вс€кий очистить надо..
    m_coverageHistory.clear();
+
+   // test 4/8
+   //const int threadCount = 16;   // NOTE: ѕо количеству логических €дер 8+HT
+   m_taskManager->SetHolderCount(m_indata->settings.thread_count);
 
    if (m_indata->settings.multithread)
       findPathMultiThread();
@@ -78,7 +82,8 @@ void PathFinderPipeline::pipelineStep()
 {
    generateIterationStep();
    formatTaskPool();
-   onAirRoutePacketFinished(nullptr);
+   TaskHolder::ClearStatistic();
+   onAirRoutePacketFinished();
 }
 
 void PathFinderPipeline::generateIterationStep()
@@ -126,25 +131,20 @@ void PathFinderPipeline::formatTaskPacket()
 //   onAirRoutePacketFinished();
 //}
 
-void PathFinderPipeline::onAirRoutePacketFinished(const research::task_holder_statistic* stat)
+void PathFinderPipeline::onAirRoutePacketFinished()
 {
    static const unsigned long long int threadCountSpec = std::thread::hardware_concurrency();
-
-   if (stat)
-      m_holderStatisticHistory.emplace_back(stat->stat_data);
 
    if (m_taskPool.size() == 0)
    {
       m_taskManager->Finale();
+      m_holderStatisticHistory.emplace_back(*m_taskManager->GetCurrentStatistic());
       buildLandCoverage();
       GetPack()->comm->Message(ICommunicator::MessageType::MT_INFO, "Land coverage complete");
       return;
    }
    formatTaskPacket();
 
-   // test 4/8
-   //const int threadCount = 16;   // NOTE: ѕо количеству логических €дер 8+HT
-   m_taskManager->SetHolderCount(m_indata->settings.thread_count);
    m_taskManager->LaunchTaskPacket(m_taskPacket);
 }
 

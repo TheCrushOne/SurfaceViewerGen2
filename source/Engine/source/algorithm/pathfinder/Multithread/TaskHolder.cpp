@@ -8,7 +8,7 @@ using namespace SV;
 using namespace SV::pathfinder;
 std::recursive_mutex g_mutex;
 
-std::shared_ptr<research::task_holder_statistic> TaskHolder::m_stat = std::make_shared<research::task_holder_statistic>();
+std::shared_ptr<research::task_holder_statistic::holder_cluster_run_data> TaskHolder::m_stat = std::make_shared<research::task_holder_statistic::holder_cluster_run_data>();
 std::shared_ptr<std::vector<task_unit>> TaskHolder::m_packet = nullptr;
 std::unique_ptr<SemaphoreType> TaskHolder::m_sema = nullptr;
 TaskHolderGroupFinishCallback TaskHolder::m_callback = nullptr;
@@ -51,7 +51,7 @@ void TaskHolder::FixCurrentTime()
 
 void TaskHolder::ClearStatistic()
 {
-   TaskHolder::m_stat.get()->stat_data.clear();
+   TaskHolder::m_stat.get()->clear();
 }
 
 void TaskHolder::ForceInnerLock()
@@ -72,7 +72,7 @@ void TaskHolder::Launch()
 
 void TaskHolder::finish()
 {
-   m_callback(TaskHolder::m_stat.get());
+   m_callback();
 }
 
 void TaskHolder::onTaskHolderFinished()
@@ -125,7 +125,9 @@ void TaskHolder::launchSingleTask(task_unit& task)
    task.finish_ts = CURTIME_MS_EPOCH() - m_startTime;
    task.holder_idx = holder_idx;
    EnterCriticalSection(&critical_inner);
-   m_stat.get()->stat_data.emplace_back(research::task_holder_statistic::statistic_unit{ task.holder_idx, task.index, task.start_ts, task.finish_ts });
+   if (m_stat.get()->find(task.holder_idx) == m_stat.get()->end())
+      m_stat.get()->insert({ task.holder_idx, {} });
+   m_stat.get()->at(task.holder_idx).emplace_back(research::task_holder_statistic::statistic_unit{ task.index, task.start_ts, task.finish_ts });
    //GetPack()->comm->Message(ICommunicator::MessageType::MT_INFO, "task finished: thread [%d], packet size [%d], idx [%d]", std::this_thread::get_id(), m_packet->size(), task.index);
    task.status = TaskStatus::TS_FINISHED;
    status = HolderStatus::HS_FINISHED;

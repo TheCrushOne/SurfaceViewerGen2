@@ -9,7 +9,8 @@ namespace SV::pathfinder
    typedef std::vector<TaskHolderData> TaskHolders;
    typedef std::vector<task_unit> TaskStorage;
 
-   class MultithreadComputingManager : public Central
+   class MultithreadComputingManager
+      : public Central
    {
    public:
       MultithreadComputingManager(central_pack*);
@@ -20,6 +21,8 @@ namespace SV::pathfinder
 
       void LaunchTaskPacket(std::shared_ptr<TaskStorage> taskPacket);
       void Finale();
+
+      const research::task_holder_statistic::holder_cluster_run_data* GetCurrentStatistic() { return TaskHolder::GetStatistic(); }
    private:
       TaskHolders m_holders;
       TaskHolderGroupFinishCallback m_callback;

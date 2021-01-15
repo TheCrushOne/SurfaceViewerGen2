@@ -21,7 +21,7 @@ namespace SV::engine
       const research::TimeResearchComplexStorage& GetTimeResearchResult() const override final { return m_timeResStorage; }
       const research::LengthResearchComplexStorage& GetLengthResearchResult() const override final { return m_lengthResStorage; }
       const research::ThreadResearchComplexStorage& GetThreadResearchResult() const override final { return m_threadResStorage; }
-      const research::statistic_data_history& GetStatisticHistory() const override final { return m_pathfinder->GetStatisticHistory(); }
+      const research::task_holder_statistic::experiment_history& GetStatisticHistory() const override final { return m_history; }
       void Release() override final { delete this; }
    private:
       void launchResearch();
@@ -46,5 +46,6 @@ namespace SV::engine
       size_t m_threadTaskCurrentIdx;
 
       std::shared_ptr<pathfinder::path_finder_indata> m_indata;
+      research::task_holder_statistic::experiment_history m_history;
    };
 }

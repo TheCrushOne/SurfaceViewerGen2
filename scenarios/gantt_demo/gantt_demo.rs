@@ -20,7 +20,7 @@
 		"step" : 1,
 		"max" : 1,
 		"values" : [
-			16
+			8
 		]
 	},
 	"task_pool_range" : {
@@ -28,10 +28,7 @@
 		"step" : 1,
 		"max" : 1,
 		"values" : [
-			1,
-			4,
-			8,
-			16
+			10
 		]
 	},
 	"debug_level" : 1,

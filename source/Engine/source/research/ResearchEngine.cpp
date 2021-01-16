@@ -307,6 +307,7 @@ void ResearchEngine::threadResNextStep()
    if (m_threadTaskCurrentIdx > 0)
    {
       m_history.emplace_back(m_pathfinder->GetStatisticHistory());
+      m_pathfinder->ClearStatisticHistory();
       m_threadResStorage.data.at(m_threadTaskCurrentIdx - 1).result.time.finish = startTime;
       m_threadResStorage.data.at(m_threadTaskCurrentIdx - 1).result.time.apply();
    }

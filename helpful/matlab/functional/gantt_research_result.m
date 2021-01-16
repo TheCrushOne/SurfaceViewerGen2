@@ -64,7 +64,7 @@ holder_run_data = history.cluster_run_data.holder_run_data;
 holder_count = holder_run_data.count;
 max_task_count = 0;
 for holderIdx=0:1:holder_count-1
-    tasklist = holder_run_data.("x" + string(holderIdx));
+    tasklist = holder_run_data.(char("x" + string(holderIdx)));
     task_count = size(tasklist, 1);
     if task_count > max_task_count
         max_task_count = task_count
@@ -79,7 +79,7 @@ for taskIdx=1:1:max_task_count
     series_list(taskIdx) = org.jfree.data.gantt.TaskSeries(string(taskIdx));
 end
 for holderIdx=0:1:holder_count-1
-    tasklist = holder_run_data.("x" + string(holderIdx));
+    tasklist = holder_run_data.(char("x" + string(holderIdx)));
     task_count = size(tasklist, 1);
     for taskIdx=1:1:task_count
         elem = tasklist(taskIdx);

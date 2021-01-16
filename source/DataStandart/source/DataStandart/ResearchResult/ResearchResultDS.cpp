@@ -76,7 +76,7 @@ Json::Value ResearchResultDataStandart::writeClusterRunHistory(const research::t
    }
    /*for (size_t fillerIdx = idx; fillerIdx < m_maxSize; fillerIdx++)
    {
-      jstat.append(writeStatisticStamp(fictive));
+      jstat.append(writeClusterRunData(fictive));
    }*/
    jrundata[tag::cluster_run_data] = jstat;
    return jrundata;
@@ -87,21 +87,33 @@ Json::Value ResearchResultDataStandart::writeClusterRunData(const research::task
    Json::Value jdata;
    Json::Value jdata_inner;
    jdata_inner[tag::count] = data.size();//std::to_string(data.size());
+   size_t maxSize = 0;
    for (const auto& time : data)
    {
-      size_t holderIdx = time.first;
-      jdata_inner[std::to_string(holderIdx)] = writeHolderRunData(time.second);
+      maxSize = maxSize > time.second.size() ? maxSize : time.second.size();
+   }
+   size_t holderIdx = 0;
+   for (const auto& time : data)
+   {
+      //size_t holderIdx = time.first;
+      //size_t holderIdx = time.first;
+      jdata_inner[std::to_string(holderIdx++)] = writeHolderRunData(time.second, maxSize);      
    }
    jdata[tag::holder_run_data] = jdata_inner;
    return jdata;
 }
 
-Json::Value ResearchResultDataStandart::writeHolderRunData(const research::task_holder_statistic::holder_run_data& data)
+Json::Value ResearchResultDataStandart::writeHolderRunData(const research::task_holder_statistic::holder_run_data& data, size_t maxSize)
 {
+   auto fictive = research::task_holder_statistic::statistic_unit{ 0, 0 };
    Json::Value jdata(Json::arrayValue);
    for (const auto& times : data)
    {
       jdata.append(writeUnitData(times));
+   }
+   for (size_t idx = data.size(); idx < maxSize; idx++)
+   {
+      jdata.append(writeUnitData(fictive));
    }
    return jdata;
 }

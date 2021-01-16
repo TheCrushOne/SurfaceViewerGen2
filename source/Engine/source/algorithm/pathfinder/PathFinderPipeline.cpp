@@ -48,6 +48,7 @@ void PathFinderPipeline::FindPath(std::function<void(void)> callback, std::share
    // test 4/8
    //const int threadCount = 16;   // NOTE: По количеству логических ядер 8+HT
    m_taskManager->SetHolderCount(m_indata->settings.thread_count);
+   TaskHolder::FixCurrentTime();
 
    if (m_indata->settings.multithread)
       findPathMultiThread();

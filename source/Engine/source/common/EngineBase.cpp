@@ -15,7 +15,7 @@ void EngineBase::processPathFindInternal(const pathfinder::path_finder_indata& s
    m_indata = std::make_shared<pathfinder::path_finder_indata>(scenarioData);
    // NOTE: радиус пока что тут настраивается
    m_indata->strategy_settings = pathfinder::strategy_settings{ pathfinder::StrategyType::ST_RHOMBOID, 5. };
-   m_indata->settings = pathfinder::path_finder_settings{};
+   //m_indata->settings = pathfinder::path_finder_settings{};
    m_indata->settings.multithread = true;
    m_pathfinder->FindPath([completeCallback]() { completeCallback(); }, m_settings, m_rawdata, m_indata);
    //using namespace std::chrono_literals;

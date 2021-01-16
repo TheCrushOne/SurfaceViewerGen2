@@ -7,12 +7,20 @@ resDataPath = '../../cache/gantt_demo/research/universal.rres';
 jsonDee = jsondecode(fileread(resDataPath));
 experiment_history = jsonDee.experiment_history;
 cluster_history = experiment_history.cluster_history;
-[history_count, dd] = size(cluster_history)
-for historyIdx=1:1:history_count
-    [holder_count, task_count] = size(cluster_history(historyIdx));
-    gantt_research_result(cluster_history(historyIdx), historyIdx);
-end
+[history_count, dd] = size(cluster_history);
 
+historyIdx = 1
+%for historyIdx=1:1:history_count
+    history_shard = cluster_history(historyIdx);
+    [holder_count, task_count] = size(history_shard);   
+    gantt_research_result(history_shard, historyIdx);
+%end
+
+%cdr = history_shard.cluster_run_data.holder_run_data
+    %addr = 'x' + string(1)
+    %cnt1 = char("count")
+    %cnt2 = 'count'
+    %cdr.(addr)
 
 %time_data = []
 %max_task_count = 0

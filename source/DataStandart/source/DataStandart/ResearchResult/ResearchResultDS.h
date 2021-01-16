@@ -79,7 +79,7 @@ namespace SV::data_standart
       static Json::Value writeExperimentHistory(const research::task_holder_statistic::experiment_history& history);
       static Json::Value writeClusterRunHistory(const research::task_holder_statistic::holder_cluster_run_history& history);
       static Json::Value writeClusterRunData(const research::task_holder_statistic::holder_cluster_run_data& data);
-      static Json::Value writeHolderRunData(const research::task_holder_statistic::holder_run_data& data);
+      static Json::Value writeHolderRunData(const research::task_holder_statistic::holder_run_data& data, size_t maxSize);
       static Json::Value writeUnitData(const research::task_holder_statistic::statistic_unit& data);
       void saveStatisticDataToFile();
    private:

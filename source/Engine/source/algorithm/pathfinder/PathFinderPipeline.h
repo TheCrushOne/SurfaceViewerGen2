@@ -30,6 +30,7 @@ namespace SV::pathfinder
       const SharedUnsignedMatrix& GetCurrentCoverage() const { return m_currentCoverage; }
       const std::vector<SharedUnsignedMatrix>& GetCoverageHistory() const { return m_coverageHistory; }
       const research::task_holder_statistic::holder_cluster_run_history& GetStatisticHistory() const { return m_holderStatisticHistory; }
+      void ClearStatisticHistory() { m_holderStatisticHistory.clear(); }
    private:
       void prepareSourcePoints();
       void correctControlPoints();

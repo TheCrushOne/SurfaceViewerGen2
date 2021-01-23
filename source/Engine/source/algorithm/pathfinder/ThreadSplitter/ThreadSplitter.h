@@ -29,7 +29,7 @@ namespace SV::pathfinder
    protected:
       void onTaskPacketComputingFinished();
       void formatTaskPacket();
-      task_unit pathFinderTaskToHolderTask(const path_finder_task&);
+      task_unit pathFinderTaskToHolderTask(path_finder_task&);
       bool nonComputedTasksExists();
    private:
       SV::pathfinder::path_finder_settings m_settings;

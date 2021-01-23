@@ -63,7 +63,7 @@ void PathFinderPipeline::prepareSourcePoints()
    for (size_t idx = 0; idx < m_indata->unit_data.air_units.size(); idx++)
    {
       // NOTE: тут не должно быть к-т, т.к. "литаки" на автораспределении точек по стратегиям
-      ATLASSERT(m_indata->unit_data.air_units.at(idx).control_point_list.empty());
+      ATLASSERT(!m_indata->settings.use_strategies || m_indata->unit_data.air_units.at(idx).control_point_list.empty());
       m_paths.air_routes.at(idx) = m_indata->unit_data.air_units.at(idx);
    }
    for (size_t idx = 0; idx < m_indata->unit_data.land_units.size(); idx++)
@@ -80,6 +80,9 @@ void PathFinderPipeline::findPathMultiThread()
 void PathFinderPipeline::pipelineStep()
 {
    generateIterationStep();
+   if (!m_currentCoverage.get())
+      m_currentCoverage = std::move(m_coverageBuilder->BuildLandCoverage(m_rowCount, m_colCount, m_indata->strategy_settings, m_paths.air_routes));
+   m_routeLinePreparer->SetCoverageMatrix(m_currentCoverage);
    generatePathfinderTaskList(true);
    m_threadSplitter->CountCurrent(m_routeLinePreparer->GetCurrentTaskList(), [this]() { onAirPathsComputed(); });
 }
@@ -174,8 +177,9 @@ void PathFinderPipeline::pipelineFinalize()
 
 bool PathFinderPipeline::updateCurrentCoverage()
 {
+   ATLASSERT(m_currentCoverage.get());
    auto newCoverage = m_coverageBuilder->BuildLandCoverage(m_rowCount, m_colCount, m_indata->strategy_settings, m_paths.air_routes);
-   if (!m_currentCoverage.get() || checkLandCoverage(newCoverage))
+   if (checkLandCoverage(newCoverage))
    {
       m_currentCoverage = std::move(newCoverage);
       m_coverageHistory.emplace_back(m_currentCoverage);

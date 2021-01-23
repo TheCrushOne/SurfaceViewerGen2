@@ -29,6 +29,7 @@ namespace SV::serializer
          static constexpr char iter_count[] = "iter_count";
          static constexpr char length_range[] = "length_range";
          static constexpr char map_size[] = "map_size";
+         static constexpr char split_factor[] = "split_factor";
          static constexpr char multi_thread_test[] = "multi_thread_test";
          static constexpr char res_type[] = "res_type";
          static constexpr char single_thread_test[] = "single_thread_test";

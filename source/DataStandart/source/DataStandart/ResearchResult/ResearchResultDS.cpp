@@ -88,6 +88,12 @@ Json::Value ResearchResultDataStandart::writeClusterRunData(const research::task
    Json::Value jdata_inner;
    jdata_inner[tag::count] = data.size();//std::to_string(data.size());
    size_t maxSize = 0;
+   size_t maxUnitIdx = 0;
+   for (const auto& time : data)
+   {
+      for (const auto& stamp : time.second)
+         maxUnitIdx = stamp.unit_idx > maxUnitIdx ? stamp.unit_idx : maxUnitIdx;
+   }
    for (const auto& time : data)
    {
       maxSize = maxSize > time.second.size() ? maxSize : time.second.size();
@@ -100,6 +106,7 @@ Json::Value ResearchResultDataStandart::writeClusterRunData(const research::task
       jdata_inner[std::to_string(holderIdx++)] = writeHolderRunData(time.second, maxSize);      
    }
    jdata[tag::holder_run_data] = jdata_inner;
+   jdata[tag::unit_count] = maxUnitIdx + 1;
    return jdata;
 }
 

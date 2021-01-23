@@ -57,6 +57,8 @@ namespace SV::pathfinder
       const height_corrector& GetCorrector() const { return corrector; }
    };
 
+   using path_finder_runnable = std::function<void(const CG::route_point&, const CG::route_point&, const path_finder_logic&, const SharedRoutePointMatrix&, const SharedUnsignedMatrix&, bool*)>;
+
    struct path_finder_task
    {
       size_t unit_index;
@@ -67,7 +69,7 @@ namespace SV::pathfinder
       SharedRoutePointMatrix rawdata;
       SharedUnsignedMatrix coverageMatrix;
 
-      std::function<void(void)> runnable;
+      path_finder_runnable runnable;
 
       CG::route_line path;
       bool path_found = false;

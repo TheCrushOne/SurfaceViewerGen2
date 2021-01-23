@@ -19,6 +19,7 @@ namespace SV::data_standart
          static constexpr char cluster_run_data[] = "cluster_run_data";
 
          static constexpr char holder_run_data[] = "holder_run_data";
+         static constexpr char unit_count[] = "unit_count";
 
          static constexpr char count[] = "count";
 

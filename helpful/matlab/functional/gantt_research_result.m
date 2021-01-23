@@ -1,4 +1,4 @@
-function gantt_research_result(history, plot_idx)
+function dataset = gantt_research_result(history, plot_idx)
 % GanttChart Demo with multiple tasks al? JFreeGraph-Demo
 %
 % The code behind is just a demo of what is possible with JFreeChart using it in Matlab. I played a little
@@ -44,11 +44,16 @@ function gantt_research_result(history, plot_idx)
 
 
 %% Start
+%import java.awt.Color;
+%import jfreechart-1.0.19.StandardLegend;
 % create_IntervalCategoryDataset 
 dataset = create_IntervalCategoryDataset(history);
 % generate chart 
 chart = org.jfree.chart.ChartFactory.createGanttChart('Gantt Chart Demo ' + string(plot_idx), 'Task', 'Date', dataset, true, true, false);
-chart.getCategoryPlot().getDomainAxis().setMaximumCategoryLabelWidthRatio(10) 
+chart.getCategoryPlot().getDomainAxis().setMaximumCategoryLabelWidthRatio(10);
+%chart.getCategoryPlot().getRenderer().setLabelGenerator(new CustomCategoryLabelGenerator("{2}", new DecimalFormat("0.00")));
+%StandardLegend legend = (StandardLegend) chart.getLegend();
+%legend.setDisplaySeriesShapes(true);
 % generate Panel
 chartPanel = org.jfree.chart.ChartPanel(chart);
 chartPanel.setPreferredSize(java.awt.Dimension(500, 270));
@@ -62,6 +67,7 @@ function collection = create_IntervalCategoryDataset(history)
 % Create first TaskSeries
 holder_run_data = history.cluster_run_data.holder_run_data;
 holder_count = holder_run_data.count;
+unit_count = history.cluster_run_data.unit_count;
 max_task_count = 0;
 for holderIdx=0:1:holder_count-1
     tasklist = holder_run_data.(char("x" + string(holderIdx)));
@@ -71,29 +77,33 @@ for holderIdx=0:1:holder_count-1
     end
 end
 
-so = org.jfree.data.gantt.TaskSeries('Data Max');
+%series_list = 
+for seriesIdx=1:1:unit_count
+    series_list(seriesIdx) = org.jfree.data.gantt.TaskSeries('Unit ' + string(seriesIdx))
+end
 % TimePeriods
 time_periods = []
 %series_list
-for taskIdx=1:1:max_task_count
-    series_list(taskIdx) = org.jfree.data.gantt.TaskSeries(string(taskIdx));
-end
+%for taskIdx=1:1:max_task_count
+%    series_list(taskIdx) = org.jfree.data.gantt.TaskSeries(string(taskIdx));
+%end
 for holderIdx=0:1:holder_count-1
     tasklist = holder_run_data.(char("x" + string(holderIdx)));
     task_count = size(tasklist, 1);
     for taskIdx=1:1:task_count
         elem = tasklist(taskIdx);
         time_period = org.jfree.data.time.SimpleTimePeriod(elem.start_ts, elem.finish_ts);
-        series_list(taskIdx).add(org.jfree.data.gantt.Task(string(holderIdx), time_period));
+        series_list(elem.unit_idx + 1).add(org.jfree.data.gantt.Task(string(holderIdx), time_period));
     end
-    for taskIdx=task_count:1:max_task_count
-        time_period = org.jfree.data.time.SimpleTimePeriod(0, 0);
-        series_list(taskIdx).add(org.jfree.data.gantt.Task(string(holderIdx), time_period));
-    end
+    %for taskIdx=task_count:1:max_task_count
+%        elem = tasklist(taskIdx);
+%        time_period = org.jfree.data.time.SimpleTimePeriod(0, 0);
+%        series_list(elem.unit_idx + 1).add(org.jfree.data.gantt.Task(string(holderIdx), time_period));
+%    end
 end
 % SeriesCollection
 collection      =  org.jfree.data.gantt.TaskSeriesCollection();
-for taskIdx=1:1:task_count
+for taskIdx=1:1:unit_count
     collection.add(series_list(taskIdx))
 end
 %collection.add(so);

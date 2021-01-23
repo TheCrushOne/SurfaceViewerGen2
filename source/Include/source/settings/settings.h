@@ -142,6 +142,7 @@ namespace SV::settings
       range_data<double> length_range; // длина пути
       size_t iter_count;
       size_t map_size;
+      size_t split_factor;
       bool multi_thread_test;
       bool single_thread_test;
       size_t debug_level;   // TODO: подкорректировать
@@ -150,6 +151,7 @@ namespace SV::settings
          : res_type(ResearchType::RT_TIME)
          , iter_count(0)
          , map_size(0)
+         , split_factor(1) // NOTE: бьется на 1, т.е. не бьется
          , multi_thread_test(false)
          , single_thread_test(false)
          , debug_level(0)

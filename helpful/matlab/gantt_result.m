@@ -3,7 +3,10 @@ javaaddpath jfreecharts/jfreechart-1.0.19.jar
 javaaddpath jfreecharts/jfreechart-1.0.19-experimental.jar            
 javaaddpath jfreecharts/jfreechart-1.0.19-swt.jar  
 
-resDataPath = '../../cache/gantt_demo/research/universal.rres';
+%import java.awt.Color;
+%import org.jfree.chart.StandardLegend;
+
+resDataPath = '../../cache/gantt_demo/research/23012021_193547_universal.rres';
 jsonDee = jsondecode(fileread(resDataPath));
 experiment_history = jsonDee.experiment_history;
 cluster_history = experiment_history.cluster_history;
@@ -13,7 +16,7 @@ historyIdx = 1
 %for historyIdx=1:1:history_count
     history_shard = cluster_history(historyIdx);
     [holder_count, task_count] = size(history_shard);   
-    gantt_research_result(history_shard, historyIdx);
+    ds = gantt_research_result(history_shard, historyIdx);
 %end
 
 %cdr = history_shard.cluster_run_data.holder_run_data

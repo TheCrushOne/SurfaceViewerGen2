@@ -325,6 +325,7 @@ void ResearchEngine::threadResNextStep()
    pathfinder::path_finder_settings stt(true, {}, true, true, 0, 0, false);
    stt.packet_size = threadResIndex.task_pool_value;
    stt.thread_count = threadResIndex.thread_pool_value;
+   stt.land_path = false;  // NOTE: наземный всё равно 1
    m_indata->settings = stt;
    GetPack()->comm->Message(ICommunicator::MessageType::MT_INFO, "task started: [fly: %i, length: %f, task: %i, thread: %i]", threadResIndex.fly_count_value, threadResIndex.length_value, threadResIndex.task_pool_value, threadResIndex.thread_pool_value);
    std::thread(&ResearchEngine::processPathFindInternal, this, *m_indata.get()/*, stt*/, [this]() { threadResNextStep(); }).detach();
@@ -343,15 +344,30 @@ void ResearchEngine::generateResScenarioData(const settings::research_settings& 
    int curSize = static_cast<int>(idx.length_value);
    // NOTE: индекс предельной точки отличается от размера карты на 1
    int fnCoord = curSize < mapSize - 1 ? curSize : mapSize - 1;
+   size_t splitFactor = stt.split_factor;
+   int multiplier = (int)((double)fnCoord / (double)splitFactor);
    for (auto& elem : m_indata->unit_data.air_units)
    {
       elem.start = CG::route_point{ 0, 0 };
       elem.finish = CG::route_point{ fnCoord, fnCoord };
+      for (size_t idx = 0; idx < splitFactor - 1; idx++)
+      {
+         int rx = (int)(idx + 1);
+         auto pt = CG::route_point{ rx * multiplier, rx * multiplier };
+         elem.control_point_list.emplace_back(pt);
+      }
    }
+   
    for (auto& elem : m_indata->unit_data.land_units)
    {
       elem.start = CG::route_point{ 0, 0 };
       elem.finish = CG::route_point{ fnCoord, fnCoord };
+      for (size_t idx = 0; idx < splitFactor - 1; idx++)
+      {
+         int rx = (int)(idx + 1);
+         auto pt = CG::route_point{ rx * multiplier, rx * multiplier };
+         elem.control_point_list.emplace_back(pt);
+      }
    }
 }
 

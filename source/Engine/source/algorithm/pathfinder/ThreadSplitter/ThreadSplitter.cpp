@@ -34,7 +34,7 @@ void ThreadSplitter::CountCurrent(std::vector<path_finder_task>& taskList, std::
 void ThreadSplitter::formatTaskPacket()
 {
    m_taskPacket->clear();
-   std::vector<path_finder_task>::const_iterator it = m_taskList->task_list.begin();
+   std::vector<path_finder_task>::iterator it = m_taskList->task_list.begin();
    while (it != m_taskList->task_list.end() && m_taskPacket->size() < m_settings.packet_size)
    //for (size_t idx = 0; idx < m_settings.packet_size && m_taskList.size() > 0; idx++)
    {
@@ -71,11 +71,14 @@ void ThreadSplitter::onTaskPacketComputingFinished()
    m_taskManager->LaunchTaskPacket(m_taskPacket);
 }
 
-task_unit ThreadSplitter::pathFinderTaskToHolderTask(const path_finder_task& path_task)
+task_unit ThreadSplitter::pathFinderTaskToHolderTask(path_finder_task& path_task)
 {
    task_unit holder_task;
    holder_task.status = TaskStatus::TS_QUEUED;
-   holder_task.runnable = path_task.runnable;
+   holder_task.runnable = [&path_task]() {
+      path_task.runnable(path_task.start, path_task.finish, path_task.logic, path_task.rawdata, path_task.coverageMatrix, &path_task.path_found);
+      path_task.counted = true;
+   };
    holder_task.unit_index = path_task.unit_index;
    holder_task.shard_index = path_task.shard_index;
 

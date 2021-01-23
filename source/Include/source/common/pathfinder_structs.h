@@ -57,6 +57,28 @@ namespace SV::pathfinder
       const height_corrector& GetCorrector() const { return corrector; }
    };
 
+   struct path_finder_task
+   {
+      size_t unit_index;
+      size_t shard_index;
+      CG::route_point start;
+      CG::route_point finish;
+      path_finder_logic logic;
+      SharedRoutePointMatrix rawdata;
+      SharedUnsignedMatrix coverageMatrix;
+
+      std::function<void(void)> runnable;
+
+      CG::route_line path;
+      bool path_found = false;
+
+      bool counted = false;
+
+      path_finder_task(aff_checker checker, height_corrector corrector)
+         : logic(checker, corrector)
+      {}
+   };
+
    // А это рантайм? или че? а то дублируются...
    // Настройки патфайндера...и в принципе всё..
    struct path_finder_settings

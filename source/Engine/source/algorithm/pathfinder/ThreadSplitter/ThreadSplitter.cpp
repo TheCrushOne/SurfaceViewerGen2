@@ -1,0 +1,83 @@
+#include "stdafx.h"
+#include "ThreadSplitter.h"
+
+using namespace SV::pathfinder;
+
+ThreadSplitter::ThreadSplitter(central_pack* pack)
+   : m_taskManager(std::make_unique<MultithreadComputingManager>(pack))
+   , m_taskPacket(std::make_shared<TaskStorage>())
+   , Central(pack)
+{
+   // TODO: check!!!
+   m_taskManager->SetTaskPacketFinishCallback([this]() { onTaskPacketComputingFinished(); });
+}
+
+ThreadSplitter::~ThreadSplitter()
+{}
+
+void ThreadSplitter::SetSettings(const SV::pathfinder::path_finder_settings& stt)
+{
+   m_settings = stt;
+   // test 4/8
+   //const int threadCount = 16;   // NOTE: По количеству логических ядер 8+HT
+   m_taskManager->SetHolderCount(m_settings.multithread ? m_settings.thread_count : 1);
+}
+
+void ThreadSplitter::CountCurrent(std::vector<path_finder_task>& taskList, std::function<void(void)> callback)
+{
+   TaskHolder::ClearStatistic();
+   m_taskList = std::make_shared<task_list_holder>(taskList);
+   m_finalizeCallback = callback;
+   onTaskPacketComputingFinished();
+}
+
+void ThreadSplitter::formatTaskPacket()
+{
+   m_taskPacket->clear();
+   std::vector<path_finder_task>::const_iterator it = m_taskList->task_list.begin();
+   while (it != m_taskList->task_list.end() && m_taskPacket->size() < m_settings.packet_size)
+   //for (size_t idx = 0; idx < m_settings.packet_size && m_taskList.size() > 0; idx++)
+   {
+      if (!it->counted)
+         m_taskPacket->emplace_back(pathFinderTaskToHolderTask(*it));
+      it++;
+   }
+}
+
+bool ThreadSplitter::nonComputedTasksExists()
+{
+   for (const auto& task : m_taskList->task_list)
+   {
+      if (!task.counted)
+         return true;
+   }
+   return false;
+}
+
+void ThreadSplitter::onTaskPacketComputingFinished()
+{
+   static const unsigned long long int threadCountSpec = std::thread::hardware_concurrency();
+
+   if (!nonComputedTasksExists())
+   {
+      m_taskManager->Finale();
+      m_holderStatisticHistory.emplace_back(*m_taskManager->GetCurrentStatistic());
+      //buildLandCoverage();
+      m_finalizeCallback();
+      return;
+   }
+   formatTaskPacket();
+
+   m_taskManager->LaunchTaskPacket(m_taskPacket);
+}
+
+task_unit ThreadSplitter::pathFinderTaskToHolderTask(const path_finder_task& path_task)
+{
+   task_unit holder_task;
+   holder_task.status = TaskStatus::TS_QUEUED;
+   holder_task.runnable = path_task.runnable;
+   holder_task.unit_index = path_task.unit_index;
+   holder_task.shard_index = path_task.shard_index;
+
+   return holder_task;
+}

@@ -25,7 +25,9 @@
     <ClCompile Include="source\algorithm\pathfinder\Multithread\TaskHolder.cpp" />
     <ClCompile Include="source\algorithm\pathfinder\PathFinder.cpp" />
     <ClCompile Include="source\algorithm\pathfinder\PathFinderPipeline.cpp" />
+    <ClCompile Include="source\algorithm\pathfinder\Prepares\RouteLinePreparer.cpp" />
     <ClCompile Include="source\algorithm\pathfinder\StrategyManager.cpp" />
+    <ClCompile Include="source\algorithm\pathfinder\ThreadSplitter\ThreadSplitter.cpp" />
     <ClCompile Include="source\algorithm\statistic.cpp" />
     <ClCompile Include="source\common\EngineBase.cpp" />
     <ClCompile Include="source\main\calibrator.cpp">
@@ -51,7 +53,9 @@
     <ClInclude Include="source\algorithm\pathfinder\Multithread\TaskHolder.h" />
     <ClInclude Include="source\algorithm\pathfinder\PathFinder.h" />
     <ClInclude Include="source\algorithm\pathfinder\PathFinderPipeline.h" />
+    <ClInclude Include="source\algorithm\pathfinder\Prepares\RouteLinePreparer.h" />
     <ClInclude Include="source\algorithm\pathfinder\StrategyManager.h" />
+    <ClInclude Include="source\algorithm\pathfinder\ThreadSplitter\ThreadSplitter.h" />
     <ClInclude Include="source\algorithm\statistic.h" />
     <ClInclude Include="source\common\EngineBase.h" />
     <ClInclude Include="source\main\calibrator.h">

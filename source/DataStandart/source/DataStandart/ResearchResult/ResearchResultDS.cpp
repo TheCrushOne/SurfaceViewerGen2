@@ -124,7 +124,9 @@ Json::Value ResearchResultDataStandart::writeUnitData(const research::task_holde
    jstamp[tag::start_ts] = data.start_ts;
    jstamp[tag::finish_ts] = data.finish_ts;
    //jstamp[tag::holder_idx] = stamp.holder_idx;
-   //jstamp[tag::task_idx] = stamp.task_idx;
+   jstamp[tag::task_idx] = data.task_idx;
+   jstamp[tag::unit_idx] = data.unit_idx;
+   jstamp[tag::shard_idx] = data.shard_idx;
    return jstamp;
 }
 

@@ -25,104 +25,104 @@ PathFinder::~PathFinder()
 /*void fly(Route& route)
 {}*/
 
-namespace
-{
-   bool airCheckAffilation(const SharedRoutePointMatrix& data, const SharedUnsignedMatrix& coverageMatrix, size_t row, size_t col)
-   {
-      return data->Get(row, col).fly == FlyZoneAffilation::FZA_FORBIDDEN;
-   }
+//namespace
+//{
+//   bool airCheckAffilation(const SharedRoutePointMatrix& data, const SharedUnsignedMatrix& coverageMatrix, size_t row, size_t col)
+//   {
+//      return data->Get(row, col).fly == FlyZoneAffilation::FZA_FORBIDDEN;
+//   }
+//
+//   float airCorrector(float y)
+//   {
+//      return y + 50.f;
+//   }
+//}
+//
+//void PathFinder::FindAirPath(settings::route& route, const SharedRoutePointMatrix& rawdata, size_t iterations, bool multithread)
+//{
+//   CG::route_line exp_route;
+//   CG::route_line waypointList;
+//   waypointList.emplace_back(route.start);
+//   waypointList.insert(waypointList.end(), route.control_point_list.begin(), route.control_point_list.end());
+//   waypointList.emplace_back(route.finish);
+//   //Q_ASSERT(waypointList.size() >= 2);
+//   //Q_UNUSED(iterations);
+//   // NOTE: Миграция чего-то непонятно чего...
+//   for (auto& item : waypointList)
+//      item = rawdata->Get(item.row, item.col);
+//
+//   path_finder_logic logic = { airCheckAffilation, airCorrector };
+//   std::string wplist;
+//   for (const auto& wp : waypointList)
+//      wplist.append(std::string("[" + std::to_string(wp.row) + ";" + std::to_string(wp.col) + "]").c_str());
+//   /*THREADDEBUG("st-fn: "
+//            << std::string("[" + std::to_string(route.start.mp.row) + ";" + std::to_string(route.start.mp.col) + "]").c_str()
+//            << std::string("[" + std::to_string(route.finish.mp.row) + ";" + std::to_string(route.finish.mp.col) + "]").c_str());
+//   THREADDEBUG("wp list: " << waypointList.size() << " elems: " << wplist.c_str());*/
+//   exp_route.emplace_back(waypointList.at(0));
+//   for (size_t idx = 0; idx < waypointList.size() - 1; idx++)
+//   {
+//      bool found = false;
+//      auto matrix = std::make_shared<UnsignedMatrix>(rawdata->GetRowCount(), rawdata->GetColCount(), 0);
+//      CG::route_line path = findUniversalPath(waypointList.at(idx), waypointList.at(idx + 1), logic, rawdata, matrix, multithread, &found);
+//      //if (!found)
+//         //Q_ASSERT(false);
+//      //exp_route.clear();
+//      std::reverse(path.begin(), path.end());
+//      //exp_route.emplace_back(waypointList.at(idx));
+//      exp_route.back().height += 50.f;
+//      if (path.size() != 0)
+//      {
+//         exp_route.insert(exp_route.end(), ++path.begin(), path.end());
+//         //exp_route.emplace_back(waypointList.at(idx + 1));
+//         exp_route.back().height += 50.f;
+//      }
+//   }
+//   //THREADDEBUG("exproute size air: " << exp_route.size());
+//   route.route_list = exp_route;
+//}
+//
+//namespace
+//{
+//   bool landAffilationChecker(const SharedRoutePointMatrix& data, const SharedUnsignedMatrix& covMatrix, size_t row, size_t col)
+//   {
+//      return data->Get(row, col).go == GoZoneAffilation::GZA_FORBIDDEN || covMatrix->Get(row, col) == 0;
+//   }
+//
+//   float landCorrector(float y)
+//   {
+//      // NOTE: корректировок нет
+//      return y;
+//   }
+//}
+//
+//void PathFinder::FindLandPath(settings::route& route, const SharedRoutePointMatrix& rawdata, const SharedUnsignedMatrix& coverageMatrix, bool multithread, bool *pathfound)
+//{
+//   CG::route_line exp_route;
+//   CG::route_line waypointList;
+//   waypointList.emplace_back(route.start);
+//   waypointList.insert(waypointList.end(), route.control_point_list.begin(), route.control_point_list.end());
+//   waypointList.emplace_back(route.finish);
+//   ATLASSERT(waypointList.size() >= 2);
+//
+//   path_finder_logic logic = { landAffilationChecker, landCorrector };
+//   exp_route.emplace_back(waypointList.at(0));
+//   for (size_t idx = 0; idx < waypointList.size() - 1; idx++)
+//   {
+//      CG::route_line path = findUniversalPath(waypointList.at(idx), waypointList.at(idx + 1), logic, rawdata, coverageMatrix, multithread, pathfound);
+//      //exp_route.clear();
+//      //qDebug() << "wpl sz:" << idx;
+//      std::reverse(path.begin(), path.end());
+//      //exp_route.emplace_back(waypointList.at(idx));
+//      if (path.size() != 0)
+//         exp_route.insert(exp_route.end(), ++path.begin(), path.end());
+//      //exp_route.emplace_back(waypointList.at(idx + 1));
+//   }
+//   //THREADDEBUG("exproute size land: " << exp_route.size());
+//   route.route_list = exp_route;
+//}
 
-   float airCorrector(float y)
-   {
-      return y + 50.f;
-   }
-}
-
-void PathFinder::FindAirPath(settings::route& route, const SharedRoutePointMatrix& rawdata, size_t iterations, bool multithread)
-{
-   CG::route_line exp_route;
-   CG::route_line waypointList;
-   waypointList.emplace_back(route.start);
-   waypointList.insert(waypointList.end(), route.control_point_list.begin(), route.control_point_list.end());
-   waypointList.emplace_back(route.finish);
-   //Q_ASSERT(waypointList.size() >= 2);
-   //Q_UNUSED(iterations);
-   // NOTE: Миграция чего-то непонятно чего...
-   for (auto& item : waypointList)
-      item = rawdata->Get(item.row, item.col);
-
-   path_finder_logic logic = { airCheckAffilation, airCorrector };
-   std::string wplist;
-   for (const auto& wp : waypointList)
-      wplist.append(std::string("[" + std::to_string(wp.row) + ";" + std::to_string(wp.col) + "]").c_str());
-   /*THREADDEBUG("st-fn: "
-            << std::string("[" + std::to_string(route.start.mp.row) + ";" + std::to_string(route.start.mp.col) + "]").c_str()
-            << std::string("[" + std::to_string(route.finish.mp.row) + ";" + std::to_string(route.finish.mp.col) + "]").c_str());
-   THREADDEBUG("wp list: " << waypointList.size() << " elems: " << wplist.c_str());*/
-   exp_route.emplace_back(waypointList.at(0));
-   for (size_t idx = 0; idx < waypointList.size() - 1; idx++)
-   {
-      bool found = false;
-      auto matrix = std::make_shared<UnsignedMatrix>(rawdata->GetRowCount(), rawdata->GetColCount(), 0);
-      CG::route_line path = findUniversalPath(waypointList.at(idx), waypointList.at(idx + 1), logic, rawdata, matrix, multithread, &found);
-      //if (!found)
-         //Q_ASSERT(false);
-      //exp_route.clear();
-      std::reverse(path.begin(), path.end());
-      //exp_route.emplace_back(waypointList.at(idx));
-      exp_route.back().height += 50.f;
-      if (path.size() != 0)
-      {
-         exp_route.insert(exp_route.end(), ++path.begin(), path.end());
-         //exp_route.emplace_back(waypointList.at(idx + 1));
-         exp_route.back().height += 50.f;
-      }
-   }
-   //THREADDEBUG("exproute size air: " << exp_route.size());
-   route.route_list = exp_route;
-}
-
-namespace
-{
-   bool landAffilationChecker(const SharedRoutePointMatrix& data, const SharedUnsignedMatrix& covMatrix, size_t row, size_t col)
-   {
-      return data->Get(row, col).go == GoZoneAffilation::GZA_FORBIDDEN || covMatrix->Get(row, col) == 0;
-   }
-
-   float landCorrector(float y)
-   {
-      // NOTE: корректировок нет
-      return y;
-   }
-}
-
-void PathFinder::FindLandPath(settings::route& route, const SharedRoutePointMatrix& rawdata, const SharedUnsignedMatrix& coverageMatrix, bool multithread, bool *pathfound)
-{
-   CG::route_line exp_route;
-   CG::route_line waypointList;
-   waypointList.emplace_back(route.start);
-   waypointList.insert(waypointList.end(), route.control_point_list.begin(), route.control_point_list.end());
-   waypointList.emplace_back(route.finish);
-   ATLASSERT(waypointList.size() >= 2);
-
-   path_finder_logic logic = { landAffilationChecker, landCorrector };
-   exp_route.emplace_back(waypointList.at(0));
-   for (size_t idx = 0; idx < waypointList.size() - 1; idx++)
-   {
-      CG::route_line path = findUniversalPath(waypointList.at(idx), waypointList.at(idx + 1), logic, rawdata, coverageMatrix, multithread, pathfound);
-      //exp_route.clear();
-      //qDebug() << "wpl sz:" << idx;
-      std::reverse(path.begin(), path.end());
-      //exp_route.emplace_back(waypointList.at(idx));
-      if (path.size() != 0)
-         exp_route.insert(exp_route.end(), ++path.begin(), path.end());
-      //exp_route.emplace_back(waypointList.at(idx + 1));
-   }
-   //THREADDEBUG("exproute size land: " << exp_route.size());
-   route.route_list = exp_route;
-}
-
-CG::route_line PathFinder::findUniversalPath(const CG::route_point& start, const CG::route_point& finish, const path_finder_logic& logic, const SharedRoutePointMatrix& rawdata, const SharedUnsignedMatrix& coverageMatrix, bool multithread, bool* pathFound)
+CG::route_line PathFinder::FindUniversalPath(const CG::route_point& start, const CG::route_point& finish, const path_finder_logic& logic, const SharedRoutePointMatrix& rawdata, const SharedUnsignedMatrix& coverageMatrix, bool* pathFound)
 {
    CG::route_line exp_route;
    /*auto countDist = [](RoutePoint& p1, RoutePoint& p2)->double

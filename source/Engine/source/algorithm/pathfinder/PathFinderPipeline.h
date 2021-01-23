@@ -14,6 +14,8 @@
 #include "PathFinder.h"
 #include "common/central_class.h"
 #include "Multithread/TaskHolder.h"
+#include "Prepares\RouteLinePreparer.h"
+#include "ThreadSplitter\ThreadSplitter.h"
 
 namespace SV::pathfinder
 {
@@ -29,23 +31,26 @@ namespace SV::pathfinder
       const pathfinder::route_data& GetPaths() const { return m_paths; }
       const SharedUnsignedMatrix& GetCurrentCoverage() const { return m_currentCoverage; }
       const std::vector<SharedUnsignedMatrix>& GetCoverageHistory() const { return m_coverageHistory; }
-      const research::task_holder_statistic::holder_cluster_run_history& GetStatisticHistory() const { return m_holderStatisticHistory; }
-      void ClearStatisticHistory() { m_holderStatisticHistory.clear(); }
+      const research::task_holder_statistic::holder_cluster_run_history& GetStatisticHistory() const { return m_threadSplitter->GetStatisticHistory(); }
+      void ClearStatisticHistory() { m_threadSplitter->ClearStatisticHistory(); }
    private:
       void prepareSourcePoints();
       void correctControlPoints();
 
       void findPathMultiThread();
-      void findPathSingleThread();
+      //void findPathSingleThread();
 
       void pipelineStep();
 
       void generateIterationStep();
-      void formatTaskPool();
-      void formatTaskPacket();
+      void generatePathfinderTaskList(bool);
+      //void formatTaskPool();
+      //void formatTaskPacket();
       //void onAirRouteTaskHolderFinished();
-   public:
-      void onAirRoutePacketFinished();
+      void restorePathList(bool isAir);
+   protected:
+      void onAirPathsComputed();
+      void onLandPathsComputed();
    private:
       void buildLandCoverage();
       bool checkLandCoverage(const SharedUnsignedMatrix& coverageMatrix);
@@ -54,17 +59,16 @@ namespace SV::pathfinder
       bool updateCurrentCoverage();
    private:
       std::function<void(void)> m_callback;
-      std::unique_ptr<PathFinder> m_pathfinder;
 
       std::shared_ptr<RoutePointMatrix> m_rawdata;
       std::shared_ptr<path_finder_indata> m_indata;
 
       SharedUnsignedMatrix m_currentCoverage;
       std::vector<SharedUnsignedMatrix> m_coverageHistory;
-      research::task_holder_statistic::holder_cluster_run_history m_holderStatisticHistory;
+      
 
       TaskStorage m_taskPool;
-      std::shared_ptr<TaskStorage> m_taskPacket;
+      //std::shared_ptr<TaskStorage> m_taskPacket;
       //std::mutex m_packetMutex;
 
       route_data m_paths;
@@ -79,7 +83,8 @@ namespace SV::pathfinder
 
       std::unique_ptr<CoverageBuilder> m_coverageBuilder;
       std::unique_ptr<StrategyManager> m_strategyManager;
-      std::unique_ptr<MultithreadComputingManager> m_taskManager;
+      std::unique_ptr<RouteLinePreparer> m_routeLinePreparer;
+      std::unique_ptr<ThreadSplitter> m_threadSplitter;
 
       //ExperimentMeta m_vmeta;
       size_t m_rowCount;

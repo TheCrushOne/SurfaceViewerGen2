@@ -15,15 +15,11 @@ PathFinderPipeline::PathFinderPipeline(central_pack* pack)
    , m_statistic(nullptr)
    , m_coverageBuilder(std::make_unique<CoverageBuilder>())
    , m_strategyManager(std::make_unique<StrategyManager>(pack))
-   , m_taskManager(std::make_unique<MultithreadComputingManager>(pack))
-   , m_pathfinder(std::make_unique<PathFinder>())
+   , m_routeLinePreparer(std::make_unique<RouteLinePreparer>(pack))
+   , m_threadSplitter(std::make_unique<ThreadSplitter>(pack))
    //, m_packetMutex(m_taskPacket)
-   , m_taskPacket(std::make_shared<TaskStorage>())
    , Central(pack)
-{
-   // TODO: check!!!
-   m_taskManager->SetTaskPacketFinishCallback([this]() { onAirRoutePacketFinished(); });
-}
+{}
 
 PathFinderPipeline::~PathFinderPipeline()
 {}
@@ -42,18 +38,20 @@ void PathFinderPipeline::FindPath(std::function<void(void)> callback, std::share
    m_rowCount = rawdata->GetRowCount();
    m_colCount = rawdata->GetColCount();
    m_settings = settings;
+
    // NOTE: вот на всякий очистить надо..
    m_coverageHistory.clear();
+   m_threadSplitter->SetSettings(m_indata->settings);
+   m_routeLinePreparer->SetCoverageMatrix(m_currentCoverage);
+   m_routeLinePreparer->SetRawDataMatrix(rawdata);
 
-   // test 4/8
-   //const int threadCount = 16;   // NOTE: По количеству логических ядер 8+HT
-   m_taskManager->SetHolderCount(m_indata->settings.thread_count);
    TaskHolder::FixCurrentTime();
 
-   if (m_indata->settings.multithread)
+   findPathMultiThread();
+   /*if (m_indata->settings.multithread)
       findPathMultiThread();
    else
-      findPathSingleThread();
+      findPathSingleThread();*/
 }
 
 void PathFinderPipeline::prepareSourcePoints()
@@ -82,9 +80,8 @@ void PathFinderPipeline::findPathMultiThread()
 void PathFinderPipeline::pipelineStep()
 {
    generateIterationStep();
-   formatTaskPool();
-   TaskHolder::ClearStatistic();
-   onAirRoutePacketFinished();
+   generatePathfinderTaskList(true);
+   m_threadSplitter->CountCurrent(m_routeLinePreparer->GetCurrentTaskList(), [this]() { onAirPathsComputed(); });
 }
 
 void PathFinderPipeline::generateIterationStep()
@@ -95,58 +92,9 @@ void PathFinderPipeline::generateIterationStep()
       m_strategyManager->PrepareControlPoint(m_iterations, m_paths.land_routes, m_paths.air_routes, m_rawdata, m_indata);
 }
 
-void PathFinderPipeline::formatTaskPool()
+void PathFinderPipeline::generatePathfinderTaskList(bool isAir)
 {
-   m_taskPool.clear();
-   m_taskPool.resize(m_indata->unit_data.air_units.size());
-
-   for (size_t idx = 0; idx < m_taskPool.size(); idx++)
-   {
-      auto& path = m_paths.air_routes.at(idx);
-      m_taskPool.at(idx).status = TaskStatus::TS_QUEUED;
-      m_taskPool.at(idx).index = idx;
-      m_taskPool.at(idx).runnable = [this, &path]()
-      {
-         this->m_pathfinder->FindAirPath(path, m_rawdata, m_iterations, true);
-      };
-   }
-}
-
-void PathFinderPipeline::formatTaskPacket()
-{
-   m_taskPacket->clear();
-   for (size_t idx = 0; idx < m_indata->settings.packet_size && m_taskPool.size() > 0; idx++)
-   {
-      m_taskPacket->emplace_back(m_taskPool.back());
-      m_taskPool.pop_back();
-   }
-}
-
-//void PathFinderPipeline::onAirRouteTaskHolderFinished()
-//{
-//   for (const auto& task : *m_taskPacket.get())
-//   {
-//      if (task.status != TaskStatus::TS_FINISHED)
-//         return;
-//   }
-//   onAirRoutePacketFinished();
-//}
-
-void PathFinderPipeline::onAirRoutePacketFinished()
-{
-   static const unsigned long long int threadCountSpec = std::thread::hardware_concurrency();
-
-   if (m_taskPool.size() == 0)
-   {
-      m_taskManager->Finale();
-      m_holderStatisticHistory.emplace_back(*m_taskManager->GetCurrentStatistic());
-      buildLandCoverage();
-      GetPack()->comm->Message(ICommunicator::MessageType::MT_INFO, "Land coverage complete");
-      return;
-   }
-   formatTaskPacket();
-
-   m_taskManager->LaunchTaskPacket(m_taskPacket);
+   m_routeLinePreparer->PrepareTaskList(isAir ? m_paths.air_routes : m_paths.land_routes, isAir);
 }
 
 void PathFinderPipeline::buildLandCoverage()
@@ -170,6 +118,7 @@ void PathFinderPipeline::buildLandCoverage()
       m_pathFound = true;
       pipelineFinalize();
    }
+   GetPack()->comm->Message(ICommunicator::MessageType::MT_INFO, "Land coverage complete");
 }
 
 // NOTE: сравнение старой матрицы покрытия с новой
@@ -192,7 +141,26 @@ void PathFinderPipeline::findLandRoute()
 {
    // NOTE: наземный пока что один, так что просто считаем его в потоке
    ATLASSERT(m_indata->unit_data.land_units.size() == 1);
-   m_pathfinder->FindLandPath(m_paths.land_routes.at(0), m_rawdata, m_currentCoverage, true, &m_pathFound);
+   generatePathfinderTaskList(false);
+   m_threadSplitter->CountCurrent(m_routeLinePreparer->GetCurrentTaskList(), [this]() { onLandPathsComputed(); });
+}
+
+void PathFinderPipeline::restorePathList(bool isAir)
+{
+   m_routeLinePreparer->RestorePathList(isAir ? m_paths.air_routes : m_paths.land_routes, isAir);
+}
+
+void PathFinderPipeline::onAirPathsComputed()
+{
+   restorePathList(true);
+   buildLandCoverage();
+}
+
+void PathFinderPipeline::onLandPathsComputed()
+{
+   restorePathList(false);
+   auto taskList = m_routeLinePreparer->GetCurrentTaskList();
+   m_pathFound = taskList.at(0).path_found;
    if (m_pathFound)
       pipelineFinalize();
    else
@@ -216,47 +184,6 @@ bool PathFinderPipeline::updateCurrentCoverage()
    else
       m_coverageHistory.emplace_back(std::move(newCoverage));
    return false;
-}
-
-void PathFinderPipeline::findPathSingleThread()
-{
-   do
-   {
-      m_paths.air_routes.clear();
-      m_paths.air_routes.resize(m_indata->unit_data.air_units.size());
-      if (m_indata->settings.use_strategies)
-         m_strategyManager->PrepareControlPoint(m_iterations, m_paths.land_routes, m_paths.air_routes, m_rawdata, m_indata);
-      for (size_t idx = 0; idx < m_paths.air_routes.size(); idx++)
-         m_pathfinder->FindAirPath(m_paths.air_routes.at(idx), m_rawdata, m_iterations, m_indata->settings.multithread);
-
-      if (m_indata->settings.land_path)
-      {
-         if (updateCurrentCoverage())
-         {
-            ATLASSERT(m_indata->unit_data.land_units.size() == 1);
-            m_paths.land_routes.clear();
-            m_paths.land_routes.resize(1);
-            m_pathfinder->FindLandPath(m_paths.land_routes.at(0), m_rawdata, m_currentCoverage, false, &m_pathFound);
-            if (m_pathFound)
-            {
-               pipelineFinalize();
-               return;
-            }
-         }
-         else
-         {
-            // NOTE: покрытия совпали, дроны исследовали всё
-            m_pathFound = false;
-            pipelineFinalize();
-            return;
-         }
-      }
-      else
-         m_pathFound = true;
-
-      //qDebug() << pathFound << iterations;
-      m_iterations++;
-   } while (!m_pathFound);
 }
 
 void PathFinderPipeline::correctControlPoints()

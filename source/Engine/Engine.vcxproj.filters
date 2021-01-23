@@ -25,6 +25,12 @@
     <Filter Include="common">
       <UniqueIdentifier>{860020ec-4e3a-4f79-b03a-7abfa1514eff}</UniqueIdentifier>
     </Filter>
+    <Filter Include="algorithm\pathfinder\Prepares">
+      <UniqueIdentifier>{f4d52a97-4553-4bf1-8e96-b625e1807fec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="algorithm\pathfinder\ThreadSplitter">
+      <UniqueIdentifier>{3e39bffc-9bf9-41ef-a386-fde29679b1cb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\main\calibrator.cpp">
@@ -75,6 +81,12 @@
     </ClCompile>
     <ClCompile Include="source\common\EngineBase.cpp">
       <Filter>common</Filter>
+    </ClCompile>
+    <ClCompile Include="source\algorithm\pathfinder\Prepares\RouteLinePreparer.cpp">
+      <Filter>algorithm\pathfinder\Prepares</Filter>
+    </ClCompile>
+    <ClCompile Include="source\algorithm\pathfinder\ThreadSplitter\ThreadSplitter.cpp">
+      <Filter>algorithm\pathfinder\ThreadSplitter</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -129,6 +141,12 @@
     </ClInclude>
     <ClInclude Include="source\common\EngineBase.h">
       <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="source\algorithm\pathfinder\Prepares\RouteLinePreparer.h">
+      <Filter>algorithm\pathfinder\Prepares</Filter>
+    </ClInclude>
+    <ClInclude Include="source\algorithm\pathfinder\ThreadSplitter\ThreadSplitter.h">
+      <Filter>algorithm\pathfinder\ThreadSplitter</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

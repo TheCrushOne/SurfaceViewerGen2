@@ -8,6 +8,8 @@ namespace SV::research::task_holder_statistic
    {
       //size_t holder_idx;
       size_t task_idx;
+      size_t unit_idx;
+      size_t shard_idx;
       __int64 start_ts;
       __int64 finish_ts;
    };

@@ -26,6 +26,8 @@ namespace SV::data_standart
          static constexpr char finish_ts[] = "finish_ts";
          static constexpr char task_idx[] = "task_idx";
          static constexpr char holder_idx[] = "holder_idx";
+         static constexpr char unit_idx[] = "unit_idx";
+         static constexpr char shard_idx[] = "shard_idx";
       };
 
       struct organized_statistic
@@ -72,7 +74,19 @@ namespace SV::data_standart
       void SetData(const research::task_holder_statistic::experiment_history&) override final;
    private:
       // Common
-      std::string getDataFilePath() { return std::string(getPath()) + "\\universal.rres"; }
+      std::string getDataFilePath()
+      {
+         time_t rawtime;
+         struct tm* timeinfo;
+         wchar_t buffer[80];
+
+         time(&rawtime);
+         timeinfo = localtime(&rawtime);
+
+         wcsftime(buffer, sizeof(buffer), L"%d%m%Y_%H%M%S_", timeinfo);
+         std::wstring str(buffer);
+         return std::string(getPath()) + "\\" + SVGUtils::wstringToString(str) + "universal.rres";
+      }
       void reorganizeStatistic();
       // Read
       // Write

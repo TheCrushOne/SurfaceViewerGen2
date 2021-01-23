@@ -127,7 +127,15 @@ void TaskHolder::launchSingleTask(task_unit& task)
    EnterCriticalSection(&critical_inner);
    if (m_stat.get()->find(task.holder_idx) == m_stat.get()->end())
       m_stat.get()->insert({ task.holder_idx, {} });
-   m_stat.get()->at(task.holder_idx).emplace_back(research::task_holder_statistic::statistic_unit{ task.index, task.start_ts, task.finish_ts });
+   m_stat.get()->at(task.holder_idx).emplace_back(
+      research::task_holder_statistic::statistic_unit{
+         task.task_index,
+         task.unit_index,
+         task.shard_index,
+         task.start_ts,
+         task.finish_ts
+      }
+   );
    //GetPack()->comm->Message(ICommunicator::MessageType::MT_INFO, "task finished: thread [%d], packet size [%d], idx [%d]", std::this_thread::get_id(), m_packet->size(), task.index);
    task.status = TaskStatus::TS_FINISHED;
    status = HolderStatus::HS_FINISHED;

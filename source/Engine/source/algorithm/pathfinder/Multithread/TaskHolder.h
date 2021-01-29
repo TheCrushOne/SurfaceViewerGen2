@@ -29,6 +29,7 @@ namespace SV::pathfinder
       size_t task_index;
       size_t unit_index;
       size_t shard_index;
+      size_t packet_index;
       unsigned long start_ts, finish_ts;
       size_t holder_idx;
       //std::function<settings::route(settings::route&, const std::shared_ptr<Matrix<SVCG::route_point>>, size_t, bool)> runnable;

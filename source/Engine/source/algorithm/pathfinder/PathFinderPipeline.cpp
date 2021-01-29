@@ -84,7 +84,7 @@ void PathFinderPipeline::pipelineStep()
       m_currentCoverage = std::move(m_coverageBuilder->BuildLandCoverage(m_rowCount, m_colCount, m_indata->strategy_settings, m_paths.air_routes));
    m_routeLinePreparer->SetCoverageMatrix(m_currentCoverage);
    generatePathfinderTaskList(true);
-   m_threadSplitter->CountCurrent(m_routeLinePreparer->GetCurrentTaskList(), [this]() { onAirPathsComputed(); });
+   m_threadSplitter->CountCurrent(m_routeLinePreparer->GetCurrentTaskList(), m_paths.air_routes.size(), [this]() { onAirPathsComputed(); });
 }
 
 void PathFinderPipeline::generateIterationStep()
@@ -145,7 +145,7 @@ void PathFinderPipeline::findLandRoute()
    // NOTE: наземный пока что один, так что просто считаем его в потоке
    ATLASSERT(m_indata->unit_data.land_units.size() == 1);
    generatePathfinderTaskList(false);
-   m_threadSplitter->CountCurrent(m_routeLinePreparer->GetCurrentTaskList(), [this]() { onLandPathsComputed(); });
+   m_threadSplitter->CountCurrent(m_routeLinePreparer->GetCurrentTaskList(), m_paths.land_routes.size(), [this]() { onLandPathsComputed(); });
 }
 
 void PathFinderPipeline::restorePathList(bool isAir)

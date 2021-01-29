@@ -51,7 +51,7 @@ bool ResearchExternal::readFromSource(data_standart::iSurfaceVieverGenMapDataSta
 bool ResearchExternal::writeToDestination(data_standart::iResearchResultDataStandart* dst)
 {
    //dst->SetData(m_engine->GetLastProcessedPaths(), m_engine->GetLandUnitExplication(), m_engine->GetAirUnitExplication(), m_engine->GetCoverageHistory());
-   dst->SetData(m_researchEngine->GetStatisticHistory());
+   dst->SetData(m_researchEngine->GetStatisticHistory(), m_commandData.pythonize_result.AsBoolean());
    return true;
 }
 

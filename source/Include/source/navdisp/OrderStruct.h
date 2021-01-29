@@ -125,6 +125,19 @@ namespace SV::navigation_dispatcher
       END_DEFINE_ZONE()
    };
 
+   struct research_order : order_base
+   {
+      ATTR_DECLARE(source);
+      ATTR_DECLARE(destination);
+      ATTR_DECLARE(pythonize_result);
+
+      BEGIN_DEFINE_ZONE()
+         ATTR_DEFINE(source);
+         ATTR_DEFINE(destination);
+         ATTR_DEFINE(pythonize_result);
+      END_DEFINE_ZONE()
+   };
+
    struct opt_pathfind_order : order_base
    {
       ATTR_DECLARE(source);

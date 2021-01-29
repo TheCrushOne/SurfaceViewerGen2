@@ -17,6 +17,7 @@
 				<params>
 					<source>SVGMDst</source>
 					<destination>RResDst</destination>
+					<pythonize_result>true</pythonize_result>
 					<rewrite_dst>true</rewrite_dst>
 				</params>
 			</order>

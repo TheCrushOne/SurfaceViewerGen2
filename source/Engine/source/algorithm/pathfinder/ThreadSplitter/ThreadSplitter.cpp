@@ -23,11 +23,13 @@ void ThreadSplitter::SetSettings(const SV::pathfinder::path_finder_settings& stt
    m_taskManager->SetHolderCount(m_settings.multithread ? m_settings.thread_count : 1);
 }
 
-void ThreadSplitter::CountCurrent(std::vector<path_finder_task>& taskList, std::function<void(void)> callback)
+void ThreadSplitter::CountCurrent(std::vector<path_finder_task>& taskList, size_t unitCount, std::function<void(void)> callback)
 {
    TaskHolder::ClearStatistic();
+   m_holderStatisticHistory.unit_count = unitCount;
    m_taskList = std::make_shared<task_list_holder>(taskList);
    m_finalizeCallback = callback;
+   m_currentPacketIdx = 0;
    onTaskPacketComputingFinished();
 }
 
@@ -42,6 +44,7 @@ void ThreadSplitter::formatTaskPacket()
          m_taskPacket->emplace_back(pathFinderTaskToHolderTask(*it));
       it++;
    }
+   m_currentPacketIdx++;
 }
 
 bool ThreadSplitter::nonComputedTasksExists()
@@ -61,7 +64,7 @@ void ThreadSplitter::onTaskPacketComputingFinished()
    if (!nonComputedTasksExists())
    {
       m_taskManager->Finale();
-      m_holderStatisticHistory.emplace_back(*m_taskManager->GetCurrentStatistic());
+      m_holderStatisticHistory.history.emplace_back(*m_taskManager->GetCurrentStatistic());
       //buildLandCoverage();
       m_finalizeCallback();
       return;
@@ -81,6 +84,7 @@ task_unit ThreadSplitter::pathFinderTaskToHolderTask(path_finder_task& path_task
    };
    holder_task.unit_index = path_task.unit_index;
    holder_task.shard_index = path_task.shard_index;
+   holder_task.packet_index = m_currentPacketIdx;
 
    return holder_task;
 }

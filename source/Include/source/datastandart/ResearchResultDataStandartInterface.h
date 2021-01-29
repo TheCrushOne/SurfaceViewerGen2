@@ -9,7 +9,7 @@ namespace SV::data_standart
    struct iResearchResultDataStandart
       : public iDataStandart
    {
-      virtual void SetData(const research::task_holder_statistic::experiment_history&) = 0;
+      virtual void SetData(const research::task_holder_statistic::experiment_history&, bool) = 0;
       //virtual pathfinder::GeoMatrix& GetData() = 0;
       //virtual settings::unit_source_data& GetUnitData() = 0;
    };

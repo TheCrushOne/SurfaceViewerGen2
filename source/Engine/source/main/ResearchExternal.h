@@ -10,7 +10,7 @@
 namespace SV::engine
 {
    class ResearchExternal
-      : public navigation_dispatcher::OrderBase<navigation_dispatcher::OrderType::OT_RESEARCH, navigation_dispatcher::pathfind_order>
+      : public navigation_dispatcher::OrderBase<navigation_dispatcher::OrderType::OT_RESEARCH, navigation_dispatcher::research_order>
    {
    public:
       ResearchExternal(central_pack* pack, navigation_dispatcher::iComService* pService);

@@ -23,9 +23,9 @@ namespace SV::pathfinder
       ~ThreadSplitter();
 
       void SetSettings(const SV::pathfinder::path_finder_settings& stt);
-      void CountCurrent(std::vector<path_finder_task>&, std::function<void(void)>);
+      void CountCurrent(std::vector<path_finder_task>&, size_t, std::function<void(void)>);
       const research::task_holder_statistic::holder_cluster_run_history& GetStatisticHistory() const { return m_holderStatisticHistory; }
-      void ClearStatisticHistory() { m_holderStatisticHistory.clear(); }
+      void ClearStatisticHistory() { m_holderStatisticHistory.history.clear(); m_holderStatisticHistory.unit_count = 0; }
    protected:
       void onTaskPacketComputingFinished();
       void formatTaskPacket();
@@ -38,5 +38,6 @@ namespace SV::pathfinder
       std::shared_ptr<TaskStorage> m_taskPacket;
       research::task_holder_statistic::holder_cluster_run_history m_holderStatisticHistory;
       std::function<void(void)> m_finalizeCallback;
+      size_t m_currentPacketIdx;
    };
 }

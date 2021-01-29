@@ -245,6 +245,11 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
     </Link>
+    <PostBuildEvent>
+      <Command>md "$(SolutionDir)..\Bin\$(Platform)\$(Configuration)\PyDirectDrawer\"
+
+copy "$(SolutionDir)..\source\PyDirectDrawer\Source\*.py" "$(SolutionDir)..\Bin\$(Platform)\$(Configuration)\PyDirectDrawer\"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -285,6 +290,11 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
     </Link>
+    <PostBuildEvent>
+      <Command>md "$(SolutionDir)..\Bin\$(Platform)\$(Configuration)\PyDirectDrawer\"
+
+copy "$(SolutionDir)..\source\PyDirectDrawer\Source\*.py" "$(SolutionDir)..\Bin\$(Platform)\$(Configuration)\PyDirectDrawer\"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

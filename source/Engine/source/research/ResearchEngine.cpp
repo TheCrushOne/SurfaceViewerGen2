@@ -237,7 +237,7 @@ void ResearchEngine::lengthResearch(/*const std::shared_ptr<SVM::iMatrix<Surface
 // NOTE: Исследование направлено на определение оптимального соотношения размера пула задач к расчету и количества потоков
 void ResearchEngine::threadResearch(/*const std::shared_ptr<SVM::iMatrix<SurfaceElement>>& resmap, std::shared_ptr<ResearchResultGen3>& result*/)
 {
-   m_history.clear();
+   m_history.history.clear();
    m_threadTaskCurrentIdx = 0;
    auto& res_stt = m_settings->res_stt;
    // Длин путей 62, 125, 250, 500
@@ -306,7 +306,7 @@ void ResearchEngine::threadResNextStep()
    CURTIME_MS(startTime);
    if (m_threadTaskCurrentIdx > 0)
    {
-      m_history.emplace_back(m_pathfinder->GetStatisticHistory());
+      m_history.history.emplace_back(m_pathfinder->GetStatisticHistory());
       m_pathfinder->ClearStatisticHistory();
       m_threadResStorage.data.at(m_threadTaskCurrentIdx - 1).result.time.finish = startTime;
       m_threadResStorage.data.at(m_threadTaskCurrentIdx - 1).result.time.apply();

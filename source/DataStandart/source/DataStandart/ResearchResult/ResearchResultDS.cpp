@@ -6,6 +6,8 @@ using namespace SV::data_standart;
 
 size_t ResearchResultDataStandart::m_maxSize = 0;
 
+const char* PYTHONIZE_ENTRANCE_POINT_PATH = "python.exe PyDirectDrawer/main.py";
+
 void ResearchResultDataStandart::resolvePathDee()
 {
    std::filesystem::path filePath(m_dataStandartData.folder);
@@ -14,12 +16,14 @@ void ResearchResultDataStandart::resolvePathDee()
       m_dataStandartData.folder = (std::filesystem::path(m_baseFolder) / filePath).generic_string().c_str();
 }
 
-void ResearchResultDataStandart::SetData(const research::task_holder_statistic::experiment_history& stat)
+void ResearchResultDataStandart::SetData(const research::task_holder_statistic::experiment_history& stat, bool pythonize_result)
 {
    m_statistic = stat;
    std::filesystem::path path(getPath());
    std::filesystem::create_directories(path);
    saveStatisticDataToFile();
+   if (pythonize_result)
+      pythonizeResult();
 }
 
 void ResearchResultDataStandart::saveStatisticDataToFile()
@@ -30,6 +34,14 @@ void ResearchResultDataStandart::saveStatisticDataToFile()
    Json::Value data;
    data[tag::experiment_history] = writeExperimentHistory(m_statistic);
    file << data;
+}
+
+void ResearchResultDataStandart::pythonizeResult()
+{
+   std::string path(PYTHONIZE_ENTRANCE_POINT_PATH);
+   path.append(" ");
+   path.append(getDataFilePath());
+   std::system(path.c_str());
 }
 
 /*void ResearchResultDataStandart::reorganizeStatistic()
@@ -57,83 +69,99 @@ Json::Value ResearchResultDataStandart::writeExperimentHistory(const research::t
 {
    Json::Value ehistory;
    Json::Value jhistory(Json::arrayValue);
-   for (const auto& stat : history)
-      jhistory.append(writeClusterRunHistory(stat));
-   ehistory[tag::cluster_history] = jhistory;
+   for (const auto& stat : history.history)
+   {
+      Json::Value runh;
+      runh[tag::holder_cluster_run_history] = writeClusterRunHistory(stat);
+      jhistory.append(runh);
+   }
+   ehistory[tag::history] = jhistory;
    return ehistory;
 }
 
-Json::Value ResearchResultDataStandart::writeClusterRunHistory(const research::task_holder_statistic::holder_cluster_run_history& history)
+Json::Value ResearchResultDataStandart::writeClusterRunHistory(const research::task_holder_statistic::holder_cluster_run_history& hcrhistory)
 {
    organized_statistic::holder_data::task_data fictive{ 0, 0 };
    Json::Value jrundata;
    Json::Value jstat(Json::arrayValue);
    size_t idx = 0;
-   for (const auto& data : history)
+   for (const auto& data : hcrhistory.history)
    {
       idx++;
-      jstat.append(writeClusterRunData(data));
+      Json::Value rund;
+      rund[tag::holder_cluster_run_data] = writeClusterRunData(data);
+      jstat.append(rund);
    }
    /*for (size_t fillerIdx = idx; fillerIdx < m_maxSize; fillerIdx++)
    {
       jstat.append(writeClusterRunData(fictive));
    }*/
-   jrundata[tag::cluster_run_data] = jstat;
+   jrundata[tag::unit_count] = hcrhistory.unit_count;
+   jrundata[tag::history] = jstat;
    return jrundata;
 }
 
-Json::Value ResearchResultDataStandart::writeClusterRunData(const research::task_holder_statistic::holder_cluster_run_data& data)
+Json::Value ResearchResultDataStandart::writeClusterRunData(const research::task_holder_statistic::holder_cluster_run_data& hcrdata)
 {
-   Json::Value jdata;
-   Json::Value jdata_inner;
-   jdata_inner[tag::count] = data.size();//std::to_string(data.size());
+   Json::Value jrundata;
+   //Json::Value jdata_inner;
+   Json::Value jrun(Json::arrayValue);
+   //jdata_inner[tag::count] = data.data.size();//std::to_string(data.size());
    size_t maxSize = 0;
    size_t maxUnitIdx = 0;
-   for (const auto& time : data)
+   /*for (const auto& time : data.data)
    {
-      for (const auto& stamp : time.second)
+      for (const auto& stamp : time.second.data)
          maxUnitIdx = stamp.unit_idx > maxUnitIdx ? stamp.unit_idx : maxUnitIdx;
    }
-   for (const auto& time : data)
+   for (const auto& time : data.data)
    {
-      maxSize = maxSize > time.second.size() ? maxSize : time.second.size();
+      maxSize = maxSize > time.second.data.size() ? maxSize : time.second.data.size();
    }
-   size_t holderIdx = 0;
-   for (const auto& time : data)
+   size_t holderIdx = 0;*/
+   for (const auto& time : hcrdata.data)
    {
       //size_t holderIdx = time.first;
-      //size_t holderIdx = time.first;
-      jdata_inner[std::to_string(holderIdx++)] = writeHolderRunData(time.second, maxSize);      
+      Json::Value rund;
+      rund[tag::holder_run_data] = writeHolderRunData(time.second, time.first);
+      jrun.append(rund);
+      //jdata_inner[std::to_string(holderIdx++)] = rund;
    }
-   jdata[tag::holder_run_data] = jdata_inner;
-   jdata[tag::unit_count] = maxUnitIdx + 1;
-   return jdata;
+   jrundata[tag::data] = jrun;
+   //jdata[tag::unit_count] = maxUnitIdx + 1;
+   return jrundata;
 }
 
-Json::Value ResearchResultDataStandart::writeHolderRunData(const research::task_holder_statistic::holder_run_data& data, size_t maxSize)
+Json::Value ResearchResultDataStandart::writeHolderRunData(const research::task_holder_statistic::holder_run_data& data, size_t holderIdx)
 {
-   auto fictive = research::task_holder_statistic::statistic_unit{ 0, 0 };
-   Json::Value jdata(Json::arrayValue);
-   for (const auto& times : data)
+   //auto fictive = research::task_holder_statistic::statistic_unit{ 0, 0 };
+   Json::Value jrundata;
+   Json::Value jrun(Json::arrayValue);
+   for (const auto& times : data.data)
    {
-      jdata.append(writeUnitData(times));
+      Json::Value unitdata;
+      unitdata[tag::statistic_unit] = writeUnitData(times, holderIdx);
+      jrun.append(unitdata);
    }
-   for (size_t idx = data.size(); idx < maxSize; idx++)
+   // NOTE: Только для матлаба
+   /*for (size_t idx = data.size(); idx < maxSize; idx++)
    {
       jdata.append(writeUnitData(fictive));
-   }
-   return jdata;
+   }*/
+   jrundata[tag::data] = jrun;
+   return jrundata;
 }
 
-Json::Value ResearchResultDataStandart::writeUnitData(const research::task_holder_statistic::statistic_unit& data)
+Json::Value ResearchResultDataStandart::writeUnitData(const research::task_holder_statistic::statistic_unit& data, size_t holderIdx)
 {
    Json::Value jstamp;
    jstamp[tag::start_ts] = data.start_ts;
    jstamp[tag::finish_ts] = data.finish_ts;
-   //jstamp[tag::holder_idx] = stamp.holder_idx;
+   jstamp[tag::holder_idx] = holderIdx;
    jstamp[tag::task_idx] = data.task_idx;
    jstamp[tag::unit_idx] = data.unit_idx;
    jstamp[tag::shard_idx] = data.shard_idx;
+   jstamp[tag::packet_idx] = data.packet_idx;
    return jstamp;
 }
 

@@ -12,13 +12,15 @@ namespace SV::data_standart
    {
       struct tag
       {
+         static constexpr char history[] = "history";
+         static constexpr char data[] = "data";
+
+         static constexpr char statistic_unit[] = "statistic_unit";
+         static constexpr char holder_run_data[] = "holder_run_data";
+         static constexpr char holder_cluster_run_data[] = "holder_cluster_run_data";
+         static constexpr char holder_cluster_run_history[] = "holder_cluster_run_history";
          static constexpr char experiment_history[] = "experiment_history";
 
-         static constexpr char cluster_history[] = "cluster_history";
-
-         static constexpr char cluster_run_data[] = "cluster_run_data";
-
-         static constexpr char holder_run_data[] = "holder_run_data";
          static constexpr char unit_count[] = "unit_count";
 
          static constexpr char count[] = "count";
@@ -29,6 +31,7 @@ namespace SV::data_standart
          static constexpr char holder_idx[] = "holder_idx";
          static constexpr char unit_idx[] = "unit_idx";
          static constexpr char shard_idx[] = "shard_idx";
+         static constexpr char packet_idx[] = "packet_idx";
       };
 
       struct organized_statistic
@@ -72,7 +75,7 @@ namespace SV::data_standart
       // Common
       // Read
       // Write
-      void SetData(const research::task_holder_statistic::experiment_history&) override final;
+      void SetData(const research::task_holder_statistic::experiment_history&, bool) override final;
    private:
       // Common
       std::string getDataFilePath()
@@ -94,9 +97,10 @@ namespace SV::data_standart
       static Json::Value writeExperimentHistory(const research::task_holder_statistic::experiment_history& history);
       static Json::Value writeClusterRunHistory(const research::task_holder_statistic::holder_cluster_run_history& history);
       static Json::Value writeClusterRunData(const research::task_holder_statistic::holder_cluster_run_data& data);
-      static Json::Value writeHolderRunData(const research::task_holder_statistic::holder_run_data& data, size_t maxSize);
-      static Json::Value writeUnitData(const research::task_holder_statistic::statistic_unit& data);
+      static Json::Value writeHolderRunData(const research::task_holder_statistic::holder_run_data& data, size_t holderIdx);
+      static Json::Value writeUnitData(const research::task_holder_statistic::statistic_unit& data, size_t holderIdx);
       void saveStatisticDataToFile();
+      void pythonizeResult();
    private:
       void resolvePathDee();
       LPCSTR getPath() override final { return m_dataStandartData.folder.c_str(); }

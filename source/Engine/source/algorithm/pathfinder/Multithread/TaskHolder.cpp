@@ -51,7 +51,7 @@ void TaskHolder::FixCurrentTime()
 
 void TaskHolder::ClearStatistic()
 {
-   TaskHolder::m_stat.get()->clear();
+   TaskHolder::m_stat.get()->data.clear();
 }
 
 void TaskHolder::ForceInnerLock()
@@ -125,13 +125,14 @@ void TaskHolder::launchSingleTask(task_unit& task)
    task.finish_ts = CURTIME_MS_EPOCH() - m_startTime;
    task.holder_idx = holder_idx;
    EnterCriticalSection(&critical_inner);
-   if (m_stat.get()->find(task.holder_idx) == m_stat.get()->end())
-      m_stat.get()->insert({ task.holder_idx, {} });
-   m_stat.get()->at(task.holder_idx).emplace_back(
+   if (m_stat.get()->data.find(task.holder_idx) == m_stat.get()->data.end())
+      m_stat.get()->data.insert({ task.holder_idx, {} });
+   m_stat.get()->data.at(task.holder_idx).data.emplace_back(
       research::task_holder_statistic::statistic_unit{
          task.task_index,
          task.unit_index,
          task.shard_index,
+         task.packet_index,
          task.start_ts,
          task.finish_ts
       }

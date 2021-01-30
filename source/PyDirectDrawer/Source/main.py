@@ -19,6 +19,7 @@ class Plotter:
     ax_gnt = {}
     label_pool = []
     color_palette = []
+    vlines_cluster = dict()
     
     def get_bw_color(self, color):
         if (color[0] + color[1] + color[2] > 1.5):
@@ -72,6 +73,14 @@ class Plotter:
             color = self.get_bw_color(mcolors.to_rgba(color)),
         )
 
+        #if self.vlines_cluster.get(shard_data["packet_idx"]) is None:
+            #self.vlines_cluster[shard_data["packet_idx"]] = {
+                #min = sys.maxint,
+                #max = 0
+            #}
+        #cl_item = self.vlines_cluster.get(shard_data["packet_idx"])
+        #if (shard_data["packet_idx"])
+
     def parse_holder_run_data(self, hrd):
         for shard in hrd["data"]:
             stat_unit = shard["statistic_unit"]
@@ -81,11 +90,15 @@ class Plotter:
         for shard in hcrd["data"]: 
             self.parse_holder_run_data(shard["holder_run_data"])
 
+    #def draw_vlines(self, hcrd):
+        #self.vlines_cluster
+
     def parse_holder_cluster_run_history(self, hcrh):
         for shard in hcrh["history"]:
             self.color_palette = self.allocate_color_palette(hcrh["unit_count"])
             self.prepare_plot_template() 
             self.parse_holder_cluster_run_data(shard["holder_cluster_run_data"])
+            #self.draw_vlines()
             self.plot_finisher(hcrh["unit_count"], 0, 0, 0)
 
     def parse_experiment_history(self, exh):

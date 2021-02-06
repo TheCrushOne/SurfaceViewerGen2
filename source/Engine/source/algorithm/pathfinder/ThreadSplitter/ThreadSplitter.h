@@ -24,19 +24,16 @@ namespace SV::pathfinder
 
       void SetSettings(const SV::pathfinder::path_finder_settings& stt);
       void CountCurrent(std::vector<path_finder_task>&, size_t, std::function<void(void)>);
-      const research::task_holder_statistic::holder_cluster_run_history& GetStatisticHistory() const { return m_holderStatisticHistory; }
-      void ClearStatisticHistory() { m_holderStatisticHistory.history.clear(); m_holderStatisticHistory.unit_count = 0; }
    protected:
       void onTaskPacketComputingFinished();
       void formatTaskPacket();
-      task_unit pathFinderTaskToHolderTask(path_finder_task&);
+      task_unit pathFinderTaskToHolderTask(path_finder_task&, size_t);
       bool nonComputedTasksExists();
    private:
       SV::pathfinder::path_finder_settings m_settings;
       std::shared_ptr<task_list_holder> m_taskList;
       std::unique_ptr<MultithreadComputingManager> m_taskManager;
       std::shared_ptr<TaskStorage> m_taskPacket;
-      research::task_holder_statistic::holder_cluster_run_history m_holderStatisticHistory;
       std::function<void(void)> m_finalizeCallback;
       size_t m_currentPacketIdx;
    };

@@ -5,6 +5,7 @@
 #include "common/pathfinder_structs.h"
 #include "common/central_class.h"
 #include "common/statistic_types.h"
+#include "statistic\PathfinderStatistic.h"
 
 namespace SV::pathfinder
 {
@@ -45,7 +46,15 @@ namespace SV::pathfinder
       TaskHolder(central_pack*);
       ~TaskHolder();
 
-      static void SetTaskPacket(std::shared_ptr<std::vector<task_unit>> taskPacket) { m_packet = taskPacket; }
+      static void SetTaskPacket(std::shared_ptr<std::vector<task_unit>> taskPacket)
+      {
+         m_stat->packet_list.emplace_back(
+            research::task_holder_statistic::mcmanager_packet_log{
+               m_stat->packet_list.size(),
+            }
+         );
+         m_packet = taskPacket;
+      }
 
       void Launch();
       void SetIdx(size_t idx) { holder_idx = idx; }
@@ -53,8 +62,14 @@ namespace SV::pathfinder
       static void InitSynchronizer();
       static void DeInitSynchronizer();
       static void ClearStatistic();
-      static const research::task_holder_statistic::holder_cluster_run_data* GetStatistic() { return m_stat.get(); }
-      static void SetTaskPacketFinishCallback(TaskHolderGroupFinishCallback callback) { m_callback = callback; }
+      static const research::task_holder_statistic::mcmanager_run_log* GetStatistic()
+      {
+         return m_stat.get();
+      }
+      static void SetTaskPacketFinishCallback(TaskHolderGroupFinishCallback callback)
+      {
+         m_callback = callback;
+      }
 
       static void FixCurrentTime();
       // NOTE: они не совсем жесткие, т.е. это скорее try
@@ -71,7 +86,7 @@ namespace SV::pathfinder
       std::function<void(void)> callback;
       size_t holder_idx;
 
-      static std::shared_ptr<research::task_holder_statistic::holder_cluster_run_data> m_stat;
+      static std::shared_ptr<research::task_holder_statistic::mcmanager_run_log> m_stat;
       static std::shared_ptr<std::vector<task_unit>> m_packet;
       static std::unique_ptr<SemaphoreType> m_sema;
       static TaskHolderGroupFinishCallback m_callback;

@@ -43,6 +43,7 @@
     <ClCompile Include="source\main\ResearchExternal.cpp" />
     <ClCompile Include="source\pathfinding\PathfindingEngine.cpp" />
     <ClCompile Include="source\research\ResearchEngine.cpp" />
+    <ClCompile Include="source\statistic\PathfinderStatistic.cpp" />
     <ClCompile Include="source\stdafx.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -71,6 +72,7 @@
     <ClInclude Include="source\main\ResearchExternal.h" />
     <ClInclude Include="source\pathfinding\PathfindingEngine.h" />
     <ClInclude Include="source\research\ResearchEngine.h" />
+    <ClInclude Include="source\statistic\PathfinderStatistic.h" />
     <ClInclude Include="source\stdafx.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

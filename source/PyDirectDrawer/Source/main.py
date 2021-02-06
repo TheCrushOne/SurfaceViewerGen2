@@ -14,6 +14,27 @@ DATA_FOLDER_PATH = "..\\..\\cache\\gantt_demo\\research\\"
 
 CELL_HEIGHT = 9
 
+class LogLevelToken():
+   LLT_OVERALL    = 'overall_log'
+   LLT_PIPELINE   = 'pipeline_run_log'
+   LLT_RUN        = 'run_log'
+   LLT_PACKET     = 'packet_log' 
+   LLT_TASK       = 'task_log'
+
+   LLT_SUB_HISTORY = 'history'
+   LLT_SUB_DATA    = 'data'
+
+class LogValueToken():
+    LVT_START_TS    = 'start_ts'
+    LVT_FINISH_TS   = 'finish_ts'
+    LVT_HOLDER_IDX  = 'holder_idx'
+    LVT_PACKET_IDX  = 'packet_idx'
+    LVT_SHARD_IDX   = 'shard_idx'
+    LVT_TASK_IDX    = 'task_idx'
+    LVT_UNIT_IDX    = 'unit_idx'
+
+    LVT_UNIT_COUNT  = 'unit_count'
+
 class Plotter:
     fig = {}
     ax_gnt = {}
@@ -81,34 +102,38 @@ class Plotter:
         #cl_item = self.vlines_cluster.get(shard_data["packet_idx"])
         #if (shard_data["packet_idx"])
 
-    def parse_holder_run_data(self, hrd):
-        for shard in hrd["data"]:
-            stat_unit = shard["statistic_unit"]
-            self.plot_single_shard(stat_unit)
+    def parse_task_log(self, hrd):
+        #for shard in hrd[LogLevelToken.LLT_SUB_DATA]:
+            #stat_unit = shard[LogLevelToken.LLT_TASK]
+            self.plot_single_shard(hrd)
 
-    def parse_holder_cluster_run_data(self, hcrd):
-        for shard in hcrd["data"]: 
-            self.parse_holder_run_data(shard["holder_run_data"])
+    def parse_packet_log(self, hcrd):
+        for shard in hcrd[LogLevelToken.LLT_SUB_DATA]: 
+            self.parse_task_log(shard[LogLevelToken.LLT_TASK])
 
     #def draw_vlines(self, hcrd):
         #self.vlines_cluster
 
-    def parse_holder_cluster_run_history(self, hcrh):
-        for shard in hcrh["history"]:
-            self.color_palette = self.allocate_color_palette(hcrh["unit_count"])
+    def parse_run_log(self, hcrh):
+        for shard in hcrh[LogLevelToken.LLT_SUB_DATA]:
+            self.color_palette = self.allocate_color_palette(hcrh[LogValueToken.LVT_UNIT_COUNT])
             self.prepare_plot_template() 
-            self.parse_holder_cluster_run_data(shard["holder_cluster_run_data"])
+            self.parse_packet_log(shard[LogLevelToken.LLT_PACKET])
             #self.draw_vlines()
-            self.plot_finisher(hcrh["unit_count"], 0, 0, 0)
+            self.plot_finisher(hcrh[LogValueToken.LVT_UNIT_COUNT], 0, 0, 0)
 
-    def parse_experiment_history(self, exh):
-        for shard in exh["history"]:
-            self.parse_holder_cluster_run_history(shard["holder_cluster_run_history"])
+    def parse_pipeline_log(self, exh):
+        for shard in exh[LogLevelToken.LLT_SUB_HISTORY]:
+            self.parse_run_log(shard[LogLevelToken.LLT_RUN])
+
+    def parse_overall_log(self, exh):
+        for shard in exh[LogLevelToken.LLT_SUB_HISTORY]:
+            self.parse_pipeline_log(shard[LogLevelToken.LLT_PIPELINE])
             
     def run(self, data_file_path):
         with open(data_file_path) as json_file:
             data = json.load(json_file)
-            self.parse_experiment_history(data["experiment_history"])
+            self.parse_overall_log(data[LogLevelToken.LLT_OVERALL])
             
     def get_latest_file(self, path):
         list_of_files = glob.glob(os.path.join(path, "*.rres"))

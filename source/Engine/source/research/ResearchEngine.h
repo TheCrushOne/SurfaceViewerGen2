@@ -5,6 +5,7 @@
 #include "common/central_class.h"
 #include "common/research_structs.h"
 #include "common/EngineBase.h"
+#include "statistic\PathfinderStatistic.h"
 
 #define CURTIME_MS(time_ms) time_ms = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count()
 
@@ -21,7 +22,7 @@ namespace SV::engine
       const research::TimeResearchComplexStorage& GetTimeResearchResult() const override final { return m_timeResStorage; }
       const research::LengthResearchComplexStorage& GetLengthResearchResult() const override final { return m_lengthResStorage; }
       const research::ThreadResearchComplexStorage& GetThreadResearchResult() const override final { return m_threadResStorage; }
-      const research::task_holder_statistic::experiment_history& GetStatisticHistory() const override final { return m_history; }
+      const research::task_holder_statistic::mcmanager_overall_log& GetStatisticHistory() const override final { return pathfinder::PathfinderStatistic::GetStatistic(); }
       void Release() override final { delete this; }
    private:
       void launchResearch();
@@ -46,6 +47,5 @@ namespace SV::engine
       size_t m_threadTaskCurrentIdx;
 
       std::shared_ptr<pathfinder::path_finder_indata> m_indata;
-      research::task_holder_statistic::experiment_history m_history;
    };
 }

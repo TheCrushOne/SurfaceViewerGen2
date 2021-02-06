@@ -31,6 +31,9 @@
     <Filter Include="algorithm\pathfinder\ThreadSplitter">
       <UniqueIdentifier>{3e39bffc-9bf9-41ef-a386-fde29679b1cb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="statistic">
+      <UniqueIdentifier>{38e64671-a374-4b9a-b422-1a443290c0bf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\main\calibrator.cpp">
@@ -87,6 +90,9 @@
     </ClCompile>
     <ClCompile Include="source\algorithm\pathfinder\ThreadSplitter\ThreadSplitter.cpp">
       <Filter>algorithm\pathfinder\ThreadSplitter</Filter>
+    </ClCompile>
+    <ClCompile Include="source\statistic\PathfinderStatistic.cpp">
+      <Filter>statistic</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -147,6 +153,9 @@
     </ClInclude>
     <ClInclude Include="source\algorithm\pathfinder\ThreadSplitter\ThreadSplitter.h">
       <Filter>algorithm\pathfinder\ThreadSplitter</Filter>
+    </ClInclude>
+    <ClInclude Include="source\statistic\PathfinderStatistic.h">
+      <Filter>statistic</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -31,8 +31,6 @@ namespace SV::pathfinder
       const pathfinder::route_data& GetPaths() const { return m_paths; }
       const SharedUnsignedMatrix& GetCurrentCoverage() const { return m_currentCoverage; }
       const std::vector<SharedUnsignedMatrix>& GetCoverageHistory() const { return m_coverageHistory; }
-      const research::task_holder_statistic::holder_cluster_run_history& GetStatisticHistory() const { return m_threadSplitter->GetStatisticHistory(); }
-      void ClearStatisticHistory() { m_threadSplitter->ClearStatisticHistory(); }
    private:
       void prepareSourcePoints();
       void correctControlPoints();

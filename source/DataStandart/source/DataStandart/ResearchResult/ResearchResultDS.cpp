@@ -16,7 +16,7 @@ void ResearchResultDataStandart::resolvePathDee()
       m_dataStandartData.folder = (std::filesystem::path(m_baseFolder) / filePath).generic_string().c_str();
 }
 
-void ResearchResultDataStandart::SetData(const research::task_holder_statistic::experiment_history& stat, bool pythonize_result)
+void ResearchResultDataStandart::SetData(const research::task_holder_statistic::mcmanager_overall_log& stat, bool pythonize_result)
 {
    m_statistic = stat;
    std::filesystem::path path(getPath());
@@ -32,7 +32,7 @@ void ResearchResultDataStandart::saveStatisticDataToFile()
    std::ofstream file(dataFilePath);
    //reorganizeStatistic();
    Json::Value data;
-   data[tag::experiment_history] = writeExperimentHistory(m_statistic);
+   data[tag::overall_log] = writeOverallLog(m_statistic);
    file << data;
 }
 
@@ -44,64 +44,43 @@ void ResearchResultDataStandart::pythonizeResult()
    std::system(path.c_str());
 }
 
-/*void ResearchResultDataStandart::reorganizeStatistic()
-{
-   for (const auto& stat : m_statistic)
-   {
-      for (const auto& stamp : stat)
-      {
-         if (m_organizedStatistic.stat.find(stamp.holder_idx) == m_organizedStatistic.stat.end())
-            m_organizedStatistic.stat.emplace(stamp.holder_idx, organized_statistic::holder_data());
-         auto& data = m_organizedStatistic.stat.at(stamp.holder_idx).data;
-         if (data.find(stamp.task_idx) == data.end())
-            data.emplace(stamp.task_idx, organized_statistic::holder_data::task_data());
-         data.at(stamp.task_idx).start_ts = stamp.start_ts;
-         data.at(stamp.task_idx).finish_ts = stamp.finish_ts;
-      }
-   }
-
-   m_maxSize = 0;
-   for (const auto& stat : m_organizedStatistic.stat)
-      m_maxSize = stat.second.data.size() > m_maxSize ? stat.second.data.size() : m_maxSize;
-}*/
-
-Json::Value ResearchResultDataStandart::writeExperimentHistory(const research::task_holder_statistic::experiment_history& history)
+Json::Value ResearchResultDataStandart::writeOverallLog(const research::task_holder_statistic::mcmanager_overall_log& log)
 {
    Json::Value ehistory;
    Json::Value jhistory(Json::arrayValue);
-   for (const auto& stat : history.history)
+   for (const auto& stat : log.pipeline_run_list)
    {
       Json::Value runh;
-      runh[tag::holder_cluster_run_history] = writeClusterRunHistory(stat);
+      runh[tag::pipeline_run_log] = writePipelineRunLog(stat);
       jhistory.append(runh);
    }
    ehistory[tag::history] = jhistory;
    return ehistory;
 }
 
-Json::Value ResearchResultDataStandart::writeClusterRunHistory(const research::task_holder_statistic::holder_cluster_run_history& hcrhistory)
+Json::Value ResearchResultDataStandart::writePipelineRunLog(const research::task_holder_statistic::mcmanager_pipeline_run_log& hcrhistory)
 {
    organized_statistic::holder_data::task_data fictive{ 0, 0 };
    Json::Value jrundata;
    Json::Value jstat(Json::arrayValue);
    size_t idx = 0;
-   for (const auto& data : hcrhistory.history)
+   for (const auto& data : hcrhistory.step_list)
    {
       idx++;
       Json::Value rund;
-      rund[tag::holder_cluster_run_data] = writeClusterRunData(data);
+      rund[tag::run_log] = writeRunLog(data);
       jstat.append(rund);
    }
    /*for (size_t fillerIdx = idx; fillerIdx < m_maxSize; fillerIdx++)
    {
       jstat.append(writeClusterRunData(fictive));
    }*/
-   jrundata[tag::unit_count] = hcrhistory.unit_count;
+   //jrundata[tag::unit_count] = hcrhistory.unit_count;
    jrundata[tag::history] = jstat;
    return jrundata;
 }
 
-Json::Value ResearchResultDataStandart::writeClusterRunData(const research::task_holder_statistic::holder_cluster_run_data& hcrdata)
+Json::Value ResearchResultDataStandart::writeRunLog(const research::task_holder_statistic::mcmanager_run_log& hcrdata)
 {
    Json::Value jrundata;
    //Json::Value jdata_inner;
@@ -119,28 +98,29 @@ Json::Value ResearchResultDataStandart::writeClusterRunData(const research::task
       maxSize = maxSize > time.second.data.size() ? maxSize : time.second.data.size();
    }
    size_t holderIdx = 0;*/
-   for (const auto& time : hcrdata.data)
+   for (const auto& time : hcrdata.packet_list)
    {
       //size_t holderIdx = time.first;
       Json::Value rund;
-      rund[tag::holder_run_data] = writeHolderRunData(time.second, time.first);
+      rund[tag::packet_log] = writePacketLog(time);
       jrun.append(rund);
       //jdata_inner[std::to_string(holderIdx++)] = rund;
    }
    jrundata[tag::data] = jrun;
+   jrundata[tag::unit_count] = hcrdata.unit_count;
    //jdata[tag::unit_count] = maxUnitIdx + 1;
    return jrundata;
 }
 
-Json::Value ResearchResultDataStandart::writeHolderRunData(const research::task_holder_statistic::holder_run_data& data, size_t holderIdx)
+Json::Value ResearchResultDataStandart::writePacketLog(const research::task_holder_statistic::mcmanager_packet_log& data)
 {
    //auto fictive = research::task_holder_statistic::statistic_unit{ 0, 0 };
    Json::Value jrundata;
    Json::Value jrun(Json::arrayValue);
-   for (const auto& times : data.data)
+   for (const auto& times : data.task_list)
    {
       Json::Value unitdata;
-      unitdata[tag::statistic_unit] = writeUnitData(times, holderIdx);
+      unitdata[tag::task_log] = writeTaskLog(times, data.packet_idx);
       jrun.append(unitdata);
    }
    // NOTE: Только для матлаба
@@ -152,16 +132,16 @@ Json::Value ResearchResultDataStandart::writeHolderRunData(const research::task_
    return jrundata;
 }
 
-Json::Value ResearchResultDataStandart::writeUnitData(const research::task_holder_statistic::statistic_unit& data, size_t holderIdx)
+Json::Value ResearchResultDataStandart::writeTaskLog(const research::task_holder_statistic::mcmanager_task_log& data, size_t packetIdx)
 {
    Json::Value jstamp;
    jstamp[tag::start_ts] = data.start_ts;
    jstamp[tag::finish_ts] = data.finish_ts;
-   jstamp[tag::holder_idx] = holderIdx;
+   jstamp[tag::holder_idx] = data.holder_idx;
    jstamp[tag::task_idx] = data.task_idx;
    jstamp[tag::unit_idx] = data.unit_idx;
    jstamp[tag::shard_idx] = data.shard_idx;
-   jstamp[tag::packet_idx] = data.packet_idx;
+   jstamp[tag::packet_idx] = packetIdx;
    return jstamp;
 }
 

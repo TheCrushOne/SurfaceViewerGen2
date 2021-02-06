@@ -26,7 +26,7 @@ void ThreadSplitter::SetSettings(const SV::pathfinder::path_finder_settings& stt
 void ThreadSplitter::CountCurrent(std::vector<path_finder_task>& taskList, size_t unitCount, std::function<void(void)> callback)
 {
    TaskHolder::ClearStatistic();
-   m_holderStatisticHistory.unit_count = unitCount;
+   PathfinderStatistic::AddStepStat(unitCount);
    m_taskList = std::make_shared<task_list_holder>(taskList);
    m_finalizeCallback = callback;
    m_currentPacketIdx = 0;
@@ -35,13 +35,18 @@ void ThreadSplitter::CountCurrent(std::vector<path_finder_task>& taskList, size_
 
 void ThreadSplitter::formatTaskPacket()
 {
+   PathfinderStatistic::AddPacketStat();
    m_taskPacket->clear();
    std::vector<path_finder_task>::iterator it = m_taskList->task_list.begin();
+   size_t idx = 0;
    while (it != m_taskList->task_list.end() && m_taskPacket->size() < m_settings.packet_size)
    //for (size_t idx = 0; idx < m_settings.packet_size && m_taskList.size() > 0; idx++)
    {
       if (!it->counted)
-         m_taskPacket->emplace_back(pathFinderTaskToHolderTask(*it));
+      {
+         PathfinderStatistic::AddTaskStat();
+         m_taskPacket->emplace_back(pathFinderTaskToHolderTask(*it, idx++));
+      }
       it++;
    }
    m_currentPacketIdx++;
@@ -64,7 +69,7 @@ void ThreadSplitter::onTaskPacketComputingFinished()
    if (!nonComputedTasksExists())
    {
       m_taskManager->Finale();
-      m_holderStatisticHistory.history.emplace_back(*m_taskManager->GetCurrentStatistic());
+      //m_holderStatisticHistory.run_list.emplace_back(*m_taskManager->GetCurrentStatistic());
       //buildLandCoverage();
       m_finalizeCallback();
       return;
@@ -74,7 +79,7 @@ void ThreadSplitter::onTaskPacketComputingFinished()
    m_taskManager->LaunchTaskPacket(m_taskPacket);
 }
 
-task_unit ThreadSplitter::pathFinderTaskToHolderTask(path_finder_task& path_task)
+task_unit ThreadSplitter::pathFinderTaskToHolderTask(path_finder_task& path_task, size_t taskIdx)
 {
    task_unit holder_task;
    holder_task.status = TaskStatus::TS_QUEUED;
@@ -85,6 +90,7 @@ task_unit ThreadSplitter::pathFinderTaskToHolderTask(path_finder_task& path_task
    holder_task.unit_index = path_task.unit_index;
    holder_task.shard_index = path_task.shard_index;
    holder_task.packet_index = m_currentPacketIdx;
+   holder_task.task_index = taskIdx;
 
    return holder_task;
 }

@@ -45,7 +45,11 @@ class Plotter:
     vlines_cluster = dict()
     shard_count = []
     shard_status = []
-    
+    #
+    #
+    #
+    shard_data = []
+
     def get_bw_color(self, color):
         if (color[0] + color[1] + color[2] > 1.5):
             return 'black'
@@ -108,15 +112,29 @@ class Plotter:
 
     def analyze_shard_count(self, hcrh):
         self.shard_count = np.zeros(self.unit_count)
+        #self.shard_data = np.zeros(len(hcrh[LogLevelToken.LLT_SUB_DATA]))
         mmax = 0
         for rshard in hcrh[LogLevelToken.LLT_SUB_DATA]:
-            hcrd = shard[LogLevelToken.LLT_PACKET]
+            hcrd = rshard[LogLevelToken.LLT_PACKET]
             for pshard in hcrd[LogLevelToken.LLT_SUB_DATA]: 
                 task = pshard[LogLevelToken.LLT_TASK]
-                self.shard_count[task.unit_idx] = task.shard_idx + 1 if (self.shard_count[task.unit_idx] < task.shard_idx + 1) else pass
-                mmax = task.shard_idx + 1 if (mmax < task.shard_idx + 1) else pass
+                self.shard_count[task["unit_idx"]] = task["shard_idx"] + 1 if (self.shard_count[task["unit_idx"]] < task["shard_idx"] + 1) else self.shard_count[task["unit_idx"]]
+                mmax = task["shard_idx"] + 1 if (mmax < task["shard_idx"] + 1) else mmax
                     
         self.shard_status = np.zeros((self.unit_count, mmax))
+
+        current_finished = 0
+        for rshard in hcrh[LogLevelToken.LLT_SUB_DATA]:
+            hcrd = rshard[LogLevelToken.LLT_PACKET]
+            for pshard in hcrd[LogLevelToken.LLT_SUB_DATA]: 
+                task = pshard[LogLevelToken.LLT_TASK]
+                self.shard_status[task["unit_idx"]][task["shard_idx"]] = 1
+                if (self.shard_status[task["unit_idx"]].tolist().count(1) == self.shard_count[task["unit_idx"]]):
+                    current_finished += 1
+            self.shard_data.append(current_finished)
+            
+
+
 
     def commit_readiness(self):
         pass
@@ -129,17 +147,23 @@ class Plotter:
         #for i in range(len(A) - 1):
             #self.ax_gnt[1].stairs(A[i+1], baseline=A[i], fill=False)
 
-        x = np.arange(14)
-        y = np.sin(x / 2)
+        x = np.arange(len(self.shard_data))
+        y = self.shard_data
 
-        plt.step(x, y + 2, label='pre (default)')
-        plt.plot(x, y + 2, 'C0o', alpha=0.5)
+        plt.step(x, y, label='vk')
+        plt.plot(x, y, 'C0o', alpha=0.5)
 
-        plt.step(x, y + 1, where='mid', label='mid')
-        plt.plot(x, y + 1, 'C1o', alpha=0.5)
+        #x = np.arange(14)
+        #y = np.sin(x / 2)
 
-        plt.step(x, y, where='post', label='post')
-        plt.plot(x, y, 'C2o', alpha=0.5)
+        #plt.step(x, y + 2, label='pre (default)')
+        #plt.plot(x, y + 2, 'C0o', alpha=0.5)
+
+        #plt.step(x, y + 1, where='mid', label='mid')
+        #plt.plot(x, y + 1, 'C1o', alpha=0.5)
+
+        #plt.step(x, y, where='post', label='post')
+        #plt.plot(x, y, 'C2o', alpha=0.5)
         
 
     def plot_gantt_chart(self, log):

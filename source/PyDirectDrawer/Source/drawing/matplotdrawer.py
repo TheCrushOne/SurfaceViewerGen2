@@ -34,7 +34,7 @@ class DrawingProvider():
             ha = 'center', 
             va = 'center',
             color = self.get_bw_color(mcolors.to_rgba(shard_data.color)),
-        )
+        )       
 
     def plot_vlines(self, vline_data):
         for pair in vline_data:
@@ -45,12 +45,21 @@ class DrawingProvider():
         for shard in shards_data:
             self.plot_single_shard(shard)
     
+    def plot_packet_delimiters(self, del_data):
+        pass
+        #for line_pair if del_data:
+            #self.ax_gnt[0].axvline(line_pair.start)
+            #self.ax_gnt[0].text(line_pair.start + 0.1, 0, 'st', rotation=90)
+            #self.ax_gnt[0].axvline(line_pair.finish)
+            #self.ax_gnt[0].text(line_pair.start + 0.1, 0, 'fn', rotation=90)
+
     def plot_stairs(self, stairs_data):
         x = np.arange(len(stairs_data))
         y = stairs_data
 
         plt.step(x, y, label='readiness')
         plt.plot(x, y, 'C0o', alpha=0.5)
+        #self.ax_gnt[0].axvline(x=2.20589566)
 
     def prepare_plot_template(self):
         self.fig, self.ax_gnt = plt.subplots(1, 2, figsize = (12, 8))
@@ -58,6 +67,12 @@ class DrawingProvider():
     def plot_finisher(self, unitCount, pathLength, packetSize, threadCount):
         self.ax_gnt[0].grid(True)
         self.ax_gnt[0].legend()
+        self.ax_gnt[0].set_ylabel('holder index')
+        self.ax_gnt[0].set_xlabel('time, ms')
+        #self.ax_gnt[1].grid(True)
+        self.ax_gnt[1].legend()
+        self.ax_gnt[1].set_ylabel('ready path count')
+        self.ax_gnt[1].set_xlabel('finished packet count')
         
         self.ax_gnt[1].legend()
         self.ax_gnt[1].legend()

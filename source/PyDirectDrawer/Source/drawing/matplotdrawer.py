@@ -3,6 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import matplotlib.colors as mcolors
+from matplotlib.ticker import (AutoMinorLocator, MultipleLocator)
 
 CELL_HEIGHT = 9
 
@@ -35,13 +36,10 @@ class DrawingProvider():
             color = self.get_bw_color(mcolors.to_rgba(shard_data.color)),
         )
 
-        #if self.vlines_cluster.get(shard_data["packet_idx"]) is None:
-            #self.vlines_cluster[shard_data["packet_idx"]] = {
-                #min = sys.maxint,
-                #max = 0
-            #}
-        #cl_item = self.vlines_cluster.get(shard_data["packet_idx"])
-        #if (shard_data["packet_idx"])
+    def plot_vlines(self, vline_data):
+        for pair in vline_data:
+            self.ax_gnt[0].axvline(x=pair.start)
+            self.ax_gnt[0].axvline(x=pair.finish)
 
     def plot_shards(self, shards_data):
         for shard in shards_data:
@@ -51,7 +49,7 @@ class DrawingProvider():
         x = np.arange(len(stairs_data))
         y = stairs_data
 
-        plt.step(x, y, label='vk')
+        plt.step(x, y, label='readiness')
         plt.plot(x, y, 'C0o', alpha=0.5)
 
     def prepare_plot_template(self):
@@ -61,14 +59,31 @@ class DrawingProvider():
         self.ax_gnt[0].grid(True)
         self.ax_gnt[0].legend()
         
+        self.ax_gnt[1].legend()
+        self.ax_gnt[1].legend()
+
+        # Change major ticks to show every 5.
+        self.ax_gnt[1].xaxis.set_major_locator(MultipleLocator(5))
+        self.ax_gnt[1].yaxis.set_major_locator(MultipleLocator(5))
+
+        # Change minor ticks to show every 1. (5/5 = 1)
+        self.ax_gnt[1].xaxis.set_minor_locator(AutoMinorLocator(5))
+        self.ax_gnt[1].yaxis.set_minor_locator(AutoMinorLocator(5))
+
+        # Turn grid on for both major and minor ticks and style minor slightly
+        # differently.
+        self.ax_gnt[1].grid(which='major', color='#CCCCCC', linestyle='--')
+        self.ax_gnt[1].grid(which='minor', color='#CCCCCC', linestyle=':')
+        
         self.fig.suptitle('Experiment for: ' + str(unitCount) + ' units, ' + str(pathLength) + ' path length, ' + str(packetSize) + ' tasks packet size, ' + str(threadCount) + ' thread count')
         self.fig.autofmt_xdate() 
         plt.show()
 
-    def draw(self, gantt_data, stairs_data):
-        assert(len(gantt_data) == len(stairs_data))
+    def draw(self, gantt_data, vlines_data, stairs_data):
+        assert(len(gantt_data) == len(stairs_data) == len(vlines_data))
         for i in range(len(gantt_data)):
             self.prepare_plot_template()
             self.plot_shards(gantt_data[i])
+            self.plot_vlines(vlines_data[i])
             self.plot_stairs(stairs_data[i])
             self.plot_finisher(0, 0, 0, 0)

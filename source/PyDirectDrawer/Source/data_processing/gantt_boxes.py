@@ -23,13 +23,29 @@ class Shard():
         self.unit_idx = unit_idx
         self.shard_idx = shard_idx
 
+class DelimiterPair():
+    start = ''
+    finish = ''
+
+    def __init__(self, st, fn):
+        self.start = st
+        self.finish = fn
+
 class GanttBoxProvider():
+    delimiters_data = []
     shard_data = []
     color_palette = []
 
+    current_delimiters_data = []
     current_shard_data = []
 
     label_pool = []
+    vmax = 0
+    vmin = 0
+
+    def flush_borders(self):
+        self.vmax = 0
+        self.vmin = sys.maxsize
 
     def allocate_color_palette(self, count):
         color_names = list(mcolors.CSS4_COLORS)
@@ -50,11 +66,19 @@ class GanttBoxProvider():
             shard_idx = hrd[LogValueToken.LVT_SHARD_IDX],
         )
         self.current_shard_data.append(shard)
-        #self.plot_single_shard(hrd)
+        if (hrd[LogValueToken.LVT_START_TS] < self.vmin):
+            self.vmin = hrd[LogValueToken.LVT_START_TS]
+        if (hrd[LogValueToken.LVT_FINISH_TS] > self.vmax):
+            self.vmax = hrd[LogValueToken.LVT_FINISH_TS] 
 
     def parse_packet_log(self, hcrd):
+        self.flush_borders()
         for shard in hcrd[LogLevelToken.LLT_SUB_DATA]: 
             self.parse_task_log(shard[LogLevelToken.LLT_TASK])
+        self.current_delimiters_data.append(DelimiterPair(
+            st = self.vmin,
+            fn = self.vmax
+        ))
 
     #def draw_vlines(self, hcrd):
         #self.vlines_cluster
@@ -77,6 +101,8 @@ class GanttBoxProvider():
         for shard in exh[LogLevelToken.LLT_SUB_HISTORY]:
             self.shard_data.append([])
             self.current_shard_data = self.shard_data[-1]
+            self.delimiters_data.append([])
+            self.current_delimiters_data = self.delimiters_data[-1]
             #self.plot_gantt_chart(shard[LogLevelToken.LLT_PIPELINE])
             self.parse_pipeline_log(shard[LogLevelToken.LLT_PIPELINE])
 
@@ -85,3 +111,6 @@ class GanttBoxProvider():
 
     def get_gantt_data(self):
         return self.shard_data
+
+    def get_delimiters_data(self):
+        return self.delimiters_data

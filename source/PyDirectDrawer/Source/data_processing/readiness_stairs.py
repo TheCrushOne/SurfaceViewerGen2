@@ -32,6 +32,7 @@ class ReadinessStairsProvider():
         self.shard_status = np.zeros((self.unit_count, mmax))
 
         current_finished = 0
+        self.current_shard_data.append(current_finished)
         for rshard in hcrh[LogLevelToken.LLT_SUB_DATA]:
             hcrd = rshard[LogLevelToken.LLT_PACKET]
             for pshard in hcrd[LogLevelToken.LLT_SUB_DATA]: 

@@ -40,6 +40,7 @@ class Plotter:
             self.readiness_stairs_provider.prepare_data(data)
             self.drawing_provider.draw(
                 self.gantt_box_provider.get_gantt_data(),
+                self.gantt_box_provider.get_delimiters_data(),
                 self.readiness_stairs_provider.get_stairs_data()
             )
             

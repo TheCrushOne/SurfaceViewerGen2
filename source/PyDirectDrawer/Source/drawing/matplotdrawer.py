@@ -38,8 +38,8 @@ class DrawingProvider():
 
     def plot_vlines(self, vline_data):
         for pair in vline_data:
-            self.ax_gnt[0].axvline(x=pair.start)
-            self.ax_gnt[0].axvline(x=pair.finish)
+            self.ax_gnt[0].axvline(x=pair.start, color='g')
+            self.ax_gnt[0].axvline(x=pair.finish, color='r')
 
     def plot_shards(self, shards_data):
         for shard in shards_data:

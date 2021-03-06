@@ -4,12 +4,18 @@ import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import matplotlib.colors as mcolors
 from matplotlib.ticker import (AutoMinorLocator, MultipleLocator)
+from drawing.draw_type import DrawType
 
 CELL_HEIGHT = 9
 
 class DrawingProvider():
     fig = {}
     ax_gnt = {}
+
+    draw_type = ''
+    
+    ax_stairs = None
+    ax_gantt = None
 
     def get_bw_color(self, color):
         if (color[0] + color[1] + color[2] > 1.5):
@@ -62,43 +68,58 @@ class DrawingProvider():
         #self.ax_gnt[0].axvline(x=2.20589566)
 
     def prepare_plot_template(self):
-        self.fig, self.ax_gnt = plt.subplots(1, 2, figsize = (12, 8))
+        if (self.draw_type == DrawType.DT_SPLITTED):
+            self.fig, self.ax_gnt = plt.subplots(1, 2, figsize = (12, 8))
+            self.ax_gantt = self.ax_gnt[0]
+            self.ax_stairs = self.ax_gnt[1]
+        elif (self.draw_type == DrawType.DT_SMSTAIRS):
+            self.fig, self.ax_gnt = plt.subplots(1, 1, figsize = (12, 12))
+            self.ax_stairs = self.ax_gnt
 
     def plot_finisher(self, unitCount, pathLength, packetSize, threadCount):
-        self.ax_gnt[0].grid(True)
-        self.ax_gnt[0].legend()
-        self.ax_gnt[0].set_ylabel('holder index')
-        self.ax_gnt[0].set_xlabel('time, ms')
+        if (self.ax_gantt is not None):
+            self.ax_gantt.grid(True)
+            self.ax_gantt.legend()
+            self.ax_gantt.set_ylabel('holder index')
+            self.ax_gantt.set_xlabel('time, ms')
         #self.ax_gnt[1].grid(True)
-        self.ax_gnt[1].legend()
-        self.ax_gnt[1].set_ylabel('ready path count')
-        self.ax_gnt[1].set_xlabel('finished packet count')
-        
-        self.ax_gnt[1].legend()
-        self.ax_gnt[1].legend()
+        self.ax_stairs.legend()
+        self.ax_stairs.set_ylabel('ready path count')
+        self.ax_stairs.set_xlabel('finished packet count')
 
         # Change major ticks to show every 5.
-        self.ax_gnt[1].xaxis.set_major_locator(MultipleLocator(5))
-        self.ax_gnt[1].yaxis.set_major_locator(MultipleLocator(5))
+        self.ax_stairs.xaxis.set_major_locator(MultipleLocator(5))
+        self.ax_stairs.yaxis.set_major_locator(MultipleLocator(5))
 
         # Change minor ticks to show every 1. (5/5 = 1)
-        self.ax_gnt[1].xaxis.set_minor_locator(AutoMinorLocator(5))
-        self.ax_gnt[1].yaxis.set_minor_locator(AutoMinorLocator(5))
+        self.ax_stairs.xaxis.set_minor_locator(AutoMinorLocator(5))
+        self.ax_stairs.yaxis.set_minor_locator(AutoMinorLocator(5))
 
         # Turn grid on for both major and minor ticks and style minor slightly
         # differently.
-        self.ax_gnt[1].grid(which='major', color='#CCCCCC', linestyle='--')
-        self.ax_gnt[1].grid(which='minor', color='#CCCCCC', linestyle=':')
+        self.ax_stairs.grid(which='major', color='#CCCCCC', linestyle='--')
+        self.ax_stairs.grid(which='minor', color='#CCCCCC', linestyle=':')
         
         self.fig.suptitle('Experiment for: ' + str(unitCount) + ' units, ' + str(pathLength) + ' path length, ' + str(packetSize) + ' tasks packet size, ' + str(threadCount) + ' thread count')
         self.fig.autofmt_xdate() 
         plt.show()
 
-    def draw(self, gantt_data, vlines_data, stairs_data):
+    def draw(self, draw_type, gantt_data, vlines_data, stairs_data):
         assert(len(gantt_data) == len(stairs_data) == len(vlines_data))
-        for i in range(len(gantt_data)):
+        self.draw_type = draw_type
+        if (draw_type == DrawType.DT_SPLITTED):
+            for i in range(len(gantt_data)):
+                self.prepare_plot_template()
+                self.plot_shards(gantt_data[i])
+                self.plot_vlines(vlines_data[i])
+                self.plot_stairs(stairs_data[i])
+                self.plot_finisher(0, 0, 0, 0)
+        elif (draw_type == DrawType.DT_SMSTAIRS):
             self.prepare_plot_template()
-            self.plot_shards(gantt_data[i])
-            self.plot_vlines(vlines_data[i])
-            self.plot_stairs(stairs_data[i])
+            for i in range(len(gantt_data)):
+                #self.prepare_plot_template()
+                #self.plot_shards(gantt_data[i])
+                #self.plot_vlines(vlines_data[i])
+                self.plot_stairs(stairs_data[i])
+                #self.plot_finisher(0, 0, 0, 0)
             self.plot_finisher(0, 0, 0, 0)

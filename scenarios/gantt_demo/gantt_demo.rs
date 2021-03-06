@@ -4,6 +4,9 @@
 		"step" : 1,
 		"max" : 1,
 		"values" : [
+			64
+		],
+		"not_used_values" : [
 			32,
 			64
 		]
@@ -22,13 +25,15 @@
 		"max" : 1,
 		"values" : [
 			8
-		]
+		],
+		"not_used_values" : []
 	},
 	"task_pool_range" : {
 		"min" : 1,
 		"step" : 1,
-		"max" : 1,
-		"values" : [
+		"max" : 10,
+		"values" : [],
+		"not_used_values" : [
 			8
 		]
 	},

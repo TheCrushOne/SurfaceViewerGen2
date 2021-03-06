@@ -11,9 +11,11 @@ void PathfinderStatistic::Clear()
    m_stat->pipeline_run_list.clear();
 }
 
-void PathfinderStatistic::AddPipelineStat()
+void PathfinderStatistic::AddPipelineStat(size_t thread_count, size_t packet_size)
 {
    m_stat->pipeline_run_list.emplace_back();
+   m_stat->pipeline_run_list.back().thread_count = thread_count;
+   m_stat->pipeline_run_list.back().packet_size = packet_size;
 }
 
 void PathfinderStatistic::AddStepStat(size_t unitCount)
@@ -44,4 +46,20 @@ void PathfinderStatistic::CommitStatStamp(research::task_holder_statistic::mcman
    auto& current_step = current_pipeline.step_list.back();
    auto& current_packet = current_step.packet_list.back();
    current_packet.task_list.at(task.task_idx) = task;
+}
+
+void PathfinderStatistic::CommitPacketStampStart(long long start)
+{
+   auto& current_pipeline = m_stat->pipeline_run_list.back();
+   auto& current_step = current_pipeline.step_list.back();
+   auto& current_packet = current_step.packet_list.back();
+   current_packet.start_ts = start;
+}
+
+void PathfinderStatistic::CommitPacketStampFinish(long long finish)
+{
+   auto& current_pipeline = m_stat->pipeline_run_list.back();
+   auto& current_step = current_pipeline.step_list.back();
+   auto& current_packet = current_step.packet_list.back();
+   current_packet.finish_ts = finish;
 }

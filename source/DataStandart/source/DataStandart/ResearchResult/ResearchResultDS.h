@@ -32,6 +32,9 @@ namespace SV::data_standart
          static constexpr char unit_idx[] = "unit_idx";
          static constexpr char shard_idx[] = "shard_idx";
          static constexpr char packet_idx[] = "packet_idx";
+
+         static constexpr char thread_count[] = "thread_count";
+         static constexpr char packet_size[] = "packet_size";
       };
 
       struct organized_statistic

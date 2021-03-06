@@ -8,3 +8,5 @@ class LogValueToken():
     LVT_UNIT_IDX    = 'unit_idx'
 
     LVT_UNIT_COUNT  = 'unit_count'
+    LVT_PACKET_SIZE  = 'packet_size'
+    LVT_THREAD_COUNT  = 'thread_count'

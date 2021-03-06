@@ -77,6 +77,8 @@ Json::Value ResearchResultDataStandart::writePipelineRunLog(const research::task
    }*/
    //jrundata[tag::unit_count] = hcrhistory.unit_count;
    jrundata[tag::history] = jstat;
+   jrundata[tag::thread_count] = hcrhistory.thread_count;
+   jrundata[tag::packet_size] = hcrhistory.packet_size;
    return jrundata;
 }
 
@@ -129,6 +131,8 @@ Json::Value ResearchResultDataStandart::writePacketLog(const research::task_hold
       jdata.append(writeUnitData(fictive));
    }*/
    jrundata[tag::data] = jrun;
+   jrundata[tag::start_ts] = data.start_ts;
+   jrundata[tag::finish_ts] = data.finish_ts;
    return jrundata;
 }
 

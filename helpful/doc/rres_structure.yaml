@@ -1,0 +1,17 @@
+overall_log:
+   history:
+      - pipeline_run_log:
+            history:
+               - run_log:
+                  unit_count: <int>
+                  data:
+                     - packet_log:
+                        data:
+                           - task_log:
+                              finish_ts : <int>
+                              holder_idx : <int>
+                              packet_idx : <int>
+                              shard_idx : <int>
+                              start_ts : <int>
+                              task_idx : <int>
+                              unit_idx : <int>

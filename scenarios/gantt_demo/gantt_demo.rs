@@ -20,6 +20,15 @@
 		]
 	},
 	"thread_pool_range" : {
+		"min" : 8,
+		"step" : 1,
+		"max" : 12,
+		"values" : [],
+		"not_used_values" : [
+			8
+		]
+	},
+	"task_pool_range" : {
 		"min" : 1,
 		"step" : 1,
 		"max" : 1,
@@ -27,15 +36,6 @@
 			8
 		],
 		"not_used_values" : []
-	},
-	"task_pool_range" : {
-		"min" : 1,
-		"step" : 1,
-		"max" : 10,
-		"values" : [],
-		"not_used_values" : [
-			8
-		]
 	},
 	"debug_level" : 1,
 	"iter_count" : 1,

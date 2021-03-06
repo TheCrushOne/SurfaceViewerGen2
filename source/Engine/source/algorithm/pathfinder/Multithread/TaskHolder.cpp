@@ -2,7 +2,7 @@
 #include "TaskHolder.h"
 #include <time.h>
 
-#define CURTIME_MS_EPOCH() clock();//std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
+#define CURTIME_MS_EPOCH() clock()//std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
 
 using namespace SV;
 using namespace SV::pathfinder;
@@ -67,11 +67,13 @@ void TaskHolder::ForceInnerUnlock()
 void TaskHolder::Launch()
 {
    EnterCriticalSection(&critical_outer);
+   PathfinderStatistic::CommitPacketStampStart(CURTIME_MS_EPOCH() - m_startTime);
    onFinished(true);  // NOTE: принудительный старт
 }
 
 void TaskHolder::finish()
 {
+   PathfinderStatistic::CommitPacketStampFinish(CURTIME_MS_EPOCH() - m_startTime);
    m_callback();
 }
 

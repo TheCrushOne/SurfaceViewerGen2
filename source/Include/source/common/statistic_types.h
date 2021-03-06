@@ -71,6 +71,8 @@ namespace SV::research::task_holder_statistic
    // NOTE: данные по запуску одного полного расчета пути(пайплайна)
    struct mcmanager_pipeline_run_log
    {
+      size_t thread_count;
+      size_t packet_size;
       std::vector<mcmanager_run_log> step_list;
    };
 

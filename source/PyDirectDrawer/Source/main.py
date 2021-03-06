@@ -45,7 +45,8 @@ class Plotter:
                 self.draw_type,
                 self.gantt_box_provider.get_gantt_data(),
                 self.gantt_box_provider.get_delimiters_data(),
-                self.readiness_stairs_provider.get_stairs_data()
+                self.readiness_stairs_provider.get_stairs_data(),
+                self.readiness_stairs_provider.get_time_stairs_data()
             )
             
     def get_latest_file(self, path):

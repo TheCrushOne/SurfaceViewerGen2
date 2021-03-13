@@ -244,6 +244,7 @@ void ResearchEngine::threadResearch(/*const std::shared_ptr<SVM::iMatrix<Surface
    // Потоков 1, 2, 4, 8
    // Пул задач 2, 4, 8
    // Путей 2, 4, 8, 16, 32, 64, 128
+   // Сплитфактор 1, 2, 3
 
    for (size_t lengthIdx = 0; lengthIdx < res_stt.length_range.values.size(); lengthIdx++)
    {
@@ -257,21 +258,26 @@ void ResearchEngine::threadResearch(/*const std::shared_ptr<SVM::iMatrix<Surface
             for (size_t flyCountIdx = 0; flyCountIdx < res_stt.fly_count_range.values.size(); flyCountIdx++)
             {
                size_t flyCount = res_stt.fly_count_range.values.at(flyCountIdx);
-               m_threadResStorage.data.emplace_back(research::ThreadResearchComplexStorage::SuperCell{
-                  research::ThreadResearchComplexStorage::SuperCell::Index{
-                     threadPoolIdx,
-                     taskPoolIdx,
-                     flyCountIdx,
-                     lengthIdx,
-                     threadCount,
-                     taskCount,
-                     flyCount,
-                     length
-                  },
-                  research::ThreadResearchComplexStorage::SuperCell::Result{
-                     0
-                  }
-               });
+               for (size_t splitFactorIdx = 0; splitFactorIdx < res_stt.split_factor_range.values.size(); splitFactorIdx++)
+               {
+                  size_t splitFactor = res_stt.split_factor_range.values.at(splitFactorIdx);
+                  m_threadResStorage.data.emplace_back(research::ThreadResearchComplexStorage::SuperCell{
+                     research::ThreadResearchComplexStorage::SuperCell::Index{
+                        threadPoolIdx,
+                        taskPoolIdx,
+                        flyCountIdx,
+                        lengthIdx,
+                        threadCount,
+                        taskCount,
+                        flyCount,
+                        length,
+                        splitFactor
+                     },
+                     research::ThreadResearchComplexStorage::SuperCell::Result{
+                        0
+                     }
+                  });
+               }
             }
          }
       }
@@ -280,7 +286,8 @@ void ResearchEngine::threadResearch(/*const std::shared_ptr<SVM::iMatrix<Surface
       res_stt.thread_pool_range,
       res_stt.task_pool_range,
       res_stt.fly_count_range,
-      res_stt.length_range
+      res_stt.length_range,
+      res_stt.split_factor_range
    };
    threadResNextStep();
 }
@@ -323,6 +330,7 @@ void ResearchEngine::threadResNextStep()
    pathfinder::path_finder_settings stt(true, {}, true, true, 0, 0, false);
    stt.packet_size = threadResIndex.task_pool_value;
    stt.thread_count = threadResIndex.thread_pool_value;
+   stt.split_factor = threadResIndex.split_factor_value;
    stt.land_path = false;  // NOTE: наземный всё равно 1
    m_indata->settings = stt;
    GetPack()->comm->Message(ICommunicator::MessageType::MT_INFO, "task started: [fly: %i, length: %f, task: %i, thread: %i]", threadResIndex.fly_count_value, threadResIndex.length_value, threadResIndex.task_pool_value, threadResIndex.thread_pool_value);
@@ -342,7 +350,7 @@ void ResearchEngine::generateResScenarioData(const settings::research_settings& 
    int curSize = static_cast<int>(idx.length_value);
    // NOTE: индекс предельной точки отличается от размера карты на 1
    int fnCoord = curSize < mapSize - 1 ? curSize : mapSize - 1;
-   size_t splitFactor = stt.split_factor;
+   size_t splitFactor = idx.split_factor_value;
    int multiplier = (int)((double)fnCoord / (double)splitFactor);
    for (auto& elem : m_indata->unit_data.air_units)
    {

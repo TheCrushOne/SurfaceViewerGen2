@@ -121,7 +121,7 @@ public:
       j[tag::iter_count] = data.iter_count;
       j[tag::length_range] = rangeWriter(data.length_range);
       j[tag::map_size] = data.map_size;
-      j[tag::split_factor] = data.split_factor;
+      j[tag::split_factor_range] = rangeWriter(data.split_factor_range);
       j[tag::multi_thread_test] = data.multi_thread_test;
       j[tag::res_type] = static_cast<unsigned short>(data.res_type);
       j[tag::single_thread_test] = data.single_thread_test;
@@ -245,7 +245,7 @@ public:
       data.iter_count = j[tag::iter_count].asInt();
       data.length_range = rangeReader<double>(j[tag::length_range]);
       data.map_size = j[tag::map_size].asInt();
-      data.split_factor = j[tag::split_factor].asInt();
+      data.split_factor_range = rangeReader<size_t>(j[tag::split_factor_range]);
       data.multi_thread_test = j[tag::multi_thread_test].asBool();
       data.res_type = static_cast<settings::ResearchType>(j[tag::res_type].asInt());
       data.single_thread_test = j[tag::single_thread_test].asBool();

@@ -73,6 +73,7 @@ namespace SV::research::task_holder_statistic
    {
       size_t thread_count;
       size_t packet_size;
+      size_t split_factor;
       std::vector<mcmanager_run_log> step_list;
    };
 

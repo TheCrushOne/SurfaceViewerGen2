@@ -35,6 +35,7 @@ namespace SV::data_standart
 
          static constexpr char thread_count[] = "thread_count";
          static constexpr char packet_size[] = "packet_size";
+         static constexpr char split_factor[] = "split_factor";
       };
 
       struct organized_statistic

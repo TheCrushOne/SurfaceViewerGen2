@@ -46,7 +46,7 @@ void PathFinderPipeline::FindPath(std::function<void(void)> callback, std::share
    m_routeLinePreparer->SetRawDataMatrix(rawdata);
 
    TaskHolder::FixCurrentTime();
-   PathfinderStatistic::AddPipelineStat(m_indata->settings.multithread ? m_indata->settings.thread_count : 1, m_indata->settings.packet_size);
+   PathfinderStatistic::AddPipelineStat(m_indata->settings.multithread ? m_indata->settings.thread_count : 1, m_indata->settings.packet_size, m_indata->settings.split_factor);
    findPathMultiThread();
    /*if (m_indata->settings.multithread)
       findPathMultiThread();

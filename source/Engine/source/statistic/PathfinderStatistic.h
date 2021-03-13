@@ -14,7 +14,7 @@ namespace SV::pathfinder
    public:
       static void Clear();
 
-      static void AddPipelineStat(size_t thread_count, size_t task_pool_size);
+      static void AddPipelineStat(size_t thread_count, size_t task_pool_size, size_t split_factor);
       static void AddStepStat(size_t unitCount);
       static void AddPacketStat();
       static void AddTaskStat();

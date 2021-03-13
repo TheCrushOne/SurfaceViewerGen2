@@ -62,8 +62,10 @@ class ReadinessStairsProvider():
         assert(len(exh[LogLevelToken.LLT_SUB_HISTORY]) == 1)
         self.current_shard_timed_data.packet_size = exh[LogValueToken.LVT_PACKET_SIZE]
         self.current_shard_timed_data.thread_count = exh[LogValueToken.LVT_THREAD_COUNT]
+        self.current_shard_timed_data.split_factor = exh[LogValueToken.LVT_SPLIT_FACTOR]
         self.current_shard_data.packet_size = exh[LogValueToken.LVT_PACKET_SIZE]
         self.current_shard_data.thread_count = exh[LogValueToken.LVT_THREAD_COUNT]
+        self.current_shard_data.split_factor = exh[LogValueToken.LVT_SPLIT_FACTOR]
         for shard in exh[LogLevelToken.LLT_SUB_HISTORY]:
             self.analyze_shard_count(shard[LogLevelToken.LLT_RUN])
 

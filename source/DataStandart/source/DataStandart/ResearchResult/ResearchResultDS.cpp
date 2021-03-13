@@ -79,6 +79,7 @@ Json::Value ResearchResultDataStandart::writePipelineRunLog(const research::task
    jrundata[tag::history] = jstat;
    jrundata[tag::thread_count] = hcrhistory.thread_count;
    jrundata[tag::packet_size] = hcrhistory.packet_size;
+   jrundata[tag::split_factor] = hcrhistory.split_factor;
    return jrundata;
 }
 

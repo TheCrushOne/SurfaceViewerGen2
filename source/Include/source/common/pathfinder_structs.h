@@ -94,14 +94,16 @@ namespace SV::pathfinder
       bool land_path;      // необходимость расчета наземного пути
       size_t packet_size;  // размер пакета путей для многопоточного вызова(0 - все задачи в 1 пул)
       size_t thread_count; // количество запрашиваемых потоков
+      size_t split_factor; // количество разбиений пути на подпути
 
-      path_finder_settings(bool multithread = false, std::vector<size_t> statFieldIndex = {}, bool research = false, bool landPath = true, size_t packetSize = 2, size_t threadCount = 8, bool useStrategies = true)
+      path_finder_settings(bool multithread = false, std::vector<size_t> statFieldIndex = {}, bool research = false, bool landPath = true, size_t packetSize = 2, size_t threadCount = 8, size_t splitFactor = 3, bool useStrategies = true)
          : multithread(multithread)
          , stat_field_index(statFieldIndex)
          , research(research)
          , land_path(landPath)
          , packet_size(packetSize)
          , thread_count(threadCount)
+         , split_factor(splitFactor)
          , use_strategies(useStrategies)
       {}
    };

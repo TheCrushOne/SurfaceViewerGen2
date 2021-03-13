@@ -16,7 +16,8 @@ from data_processing.readiness_stairs import ReadinessStairsProvider
 from drawing.matplotdrawer import DrawingProvider
 from drawing.draw_type import DrawType
 
-DATA_FILE_PATH = "E:\\FilesX\\PrOgRaMmInG\\2019_2020_9th_course\\SurfaceViewerGen2\\cache\\gantt_demo\\research\\29012021_012018_universal.rres"
+#DATA_FILE_PATH = "E:\\FilesX\\PrOgRaMmInG\\2019_2020_9th_course\\SurfaceViewerGen2\\cache\\gantt_demo\\research\\13032021_194624_universal.rres"
+DATA_FILE_PATH = "C:\\Projects\\surfaceviewergen2\\cache\\gantt_demo\\research\\13032021_194624_universal.rres"
 DATA_FOLDER_PATH = "..\\..\\cache\\gantt_demo\\research\\"
 
 class Plotter:
@@ -29,7 +30,9 @@ class Plotter:
     label_pool = []
     vlines_cluster = dict()
 
-    draw_type = DrawType.DT_SMSTAIRS
+    #draw_type = DrawType.DT_SMSTAIRS
+    #draw_type = DrawType.DT_SPLITTED
+    draw_type = DrawType.DT_AFTERWARDS
 
     def __init__(self):
         self.gantt_box_provider = GanttBoxProvider()
@@ -56,4 +59,5 @@ class Plotter:
 
 if __name__ == '__main__':
     plotter = Plotter()
-    plotter.run(sys.argv[1] if len(sys.argv) > 1 else plotter.get_latest_file(DATA_FOLDER_PATH))
+    #plotter.run(sys.argv[1] if len(sys.argv) > 1 else plotter.get_latest_file(DATA_FOLDER_PATH))
+    plotter.run(DATA_FILE_PATH)

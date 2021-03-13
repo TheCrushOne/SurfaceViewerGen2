@@ -1,7 +1,7 @@
 class ReadinessData():
     x = None
     y = None
-    label = "wtf"
+    label = "ex"
     
     unit_count = 0
     packet_size = 0

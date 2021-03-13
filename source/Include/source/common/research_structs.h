@@ -63,6 +63,7 @@ namespace SV::research
             size_t task_pool_value;
             size_t fly_count_value;
             double length_value;
+            size_t split_factor_value;
          } index;
 
          struct Result
@@ -77,6 +78,7 @@ namespace SV::research
          settings::range_data<size_t> task_pool_range;
          settings::range_data<size_t> fly_count_range;
          settings::range_data<double> length_range;
+         settings::range_data<size_t> split_factor_range;
       };
 
       std::vector<SuperCell> data;

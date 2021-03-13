@@ -11,11 +11,12 @@ void PathfinderStatistic::Clear()
    m_stat->pipeline_run_list.clear();
 }
 
-void PathfinderStatistic::AddPipelineStat(size_t thread_count, size_t packet_size)
+void PathfinderStatistic::AddPipelineStat(size_t thread_count, size_t packet_size, size_t split_factor)
 {
    m_stat->pipeline_run_list.emplace_back();
    m_stat->pipeline_run_list.back().thread_count = thread_count;
    m_stat->pipeline_run_list.back().packet_size = packet_size;
+   m_stat->pipeline_run_list.back().split_factor = split_factor;
 }
 
 void PathfinderStatistic::AddStepStat(size_t unitCount)

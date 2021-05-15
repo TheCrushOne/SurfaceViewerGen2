@@ -70,14 +70,24 @@ class DrawingProvider():
         x = stairs_data.x
         y = stairs_data.y
 
-        gnt.step(x, y, 
+        #var-1
+        #gnt.step(x, y, 
+            #label=stairs_data.label + ' ' +
+            #'u:' + str(stairs_data.unit_count) + ' ' +
+            #'p:' + str(stairs_data.packet_size) + ' ' +
+            #'t:' + str(stairs_data.thread_count) + ' ' +
+            #'s:' + str(stairs_data.split_factor)
+        #)
+        #gnt.plot(x, y, 'C0o', alpha=0.5)
+
+        #var-2
+        gnt.plot(x, y, '-o', alpha=0.7,
             label=stairs_data.label + ' ' +
             'u:' + str(stairs_data.unit_count) + ' ' +
             'p:' + str(stairs_data.packet_size) + ' ' +
             't:' + str(stairs_data.thread_count) + ' ' +
             's:' + str(stairs_data.split_factor)
         )
-        gnt.plot(x, y, 'C0o', alpha=0.5)
         #plt.step(x, y, label='readiness')
         #plt.plot(x, y, 'C0o', alpha=0.5)
 

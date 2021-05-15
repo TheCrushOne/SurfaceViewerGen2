@@ -16,8 +16,8 @@ from data_processing.readiness_stairs import ReadinessStairsProvider
 from drawing.matplotdrawer import DrawingProvider
 from drawing.draw_type import DrawType
 
-#DATA_FILE_PATH = "E:\\FilesX\\PrOgRaMmInG\\2019_2020_9th_course\\SurfaceViewerGen2\\cache\\gantt_demo\\research\\13032021_194624_universal.rres"
-DATA_FILE_PATH = "C:\\Projects\\surfaceviewergen2\\cache\\gantt_demo\\research\\13032021_194624_universal.rres"
+DATA_FILE_PATH = "E:\\FilesX\\PrOgRaMmInG\\2019_2020_9th_course\\SurfaceViewerGen2\\cache\\gantt_demo\\research\\17032021_222427_universal.rres"
+#DATA_FILE_PATH = "C:\\Projects\\surfaceviewergen2\\cache\\gantt_demo\\research\\13032021_194624_universal.rres"
 DATA_FOLDER_PATH = "..\\..\\cache\\gantt_demo\\research\\"
 
 class Plotter:

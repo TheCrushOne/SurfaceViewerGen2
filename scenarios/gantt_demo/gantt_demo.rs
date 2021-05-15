@@ -20,31 +20,31 @@
 		]
 	},
 	"thread_pool_range" : {
-		"min" : 2,
-		"step" : 2,
-		"max" : 8,
-		"values" : [],
-		"not_used_values" : [
+		"min" : 1,
+		"step" : 1,
+		"max" : 1,
+		"values" : [
 			8
-		]
+		],
+		"not_used_values" : []
 	},
 	"task_pool_range" : {
 		"min" : 1,
 		"step" : 1,
 		"max" : 1,
 		"values" : [
-			8
+			16
 		],
 		"not_used_values" : []
 	},
 	"split_factor_range" : {
 		"min" : 1,
 		"step" : 1,
-		"max" : 1,
-		"values" : [
+		"max" : 10,
+		"values" : [],
+		"not_used_values" : [
 			3
-		],
-		"not_used_values" : []
+		]
 	},
 	"debug_level" : 1,
 	"iter_count" : 1,

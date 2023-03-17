@@ -206,7 +206,7 @@ CG::route_line PathFinder::FindUniversalPath(const CG::route_point& start, const
          frontlineCheckEmplace(pts, curRow + 1, curCol + 1);   // bottomright
 
          for (auto iter : pts)
-         {            
+         {
             if (pointScore->Get(iter.first, iter.second) == 0)
             {
                if (logic.checker(rawdata, coverageMatrix, iter.first, iter.second))
